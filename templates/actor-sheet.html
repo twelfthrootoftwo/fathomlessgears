@@ -41,7 +41,7 @@
             <ol class="attributes-list">
                 {{#each actor.system.attributes as |attrib key|}}
                 <li class="attribute flexrow">
-                    <span class="attribute-label flexrow" name="system.attributes.{{key}}.label">{{label}}</span>
+                    <span class="attribute-label flexrow">{{label}}</span>
                     <div class="attribute-editbox flexrow">
                         <input class="attribute-value" type="number" name="system.attributes.{{key}}.value" value={{attrib.value}} data-dtype="Number"/>
                     </div>
@@ -56,6 +56,21 @@
                     </div>
                 </li>
                 {{/each}}
+                <li class="attribute flexrow">
+                    <span class="attribute-label flexrow" name="system.attributes.{{key}}.label">Flat rolls</span>
+                    <div class="attribute-roll flexrow">
+                        <div class="attribute button rollable" diesize="3" diecount="1" attribute="{{key}}">1d3</div>
+                    </div>
+                    <div class="attribute-roll flexrow">
+                        <div class="attribute button rollable" diesize="6" diecount="1" attribute="{{key}}">1d6</div>
+                    </div>
+                    <div class="attribute-roll flexrow">
+                        <div class="attribute button rollable" diesize="6" diecount="2" attribute="{{key}}">2d6</div>
+                    </div>
+                    <div class="attribute-roll flexrow">
+                        <div class="attribute button rollable" diesize="6" diecount="3" attribute="{{key}}">3d6</div>
+                    </div>
+                </li>
             </ol>
         </div>
     </section>

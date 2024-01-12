@@ -50,14 +50,22 @@ export class HLMActorSheet extends ActorSheet {
         event.preventDefault();
         const dieCount=event.target.attributes.diecount.value;
         const dieSize=event.target.attributes.diesize.value;
-        const attribute=event.target.attributes.attribute.value;
-        const rollAttribute=this.actor.system.attributes[attribute];
-        const formula=dieCount+"d"+dieSize+"+"+rollAttribute.value.toString();
+        const attribute=event.target.attributes.attribute?.value;
+        var formula=new Roll;
+        var label="";
+        if (attribute) {
+            const rollAttribute=this.actor.system.attributes[attribute];
+            formula=dieCount+"d"+dieSize+"+"+rollAttribute.value.toString();
+            label="Rolling "+rollAttribute.label+":";
+        } else {
+            formula=dieCount+"d"+dieSize+":";
+            label="Rolling "+formula
+        }
         let roll=new Roll(formula);       
         await roll.evaluate()
         roll.toMessage({
             speaker: ChatMessage.getSpeaker({actor: this.actor}),
-            flavor: "Rolling "+rollAttribute.label
+            flavor: label
         });
     }
 }
