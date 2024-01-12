@@ -1,0 +1,62 @@
+<form class="flexcol {{cssClass}}" autocomplete="off">
+
+    {{!-- Sheet Header --}}
+    <header class="sheet-header">
+        <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}" height="100" width="100" />
+        <div class="header-fields">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{data.name}}" placeholder="Name" />
+            </h1>
+            <div class="flex-container" style="display: flex; flex-direction: row; width: 100%">
+                {{#each actor.system.resources as |resource key|}}
+                <div style="flex: 50%">
+                    <div class="resource">
+                        <label>{{resource.label}}</label> <br>
+                        <input type="number" name="system.resources.{{key}}.value" value="{{resource.value}}" data-dtype="Number"/>
+                        <span> / </span>
+                        <input type="number" name="system.resources.{{key}}.max" value="{{resource.max}}" data-dtype="Number"/>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="attributes">Attributes</a>
+        <a class="item" data-tab="description">Description</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+        {{!-- Biography Tab --}}
+        <div class="tab description" data-group="primary" data-tab="description">
+            {{editor biographyHTML target="actor.biography" button=true editable=editable engine="prosemirror"}}
+        </div>
+
+        {{!-- Attributes Tab --}}
+        <div class="tab attributes" data-group="primary" data-tab="attributes">
+            <ol class="attributes-list">
+                {{#each actor.system.attributes as |attrib key|}}
+                <li class="attribute flexrow">
+                    <span class="attribute-label flexrow" name="system.attributes.{{key}}.label">{{label}}</span>
+                    <div class="attribute-editbox flexrow">
+                        <input class="attribute-value" type="number" name="system.attributes.{{key}}.value" value={{attrib.value}} data-dtype="Number"/>
+                    </div>
+                    <div class="attribute-roll flexrow">
+                        <div class="attribute button rollable" diesize="6" diecount="1" attribute="{{key}}">1d6</div>
+                    </div>
+                    <div class="attribute-roll flexrow">
+                        <div class="attribute button rollable" diesize="6" diecount="2" attribute="{{key}}">2d6</div>
+                    </div>
+                    <div class="attribute-roll flexrow">
+                        <div class="attribute button rollable" diesize="6" diecount="3" attribute="{{key}}">3d6</div>
+                    </div>
+                </li>
+                {{/each}}
+            </ol>
+        </div>
+    </section>
+</form>
