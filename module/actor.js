@@ -32,35 +32,31 @@ export class WeightClass {
     }
     this.value=value;
     switch(value) {
-      case 0:
+      case 4:
         this.label="Ultra Light";
         break;
-      case 1:
+      case 3:
         this.label="Light";
         break;
       case 2:
         this.label="Medium";
         break;
-      case 3:
+      case 1:
         this.label="Heavy";
         break;
-      case 4:
+      case 0:
         this.label="Ultra Heavy";
         break;
     }
   }
   static evaluateWeightClass(weight, shift) {
-    console.log("Calculating class for weight "+weight.toString());
     var baseWeightClass;
     if(weight<11) {
-      console.log("Light");
-      baseWeightClass=1;
+      baseWeightClass=3;
     } else if(weight<21) {
-      console.log("Medium");
       baseWeightClass=2;
     } else {
-      console.log("Heavy");
-      baseWeightClass=3;
+      baseWeightClass=1;
     }
 
     var weightClass=baseWeightClass+shift;
