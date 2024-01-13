@@ -33,7 +33,7 @@
 
         {{!-- Biography Tab --}}
         <div class="tab description" data-group="primary" data-tab="description">
-            {{editor biographyHTML target="actor.biography" button=true editable=editable engine="prosemirror"}}
+            {{editor biographyHTML target="actor.system.biography" button=true editable=editable engine="prosemirror"}}
         </div>
 
         {{!-- Attributes Tab --}}
@@ -72,6 +72,10 @@
                     </div>
                 </li>
             </ol>
+            <div class="flexrow">
+                <span class="attribute-label">Weight Class</span>
+                <div class="attribute-label">{{actor.system.weightClass.label}}</div>
+            </div>
         </div>
     </section>
 </form>

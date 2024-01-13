@@ -6,7 +6,9 @@ export class SimpleActor extends Actor {
 
   /** @inheritdoc */
   prepareDerivedData() {
+    console.log("Preparing derived data");
     super.prepareDerivedData();
+    this.system.weightClass=WeightClass.evaluateWeightClass(this.system.attributes.weight.value, 0);
   }
 
   /* -------------------------------------------- */
@@ -17,5 +19,55 @@ export class SimpleActor extends Actor {
    */
   get isTemplate() {
     return !!this.getFlag("hooklineandmecha", "isTemplate");
+  }
+
+}
+
+export class WeightClass {
+  static maxClass=4;
+  static minClass=0;
+  constructor(value) {
+    if(value<WeightClass.minClass || value > WeightClass.maxClass) {
+      throw new Error(`WeightClass value must be between ${WeightClass.minClass.toString()} and ${WeightClass.maxClass.toString()} (received ${value.toString()})`);
+    }
+    this.value=value;
+    switch(value) {
+      case 0:
+        this.label="Ultra Light";
+        break;
+      case 1:
+        this.label="Light";
+        break;
+      case 2:
+        this.label="Medium";
+        break;
+      case 3:
+        this.label="Heavy";
+        break;
+      case 4:
+        this.label="Ultra Heavy";
+        break;
+    }
+  }
+  static evaluateWeightClass(weight, shift) {
+    console.log("Calculating class for weight "+weight.toString());
+    var baseWeightClass;
+    if(weight<11) {
+      console.log("Light");
+      baseWeightClass=1;
+    } else if(weight<21) {
+      console.log("Medium");
+      baseWeightClass=2;
+    } else {
+      console.log("Heavy");
+      baseWeightClass=3;
+    }
+
+    var weightClass=baseWeightClass+shift;
+    weightClass=weightClass<WeightClass.minClass ? WeightClass.minClass : weightClass;
+    weightClass=weightClass>WeightClass.maxClass ? WeightClass.maxClass : weightClass;
+    console.log("Calculated weight: "+weightClass.toString());
+
+    return new WeightClass(weightClass);
   }
 }
