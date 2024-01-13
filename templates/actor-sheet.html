@@ -2,10 +2,10 @@
 
     {{!-- Sheet Header --}}
     <header class="sheet-header">
-        <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}" height="100" width="100" />
+        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100" />
         <div class="header-fields">
             <h1 class="charname">
-                <input name="name" type="text" value="{{data.name}}" placeholder="Name" />
+                <input name="name" type="text" value="{{actor.name}}" placeholder="Name" />
             </h1>
             <div class="flex-container" style="display: flex; flex-direction: row; width: 100%">
                 {{#each actor.system.resources as |resource key|}}
@@ -33,7 +33,7 @@
 
         {{!-- Biography Tab --}}
         <div class="tab description" data-group="primary" data-tab="description">
-            {{editor biographyHTML target="actor.system.biography" button=true editable=editable engine="prosemirror"}}
+            {{editor actor.system.biography target="system.biography" button=true owner=owner editable=editable}}
         </div>
 
         {{!-- Attributes Tab --}}
