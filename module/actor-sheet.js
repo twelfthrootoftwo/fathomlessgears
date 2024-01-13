@@ -20,7 +20,7 @@ export class HLMActorSheet extends ActorSheet {
         const context = await super.getData(options);
         console.log("Getting context data")
         console.log(context);
-        context.biographyHTML = await TextEditor.enrichHTML(context.actor.biography, {
+        context.biographyHTML = await TextEditor.enrichHTML(context.actor.system.biography, {
             secrets: this.document.isOwner,
             async: true
         });
@@ -58,8 +58,8 @@ export class HLMActorSheet extends ActorSheet {
             formula=dieCount+"d"+dieSize+"+"+rollAttribute.value.toString();
             label="Rolling "+rollAttribute.label+":";
         } else {
-            formula=dieCount+"d"+dieSize+":";
-            label="Rolling "+formula
+            formula=dieCount+"d"+dieSize;
+            label="Rolling "+formula+":";
         }
         let roll=new Roll(formula);       
         await roll.evaluate()
