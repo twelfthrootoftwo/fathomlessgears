@@ -7,6 +7,7 @@
             <h1 class="charname">
                 <input name="name" type="text" value="{{actor.name}}" placeholder="Name" />
             </h1>
+            {{#if actor.system.resources}}
             <div class="flex-container" style="display: flex; flex-direction: row; width: 100%">
                 {{#each actor.system.resources as |resource key|}}
                 <div style="flex: 50%">
@@ -19,13 +20,17 @@
                 </div>
                 {{/each}}
             </div>
+            {{/if}}
         </div>
     </header>
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="attributes">Attributes</a>
+        {{#if actor.system.resources}}
         <a class="item" data-tab="description">Description</a>
+        {{/if}}
+        <a class="item" data-tab="internals">Internals</a>
     </nav>
 
     {{!-- Sheet Body --}}
@@ -34,6 +39,11 @@
         {{!-- Biography Tab --}}
         <div class="tab description" data-group="primary" data-tab="description">
             {{editor actor.system.biography target="system.biography" button=true owner=owner editable=editable}}
+        </div>
+
+        {{!-- Internals Tab --}}
+        <div class="tab internals" data-group="primary" data-tab="internals">
+            <input type="image" value="{{actor.system.internals.img}}" name="actor.system.internals.img" data-edit="img" title="{{actor.name}}"/>
         </div>
 
         {{!-- Attributes Tab --}}

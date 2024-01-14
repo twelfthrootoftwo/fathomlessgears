@@ -29,7 +29,7 @@ Hooks.once("init", async function() {
   Actors.registerSheet("hooklineandmecha", HLMActorSheet, { makeDefault: true });
 
   CONFIG.Combat.initiative={
-    formula: "@weightClass.value",
+    formula: "10*@weightClass.value+@attributes.speed.value",
     decimals: 2
   };
 });
