@@ -26,8 +26,6 @@
   },
   "gridDistance": 1,
   "gridUnits": "space",
-  "primaryTokenAttribute": "evade",
-  "secondaryTokenAttribute": "willpower",
   "manifest": "",
   "download": ""
 }
