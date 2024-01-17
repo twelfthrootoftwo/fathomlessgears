@@ -1,3 +1,7 @@
-# Simple Worldbuilding System
+# Hook, Line & Mecha
 
-A simple game system for Foundry VTT which allows for flexible definition of Actors and Items to assist with worldbuilding or for running games which do not have a more complete system implementation available.
+A rudimentary Foundry system for Hook, Line & Mecha
+
+Meant for use with the Character Builder tools
+
+NO MIGRATIONS IN THE NEAR FUTURE - don't rely on Foundry to keep actor data between updates to the package!
