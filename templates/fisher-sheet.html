@@ -10,12 +10,12 @@
             {{#if actor.system.resources}}
             <div class="flex-container" style="display: flex; flex-direction: row; width: 100%">
                 {{#each actor.system.resources as |resource key|}}
-                <div style="flex: 50%">
+                <div style="flex: 80%">
                     <div class="resource">
                         <label>{{resource.label}}</label> <br>
-                        <input type="number" name="system.resources.{{key}}.value" value="{{resource.value}}" data-dtype="Number"/>
+                        <input type="number" name="system.resources.{{key}}.value" value="{{resource.value}}" data-dtype="Number" width="40%"/>
                         <span> / </span>
-                        <input type="number" name="system.resources.{{key}}.max" value="{{resource.max}}" data-dtype="Number"/>
+                        <input type="number" name="system.resources.{{key}}.max" value="{{resource.max}}" data-dtype="Number" width="40%"/>
                     </div>
                 </div>
                 {{/each}}
@@ -49,7 +49,7 @@
         {{!-- Attributes Tab --}}
         <div class="tab attributes" data-group="primary" data-tab="attributes">
             <ol class="attributes-list">
-                {{#each actor.system.attributes as |attrib key|}}
+                {{#each actor.system.attributes.rolled as |attrib key|}}
                 <li class="attribute flexrow">
                     <span class="attribute-label flexrow">{{label}}</span>
                     <div class="attribute-editbox flexrow">

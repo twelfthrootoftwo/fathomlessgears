@@ -8,7 +8,7 @@ export class HLMActor extends Actor {
   prepareDerivedData() {
     console.log("Preparing derived data");
     super.prepareDerivedData();
-    this.system.weightClass=WeightClass.evaluateWeightClass(this.system.attributes.weight.value, 0);
+    this.system.weightClass=WeightClass.evaluateWeightClass(this.system.attributes.flat.weight.value, 0);
   }
 
   /* -------------------------------------------- */
