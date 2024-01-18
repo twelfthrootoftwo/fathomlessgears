@@ -144,6 +144,9 @@
   line-height: 28px;
   display: block;
 }
+.hooklineandmecha .attributes .button:hover {
+  background-color: #44444466;
+}
 .hooklineandmecha .attributes .attribute-key {
   background: transparent;
   border: none;
