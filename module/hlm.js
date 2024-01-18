@@ -4,8 +4,9 @@
  */
 
 // Import Modules
-import { SimpleActor } from "./actor.js";
+import { HLMActor } from "./actor.js";
 import { HLMActorSheet } from "./actor-sheet.js";
+import { HLMToken, HLMTokenDocument } from "./token.js"
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -18,11 +19,13 @@ Hooks.once("init", async function() {
   console.log(`Initializing Hook, Line & Mecha System`);
 
   game.hooklineandmecha = {
-    SimpleActor,
+    HLMActor,
   };
 
   // Define custom Document classes
-  CONFIG.Actor.documentClass = SimpleActor;
+  CONFIG.Actor.documentClass = HLMActor;
+  CONFIG.Token.documentClass = HLMTokenDocument;
+  CONFIG.Token.objectClass = HLMToken;
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);

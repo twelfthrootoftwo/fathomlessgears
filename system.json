@@ -10,7 +10,7 @@
       "url": ""
     }
   ],
-  "esmodules": ["module/simple.js"],
+  "esmodules": ["module/hlm.js"],
   "styles": ["styles/simple.css"],
   "packs": [],
   "languages": [

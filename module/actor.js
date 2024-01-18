@@ -2,7 +2,7 @@
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
  * @extends {Actor}
  */
-export class SimpleActor extends Actor {
+export class HLMActor extends Actor {
 
   /** @inheritdoc */
   prepareDerivedData() {
