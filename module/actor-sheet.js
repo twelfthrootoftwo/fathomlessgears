@@ -24,6 +24,15 @@ export class HLMActorSheet extends ActorSheet {
             secrets: this.document.isOwner,
             async: true
         });
+        this.fixedFirstRow=new Object();
+        this.fixedSecondRow=new Object();
+        this.fixedFirstRow.evade=context.actor.system.attributes.flat.evade;
+        this.fixedFirstRow.willpower=context.actor.system.attributes.flat.willpower;
+        this.fixedFirstRow.speed=context.actor.system.attributes.flat.speed;
+        this.fixedSecondRow.weight=context.actor.system.attributes.flat.weight;
+        this.fixedSecondRow.sensors=context.actor.system.attributes.flat.sensors;
+        this.fixedSecondRow.baseAP=context.actor.system.attributes.flat.baseAP;
+        console.log(this);
         return context;
     }
 
@@ -54,7 +63,7 @@ export class HLMActorSheet extends ActorSheet {
         var formula=new Roll;
         var label="";
         if (attribute) {
-            const rollAttribute=this.actor.system.attributes[attribute];
+            const rollAttribute=this.actor.system.attributes.rolled[attribute];
             formula=dieCount+"d"+dieSize+"+"+rollAttribute.value.toString();
             label="Rolling "+rollAttribute.label+":";
         } else {
