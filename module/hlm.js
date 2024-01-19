@@ -1,12 +1,8 @@
-/**
- * A simple and flexible system for world-building using an arbitrary collection of character and item attributes
- * Author: Atropos
- */
-
 // Import Modules
 import { HLMActor } from "./actor.js";
 import { HLMActorSheet } from "./actor-sheet.js";
 import { HLMToken, HLMTokenDocument } from "./token.js"
+import { preloadHandlebarsTemplates } from "./templates.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -30,6 +26,9 @@ Hooks.once("init", async function() {
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("hooklineandmecha", HLMActorSheet, { makeDefault: true });
+
+  //Load templates
+  await preloadHandlebarsTemplates();
 
   CONFIG.Combat.initiative={
     formula: "10*@weightClass.value+@attributes.speed.value",

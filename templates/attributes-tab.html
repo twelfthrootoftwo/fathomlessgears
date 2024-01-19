@@ -1,0 +1,55 @@
+<div class="attributes-header">
+    Rollable attributes
+</div>
+<ol class="attributes-list">
+    {{#each attributes.rolled as |attrib key|}}
+    <li class="attribute flexrow">
+        <span class="attribute-label flexrow">{{label}}</span>
+        <div class="attribute-editbox flexrow">
+            <input class="attribute-value" type="number" name="system.attributes.rolled.{{key}}.value" value={{attrib.value}} data-dtype="Number"/>
+        </div>
+        <div class="attribute-roll flexrow">
+            <div class="attribute button rollable" diesize="6" diecount="1" attribute="{{key}}">1d6</div>
+        </div>
+        <div class="attribute-roll flexrow">
+            <div class="attribute button rollable" diesize="6" diecount="2" attribute="{{key}}">2d6</div>
+        </div>
+        <div class="attribute-roll flexrow">
+            <div class="attribute button rollable" diesize="6" diecount="3" attribute="{{key}}">3d6</div>
+        </div>
+    </li>
+    {{/each}}
+    <li class="attribute flexrow">
+        <span class="attribute-label flexrow" style="flex-grow: 5">Flat rolls</span>
+        <div class="attribute-roll flexrow">
+            <div class="attribute button rollable" diesize="3" diecount="1" attribute="{{key}}">1d3</div>
+        </div>
+        <div class="attribute-roll flexrow">
+            <div class="attribute button rollable" diesize="6" diecount="1" attribute="{{key}}">1d6</div>
+        </div>
+        <div class="attribute-roll flexrow">
+            <div class="attribute button rollable" diesize="6" diecount="2" attribute="{{key}}">2d6</div>
+        </div>
+        <div class="attribute-roll flexrow">
+            <div class="attribute button rollable" diesize="6" diecount="3" attribute="{{key}}">3d6</div>
+        </div>
+    </li>
+</ol>
+<div class="attributes-header">
+    Fixed attributes
+</div>
+<div class="attributes-flex">
+    {{#each attributes.flat as |attrib key|}}
+    <div class="attribute attribute-flat-wrapbox">
+        <span class="attribute-label-fixed">{{label}}</span>
+        <div class="attribute-editbox-fixed">
+            <input class="attribute-value" type="number" name="system.attributes.flat.{{key}}.value" value={{attrib.value}} data-dtype="Number"/>
+        </div>
+    </div>
+    {{/each}}
+</div>
+
+<div class="flexrow">
+    <span class="attribute-label">Weight Class</span>
+    <div class="attribute-label">{{weightClass.label}}</div>
+</div>

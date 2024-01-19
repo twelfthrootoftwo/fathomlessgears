@@ -7,85 +7,20 @@
             <h1 class="charname">
                 <input name="name" type="text" value="{{actor.name}}" placeholder="Name" />
             </h1>
-            {{#if actor.system.resources}}
-            <div class="flex-container" style="display: flex; flex-direction: row; width: 100%">
-                {{#each actor.system.resources as |resource key|}}
-                <div style="flex: 50%">
-                    <div class="resource">
-                        <label>{{resource.label}}</label> <br>
-                        <input type="number" name="system.resources.{{key}}.value" value="{{resource.value}}" data-dtype="Number"/>
-                        <span> / </span>
-                        <input type="number" name="system.resources.{{key}}.max" value="{{resource.max}}" data-dtype="Number"/>
-                    </div>
-                </div>
-                {{/each}}
-            </div>
-            {{/if}}
         </div>
     </header>
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="attributes">Attributes</a>
-        {{#if actor.system.resources}}
-        <a class="item" data-tab="description">Description</a>
-        {{/if}}
-        <a class="item" data-tab="internals">Internals</a>
     </nav>
 
     {{!-- Sheet Body --}}
     <section class="sheet-body">
 
-        {{!-- Biography Tab --}}
-        <div class="tab description" data-group="primary" data-tab="description">
-            {{editor actor.system.biography target="system.biography" button=true owner=owner editable=editable}}
-        </div>
-
-        {{!-- Internals Tab --}}
-        <div class="tab internals" data-group="primary" data-tab="internals">
-            <input type="image" value="{{actor.system.internals.img}}" name="actor.system.internals.img" data-edit="img" title="{{actor.name}}"/>
-        </div>
-
         {{!-- Attributes Tab --}}
         <div class="tab attributes" data-group="primary" data-tab="attributes">
-            <ol class="attributes-list">
-                {{#each actor.system.attributes as |attrib key|}}
-                <li class="attribute flexrow">
-                    <span class="attribute-label flexrow">{{label}}</span>
-                    <div class="attribute-editbox flexrow">
-                        <input class="attribute-value" type="number" name="system.attributes.{{key}}.value" value={{attrib.value}} data-dtype="Number"/>
-                    </div>
-                    <div class="attribute-roll flexrow">
-                        <div class="attribute button rollable" diesize="6" diecount="1" attribute="{{key}}">1d6</div>
-                    </div>
-                    <div class="attribute-roll flexrow">
-                        <div class="attribute button rollable" diesize="6" diecount="2" attribute="{{key}}">2d6</div>
-                    </div>
-                    <div class="attribute-roll flexrow">
-                        <div class="attribute button rollable" diesize="6" diecount="3" attribute="{{key}}">3d6</div>
-                    </div>
-                </li>
-                {{/each}}
-                <li class="attribute flexrow">
-                    <span class="attribute-label flexrow" name="system.attributes.{{key}}.label">Flat rolls</span>
-                    <div class="attribute-roll flexrow">
-                        <div class="attribute button rollable" diesize="3" diecount="1" attribute="{{key}}">1d3</div>
-                    </div>
-                    <div class="attribute-roll flexrow">
-                        <div class="attribute button rollable" diesize="6" diecount="1" attribute="{{key}}">1d6</div>
-                    </div>
-                    <div class="attribute-roll flexrow">
-                        <div class="attribute button rollable" diesize="6" diecount="2" attribute="{{key}}">2d6</div>
-                    </div>
-                    <div class="attribute-roll flexrow">
-                        <div class="attribute button rollable" diesize="6" diecount="3" attribute="{{key}}">3d6</div>
-                    </div>
-                </li>
-            </ol>
-            <div class="flexrow">
-                <span class="attribute-label">Weight Class</span>
-                <div class="attribute-label">{{actor.system.weightClass.label}}</div>
-            </div>
+            {{> "systems/hooklineandmecha/templates/attributes-tab.html" attributes=actor.system.attributes weightClass=actor.system.weightClass}}
         </div>
     </section>
 </form>

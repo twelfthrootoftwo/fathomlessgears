@@ -190,6 +190,31 @@
   text-align: center;
   line-height: 1;
 }
+.hooklineandmecha .attributes-flex {
+  display: flex;
+  flex-flow: row wrap;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid #AAA;
+}
+.hooklineandmecha .attributes-flex .attribute-flat-wrapbox {
+  margin: 3px;
+  display: flex;
+  border-radius: 0;
+  border: 1px solid #AAA;
+  height: 28px;
+  line-height: 24px;
+}
+
+.hooklineandmecha .attribute-label-fixed {
+  width: 100px;
+}
+
+.hooklineandmecha .attribute-editbox-fixed {
+  width: 28px;
+}
+
 .hooklineandmecha .attributes-list .attribute-col input {
   font-size: 11px;
   text-align: center;
