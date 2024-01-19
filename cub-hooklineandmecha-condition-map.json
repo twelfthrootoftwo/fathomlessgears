@@ -1,299 +1,299 @@
 {
-  "system": "hooklineandmecha",
-  "map": [
-    {
-      "id": "dead",
-      "name": "HookedP1",
-      "icon": "icons/tools/fishing/hook-barbed-steel-blue.webp",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "L8CtdnYL6I6jcDd0",
-      "name": "HookedP2",
-      "icon": "icons/tools/fishing/hook-barbed-steel-brown.webp",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "QfDPDjC54uLWQsjG",
-      "name": "HookedP3",
-      "icon": "icons/tools/fishing/hook-barbed-steel-grey.webp",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "OhISsAo4TERAoKH0",
-      "name": "HookedP4",
-      "icon": "icons/tools/fishing/hook-barbed-steel-white.webp",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "stun",
-      "name": "Hovering",
-      "icon": "icons/svg/wing.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "prone",
-      "name": "Burdened",
-      "icon": "icons/svg/anchor.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "restrain",
-      "name": "Quickened",
-      "icon": "icons/svg/clockwork.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "paralysis",
-      "name": "Frenzied",
-      "icon": "icons/svg/sword.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "fly",
-      "name": "Blind",
-      "icon": "icons/svg/blind.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "blind",
-      "name": "Jammed",
-      "icon": "icons/svg/padlock.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "deaf",
-      "name": "Snared",
-      "icon": "icons/svg/trap.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "silence",
-      "name": "Lured",
-      "icon": "icons/svg/thrust.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "fear",
-      "name": "Terrified",
-      "icon": "icons/svg/terror.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "burning",
-      "name": "Focused",
-      "icon": "icons/svg/aura.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "frozen",
-      "name": "Dazed",
-      "icon": "icons/svg/daze.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "shock",
-      "name": "Wired",
-      "icon": "icons/svg/up.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "corrode",
-      "name": "Drained",
-      "icon": "icons/svg/direction.svg",
-      "referenceId": "",
-      "activeEffect": {
-        "label": "EFFECT.Drained",
-        "icon": "icons/svg/direction.svg",
-        "tint": null,
-        "disabled": false,
-        "duration": {
-          "seconds": null,
-          "startTime": null,
-          "rounds": null,
-          "turns": null,
-          "startRound": null,
-          "startTurn": null
-        },
-        "changes": [
-          {
-            "key": "",
-            "mode": 2,
-            "value": ""
-          }
-        ]
-      },
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "NQUAaebDWZP4ZbbJ",
-      "name": "Tranq",
-      "icon": "icons/svg/sleep.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "disease",
-      "name": "Concealed",
-      "icon": "icons/svg/invisible.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "poison",
-      "name": "Slippery",
-      "icon": "icons/svg/stoned.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    },
-    {
-      "id": "lRv1NcijT7aTfUAi",
-      "name": "Catch",
-      "icon": "icons/svg/net.svg",
-      "referenceId": "",
-      "options": {
-        "outputChat": false
-      },
-      "isNew": false,
-      "isChanged": false,
-      "enrichedReference": "",
-      "hidden": false
-    }
-  ]
+	"system": "hooklineandmecha",
+	"map": [
+		{
+			"id": "dead",
+			"name": "HookedP1",
+			"icon": "icons/tools/fishing/hook-barbed-steel-blue.webp",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "L8CtdnYL6I6jcDd0",
+			"name": "HookedP2",
+			"icon": "icons/tools/fishing/hook-barbed-steel-brown.webp",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "QfDPDjC54uLWQsjG",
+			"name": "HookedP3",
+			"icon": "icons/tools/fishing/hook-barbed-steel-grey.webp",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "OhISsAo4TERAoKH0",
+			"name": "HookedP4",
+			"icon": "icons/tools/fishing/hook-barbed-steel-white.webp",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "stun",
+			"name": "Hovering",
+			"icon": "icons/svg/wing.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "prone",
+			"name": "Burdened",
+			"icon": "icons/svg/anchor.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "restrain",
+			"name": "Quickened",
+			"icon": "icons/svg/clockwork.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "paralysis",
+			"name": "Frenzied",
+			"icon": "icons/svg/sword.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "fly",
+			"name": "Blind",
+			"icon": "icons/svg/blind.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "blind",
+			"name": "Jammed",
+			"icon": "icons/svg/padlock.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "deaf",
+			"name": "Snared",
+			"icon": "icons/svg/trap.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "silence",
+			"name": "Lured",
+			"icon": "icons/svg/thrust.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "fear",
+			"name": "Terrified",
+			"icon": "icons/svg/terror.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "burning",
+			"name": "Focused",
+			"icon": "icons/svg/aura.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "frozen",
+			"name": "Dazed",
+			"icon": "icons/svg/daze.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "shock",
+			"name": "Wired",
+			"icon": "icons/svg/up.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "corrode",
+			"name": "Drained",
+			"icon": "icons/svg/direction.svg",
+			"referenceId": "",
+			"activeEffect": {
+				"label": "EFFECT.Drained",
+				"icon": "icons/svg/direction.svg",
+				"tint": null,
+				"disabled": false,
+				"duration": {
+					"seconds": null,
+					"startTime": null,
+					"rounds": null,
+					"turns": null,
+					"startRound": null,
+					"startTurn": null
+				},
+				"changes": [
+					{
+						"key": "",
+						"mode": 2,
+						"value": ""
+					}
+				]
+			},
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "NQUAaebDWZP4ZbbJ",
+			"name": "Tranq",
+			"icon": "icons/svg/sleep.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "disease",
+			"name": "Concealed",
+			"icon": "icons/svg/invisible.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "poison",
+			"name": "Slippery",
+			"icon": "icons/svg/stoned.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		},
+		{
+			"id": "lRv1NcijT7aTfUAi",
+			"name": "Catch",
+			"icon": "icons/svg/net.svg",
+			"referenceId": "",
+			"options": {
+				"outputChat": false
+			},
+			"isNew": false,
+			"isChanged": false,
+			"enrichedReference": "",
+			"hidden": false
+		}
+	]
 }
