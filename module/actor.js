@@ -48,6 +48,27 @@ export class HLMActor extends Actor {
 			flavor: label,
 		});
 	}
+
+	/**
+	 * Send this actor's flat attributes to the chat log
+	 */
+	shareFlatAttributes() {
+		ChatMessage.create({
+			speaker: {actor: this},
+			content: this.getFlatAttributeString(),
+		});
+		let message = new ChatMessage();
+		console.log(message);
+	}
+
+	getFlatAttributeString() {
+		const attrStrings = [];
+		for (const attribute in this.system.attributes.flat) {
+			const attr = this.system.attributes.flat[attribute];
+			attrStrings.push(attr.label + ": " + attr.value.toString());
+		}
+		return attrStrings.join("<br>");
+	}
 }
 
 export class WeightClass {
