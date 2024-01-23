@@ -5,7 +5,6 @@
 export class HLMActor extends Actor {
 	/** @inheritdoc */
 	prepareDerivedData() {
-		console.log("Preparing derived data");
 		super.prepareDerivedData();
 		this.system.weightClass = WeightClass.evaluateWeightClass(
 			this.system.attributes.flat.weight.value,
@@ -21,6 +20,33 @@ export class HLMActor extends Actor {
 	 */
 	get isTemplate() {
 		return !!this.getFlag("hooklineandmecha", "isTemplate");
+	}
+
+	/**
+	 *	Roll an attribute (or a flat roll)
+	 * @param {*} attributeKey: The string key of the attribute
+	 * @param {*} dieCount: The number of dice to roll
+	 * @param {*} dieSize : The size of dice to roll
+	 */
+	async rollAttribute(attributeKey, dieCount, dieSize) {
+		var formula = new Roll();
+		var label = "";
+		if (attributeKey) {
+			const rollAttribute = this.system.attributes.rolled[attributeKey];
+			formula =
+				dieCount + "d" + dieSize + "+" + rollAttribute.value.toString();
+			label = "Rolling " + rollAttribute.label + ":";
+		} else {
+			formula = dieCount + "d" + dieSize;
+			label = "Rolling " + formula + ":";
+		}
+
+		let roll = new Roll(formula);
+		await roll.evaluate();
+		roll.toMessage({
+			speaker: ChatMessage.getSpeaker({actor: this.actor}),
+			flavor: label,
+		});
 	}
 }
 
