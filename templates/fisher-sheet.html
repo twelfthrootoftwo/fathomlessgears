@@ -23,25 +23,21 @@
 				style="display: flex; flex-direction: row; width: 100%"
 			>
 				{{#each actor.system.resources as |resource key|}}
-				<div style="flex: 80%">
-					<div class="resource">
-						<label>{{resource.label}}</label> <br />
-						<input
-							type="number"
-							name="system.resources.{{key}}.value"
-							value="{{resource.value}}"
-							data-dtype="Number"
-							width="40%"
-						/>
-						<span> / </span>
-						<input
-							type="number"
-							name="system.resources.{{key}}.max"
-							value="{{resource.max}}"
-							data-dtype="Number"
-							width="40%"
-						/>
-					</div>
+				<div class="resource">
+					<label>{{resource.label}}</label> <br />
+					<input
+						type="number"
+						name="system.resources.{{key}}.value"
+						value="{{resource.value}}"
+						data-dtype="Number"
+					/>
+					<span> / </span>
+					<input
+						type="number"
+						name="system.resources.{{key}}.max"
+						value="{{resource.max}}"
+						data-dtype="Number"
+					/>
 				</div>
 				{{/each}}
 			</div>

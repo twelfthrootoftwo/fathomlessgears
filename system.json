@@ -11,7 +11,7 @@
 		}
 	],
 	"esmodules": ["module/hlm.js"],
-	"styles": ["styles/simple.css"],
+	"styles": ["styles/hlm.css"],
 	"packs": [],
 	"languages": [
 		{

@@ -2,7 +2,7 @@
 <ol class="attributes-list">
 	{{#each attributes.rolled as |attrib key|}}
 	<li class="attributes flexrow">
-		<span class="attribute-label flexrow">{{label}}</span>
+		<span class="attribute-label">{{label}}</span>
 		<div class="attribute-editbox flexrow">
 			<input
 				class="attribute-value"
@@ -45,9 +45,7 @@
 	</li>
 	{{/each}}
 	<li class="attributes flexrow">
-		<span class="attribute-label flexrow" style="flex-grow: 5"
-			>Flat rolls</span
-		>
+		<span class="attribute-label flexrow">Flat rolls</span>
 		<div class="attribute-roll flexrow">
 			<div
 				class="attribute button rollable"
@@ -93,11 +91,10 @@
 <div class="attributes-header">Fixed attributes</div>
 <div class="attributes-flex">
 	{{#each attributes.flat as |attrib key|}}
-	<div class="attribute attribute-flat-wrapbox">
-		<span class="attribute-label-fixed">{{label}}</span>
-		<div class="attribute-editbox-fixed">
+	<div class="flat-wrapbox">
+		<span class="label-fixed">{{label}}</span>
+		<div class="editbox-fixed">
 			<input
-				class="attribute-value"
 				type="number"
 				name="system.attributes.flat.{{key}}.value"
 				value="{{attrib.value}}"
@@ -109,6 +106,6 @@
 </div>
 
 <div class="flexrow">
-	<span class="attribute-label">Weight Class</span>
-	<div class="attribute-label">{{weightClass.label}}</div>
+	<span>Weight Class</span>
+	<div>{{weightClass.label}}</div>
 </div>
