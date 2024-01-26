@@ -83,19 +83,19 @@ export class WeightClass {
 		this.value = value;
 		switch (value) {
 			case 4:
-				this.label = "Ultra Light";
+				this.label = game.i18n.localize("WEIGHT.ultraLight");
 				break;
 			case 3:
-				this.label = "Light";
+				this.label = game.i18n.localize("WEIGHT.light");
 				break;
 			case 2:
-				this.label = "Medium";
+				this.label = game.i18n.localize("WEIGHT.medium");
 				break;
 			case 1:
-				this.label = "Heavy";
+				this.label = game.i18n.localize("WEIGHT.heavy");
 				break;
 			case 0:
-				this.label = "Ultra Heavy";
+				this.label = game.i18n.localize("WEIGHT.ultraHeavy");
 				break;
 		}
 	}

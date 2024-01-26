@@ -1,4 +1,4 @@
-<div class="attributes-header">Rollable attributes</div>
+<div class="attributes-header">{{localize "ATTRIBUTETAB.rollable"}}</div>
 <ol class="attributes-list">
 	{{#each attributes.rolled as |attrib key|}}
 	<li class="attributes flexrow">
@@ -45,7 +45,9 @@
 	</li>
 	{{/each}}
 	<li class="attributes flexrow">
-		<span class="attribute-label flexrow">Flat rolls</span>
+		<span class="attribute-label flexrow"
+			>{{localize "ATTRIBUTETAB.noAttribute"}}</span
+		>
 		<div class="attribute-roll flexrow">
 			<div
 				class="attribute button rollable"
@@ -88,7 +90,7 @@
 		</div>
 	</li>
 </ol>
-<div class="attributes-header">Fixed attributes</div>
+<div class="attributes-header">{{localize "ATTRIBUTETAB.flat"}}</div>
 <div class="attributes-flex">
 	{{#each attributes.flat as |attrib key|}}
 	<div class="flat-wrapbox">
@@ -106,6 +108,6 @@
 </div>
 
 <div class="flexrow">
-	<span>Weight Class</span>
+	<span>{{localize "ATTRIBUTETAB.weightClass"}}</span>
 	<div>{{weightClass.label}}</div>
 </div>

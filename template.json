@@ -8,54 +8,44 @@
 					"rolled": {
 						"close": {
 							"value": 1,
-							"label": "Close",
 							"key": "close"
 						},
 						"far": {
 							"value": 1,
-							"label": "Far",
 							"key": "far"
 						},
 						"mental": {
 							"value": 1,
-							"label": "Mental",
 							"key": "mental"
 						},
 						"power": {
 							"value": 1,
-							"label": "Power",
 							"key": "power"
 						}
 					},
 					"flat": {
 						"evade": {
 							"value": 1,
-							"label": "Evade",
 							"key": "evade"
 						},
 						"willpower": {
 							"value": 1,
-							"label": "Willpower",
 							"key": "willpower"
 						},
 						"speed": {
 							"value": 1,
-							"label": "Speed",
 							"key": "speed"
 						},
 						"sensors": {
 							"value": 1,
-							"label": "Sensors",
 							"key": "sensors"
 						},
 						"weight": {
 							"value": 1,
-							"label": "Weight",
 							"key": "weight"
 						},
 						"baseAP": {
 							"value": 1,
-							"label": "Base AP",
 							"key": "baseAP"
 						}
 					}
@@ -66,26 +56,26 @@
 			"templates": ["attributes"],
 			"biography": "Good at catching fish",
 			"resources": {
-				"repair-dice": {
-					"label": "Repair Dice",
+				"repair": {
+					"key": "repair",
 					"value": 1,
 					"min": 0,
 					"max": 1
 				},
 				"marbles": {
-					"label": "Marbles",
+					"key": "marbles",
 					"value": 1,
 					"min": 0,
 					"max": 1
 				},
 				"core": {
-					"label": "Core Integrity",
+					"key": "core",
 					"value": 1,
 					"min": 0,
 					"max": 1
 				},
 				"backlash": {
-					"label": "Backlash",
+					"key": "backlash",
 					"value": 1,
 					"min": 0,
 					"max": 1

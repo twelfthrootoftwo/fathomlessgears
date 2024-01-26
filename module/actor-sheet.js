@@ -1,3 +1,5 @@
+import {Utils} from "./utils.js";
+
 /**
  * @extends {ActorSheet}
  */
@@ -33,19 +35,10 @@ export class HLMActorSheet extends ActorSheet {
 				async: true,
 			}
 		);
-		this.fixedFirstRow = new Object();
-		this.fixedSecondRow = new Object();
-		this.fixedFirstRow.evade = context.actor.system.attributes.flat.evade;
-		this.fixedFirstRow.willpower =
-			context.actor.system.attributes.flat.willpower;
-		this.fixedFirstRow.speed = context.actor.system.attributes.flat.speed;
-		this.fixedSecondRow.weight =
-			context.actor.system.attributes.flat.weight;
-		this.fixedSecondRow.sensors =
-			context.actor.system.attributes.flat.sensors;
-		this.fixedSecondRow.baseAP =
-			context.actor.system.attributes.flat.baseAP;
-		console.log(this);
+		this._getAttributeLabels();
+		if (this.actor.system.resources) {
+			this._getResourceLabels();
+		}
 		return context;
 	}
 
@@ -79,5 +72,23 @@ export class HLMActorSheet extends ActorSheet {
 	/** @override */
 	get template() {
 		return `systems/hooklineandmecha/templates/${this.actor.type}-sheet.html`;
+	}
+
+	_getAttributeLabels() {
+		for (const attributeKey in this.actor.system.attributes.rolled) {
+			const attribute = this.actor.system.attributes.rolled[attributeKey];
+			attribute.label = Utils.getLocalisedAttributeLabel(attributeKey);
+		}
+		for (const attributeKey in this.actor.system.attributes.flat) {
+			const attribute = this.actor.system.attributes.flat[attributeKey];
+			attribute.label = Utils.getLocalisedAttributeLabel(attributeKey);
+		}
+	}
+
+	_getResourceLabels() {
+		for (const resourceKey in this.actor.system.resources) {
+			const resource = this.actor.system.resources[resourceKey];
+			resource.label = Utils.getLocalisedResourceLabel(resourceKey);
+		}
 	}
 }
