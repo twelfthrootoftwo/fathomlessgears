@@ -47,35 +47,74 @@
 			"speed": 4,
 			"power": 2,
 			"weight": 5,
-			"baseAP": 3
+			"baseAP": 3,
+			"hitLocationRoll": null,
+			"hitRegions": [
+				{
+					"columns": 3
+				}
+			]
 		},
 		"medium-horz": {
 			"evade": 12,
 			"speed": 4,
 			"power": 4,
 			"weight": 10,
-			"baseAP": 4
+			"baseAP": 4,
+			"hitLocationRoll": null,
+			"hitRegions": [
+				{
+					"columns": 6
+				}
+			]
 		},
 		"medium-vert": {
 			"evade": 12,
 			"speed": 4,
 			"power": 4,
 			"weight": 10,
-			"baseAP": 4
+			"baseAP": 4,
+			"hitLocationRoll": null,
+			"hitRegions": [
+				{
+					"columns": 3
+				}
+			]
 		},
 		"large": {
 			"evade": 11,
 			"speed": 3,
 			"power": 6,
 			"weight": 15,
-			"baseAP": 5
+			"baseAP": 5,
+			"hitLocationRoll": null,
+			"hitRegions": [
+				{
+					"columns": 6
+				}
+			]
 		},
 		"leviathan": {
 			"evade": 10,
 			"speed": 2,
 			"power": 8,
 			"weight": 30,
-			"baseAP": 6
+			"baseAP": 6,
+			"hitLocationRoll": "2d6",
+			"hitRegions": [
+				{
+					"range": [2, 5],
+					"columns": 3
+				},
+				{
+					"range": [6, 8],
+					"columns": 3
+				},
+				{
+					"range": [9, 12],
+					"columns": 3
+				}
+			]
 		}
 	}
 }
