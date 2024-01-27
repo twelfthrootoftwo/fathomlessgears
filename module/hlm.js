@@ -1,12 +1,17 @@
 // Import Modules
 import {HLMActor} from "./actor.js";
+import {HLMItem} from "./item.js";
 import {HLMActorSheet} from "./actor-sheet.js";
 import {HLMToken, HLMTokenDocument} from "./token.js";
 import {preloadHandlebarsTemplates} from "./templates.js";
+import {FishDataHandler} from "./npcType.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
 /* -------------------------------------------- */
+
+//Handlers
+let fishHandler = null;
 
 /**
  * Init hook.
@@ -16,10 +21,12 @@ Hooks.once("init", async function () {
 
 	game.hooklineandmecha = {
 		HLMActor,
+		HLMItem,
 	};
 
 	// Define custom Document classes
 	CONFIG.Actor.documentClass = HLMActor;
+	CONFIG.Item.documentClass = HLMItem;
 	CONFIG.Token.documentClass = HLMTokenDocument;
 	CONFIG.Token.objectClass = HLMToken;
 
@@ -36,4 +43,14 @@ Hooks.once("init", async function () {
 		formula: "10*@weightClass.value+@attributes.speed.value",
 		decimals: 2,
 	};
+});
+
+export const system_ready = new Promise((success) => {
+	Hooks.once("ready", async function () {
+		const fishDataFile = "systems/hooklineandmecha/data/fish.json";
+		game.fishHandler = new FishDataHandler();
+		game.fishHandler.loadNPCData(fishDataFile);
+
+		success();
+	});
 });

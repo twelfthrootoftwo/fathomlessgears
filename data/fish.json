@@ -1,0 +1,81 @@
+{
+	"Types": {
+		"aquatic": {
+			"close": 5,
+			"far": 3,
+			"mental": 4,
+			"willpower": 11,
+			"sensors": 3,
+			"biological": true
+		},
+		"amphibian": {
+			"close": 5,
+			"far": 4,
+			"mental": 3,
+			"willpower": 11,
+			"sensors": 3,
+			"biological": true
+		},
+		"abyssal": {
+			"close": 3,
+			"far": 4,
+			"mental": 5,
+			"willpower": 12,
+			"sensors": 3,
+			"biological": true
+		},
+		"pirate": {
+			"close": 4,
+			"far": 4,
+			"mental": 3,
+			"willpower": 12,
+			"sensors": 3,
+			"biological": false
+		},
+		"forgotten": {
+			"close": 4,
+			"far": 4,
+			"mental": 3,
+			"willpower": 14,
+			"sensors": 5,
+			"biological": false
+		}
+	},
+	"Size": {
+		"small": {
+			"evade": 13,
+			"speed": 4,
+			"power": 2,
+			"weight": 5,
+			"baseAP": 3
+		},
+		"medium-horz": {
+			"evade": 12,
+			"speed": 4,
+			"power": 4,
+			"weight": 10,
+			"baseAP": 4
+		},
+		"medium-vert": {
+			"evade": 12,
+			"speed": 4,
+			"power": 4,
+			"weight": 10,
+			"baseAP": 4
+		},
+		"large": {
+			"evade": 11,
+			"speed": 3,
+			"power": 6,
+			"weight": 15,
+			"baseAP": 5
+		},
+		"leviathan": {
+			"evade": 10,
+			"speed": 2,
+			"power": 8,
+			"weight": 30,
+			"baseAP": 6
+		}
+	}
+}

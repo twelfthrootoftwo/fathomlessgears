@@ -83,7 +83,9 @@
 			}
 		},
 		"fish": {
-			"templates": ["attributes"]
+			"templates": ["attributes"],
+			"type": "aquatic",
+			"size": "small"
 		}
 	}
 }
