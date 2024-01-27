@@ -1,12 +1,4 @@
 export class FishDataHandler {
-	// static knownTypes = new Map([
-	// 	["aquatic", game.i18n.localize("FISHTYPE.aquatic")],
-	// 	["amphibian", game.i18n.localize("FISHTYPE.amphibian")],
-	// 	["abyssal", game.i18n.localize("FISHTYPE.abyssal")],
-	// 	["pirate", game.i18n.localize("FISHTYPE.pirate")],
-	// 	["forgotten", game.i18n.localize("FISHTYPE.forgotten")],
-	// ]);
-
 	async loadNPCData(npcDataFile) {
 		const response = await fetch(npcDataFile);
 		const data = await response
@@ -17,7 +9,6 @@ export class FishDataHandler {
 				)
 			);
 		if (response.ok) {
-			console.log(data);
 			this._loadNPCTypes(data);
 			this._loadNPCSizes(data);
 		} else
@@ -31,7 +22,6 @@ export class FishDataHandler {
 		for (const key in data.types) {
 			this.knownTypes[key].label = game.i18n.localize("FISHTYPE." + key);
 		}
-		console.log(this.knownTypes);
 	}
 
 	_loadNPCSizes(data) {
@@ -39,8 +29,5 @@ export class FishDataHandler {
 		for (const key in data.sizes) {
 			this.knownSizes[key].label = game.i18n.localize("FISHSIZE." + key);
 		}
-		console.log(this.knownSizes);
 	}
-
-	getTypeBaseStats() {}
 }
