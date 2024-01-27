@@ -1,5 +1,5 @@
 {
-	"Types": {
+	"types": {
 		"aquatic": {
 			"close": 5,
 			"far": 3,
@@ -41,7 +41,7 @@
 			"biological": false
 		}
 	},
-	"Size": {
+	"sizes": {
 		"small": {
 			"evade": 13,
 			"speed": 4,

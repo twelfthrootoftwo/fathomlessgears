@@ -28,5 +28,17 @@
 	"WEIGHT.light": "Light",
 	"WEIGHT.medium": "Medium",
 	"WEIGHT.heavy": "Heavy",
-	"WEIGHT.ultraHeavy": "Ultra Heavy"
+	"WEIGHT.ultraHeavy": "Ultra Heavy",
+
+	"FISHTYPE.aquatic": "Aquatic",
+	"FISHTYPE.amphibian": "Amphibian",
+	"FISHTYPE.abyssal": "Abyssal",
+	"FISHTYPE.pirate": "Pirate",
+	"FISHTYPE.forgotten": "Forgotten",
+
+	"FISHSIZE.small": "Small",
+	"FISHSIZE.medVert": "Medium (Portrait)",
+	"FISHSIZE.medHorz": "Medium (Landscape)",
+	"FISHSIZE.large": "Large",
+	"FISHSIZE.leviathan": "Leviathan"
 }

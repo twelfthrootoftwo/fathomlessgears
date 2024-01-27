@@ -27,13 +27,19 @@ export class FishDataHandler {
 	}
 
 	_loadNPCTypes(data) {
-		console.log("(Loading types)");
-		//pass
+		this.knownTypes = data.types;
+		for (const key in data.types) {
+			this.knownTypes[key].label = game.i18n.localize("FISHTYPE." + key);
+		}
+		console.log(this.knownTypes);
 	}
 
 	_loadNPCSizes(data) {
-		console.log("(Loading sizes)");
-		//pass
+		this.knownSizes = data.sizes;
+		for (const key in data.sizes) {
+			this.knownSizes[key].label = game.i18n.localize("FISHSIZE." + key);
+		}
+		console.log(this.knownSizes);
 	}
 
 	getTypeBaseStats() {}
