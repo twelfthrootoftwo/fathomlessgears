@@ -130,7 +130,9 @@ export class HLMActor extends Actor {
 		} else {
 			hitResult = "miss";
 		}
-		const attackAttrLabel = this.system.attributes.rolled[attackKey].label;
+		const attackAttrLabel = game.i18n.localize(
+			Utils.getLocalisedAttributeLabel(attackKey)
+		);
 		this.createHitRollMessage(
 			attackRoll,
 			attacker,
@@ -164,7 +166,9 @@ export class HLMActor extends Actor {
 		const successDisplay = await renderTemplate(
 			"systems/hooklineandmecha/templates/partials/target-dc-partial.html",
 			{
-				result: hitResult,
+				result: game.i18n.localize(
+					Utils.getLocalisedHitType(hitResult)
+				),
 			}
 		);
 

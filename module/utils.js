@@ -20,11 +20,20 @@ export class Utils {
 	}
 
 	static getLocalisedResourceLabel(resourceKey) {
-		const recognisedAttributes = ["repair", "marbles", "core", "backlash"];
-		if (recognisedAttributes.includes(resourceKey)) {
+		const recognisedResources = ["repair", "marbles", "core", "backlash"];
+		if (recognisedResources.includes(resourceKey)) {
 			return game.i18n.localize("RESOURCES." + resourceKey);
 		} else {
 			console.log("Resource key not recognised: " + resourceKey);
+		}
+	}
+
+	static getLocalisedHitType(hitTypeKey) {
+		const recognisedHits = ["crit", "hit", "miss"];
+		if (recognisedHits.includes(hitTypeKey)) {
+			return game.i18n.localize("HIT." + hitTypeKey);
+		} else {
+			console.log("Resource key not recognised: " + hitTypeKey);
 		}
 	}
 }
