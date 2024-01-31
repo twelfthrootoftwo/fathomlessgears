@@ -40,5 +40,14 @@
 	"FISHSIZE.medVert": "Medium (Portrait)",
 	"FISHSIZE.medHorz": "Medium (Landscape)",
 	"FISHSIZE.large": "Large",
-	"FISHSIZE.leviathan": "Leviathan"
+	"FISHSIZE.leviathan": "Leviathan",
+
+	"ROLLTEXT.base": "Rolling _ATTRIBUTE_NAME_",
+	"ROLLTEXT.attackIntro": "_ATTRIBUTE_NAME_ attack against _TARGET_NAME_:",
+	"ROLLTEXT.hitZone": "Hit zone:",
+	"ROLLTEXT.hitColumn": "Hit column:",
+
+	"HIT.miss": "Miss",
+	"HIT.hit": "Hit",
+	"HIT.crit": "Crit!"
 }

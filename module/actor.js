@@ -1,3 +1,5 @@
+import {Utils} from "./utils.js";
+
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
  * @extends {Actor}
@@ -22,6 +24,12 @@ export class HLMActor extends Actor {
 		return !!this.getFlag("hooklineandmecha", "isTemplate");
 	}
 
+	static isTargetedRoll(attributeKey) {
+		if (["close", "far"].includes(attributeKey)) return "evade";
+		if (attributeKey === "mental") return "willpower";
+		return false;
+	}
+
 	/**
 	 *	Roll an attribute (or a flat roll)
 	 * @param {*} attributeKey: The string key of the attribute
@@ -29,24 +37,25 @@ export class HLMActor extends Actor {
 	 * @param {*} dieSize : The size of dice to roll
 	 */
 	async rollAttribute(attributeKey, dieCount, dieSize) {
+		const defenceKey = HLMActor.isTargetedRoll(attributeKey);
+		if (defenceKey) {
+			this.rollTargeted(attributeKey, defenceKey, dieCount, dieSize);
+		} else {
+			this.rollNoTarget(attributeKey, dieCount, dieSize);
+		}
+	}
+
+	getAttributeRoller(attributeKey, dieCount, dieSize) {
 		var formula = new Roll();
-		var label = "";
 		if (attributeKey) {
 			const rollAttribute = this.system.attributes.rolled[attributeKey];
 			formula =
 				dieCount + "d" + dieSize + "+" + rollAttribute.value.toString();
-			label = "Rolling " + rollAttribute.label + ":";
 		} else {
 			formula = dieCount + "d" + dieSize;
-			label = "Rolling " + formula + ":";
 		}
 
-		let roll = new Roll(formula);
-		await roll.evaluate();
-		roll.toMessage({
-			speaker: ChatMessage.getSpeaker({actor: this.actor}),
-			flavor: label,
-		});
+		return new Roll(formula);
 	}
 
 	/**
@@ -57,8 +66,6 @@ export class HLMActor extends Actor {
 			speaker: {actor: this},
 			content: this.getFlatAttributeString(),
 		});
-		let message = new ChatMessage();
-		console.log(message);
 	}
 
 	getFlatAttributeString() {
@@ -68,6 +75,105 @@ export class HLMActor extends Actor {
 			attrStrings.push(attr.label + ": " + attr.value.toString());
 		}
 		return attrStrings.join("<br>");
+	}
+
+	async rollTargeted(attackKey, defenceKey, dieCount, dieSize) {
+		const targetSet = game.user.targets;
+		if (targetSet.size < 1) {
+			this.rollNoTarget(attackKey, dieCount, dieSize);
+		} else {
+			const target = targetSet.values().next().value;
+			target.actor.rollToHit(
+				this,
+				attackKey,
+				defenceKey,
+				dieCount,
+				dieSize
+			);
+		}
+	}
+
+	async rollNoTarget(attributeKey, dieCount, dieSize) {
+		var label = "";
+		if (attributeKey) {
+			label =
+				"Rolling " +
+				Utils.getLocalisedAttributeLabel(attributeKey) +
+				":";
+		} else {
+			label = "Rolling " + formula + ":";
+		}
+
+		let roll = this.getAttributeRoller(attributeKey, dieCount, dieSize);
+		await roll.evaluate();
+		roll.toMessage({
+			speaker: ChatMessage.getSpeaker({actor: this.actor}),
+			flavor: label,
+		});
+	}
+
+	async rollToHit(attacker, attackKey, defenceKey, dieCount, dieSize) {
+		const attackRoll = attacker.getAttributeRoller(
+			attackKey,
+			dieCount,
+			dieSize
+		);
+		await attackRoll.evaluate();
+		let hitResult = "";
+		const hitMargin =
+			attackRoll.total - this.system.attributes.flat[defenceKey].value;
+
+		if (hitMargin >= 5 && attacker.type == "fisher") {
+			hitResult = "crit";
+		} else if (hitMargin >= 0) {
+			hitResult = "hit";
+		} else {
+			hitResult = "miss";
+		}
+		const attackAttrLabel = this.system.attributes.rolled[attackKey].label;
+		this.createHitRollMessage(
+			attackRoll,
+			attacker,
+			attackAttrLabel,
+			hitResult
+		);
+	}
+
+	async createHitRollMessage(
+		attackRoll,
+		attacker,
+		attackAttrLabel,
+		hitResult
+	) {
+		//Intro
+		const introductionMessage = game.i18n
+			.localize("ROLLTEXT.attackIntro")
+			.replace("_ATTRIBUTE_NAME_", attackAttrLabel)
+			.replace("_TARGET_NAME_", this.name);
+
+		//To hit
+		const hitRollDisplay = await renderTemplate(
+			"systems/hooklineandmecha/templates/partials/roll-partial.html",
+			{
+				flavor: introductionMessage,
+				formula: attackRoll.formula,
+				total: attackRoll.total,
+			}
+		);
+
+		const successDisplay = await renderTemplate(
+			"systems/hooklineandmecha/templates/partials/target-dc-partial.html",
+			{
+				result: hitResult,
+			}
+		);
+
+		const displayString = [hitRollDisplay, successDisplay].join("<br>");
+
+		const hitMessage = ChatMessage.create({
+			speaker: {actor: attacker},
+			content: displayString,
+		});
 	}
 }
 
