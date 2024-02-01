@@ -1,4 +1,7 @@
 {
+	"ACTORTYPE.fisher": "Fisher",
+	"ACTORTYPE.fish": "Fish",
+
 	"ATTRIBUTES.close": "Close",
 	"ATTRIBUTES.far": "Far",
 	"ATTRIBUTES.mental": "Mental",

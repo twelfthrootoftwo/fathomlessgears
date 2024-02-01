@@ -1,4 +1,6 @@
 import {Utils} from "./utils.js";
+import {AttackHandler} from "./attack.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "./constants.js";
 
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
@@ -25,8 +27,9 @@ export class HLMActor extends Actor {
 	}
 
 	static isTargetedRoll(attributeKey) {
-		if (["close", "far"].includes(attributeKey)) return "evade";
-		if (attributeKey === "mental") return "willpower";
+		if ([ATTRIBUTES.close, ATTRIBUTES.far].includes(attributeKey))
+			return ATTRIBUTES.evade;
+		if (attributeKey === ATTRIBUTES.mental) return ATTRIBUTES.willpower;
 		return false;
 	}
 
@@ -72,7 +75,11 @@ export class HLMActor extends Actor {
 		const attrStrings = [];
 		for (const attribute in this.system.attributes.flat) {
 			const attr = this.system.attributes.flat[attribute];
-			attrStrings.push(attr.label + ": " + attr.value.toString());
+			attrStrings.push(
+				Utils.getLocalisedAttributeLabel(attribute) +
+					": " +
+					attr.value.toString()
+			);
 		}
 		return attrStrings.join("<br>");
 	}
@@ -83,9 +90,10 @@ export class HLMActor extends Actor {
 			this.rollNoTarget(attackKey, dieCount, dieSize);
 		} else {
 			const target = targetSet.values().next().value;
-			target.actor.rollToHit(
+			AttackHandler.rollToHit(
 				this,
 				attackKey,
+				target.actor,
 				defenceKey,
 				dieCount,
 				dieSize
@@ -109,74 +117,6 @@ export class HLMActor extends Actor {
 		roll.toMessage({
 			speaker: ChatMessage.getSpeaker({actor: this.actor}),
 			flavor: label,
-		});
-	}
-
-	async rollToHit(attacker, attackKey, defenceKey, dieCount, dieSize) {
-		const attackRoll = attacker.getAttributeRoller(
-			attackKey,
-			dieCount,
-			dieSize
-		);
-		await attackRoll.evaluate();
-		let hitResult = "";
-		const hitMargin =
-			attackRoll.total - this.system.attributes.flat[defenceKey].value;
-
-		if (hitMargin >= 5 && attacker.type == "fisher") {
-			hitResult = "crit";
-		} else if (hitMargin >= 0) {
-			hitResult = "hit";
-		} else {
-			hitResult = "miss";
-		}
-		const attackAttrLabel = game.i18n.localize(
-			Utils.getLocalisedAttributeLabel(attackKey)
-		);
-		this.createHitRollMessage(
-			attackRoll,
-			attacker,
-			attackAttrLabel,
-			hitResult
-		);
-	}
-
-	async createHitRollMessage(
-		attackRoll,
-		attacker,
-		attackAttrLabel,
-		hitResult
-	) {
-		//Intro
-		const introductionMessage = game.i18n
-			.localize("ROLLTEXT.attackIntro")
-			.replace("_ATTRIBUTE_NAME_", attackAttrLabel)
-			.replace("_TARGET_NAME_", this.name);
-
-		//To hit
-		const hitRollDisplay = await renderTemplate(
-			"systems/hooklineandmecha/templates/partials/roll-partial.html",
-			{
-				flavor: introductionMessage,
-				formula: attackRoll.formula,
-				total: attackRoll.total,
-			}
-		);
-
-		const successDisplay = await renderTemplate(
-			"systems/hooklineandmecha/templates/partials/target-dc-partial.html",
-			{
-				result: game.i18n.localize(
-					Utils.getLocalisedHitType(hitResult)
-				),
-			}
-		);
-
-		const displayString = [hitRollDisplay, successDisplay].join("<br>");
-
-		const hitMessage = ChatMessage.create({
-			speaker: {actor: attacker},
-			content: displayString,
 		});
 	}
 }
