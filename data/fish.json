@@ -51,6 +51,8 @@
 			"hitLocationRoll": null,
 			"hitRegions": [
 				{
+					"location": "torso",
+					"range": [1],
 					"columns": 3
 				}
 			]
@@ -64,6 +66,8 @@
 			"hitLocationRoll": null,
 			"hitRegions": [
 				{
+					"location": "torso",
+					"range": [1],
 					"columns": 6
 				}
 			]
@@ -77,6 +81,8 @@
 			"hitLocationRoll": null,
 			"hitRegions": [
 				{
+					"location": "torso",
+					"range": [1],
 					"columns": 3
 				}
 			]
@@ -90,6 +96,8 @@
 			"hitLocationRoll": null,
 			"hitRegions": [
 				{
+					"location": "torso",
+					"range": [1],
 					"columns": 6
 				}
 			]
@@ -100,6 +108,26 @@
 			"power": 8,
 			"weight": 30,
 			"baseAP": 6,
+			"hitLocationRoll": "2d6",
+			"hitRegions": [
+				{
+					"location": "leftArm",
+					"range": [2, 5],
+					"columns": 3
+				},
+				{
+					"location": "torso",
+					"range": [6, 8],
+					"columns": 3
+				},
+				{
+					"location": "rightArm",
+					"range": [9, 12],
+					"columns": 3
+				}
+			]
+		},
+		"fisher": {
 			"hitLocationRoll": "2d6",
 			"hitRegions": [
 				{

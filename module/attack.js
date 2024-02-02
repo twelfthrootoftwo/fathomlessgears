@@ -22,6 +22,11 @@ export class AttackHandler {
 			AttackHandler.canCrit(attacker)
 		);
 
+		let locationResult = null;
+		if (hasLocationRoll(defender) && hitResult === HIT_TYPE.hit) {
+			locationResult = rollHitLocation(defender);
+		}
+
 		const attackAttrLabel = game.i18n.localize(
 			Utils.getLocalisedAttributeLabel(attackKey)
 		);
@@ -30,7 +35,8 @@ export class AttackHandler {
 			attacker,
 			defender,
 			attackAttrLabel,
-			hitResult
+			hitResult,
+			locationResult
 		);
 	}
 
@@ -53,11 +59,13 @@ export class AttackHandler {
 		attackAttrLabel,
 		hitResult
 	) {
+		const displayString = [];
 		//Intro
 		const introductionMessage = game.i18n
 			.localize("ROLLTEXT.attackIntro")
 			.replace("_ATTRIBUTE_NAME_", attackAttrLabel)
 			.replace("_TARGET_NAME_", defender.name);
+		displayString.push(introductionMessage);
 
 		//To hit
 		const hitRollDisplay = await renderTemplate(
@@ -68,6 +76,7 @@ export class AttackHandler {
 				total: attackRoll.total,
 			}
 		);
+		displayString.push(hitRollDisplay);
 
 		const successDisplay = await renderTemplate(
 			"systems/hooklineandmecha/templates/partials/target-dc-partial.html",
@@ -77,16 +86,66 @@ export class AttackHandler {
 				),
 			}
 		);
+		displayString.push(successDisplay);
 
-		const displayString = [hitRollDisplay, successDisplay].join("<br>");
+		if (hitResult === HIT_TYPE.hit) {
+			const locationDisplay = await generateLocationDisplay(
+				locationResult
+			);
+			displayString.push(hitRollDisplay);
+		}
 
 		const hitMessage = ChatMessage.create({
 			speaker: {actor: attacker},
-			content: displayString,
+			content: displayString.join("<br>"),
 		});
 	}
 
 	static canCrit(attacker) {
 		return attacker.type === ACTOR_TYPES.fisher;
+	}
+
+	static async rollHitLocation(defender) {
+		const locationRoll = new Roll();
+		locationRoll.formula = defender.size.hitLocationRoll
+			? defender.size.hitLocationRoll
+			: "1";
+		await locationRoll.evaluate();
+
+		const location = defender.size.hitRegions.find((location) => {
+			locationRoll.total >= location.range[0] &&
+				locationRoll.total <= location.range[-1];
+		});
+
+		const columnRoll = new Roll();
+		columnRoll.formula = "1d" + location.columns.toString();
+		await columnRoll.evaluate();
+
+		return locationRoll, location, columnRoll;
+	}
+
+	static async generateLocationDisplay(locationResult) {
+		const locationDisplayParts = [];
+		if (locationResult.locationRoll.formula !== "1") {
+			const hitZone = await renderTemplate(
+				"systems/hooklineandmecha/templates/partials/target-dc-partial.html",
+				{
+					result: game.i18n.localize(
+						Utils.getLocalisedHitType(hitResult)
+					),
+				}
+			);
+			locationDisplayParts.push(hitZone);
+		}
+		const column = await renderTemplate(
+			"systems/hooklineandmecha/templates/partials/target-dc-partial.html",
+			{
+				result: game.i18n.localize(
+					Utils.getLocalisedHitType(hitResult)
+				),
+			}
+		);
+		locationDisplayParts.push(column);
+		return locationDisplayParts.join("<br>");
 	}
 }
