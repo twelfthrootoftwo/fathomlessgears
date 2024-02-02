@@ -10,7 +10,6 @@ import {FishDataHandler} from "./npcType.js";
 /*  Foundry VTT Initialization                  */
 /* -------------------------------------------- */
 
-//Handlers
 let fishHandler = null;
 
 /**
@@ -43,14 +42,15 @@ Hooks.once("init", async function () {
 		formula: "10*@weightClass.value+@attributes.speed.value",
 		decimals: 2,
 	};
+
+	const fishDataFile = "systems/hooklineandmecha/data/fish.json";
+	game.fishHandler = new FishDataHandler();
+	game.fishHandler.loadNPCData(fishDataFile);
 });
 
 export const system_ready = new Promise((success) => {
 	Hooks.once("ready", async function () {
-		const fishDataFile = "systems/hooklineandmecha/data/fish.json";
-		game.fishHandler = new FishDataHandler();
-		game.fishHandler.loadNPCData(fishDataFile);
-
+		//Post-init stuff goes here
 		success();
 	});
 });

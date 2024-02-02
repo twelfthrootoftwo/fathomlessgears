@@ -1,5 +1,6 @@
 import {Utils} from "./utils.js";
 import {AttackHandler} from "./attack.js";
+import {FishDataHandler} from "./npcType.js";
 import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "./constants.js";
 
 /**
@@ -14,6 +15,7 @@ export class HLMActor extends Actor {
 			this.system.attributes.flat.weight.value,
 			0
 		);
+		this.setNPCSize(this.type == "fisher" ? "fisher" : "small");
 	}
 
 	/* -------------------------------------------- */
@@ -122,23 +124,23 @@ export class HLMActor extends Actor {
 
 	setAttributeValue(attributeKey, value) {
 		if (Utils.isRollableAttribute(attributeKey)) {
-			this.system.attributes.rollable[attributeKey].value = value;
+			this.system.attributes.rolled[attributeKey].value = value;
 		} else if (this.system.attributes.flat[attributeKey]) {
 			this.system.attributes.flat[attributeKey].value = value;
 		}
 	}
 
 	setNPCType(targetType) {
-		this.npcType = FishDataHandler.knownTypes[targetType];
+		this.npcType = game.fishHandler.knownTypes[targetType];
 		for (let key in this.npcType) {
-			this.setAttributeValue(key, this.npcType.key);
+			this.setAttributeValue(key, this.npcType[key]);
 		}
 	}
 
 	setNPCSize(targetSize) {
-		this.npcSize = FishDataHandler.knownSizes[targetSize];
-		for (let key in this.npcType) {
-			this.setAttributeValue(key, this.npcType.key);
+		this.npcSize = game.fishHandler.knownSizes[targetSize];
+		for (let key in this.npcSize) {
+			this.setAttributeValue(key, this.npcSize[key]);
 		}
 	}
 }
@@ -190,7 +192,6 @@ export class WeightClass {
 			weightClass > WeightClass.maxClass
 				? WeightClass.maxClass
 				: weightClass;
-		console.log("Calculated weight: " + weightClass.toString());
 
 		return new WeightClass(weightClass);
 	}
