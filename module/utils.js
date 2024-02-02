@@ -1,3 +1,5 @@
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "./constants.js";
+
 export class Utils {
 	static getLocalisedAttributeLabel(attrKey) {
 		const recognisedAttributes = [
@@ -33,7 +35,17 @@ export class Utils {
 		if (recognisedHits.includes(hitTypeKey)) {
 			return game.i18n.localize("HIT." + hitTypeKey);
 		} else {
-			console.log("Resource key not recognised: " + hitTypeKey);
+			console.log("Hit type not recognised: " + hitTypeKey);
 		}
+	}
+
+	static isRollableAttribute(attributeKey) {
+		const rollable = [
+			ATTRIBUTES.close,
+			ATTRIBUTES.far,
+			ATTRIBUTES.mental,
+			ATTRIBUTES.power,
+		];
+		return rollable.includes(attributeKey);
 	}
 }

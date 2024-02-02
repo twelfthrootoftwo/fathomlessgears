@@ -119,6 +119,28 @@ export class HLMActor extends Actor {
 			flavor: label,
 		});
 	}
+
+	setAttributeValue(attributeKey, value) {
+		if (Utils.isRollableAttribute(attributeKey)) {
+			this.system.attributes.rollable[attributeKey].value = value;
+		} else if (this.system.attributes.flat[attributeKey]) {
+			this.system.attributes.flat[attributeKey].value = value;
+		}
+	}
+
+	setNPCType(targetType) {
+		this.npcType = FishDataHandler.knownTypes[targetType];
+		for (let key in this.npcType) {
+			this.setAttributeValue(key, this.npcType.key);
+		}
+	}
+
+	setNPCSize(targetSize) {
+		this.npcSize = FishDataHandler.knownSizes[targetSize];
+		for (let key in this.npcType) {
+			this.setAttributeValue(key, this.npcType.key);
+		}
+	}
 }
 
 export class WeightClass {
