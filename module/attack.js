@@ -23,8 +23,8 @@ export class AttackHandler {
 		);
 
 		let locationResult = null;
-		if (hasLocationRoll(defender) && hitResult === HIT_TYPE.hit) {
-			locationResult = rollHitLocation(defender);
+		if (hitResult === HIT_TYPE.hit) {
+			locationResult = AttackHandler.rollHitLocation(defender);
 		}
 
 		const attackAttrLabel = game.i18n.localize(
@@ -57,7 +57,8 @@ export class AttackHandler {
 		attacker,
 		defender,
 		attackAttrLabel,
-		hitResult
+		hitResult,
+		locationResult
 	) {
 		const displayString = [];
 		//Intro
@@ -71,7 +72,6 @@ export class AttackHandler {
 		const hitRollDisplay = await renderTemplate(
 			"systems/hooklineandmecha/templates/partials/roll-partial.html",
 			{
-				flavor: introductionMessage,
 				formula: attackRoll.formula,
 				total: attackRoll.total,
 			}
@@ -89,10 +89,10 @@ export class AttackHandler {
 		displayString.push(successDisplay);
 
 		if (hitResult === HIT_TYPE.hit) {
-			const locationDisplay = await generateLocationDisplay(
+			const locationDisplay = await AttackHandler.generateLocationDisplay(
 				locationResult
 			);
-			displayString.push(hitRollDisplay);
+			displayString.push(locationDisplay);
 		}
 
 		const hitMessage = ChatMessage.create({
@@ -101,48 +101,62 @@ export class AttackHandler {
 		});
 	}
 
-	static canCrit(attacker) {
-		return attacker.type === ACTOR_TYPES.fisher;
+	static canCrit(actor) {
+		return actor.type === ACTOR_TYPES.fisher;
 	}
 
 	static async rollHitLocation(defender) {
-		const locationRoll = new Roll();
-		locationRoll.formula = defender.size.hitLocationRoll
-			? defender.size.hitLocationRoll
+		const formula = defender.npcSize.hitLocationRoll
+			? defender.npcSize.hitLocationRoll
 			: "1";
+		const locationRoll = new Roll(formula);
 		await locationRoll.evaluate();
 
-		const location = defender.size.hitRegions.find((location) => {
-			locationRoll.total >= location.range[0] &&
-				locationRoll.total <= location.range[-1];
+		const hitZone = defender.npcSize.hitRegions.find((location) => {
+			return AttackHandler.checkHitZone(locationRoll, location);
 		});
 
-		const columnRoll = new Roll();
-		columnRoll.formula = "1d" + location.columns.toString();
+		const columnRoll = new Roll("1d" + hitZone.columns.toString());
 		await columnRoll.evaluate();
 
-		return locationRoll, location, columnRoll;
+		return {locationRoll, hitZone, columnRoll};
+	}
+
+	static checkHitZone(locationRoll, hitZone) {
+		return (
+			locationRoll.total >= hitZone.range.at(0) &&
+			locationRoll.total <= hitZone.range.at(-1)
+		);
 	}
 
 	static async generateLocationDisplay(locationResult) {
 		const locationDisplayParts = [];
 		if (locationResult.locationRoll.formula !== "1") {
 			const hitZone = await renderTemplate(
-				"systems/hooklineandmecha/templates/partials/target-dc-partial.html",
+				"systems/hooklineandmecha/templates/partials/roll-partial.html",
 				{
-					result: game.i18n.localize(
-						Utils.getLocalisedHitType(hitResult)
+					flavor: game.i18n.localize(
+						Utils.getLocalisedHitType("ROLLTEXT.hitZone")
 					),
+					formula: locationResult.locationRoll.formula,
+					total: locationResult.locationRoll.total,
 				}
+			);
+			hitZone.concat(
+				`<p> ${game.i18n.localize(
+					Utils.getLocalisedHitZone(locationResult.hitZone)
+				)} </p>`
 			);
 			locationDisplayParts.push(hitZone);
 		}
 		const column = await renderTemplate(
-			"systems/hooklineandmecha/templates/partials/target-dc-partial.html",
+			"systems/hooklineandmecha/templates/partials/roll-partial.html",
 			{
-				result: game.i18n.localize(
-					Utils.getLocalisedHitType(hitResult)
+				flavor: game.i18n.localize(
+					Utils.getLocalisedHitType("ROLLTEXT.hitColumn")
 				),
+				formula: locationResult.columnRoll.formula,
+				total: locationResult.columnRoll.total,
 			}
 		);
 		locationDisplayParts.push(column);
