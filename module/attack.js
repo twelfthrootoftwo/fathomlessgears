@@ -24,7 +24,7 @@ export class AttackHandler {
 
 		let locationResult = null;
 		if (hitResult === HIT_TYPE.hit) {
-			locationResult = AttackHandler.rollHitLocation(defender);
+			locationResult = await AttackHandler.rollHitLocation(defender);
 		}
 
 		const attackAttrLabel = game.i18n.localize(
