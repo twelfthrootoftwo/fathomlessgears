@@ -105,7 +105,7 @@
 	align-items: center;
 	justify-content: center;
 }
-.hooklineandmecha .attributes .button {
+.hooklineandmecha .button {
 	width: 100%;
 	flex: 1;
 	margin: 0;
@@ -115,7 +115,7 @@
 	font-size: 14px;
 	display: block;
 }
-.hooklineandmecha .attributes .button:hover {
+.hooklineandmecha .button:hover {
 	background-color: #44444466;
 }
 .hooklineandmecha .attributes-header {

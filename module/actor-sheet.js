@@ -4,6 +4,8 @@ import {Utils} from "./utils.js";
  * @extends {ActorSheet}
  */
 export class HLMActorSheet extends ActorSheet {
+	selectedNpcType = "";
+	selectedNpcSize = "";
 	/** @inheritdoc */
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
@@ -26,8 +28,6 @@ export class HLMActorSheet extends ActorSheet {
 	/** @inheritdoc */
 	async getData(options) {
 		const context = await super.getData(options);
-		console.log("Getting context data");
-		console.log(context);
 		context.biographyHTML = await TextEditor.enrichHTML(
 			context.actor.system.biography,
 			{
@@ -39,15 +39,20 @@ export class HLMActorSheet extends ActorSheet {
 		if (this.actor.system.resources) {
 			this._getResourceLabels();
 		}
+		if (this.actor.type === "fish") {
+			this._getNPCTypes(context);
+			this._getNPCSizes(context);
+		}
 		return context;
 	}
 
 	/**@inheritdoc */
-	/**Not doing anything, just here to provide debug info when saving the sheet*/
 	_getSubmitData(updateData) {
 		let formData = super._getSubmitData(updateData);
-		console.log("Form data:");
-		console.log(formData);
+		if (formData.selectedNpcType) {
+			this.selectedNpcType = formData.selectedNpcType;
+			this.selectedNpcSize = formData.selectedNpcSize;
+		}
 		return formData;
 	}
 
@@ -55,6 +60,7 @@ export class HLMActorSheet extends ActorSheet {
 	activateListeners(html) {
 		super.activateListeners(html);
 		html.find(".rollable").click(this._onRoll.bind(this));
+		html.find(".set-types").click(this.setTypes.bind(this));
 
 		// Everything below here is only needed if the sheet is editable
 		if (!this.isEditable) return;
@@ -67,6 +73,12 @@ export class HLMActorSheet extends ActorSheet {
 		const attribute = event.target.attributes.attribute?.value;
 
 		this.actor.rollAttribute(attribute, dieCount, dieSize);
+	}
+
+	setTypes(event) {
+		this.actor.setNPCType(this.selectedNpcType);
+		this.actor.setNPCSize(this.selectedNpcSize);
+		this.render();
 	}
 
 	/** @override */
@@ -89,6 +101,24 @@ export class HLMActorSheet extends ActorSheet {
 		for (const resourceKey in this.actor.system.resources) {
 			const resource = this.actor.system.resources[resourceKey];
 			resource.label = Utils.getLocalisedResourceLabel(resourceKey);
+		}
+	}
+
+	_getNPCTypes(context) {
+		context.npcTypes = new Object();
+		for (const typeKey in game.fishHandler.knownTypes) {
+			const type = game.fishHandler.knownTypes[typeKey];
+			type.label = game.i18n.localize("FISHTYPE." + typeKey);
+			context.npcTypes[typeKey] = type;
+		}
+	}
+
+	_getNPCSizes(context) {
+		context.npcSizes = new Object();
+		for (const sizeKey in game.fishHandler.knownSizes) {
+			const size = game.fishHandler.knownSizes[sizeKey];
+			size.label = game.i18n.localize("FISHSIZE." + sizeKey);
+			context.npcSizes[sizeKey] = size;
 		}
 	}
 }

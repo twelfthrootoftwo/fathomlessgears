@@ -18,6 +18,32 @@
 					placeholder="Name"
 				/>
 			</h1>
+			<div
+				class="flex-container"
+				style="display: flex; flex-direction: row; width: 100%"
+			>
+				<select
+					class="dropdown"
+					name="selectedNpcType"
+					id="selectedNpcType"
+				>
+					{{#each npcTypes as |type key|}}
+					<option value="{{key}}">{{type.label}}</option>
+					{{/each}}
+				</select>
+				<select
+					class="dropdown"
+					name="selectedNpcSize"
+					id="selectedNpcSize"
+				>
+					{{#each npcSizes as |size key|}}
+					<option value="{{key}}">{{size.label}}</option>
+					{{/each}}
+				</select>
+				<div class="button set-types">
+					{{localize "HEADER.setTypes"}}
+				</div>
+			</div>
 		</div>
 	</header>
 
