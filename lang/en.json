@@ -52,5 +52,11 @@
 
 	"HIT.miss": "Miss",
 	"HIT.hit": "Hit",
-	"HIT.crit": "Crit!"
+	"HIT.crit": "Crit!",
+
+	"HITZONE.head": "Head",
+	"HITZONE.leftArm": "Left Arm",
+	"HITZONE.rightArm": "Right Arm",
+	"HITZONE.torso": "Torso",
+	"HITZONE.legs": "Legs"
 }

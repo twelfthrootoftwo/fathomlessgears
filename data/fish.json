@@ -131,15 +131,28 @@
 			"hitLocationRoll": "2d6",
 			"hitRegions": [
 				{
-					"range": [2, 5],
+					"location": "head",
+					"range": [2, 3],
 					"columns": 3
 				},
 				{
+					"location": "leftArm",
+					"range": [4, 5],
+					"columns": 6
+				},
+				{
+					"location": "torso",
 					"range": [6, 8],
-					"columns": 3
+					"columns": 6
 				},
 				{
-					"range": [9, 12],
+					"location": "rightArm",
+					"range": [9, 10],
+					"columns": 6
+				},
+				{
+					"location": "legs",
+					"range": [11, 12],
 					"columns": 3
 				}
 			]

@@ -39,6 +39,21 @@ export class Utils {
 		}
 	}
 
+	static getLocalisedHitZone(hitZoneKey) {
+		const recognisedZones = [
+			"head",
+			"leftArm",
+			"rightArm",
+			"torso",
+			"legs",
+		];
+		if (recognisedZones.includes(hitZoneKey)) {
+			return game.i18n.localize("HITZONE." + hitZoneKey);
+		} else {
+			console.log("Hit zone not recognised: " + hitZoneKey);
+		}
+	}
+
 	static isRollableAttribute(attributeKey) {
 		const rollable = [
 			ATTRIBUTES.close,

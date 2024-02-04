@@ -81,9 +81,7 @@ export class AttackHandler {
 		const successDisplay = await renderTemplate(
 			"systems/hooklineandmecha/templates/partials/target-dc-partial.html",
 			{
-				result: game.i18n.localize(
-					Utils.getLocalisedHitType(hitResult)
-				),
+				result: Utils.getLocalisedHitType(hitResult),
 			}
 		);
 		displayString.push(successDisplay);
@@ -132,29 +130,25 @@ export class AttackHandler {
 	static async generateLocationDisplay(locationResult) {
 		const locationDisplayParts = [];
 		if (locationResult.locationRoll.formula !== "1") {
-			const hitZone = await renderTemplate(
+			locationDisplayParts.push(game.i18n.localize("ROLLTEXT.hitZone"));
+			let hitZone = await renderTemplate(
 				"systems/hooklineandmecha/templates/partials/roll-partial.html",
 				{
-					flavor: game.i18n.localize(
-						Utils.getLocalisedHitType("ROLLTEXT.hitZone")
-					),
 					formula: locationResult.locationRoll.formula,
 					total: locationResult.locationRoll.total,
 				}
 			);
-			hitZone.concat(
-				`<p> ${game.i18n.localize(
-					Utils.getLocalisedHitZone(locationResult.hitZone)
+			hitZone = hitZone.concat(
+				`<p> ${Utils.getLocalisedHitZone(
+					locationResult.hitZone.location
 				)} </p>`
 			);
 			locationDisplayParts.push(hitZone);
 		}
+		locationDisplayParts.push(game.i18n.localize("ROLLTEXT.hitColumn"));
 		const column = await renderTemplate(
 			"systems/hooklineandmecha/templates/partials/roll-partial.html",
 			{
-				flavor: game.i18n.localize(
-					Utils.getLocalisedHitType("ROLLTEXT.hitColumn")
-				),
 				formula: locationResult.columnRoll.formula,
 				total: locationResult.columnRoll.total,
 			}
