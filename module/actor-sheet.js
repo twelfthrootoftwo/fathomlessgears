@@ -42,6 +42,12 @@ export class HLMActorSheet extends ActorSheet {
 		if (this.actor.type === "fish") {
 			this._getNPCTypes(context);
 			this._getNPCSizes(context);
+			if (this.actor.npcType) {
+				context.selectedNpcType = this.actor.npcType.key;
+			}
+			if (this.actor.npcSize) {
+				context.selectedNpcSize = this.actor.npcSize.key;
+			}
 		}
 		return context;
 	}
@@ -52,6 +58,9 @@ export class HLMActorSheet extends ActorSheet {
 		if (formData.selectedNpcType) {
 			this.selectedNpcType = formData.selectedNpcType;
 			this.selectedNpcSize = formData.selectedNpcSize;
+		}
+		for(let key in updateData) {
+			formData[key]=updateData[key];
 		}
 		return formData;
 	}
@@ -78,6 +87,7 @@ export class HLMActorSheet extends ActorSheet {
 	setTypes(event) {
 		this.actor.setNPCType(this.selectedNpcType);
 		this.actor.setNPCSize(this.selectedNpcSize);
+		this._getSubmitData({"system.size": this.selectedNpcSize,"system.fishType": this.selectedNpcType});
 		this.render();
 	}
 

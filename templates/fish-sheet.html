@@ -27,18 +27,23 @@
 					name="selectedNpcType"
 					id="selectedNpcType"
 				>
+					{{#select selectedNpcType }}
 					{{#each npcTypes as |type key|}}
 					<option value="{{key}}">{{type.label}}</option>
 					{{/each}}
+					{{/select}}
 				</select>
 				<select
 					class="dropdown"
 					name="selectedNpcSize"
 					id="selectedNpcSize"
 				>
+					{{#select selectedNpcSize}}
+					<option value="">---</option>
 					{{#each npcSizes as |size key|}}
 					<option value="{{key}}">{{size.label}}</option>
 					{{/each}}
+					{{/select}}
 				</select>
 				<div class="button set-types">
 					{{localize "HEADER.setTypes"}}

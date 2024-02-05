@@ -15,7 +15,10 @@ export class HLMActor extends Actor {
 			this.system.attributes.flat.weight.value,
 			0
 		);
-		this.setNPCSize(this.type == "fisher" ? "fisher" : "small");
+		this.setNPCSize(this.size);
+		if(this.fishType) {
+			this.setNPCType(this.fishType);
+		}
 	}
 
 	/* -------------------------------------------- */
@@ -131,6 +134,7 @@ export class HLMActor extends Actor {
 	}
 
 	setNPCType(targetType) {
+		this.fishType=targetType;
 		this.npcType = game.fishHandler.knownTypes[targetType];
 		for (let key in this.npcType) {
 			this.setAttributeValue(key, this.npcType[key]);
@@ -138,6 +142,7 @@ export class HLMActor extends Actor {
 	}
 
 	setNPCSize(targetSize) {
+		this.size=targetSize;
 		this.npcSize = game.fishHandler.knownSizes[targetSize];
 		for (let key in this.npcSize) {
 			this.setAttributeValue(key, this.npcSize[key]);

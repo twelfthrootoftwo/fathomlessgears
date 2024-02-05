@@ -1,6 +1,7 @@
 {
 	"types": {
 		"aquatic": {
+			"key": "aquatic",
 			"close": 5,
 			"far": 3,
 			"mental": 4,
@@ -9,6 +10,7 @@
 			"biological": true
 		},
 		"amphibian": {
+			"key": "amphibian",
 			"close": 5,
 			"far": 4,
 			"mental": 3,
@@ -17,6 +19,7 @@
 			"biological": true
 		},
 		"abyssal": {
+			"key": "abyssal",
 			"close": 3,
 			"far": 4,
 			"mental": 5,
@@ -25,6 +28,7 @@
 			"biological": true
 		},
 		"pirate": {
+			"key": "pirate",
 			"close": 4,
 			"far": 4,
 			"mental": 3,
@@ -33,6 +37,7 @@
 			"biological": false
 		},
 		"forgotten": {
+			"key": "forgotten",
 			"close": 4,
 			"far": 4,
 			"mental": 3,
@@ -43,6 +48,7 @@
 	},
 	"sizes": {
 		"small": {
+			"key": "small",
 			"evade": 13,
 			"speed": 4,
 			"power": 2,
@@ -58,6 +64,7 @@
 			]
 		},
 		"medium-horz": {
+			"key": "medium-horz",
 			"evade": 12,
 			"speed": 4,
 			"power": 4,
@@ -73,6 +80,7 @@
 			]
 		},
 		"medium-vert": {
+			"key": "medium-vert",
 			"evade": 12,
 			"speed": 4,
 			"power": 4,
@@ -88,6 +96,7 @@
 			]
 		},
 		"large": {
+			"key": "large",
 			"evade": 11,
 			"speed": 3,
 			"power": 6,
@@ -103,6 +112,7 @@
 			]
 		},
 		"leviathan": {
+			"key": "leviathan",
 			"evade": 10,
 			"speed": 2,
 			"power": 8,
@@ -128,6 +138,7 @@
 			]
 		},
 		"fisher": {
+			"key": "fisher",
 			"hitLocationRoll": "2d6",
 			"hitRegions": [
 				{
