@@ -35,6 +35,18 @@
 	height: 100%;
 	margin: 0;
 }
+.hooklineandmecha .sheet-header .type-size-select {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+.hooklineandmecha .sheet-header .type-size-select .dropdown {
+	flex: 0 0 60px;
+	margin-right: 1rem;
+}
+.hooklineandmecha .sheet-header .type-size-select .set-types {
+	flex: 0 0 100px;
+}
 .hooklineandmecha .resource {
 	width: 100%;
 	height: 40px;
@@ -105,15 +117,20 @@
 	align-items: center;
 	justify-content: center;
 }
-.hooklineandmecha .button {
+.hooklineandmecha .attributes .button {
 	width: 100%;
 	flex: 1;
+	display: block;
+}
+.hooklineandmecha .button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	margin: 0;
 	background: rgba(0, 0, 0, 0.1);
 	border: 2px groove #f0f0e0;
 	border-radius: 3px;
 	font-size: 14px;
-	display: block;
 }
 .hooklineandmecha .button:hover {
 	background-color: #44444466;
@@ -158,8 +175,10 @@
 	display: flex;
 	border-radius: 0;
 	border: 1px solid #aaa;
-	height: 28px;
+	height: 32px;
 	line-height: 24px;
+	align-items: center;
+	padding-left: 8px;
 }
 .hooklineandmecha .attributes-flex .label-fixed {
 	width: 100px;
