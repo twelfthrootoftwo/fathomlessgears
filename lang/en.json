@@ -42,8 +42,8 @@
 	"FISHTYPE.forgotten": "Forgotten",
 
 	"FISHSIZE.small": "Small",
-	"FISHSIZE.medVert": "Medium (Portrait)",
-	"FISHSIZE.medHorz": "Medium (Landscape)",
+	"FISHSIZE.medium-vert": "Medium (Portrait)",
+	"FISHSIZE.medium-horz": "Medium (Landscape)",
 	"FISHSIZE.large": "Large",
 	"FISHSIZE.leviathan": "Leviathan",
 

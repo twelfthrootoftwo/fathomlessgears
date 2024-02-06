@@ -63,4 +63,16 @@ export class Utils {
 		];
 		return rollable.includes(attributeKey);
 	}
+
+	static isFlatAttribute(attributeKey) {
+		const flat = [
+			ATTRIBUTES.evade,
+			ATTRIBUTES.willpower,
+			ATTRIBUTES.speed,
+			ATTRIBUTES.sensors,
+			ATTRIBUTES.weight,
+			ATTRIBUTES.baseAP,
+		];
+		return flat.includes(attributeKey);
+	}
 }

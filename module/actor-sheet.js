@@ -6,6 +6,7 @@ import {Utils} from "./utils.js";
 export class HLMActorSheet extends ActorSheet {
 	selectedNpcType = "";
 	selectedNpcSize = "";
+	updateTypeAndSize=false;
 	/** @inheritdoc */
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
@@ -42,26 +43,41 @@ export class HLMActorSheet extends ActorSheet {
 		if (this.actor.type === "fish") {
 			this._getNPCTypes(context);
 			this._getNPCSizes(context);
-			if (this.actor.npcType) {
-				context.selectedNpcType = this.actor.npcType.key;
+			if (this.actor.system.fishType) {
+				context.selectedNpcType = this.actor.system.fishType;
 			}
-			if (this.actor.npcSize) {
-				context.selectedNpcSize = this.actor.npcSize.key;
+			if (this.actor.system.size) {
+				context.selectedNpcSize = this.actor.system.size;
 			}
 		}
+		console.log(context);
 		return context;
 	}
 
 	/**@inheritdoc */
 	_getSubmitData(updateData) {
 		let formData = super._getSubmitData(updateData);
-		if (formData.selectedNpcType) {
-			this.selectedNpcType = formData.selectedNpcType;
-			this.selectedNpcSize = formData.selectedNpcSize;
+		if(this.updateTypeAndSize) {
+			console.log("Updating type and size");
+
+			formData["system.fishType"]=formData.selectedNpcType;
+			formData["system.size"]=formData.selectedNpcSize;
+			
+			const npcType = game.fishHandler.knownTypes[formData.selectedNpcType];
+			for (let key in npcType) {
+				console.log("Updating "+key)
+				this.setAttributeValue(formData,key, npcType[key]);
+			}
+			this.actor.npcType=npcType;
+
+			const npcSize = game.fishHandler.knownSizes[formData.selectedNpcSize];
+			for (let key in npcSize) {
+				console.log("Updating "+key)
+				this.setAttributeValue(formData,key, npcSize[key]);
+			}
+			this.actor.npcSize=npcSize;
 		}
-		for(let key in updateData) {
-			formData[key]=updateData[key];
-		}
+		console.log(formData);
 		return formData;
 	}
 
@@ -85,10 +101,9 @@ export class HLMActorSheet extends ActorSheet {
 	}
 
 	setTypes(event) {
-		this.actor.setNPCType(this.selectedNpcType);
-		this.actor.setNPCSize(this.selectedNpcSize);
-		this._getSubmitData({"system.size": this.selectedNpcSize,"system.fishType": this.selectedNpcType});
-		this.render();
+		this.updateTypeAndSize=true;
+		this.submit();
+		this.updateTypeAndSize=false;
 	}
 
 	/** @override */
@@ -126,9 +141,18 @@ export class HLMActorSheet extends ActorSheet {
 	_getNPCSizes(context) {
 		context.npcSizes = new Object();
 		for (const sizeKey in game.fishHandler.knownSizes) {
+			if (sizeKey==="fisher") continue;
 			const size = game.fishHandler.knownSizes[sizeKey];
 			size.label = game.i18n.localize("FISHSIZE." + sizeKey);
 			context.npcSizes[sizeKey] = size;
+		}
+	}
+
+	setAttributeValue(formData, key, value) {
+		if (Utils.isRollableAttribute(key)) {
+			formData["system.attributes.rolled."+key+".value"] = value;
+		} else if (Utils.isFlatAttribute(key)) {
+			formData["system.attributes.flat."+key+".value"] = value;
 		}
 	}
 }
