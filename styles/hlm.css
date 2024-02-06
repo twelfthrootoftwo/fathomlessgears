@@ -160,7 +160,7 @@
 	background: transparent;
 	border: none;
 	border-radius: 0;
-	border-bottom: 1px solid #aaa;
+	border-bottom: 1px solid var(--color-border-light-1);
 }
 .hooklineandmecha .attributes-flex {
 	display: flex;
@@ -168,13 +168,13 @@
 	background: transparent;
 	border: none;
 	border-radius: 0;
-	border-bottom: 1px solid #aaa;
+	border-bottom: 1px solid var(--color-border-light-1);
 }
 .hooklineandmecha .attributes-flex .flat-wrapbox {
 	margin: 3px;
 	display: flex;
 	border-radius: 0;
-	border: 1px solid #aaa;
+	border: 1px solid var(--color-border-light-1);
 	height: 32px;
 	line-height: 24px;
 	align-items: center;
@@ -193,4 +193,26 @@
 .hooklineandmecha.sheet.item {
 	min-width: 460px;
 	min-height: 400px;
+}
+.message-header {
+	background: var(--color-bg-header);
+	font-size: var(--font-size-14);
+	font-weight: bold;
+}
+.flat-display-row {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	margin-top: 2px;
+	padding-inline: 4px;
+	border-bottom: 1px solid var(--color-border-light-1);
+}
+.flat-display-row .attribute-label {
+	font-size: var(--font-size-12);
+}
+.flat-display-row .attribute-value {
+	font-size: var(--font-size-12);
+	font-weight: bold;
 }

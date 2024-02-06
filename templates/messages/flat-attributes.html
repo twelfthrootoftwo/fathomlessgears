@@ -1,0 +1,14 @@
+<div class="message-header">
+    {{localize "ROLLTEXT.flat"}}
+</div>
+<div class="dice-roll">
+    <div class="column">
+        {{#each attributes as |attribute key|}}
+        <div class="flat-display-row">
+            <span class="attribute-label">{{label}}</span>
+            <div class="attribute-value">{{attribute.value}}</div>
+        </div>
+        {{/each}}
+    </div>
+    
+</div>

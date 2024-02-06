@@ -36,10 +36,6 @@ export class HLMActorSheet extends ActorSheet {
 				async: true,
 			}
 		);
-		this._getAttributeLabels();
-		if (this.actor.system.resources) {
-			this._getResourceLabels();
-		}
 		if (this.actor.type === "fish") {
 			this._getNPCTypes(context);
 			this._getNPCSizes(context);
@@ -109,24 +105,6 @@ export class HLMActorSheet extends ActorSheet {
 	/** @override */
 	get template() {
 		return `systems/hooklineandmecha/templates/${this.actor.type}-sheet.html`;
-	}
-
-	_getAttributeLabels() {
-		for (const attributeKey in this.actor.system.attributes.rolled) {
-			const attribute = this.actor.system.attributes.rolled[attributeKey];
-			attribute.label = Utils.getLocalisedAttributeLabel(attributeKey);
-		}
-		for (const attributeKey in this.actor.system.attributes.flat) {
-			const attribute = this.actor.system.attributes.flat[attributeKey];
-			attribute.label = Utils.getLocalisedAttributeLabel(attributeKey);
-		}
-	}
-
-	_getResourceLabels() {
-		for (const resourceKey in this.actor.system.resources) {
-			const resource = this.actor.system.resources[resourceKey];
-			resource.label = Utils.getLocalisedResourceLabel(resourceKey);
-		}
 	}
 
 	_getNPCTypes(context) {

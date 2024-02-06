@@ -19,6 +19,10 @@ export class HLMActor extends Actor {
 		if(this.system.fishType) {
 			this.setNPCType(this.system.fishType);
 		}
+		this._getAttributeLabels();
+		if (this.system.resources) {
+			this._getResourceLabels();
+		}
 	}
 
 	/* -------------------------------------------- */
@@ -69,10 +73,12 @@ export class HLMActor extends Actor {
 	/**
 	 * Send this actor's flat attributes to the chat log
 	 */
-	shareFlatAttributes() {
+	async shareFlatAttributes() {
+		const content=await this.getFlatAttributeChatMessage();
+		console.log(content);
 		ChatMessage.create({
 			speaker: {actor: this},
-			content: this.getFlatAttributeString(),
+			content: content,
 		});
 	}
 
@@ -87,6 +93,16 @@ export class HLMActor extends Actor {
 			);
 		}
 		return attrStrings.join("<br>");
+	}
+
+	async getFlatAttributeChatMessage() {
+		const html= await renderTemplate(
+			"systems/hooklineandmecha/templates/messages/flat-attributes.html",
+			{
+				attributes: this.system.attributes.flat
+			}
+		);
+		return html;
 	}
 
 	async rollTargeted(attackKey, defenceKey, dieCount, dieSize) {
@@ -141,6 +157,24 @@ export class HLMActor extends Actor {
 	setNPCSize(targetSize) {
 		this.system.size=targetSize;
 		this.npcSize = game.fishHandler.knownSizes[targetSize];
+	}
+
+	_getAttributeLabels() {
+		for (const attributeKey in this.system.attributes.rolled) {
+			const attribute = this.system.attributes.rolled[attributeKey];
+			attribute.label = Utils.getLocalisedAttributeLabel(attributeKey);
+		}
+		for (const attributeKey in this.system.attributes.flat) {
+			const attribute = this.system.attributes.flat[attributeKey];
+			attribute.label = Utils.getLocalisedAttributeLabel(attributeKey);
+		}
+	}
+
+	_getResourceLabels() {
+		for (const resourceKey in this.system.resources) {
+			const resource = this.system.resources[resourceKey];
+			resource.label = Utils.getLocalisedResourceLabel(resourceKey);
+		}
 	}
 }
 

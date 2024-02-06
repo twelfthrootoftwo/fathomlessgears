@@ -51,6 +51,7 @@
 	"ROLLTEXT.attackIntro": "_ATTRIBUTE_NAME_ attack against _TARGET_NAME_:",
 	"ROLLTEXT.hitZone": "Hit zone:",
 	"ROLLTEXT.hitColumn": "Hit column:",
+	"ROLLTEXT.flat": "Flat Attributes:",
 
 	"HIT.miss": "Miss",
 	"HIT.hit": "Hit",
