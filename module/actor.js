@@ -123,6 +123,10 @@ export class HLMActor extends Actor {
 	}
 
 	async rollNoTarget(attributeKey, dieCount, dieSize) {
+
+		let roll = this.getAttributeRoller(attributeKey, dieCount, dieSize);
+		await roll.evaluate();
+
 		var label = "";
 		if (attributeKey) {
 			label =
@@ -130,11 +134,8 @@ export class HLMActor extends Actor {
 				Utils.getLocalisedAttributeLabel(attributeKey) +
 				":";
 		} else {
-			label = "Rolling " + formula + ":";
+			label = "Rolling " + roll.formula + ":";
 		}
-
-		let roll = this.getAttributeRoller(attributeKey, dieCount, dieSize);
-		await roll.evaluate();
 		roll.toMessage({
 			speaker: ChatMessage.getSpeaker({actor: this.actor}),
 			flavor: label,

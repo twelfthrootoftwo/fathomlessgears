@@ -66,25 +66,19 @@ export class AttackHandler {
 			.localize("ROLLTEXT.attackIntro")
 			.replace("_ATTRIBUTE_NAME_", attackAttrLabel)
 			.replace("_TARGET_NAME_", defender.name);
-		displayString.push(introductionMessage);
+		const introductionHtml=`<div class="message-header">${introductionMessage}</div>`
+		displayString.push(introductionHtml);
 
 		//To hit
 		const hitRollDisplay = await renderTemplate(
-			"systems/hooklineandmecha/templates/partials/roll-partial.html",
+			"systems/hooklineandmecha/templates/partials/attack-roll-partial.html",
 			{
-				formula: attackRoll.formula,
 				total: attackRoll.total,
+				formula: attackRoll.formula,
+				result: game.i18n.localize("HIT."+hitResult),
 			}
 		);
 		displayString.push(hitRollDisplay);
-
-		const successDisplay = await renderTemplate(
-			"systems/hooklineandmecha/templates/partials/target-dc-partial.html",
-			{
-				result: Utils.getLocalisedHitType(hitResult),
-			}
-		);
-		displayString.push(successDisplay);
 
 		if (hitResult === HIT_TYPE.hit) {
 			const locationDisplay = await AttackHandler.generateLocationDisplay(
@@ -93,7 +87,7 @@ export class AttackHandler {
 			displayString.push(locationDisplay);
 		}
 
-		const hitMessage = ChatMessage.create({
+		const hitMessage = await ChatMessage.create({
 			speaker: {actor: attacker},
 			content: displayString.join("<br>"),
 		});
