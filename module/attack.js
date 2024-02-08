@@ -92,7 +92,7 @@ export class AttackHandler {
 
 		const hitMessage = await ChatMessage.create({
 			speaker: {actor: attacker},
-			content: displayString.join("<br>"),
+			content: displayString.join(""),
 		});
 	}
 

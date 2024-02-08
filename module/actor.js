@@ -123,22 +123,32 @@ export class HLMActor extends Actor {
 	}
 
 	async rollNoTarget(attributeKey, dieCount, dieSize) {
+		console.log(attributeKey);
 
 		let roll = this.getAttributeRoller(attributeKey, dieCount, dieSize);
 		await roll.evaluate();
 
-		var label = "";
+		var label = game.i18n.localize("ROLLTEXT.base");
+		console.log(label);
 		if (attributeKey) {
-			label =
-				"Rolling " +
-				Utils.getLocalisedAttributeLabel(attributeKey) +
-				":";
+			console.log("Replacing with attribute")
+			label=label.replace("_ATTRIBUTE_NAME_", Utils.getLocalisedAttributeLabel(attributeKey));
 		} else {
-			label = "Rolling " + roll.formula + ":";
+			label=label.replace("_ATTRIBUTE_NAME_", roll.formula);
 		}
-		roll.toMessage({
-			speaker: ChatMessage.getSpeaker({actor: this.actor}),
-			flavor: label,
+
+		const hitRollDisplay = await renderTemplate(
+			"systems/hooklineandmecha/templates/partials/labelled-roll-partial.html",
+			{
+				label_left: label,
+				total: roll.total,
+				tooltip: `${roll.formula}:  ${roll.result}`,
+			}
+		);
+
+		const hitMessage = await ChatMessage.create({
+			speaker: {actor: this},
+			content: hitRollDisplay,
 		});
 	}
 
