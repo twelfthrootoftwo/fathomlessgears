@@ -63,19 +63,22 @@ export class AttackHandler {
 		const displayString = [];
 		//Intro
 		const introductionMessage = game.i18n
-			.localize("ROLLTEXT.attackIntro")
-			.replace("_ATTRIBUTE_NAME_", attackAttrLabel)
+			.localize("ROLLTEXT.attackHeader")
+			.replace("_ATTACKER_NAME_", attacker.name)
 			.replace("_TARGET_NAME_", defender.name);
 		const introductionHtml=`<div class="message-header">${introductionMessage}</div>`
 		displayString.push(introductionHtml);
 
 		//To hit
 		const hitRollDisplay = await renderTemplate(
-			"systems/hooklineandmecha/templates/partials/attack-roll-partial.html",
+			"systems/hooklineandmecha/templates/partials/labelled-roll-partial.html",
 			{
+				label_left: game.i18n
+				.localize("ROLLTEXT.attackIntro")
+				.replace("_ATTRIBUTE_NAME_", attackAttrLabel),
 				total: attackRoll.total,
-				formula: attackRoll.formula,
-				result: game.i18n.localize("HIT."+hitResult),
+				tooltip: `${attackRoll.formula}:  ${attackRoll.result}`,
+				outcome: game.i18n.localize("HIT."+hitResult),
 			}
 		);
 		displayString.push(hitRollDisplay);
@@ -124,30 +127,27 @@ export class AttackHandler {
 	static async generateLocationDisplay(locationResult) {
 		const locationDisplayParts = [];
 		if (locationResult.locationRoll.formula !== "1") {
-			locationDisplayParts.push(game.i18n.localize("ROLLTEXT.hitZone"));
 			let hitZone = await renderTemplate(
-				"systems/hooklineandmecha/templates/partials/roll-partial.html",
+				"systems/hooklineandmecha/templates/partials/labelled-roll-partial.html",
 				{
-					formula: locationResult.locationRoll.formula,
+					label_left: game.i18n.localize("ROLLTEXT.hitZone"),
+					tooltip: `${locationResult.locationRoll.formula}:  ${locationResult.locationRoll.result}`,
 					total: locationResult.locationRoll.total,
+					outcome: Utils.getLocalisedHitZone(
+						locationResult.hitZone.location)
 				}
-			);
-			hitZone = hitZone.concat(
-				`<p> ${Utils.getLocalisedHitZone(
-					locationResult.hitZone.location
-				)} </p>`
 			);
 			locationDisplayParts.push(hitZone);
 		}
-		locationDisplayParts.push(game.i18n.localize("ROLLTEXT.hitColumn"));
 		const column = await renderTemplate(
-			"systems/hooklineandmecha/templates/partials/roll-partial.html",
+			"systems/hooklineandmecha/templates/partials/labelled-roll-partial.html",
 			{
-				formula: locationResult.columnRoll.formula,
+				label_left: game.i18n.localize("ROLLTEXT.hitColumn"),
+				tooltip: locationResult.columnRoll.formula,
 				total: locationResult.columnRoll.total,
 			}
 		);
 		locationDisplayParts.push(column);
-		return locationDisplayParts.join("<br>");
+		return locationDisplayParts.join("");
 	}
 }

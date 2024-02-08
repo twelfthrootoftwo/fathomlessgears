@@ -227,11 +227,19 @@
 .hit-result .dice-roll {
 	flex: 2 0 0;
 }
-.hit-result .target-dc-result {
-	flex-grow: 1;
+.hit-result .roll-label {
+	display: flex;
+	align-items: center;
+}
+.hit-result .outcome {
+	flex: 2 0 0;
+	justify-content: center;
+}
+.hit-result .descriptor {
+	flex: 3 0 0;
+	justify-content: left;
+}
+.hit-result .roll-outcome-text{
 	font-size: var(--font-size-13);
 	font-weight: bold;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 }

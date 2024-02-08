@@ -48,7 +48,8 @@
 	"FISHSIZE.leviathan": "Leviathan",
 
 	"ROLLTEXT.base": "Rolling _ATTRIBUTE_NAME_",
-	"ROLLTEXT.attackIntro": "_ATTRIBUTE_NAME_ attack against _TARGET_NAME_",
+	"ROLLTEXT.attackHeader": "_ATTACKER_NAME_ attacks _TARGET_NAME_!",
+	"ROLLTEXT.attackIntro": "_ATTRIBUTE_NAME_ attack:",
 	"ROLLTEXT.hitZone": "Hit zone:",
 	"ROLLTEXT.hitColumn": "Hit column:",
 	"ROLLTEXT.flat": "Flat Attributes:",
