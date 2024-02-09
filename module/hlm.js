@@ -38,10 +38,9 @@ Hooks.once("init", async function () {
 
 	//Load templates
 	await preloadHandlebarsTemplates();
-
 	CONFIG.Combat.initiative = {
-		formula: "-@ballast.total.value+0.1*@attributes.speed.value",
-		decimals: 2,
+		formula: "20-@ballast.total.value + 0.1*@attributes.flat.speed.value",
+		decimals: 1,
 	};
 
 	const fishDataFile = "systems/hooklineandmecha/data/fish.json";
