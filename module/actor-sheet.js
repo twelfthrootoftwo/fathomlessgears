@@ -73,7 +73,7 @@ export class HLMActorSheet extends ActorSheet {
 			}
 			this.actor.npcSize=npcSize;
 		}
-		console.log(formData);
+		this.actor.calculateBallast();
 		return formData;
 	}
 

@@ -50,10 +50,26 @@
 						}
 					}
 				}
+			},
+			"ballast": {
+				"ballast": {
+					"base": {
+						"value": 0
+					},
+					"weight": {
+						"value": 0
+					},
+					"modifiers": {
+						"value": 0
+					},
+					"total": {
+						"value": 0
+					}
+				}
 			}
 		},
 		"fisher": {
-			"templates": ["attributes"],
+			"templates": ["attributes", "ballast"],
 			"biography": "Good at catching fish",
 			"resources": {
 				"repair": {
@@ -84,7 +100,7 @@
 			"size": "fisher"
 		},
 		"fish": {
-			"templates": ["attributes"],
+			"templates": ["attributes", "ballast"],
 			"fishType": "aquatic",
 			"size": "small"
 		}

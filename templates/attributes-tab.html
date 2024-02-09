@@ -107,7 +107,31 @@
 	{{/each}}
 </div>
 
-<div class="flexrow">
-	<span>{{localize "ATTRIBUTETAB.weightClass"}}</span>
-	<div>{{weightClass.label}}</div>
+<div class="attributes-header">{{localize "ATTRIBUTETAB.ballast"}}</div>
+<div class="attributes-flex">
+	{{#each ballast as |bal key|}}
+		<div class="flat-wrapbox">
+			<span class="label-fixed">{{label}}</span>
+				<div class="editbox-fixed">
+					{{#ifcond key '==' "total"}}
+					<div class="fixed-number">
+						{{bal.value}}
+					</div>
+					{{else}}
+						{{#ifcond key '==' "weight"}}
+						<div class="fixed-number">
+							{{bal.value}}
+						</div>
+						{{else}}
+						<input
+						type="number"
+						name="system.ballast.{{key}}.value"
+						value="{{bal.value}}"
+						data-dtype="Number"
+						/>
+						{{/ifcond}}
+					{{/ifcond}}
+				</div>
+		</div>
+	{{/each}}
 </div>

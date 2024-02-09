@@ -5,6 +5,7 @@ import {HLMActorSheet} from "./actor-sheet.js";
 import {HLMToken, HLMTokenDocument} from "./token.js";
 import {preloadHandlebarsTemplates} from "./templates.js";
 import {FishDataHandler} from "./npcType.js";
+import { initialiseHelpers } from "./handlebars.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -39,13 +40,15 @@ Hooks.once("init", async function () {
 	await preloadHandlebarsTemplates();
 
 	CONFIG.Combat.initiative = {
-		formula: "10*@weightClass.value+@attributes.speed.value",
+		formula: "-@ballast.total.value+0.1*@attributes.speed.value",
 		decimals: 2,
 	};
 
 	const fishDataFile = "systems/hooklineandmecha/data/fish.json";
 	game.fishHandler = new FishDataHandler();
 	game.fishHandler.loadNPCData(fishDataFile);
+
+	initialiseHelpers();
 });
 
 export const system_ready = new Promise((success) => {

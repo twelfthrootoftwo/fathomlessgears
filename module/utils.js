@@ -30,6 +30,15 @@ export class Utils {
 		}
 	}
 
+	static getLocalisedBallastLabel(ballastKey) {
+		const recognisedBallast = ["base", "weight", "modifiers", "total"];
+		if (recognisedBallast.includes(ballastKey)) {
+			return game.i18n.localize("BALLAST." + ballastKey);
+		} else {
+			console.log("Ballast key not recognised: " + ballastKey);
+		}
+	}
+
 	static getLocalisedHitType(hitTypeKey) {
 		const recognisedHits = ["crit", "hit", "miss"];
 		if (recognisedHits.includes(hitTypeKey)) {

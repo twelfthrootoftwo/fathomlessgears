@@ -11,18 +11,12 @@ export class HLMActor extends Actor {
 	/** @inheritdoc */
 	prepareDerivedData() {
 		super.prepareDerivedData();
-		this.system.weightClass = WeightClass.evaluateWeightClass(
-			this.system.attributes.flat.weight.value,
-			0
-		);
+		this.calculateBallast();
 		this.setNPCSize(this.system.size);
 		if(this.system.fishType) {
 			this.setNPCType(this.system.fishType);
 		}
-		this._getAttributeLabels();
-		if (this.system.resources) {
-			this._getResourceLabels();
-		}
+		this._setLabels();
 	}
 
 	/* -------------------------------------------- */
@@ -187,56 +181,29 @@ export class HLMActor extends Actor {
 			resource.label = Utils.getLocalisedResourceLabel(resourceKey);
 		}
 	}
-}
 
-export class WeightClass {
-	static maxClass = 4;
-	static minClass = 0;
-	constructor(value) {
-		if (value < WeightClass.minClass || value > WeightClass.maxClass) {
-			throw new Error(
-				`WeightClass value must be between ${WeightClass.minClass.toString()} and ${WeightClass.maxClass.toString()} (received ${value.toString()})`
-			);
-		}
-		this.value = value;
-		switch (value) {
-			case 4:
-				this.label = game.i18n.localize("WEIGHT.ultraLight");
-				break;
-			case 3:
-				this.label = game.i18n.localize("WEIGHT.light");
-				break;
-			case 2:
-				this.label = game.i18n.localize("WEIGHT.medium");
-				break;
-			case 1:
-				this.label = game.i18n.localize("WEIGHT.heavy");
-				break;
-			case 0:
-				this.label = game.i18n.localize("WEIGHT.ultraHeavy");
-				break;
+	_getBallastLabels() {
+		for (const ballastKey in this.system.ballast) {
+			console.log(ballastKey);
+			const bal = this.system.ballast[ballastKey];
+			bal.label = Utils.getLocalisedBallastLabel(ballastKey);
+			console.log(bal);
 		}
 	}
-	static evaluateWeightClass(weight, shift) {
-		var baseWeightClass;
-		if (weight < 11) {
-			baseWeightClass = 3;
-		} else if (weight < 21) {
-			baseWeightClass = 2;
-		} else {
-			baseWeightClass = 1;
+
+	_setLabels() {
+		this._getAttributeLabels();
+		this._getBallastLabels();
+		if (this.system.resources) {
+			this._getResourceLabels();
 		}
+	}
 
-		var weightClass = baseWeightClass + shift;
-		weightClass =
-			weightClass < WeightClass.minClass
-				? WeightClass.minClass
-				: weightClass;
-		weightClass =
-			weightClass > WeightClass.maxClass
-				? WeightClass.maxClass
-				: weightClass;
-
-		return new WeightClass(weightClass);
+	calculateBallast() {
+		console.log(this);
+		const baseBallast=this.system.ballast.base.value;
+		const weightBallast=Math.floor(this.system.attributes.flat.weight.value/5);
+		const ballastMods=this.system.ballast.modifiers.value;
+		this.system.ballast.total.value=baseBallast+weightBallast+ballastMods;
 	}
 }

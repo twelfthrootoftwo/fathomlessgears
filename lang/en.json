@@ -18,6 +18,11 @@
 	"RESOURCES.core": "Core Integrity",
 	"RESOURCES.backlash": "Backlash",
 
+	"BALLAST.base": "Base",
+	"BALLAST.weight": "Weight",
+	"BALLAST.modifiers": "Modifiers", 
+	"BALLAST.total": "Total",
+
 	"HEADER.setTypes": "Apply types",
 
 	"TABS.attributes": "Attributes",
@@ -28,6 +33,7 @@
 	"ATTRIBUTETAB.noAttribute": "Flat Rolls",
 	"ATTRIBUTETAB.flat": "Flat Attributes",
 	"ATTRIBUTETAB.weightClass": "Weight Class",
+	"ATTRIBUTETAB.ballast": "Ballast",
 
 	"WEIGHT.ultraLight": "Ultra Light",
 	"WEIGHT.light": "Light",

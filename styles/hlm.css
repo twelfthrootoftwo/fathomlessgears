@@ -164,6 +164,10 @@
 }.hooklineandmecha .button-dark:hover {
 	background-color: #bbbbbb66;
 }
+.hooklineandmecha .fixed-number {
+	text-align: center;
+	color: var(--color-text-dark-inactive);
+}
 .hooklineandmecha .attributes-header {
 	position: sticky;
 	top: 0;
@@ -214,6 +218,7 @@
 }
 .hooklineandmecha .attributes-flex .editbox-fixed {
 	width: 28px;
+	text-align: center;
 }
 .hooklineandmecha.sheet.actor {
 	min-width: 560px;
@@ -228,22 +233,8 @@
 	font-size: var(--font-size-14);
 	font-weight: bold;
 }
-.flat-display-row {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	width: 100%;
-	margin-top: 2px;
-	padding-inline: 4px;
-	border-bottom: 1px solid var(--color-border-light-1);
-}
-.flat-display-row .attribute-label {
-	font-size: var(--font-size-12);
-}
-.flat-display-row .attribute-value {
-	font-size: var(--font-size-12);
-	font-weight: bold;
+.attribute-value {
+	text-align: center !important;
 }
 .hit-result {
 	display: flex;
