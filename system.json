@@ -1,9 +1,10 @@
 {
 	"id": "hooklineandmecha",
-	"version": "0.0.1",
+	"version": "0.1",
 	"title": "Hook, Line & Mecha",
 	"url": "",
-	"description": "Basic implementation of HLM based on Simple Worldbuilding System by Atropos",
+	"description": "Hook, Line & Mecha (WIP system)",
+	"background": "systems/hooklineandmecha/assets/hlm-logo-simple.png",
 	"authors": [
 		{
 			"name": "Twelfth",
@@ -25,7 +26,6 @@
 		"verified": "11"
 	},
 	"gridDistance": 1,
-	"gridUnits": "space",
 	"manifest": "",
 	"download": ""
 }
