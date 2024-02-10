@@ -46,7 +46,6 @@ export class HLMActorSheet extends ActorSheet {
 				context.selectedNpcSize = this.actor.system.size;
 			}
 		}
-		console.log(context);
 		return context;
 	}
 

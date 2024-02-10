@@ -183,10 +183,8 @@ export class HLMActor extends Actor {
 
 	_getBallastLabels() {
 		for (const ballastKey in this.system.ballast) {
-			console.log(ballastKey);
 			const bal = this.system.ballast[ballastKey];
 			bal.label = Utils.getLocalisedBallastLabel(ballastKey);
-			console.log(bal);
 		}
 	}
 
@@ -199,9 +197,9 @@ export class HLMActor extends Actor {
 	}
 
 	calculateBallast() {
-		console.log(this);
 		const baseBallast=this.system.ballast.base.value;
 		const weightBallast=Math.floor(this.system.attributes.flat.weight.value/5);
+		this.system.ballast.weight.value=weightBallast;
 		const ballastMods=this.system.ballast.modifiers.value;
 		this.system.ballast.total.value=baseBallast+weightBallast+ballastMods;
 	}
