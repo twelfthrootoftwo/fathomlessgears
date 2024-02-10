@@ -69,7 +69,6 @@ export class HLMActor extends Actor {
 	 */
 	async shareFlatAttributes() {
 		const content=await this.getFlatAttributeChatMessage();
-		console.log(content);
 		ChatMessage.create({
 			speaker: {actor: this},
 			content: content,
