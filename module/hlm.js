@@ -6,6 +6,8 @@ import {HLMToken, HLMTokenDocument} from "./token.js";
 import {preloadHandlebarsTemplates} from "./templates.js";
 import {FishDataHandler} from "./npcType.js";
 import { initialiseHelpers } from "./handlebars.js";
+import { addFshManager } from "./fsh-manager.js";
+
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -53,6 +55,9 @@ Hooks.once("init", async function () {
 export const system_ready = new Promise((success) => {
 	Hooks.once("ready", async function () {
 		//Post-init stuff goes here
+		Hooks.on("renderSidebarTab", async (app, html) => {
+			addFshManager(app, html);
+		});
 		success();
 	});
 });

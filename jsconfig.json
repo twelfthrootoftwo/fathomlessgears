@@ -1,0 +1,4 @@
+{
+  "include": ["module", "foundry"],
+  "exclude": ["foundry/client/config.js"]
+}

@@ -7,3 +7,9 @@ node_modules/
 package-lock.json
 
 worldbuilding.lock
+
+# Foundry
+foundry/
+
+# IP
+*.fsh

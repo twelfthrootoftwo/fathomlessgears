@@ -8,6 +8,7 @@ import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "./constants.js";
  * @extends {Actor}
  */
 export class HLMActor extends Actor {
+	system;
 	/** @inheritdoc */
 	prepareDerivedData() {
 		super.prepareDerivedData();
@@ -21,15 +22,7 @@ export class HLMActor extends Actor {
 
 	/* -------------------------------------------- */
 
-	/**
-	 * Is this Actor used as a template for other Actors?
-	 * @type {boolean}
-	 */
-	get isTemplate() {
-		return !!this.getFlag("hooklineandmecha", "isTemplate");
-	}
-
-	static isTargetedRoll(attributeKey) {
+		static isTargetedRoll(attributeKey) {
 		if ([ATTRIBUTES.close, ATTRIBUTES.far].includes(attributeKey))
 			return ATTRIBUTES.evade;
 		if (attributeKey === ATTRIBUTES.mental) return ATTRIBUTES.willpower;
@@ -52,7 +45,7 @@ export class HLMActor extends Actor {
 	}
 
 	getAttributeRoller(attributeKey, dieCount, dieSize) {
-		var formula = new Roll();
+		var formula = "";
 		if (attributeKey) {
 			const rollAttribute = this.system.attributes.rolled[attributeKey];
 			formula =
