@@ -44,3 +44,10 @@ export const HIT_TYPE = {
 	hit: "hit",
 	crit: "crit",
 };
+
+export const FILE_CONTENTS = {
+	tags_and_conds: "tags_and_conds",
+	fish: "fish",
+	item_data: "item_data",
+	frame_data: "frame_data"
+}
