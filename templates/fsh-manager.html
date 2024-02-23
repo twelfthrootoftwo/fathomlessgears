@@ -6,5 +6,18 @@
             <label>Import</label>
         </button>
     </div>
+    <ol class="datafile-table">
+        <li class="datafile-row datafile-header">
+            <div>Data file</div>
+            <div>Version</div>
+        </li>
+        {{#each datafiles as |file key|}}
+            <li class="datafile-row">
+                <div>{{file}}</div>
+                <div>.fsh numbering not available</div>
+            </li>
+        {{/each}}
+    </ol>
+
     <p>Uploading will overwrite files of the same name</p>
 </form>

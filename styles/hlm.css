@@ -280,3 +280,16 @@
 	font-size: var(--font-size-13);
 	font-weight: bold;
 }
+.datafile-table {
+	background: rgba(0, 0, 0, 0.1);
+}
+.datafile-row {
+	display: flex;
+	flex-direction: row;
+	border-bottom:1px solid var(--color-border-light-1);
+}
+.datafile-table .datafile-header {
+	background: var(--color-bg-header);
+	font-size: var(--font-size-14);
+	font-weight: bold;
+}

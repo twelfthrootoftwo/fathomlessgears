@@ -3,7 +3,6 @@ export function addFshManager(app, html) {
 	const compendium=html.siblings().filter(`.compendium-sidebar`);
 
 	const presetManager=$(compendium).find(`.fsh-content-manager`);
-	console.log(presetManager);
 	if(presetManager.length==0) {
 		const buttons=$(compendium).find(`.header-actions`);
 
@@ -20,13 +19,34 @@ export function addFshManager(app, html) {
 class FshManager extends Application {
 	datafiles=[]
 
+	constructor(...args) {
+		super(...args);
+		(async() => {
+			console.log("Getting file list")
+			const storageDir="systems/hooklineandmecha/storage/";
+			const files=await FilePicker.browse("data",storageDir,{extensions: [".json"]})
+			files.files.forEach((file) => {
+				const filename=file.slice(file.lastIndexOf("/")+1,file.lastIndexOf("."));
+				this.datafiles.push(filename);
+			})
+			console.log(`Files: ${this.datafiles}`)
+		}) ();
+	}
+
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			template: "systems/hooklineandmecha/templates/fsh-manager.html",
 			title: ".FSH Manager",
-			width: 600,
-			height: 600,
+			width: 400,
+			height: 400,
 		});
+	}
+
+	getData() {
+		const data={
+			datafiles: this.datafiles
+		}
+		return data
 	}
 
 	activateListeners(html) {

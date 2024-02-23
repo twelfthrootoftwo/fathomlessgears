@@ -7,6 +7,7 @@ import {preloadHandlebarsTemplates} from "./templates.js";
 import {FishDataHandler} from "./npcType.js";
 import { initialiseHelpers } from "./handlebars.js";
 import { addFshManager } from "./fsh-manager.js";
+import { readDataFiles } from "./file-management.js";
 
 
 /* -------------------------------------------- */
@@ -47,30 +48,9 @@ Hooks.once("init", async function () {
 
 	game.fishHandler = new FishDataHandler();
 	readDataFiles();
-	//game.fishHandler.loadNPCData(fishDataFile);
 
 	initialiseHelpers();
 });
-
-async function readDataFiles() {
-	const storageDir="systems/hooklineandmecha/storage/";
-	const files=await FilePicker.browse("data",storageDir,{extensions: [".json"]})
-	console.log(files.files)
-	files.files.foreach((file) => {
-		//ideally this would read each file and then categorise data based on the contents, but there's nothing in the file to indicate what it contains
-		const fileType=identifyType(file)
-		switch(fileType) {
-			case FILE_CONTENTS.fish:
-				game.fishHandler.loadNPCData(file);
-			case FILE_CONTENTS.item_data:
-				console.log("Reading internals");
-			case FILE_CONTENTS.frame_data:
-				console.log("Reading frames");
-			case _:
-				console.log("File type not recognised")
-		}
-	})
-}
 
 export const system_ready = new Promise((success) => {
 	Hooks.once("ready", async function () {
