@@ -50,23 +50,18 @@ class FshManager extends Application {
 	}
 
 	async _onUploadButtonClick() {
-		console.log("Button pressed")
+		//need to read the file as binary since Foundry's uploaders don't like the .fsh extension
 		const fr = new FileReader();
 		fr.readAsBinaryString(this.newFsh);
-		console.log("Uploading")
 		fr.addEventListener("load", (ev) => {
-			this._onFshLoaded(ev.target.result).then();
+			this._onFshLoaded(ev.target.result,this.newFsh.name).then();
 		  });
-		console.log("Upload complete")
-
-		this.processFsh(this.newFsh)
-		this.datafiles.push(this.newFsh)
-		this.newFsh=null
 	}
 
-	_onFshLoaded(ev) {
-		console.log("File read")
-		console.log(ev)
+	async _onFshLoaded(ev,fileName) {;
+		//convert binary back to (actual) json
+		const fshFile=new File([ev],fileName.replace(".fsh",".json"),{"type":"application/json"});
+		await FilePicker.upload("data","systems/hooklineandmecha/storage/",fshFile);
 	}
 
 	processFsh(fsh) {
