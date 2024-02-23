@@ -8,16 +8,17 @@
     </div>
     <ol class="datafile-table">
         <li class="datafile-row datafile-header">
-            <div>Data file</div>
-            <div>Version</div>
+            <div class="datafile-label" i18n>Data file</div>
+            <div class="datafile-version" i18n>Version</div>
+            <div class="datafile-actions" i18n>Actions</div>
         </li>
         {{#each datafiles as |file key|}}
             <li class="datafile-row">
-                <div>{{file}}</div>
-                <div>.fsh numbering not available</div>
+                <div class="datafile-label">{{file}}</div>
+                <div class="datafile-version">0.0.0</div>
+                <div class="datafile-action-button button update" id=file i18n>Update</div>
+                <div class="datafile-action-button button remove" id=file i18n>Remove</div>
             </li>
         {{/each}}
     </ol>
-
-    <p>Uploading will overwrite files of the same name</p>
 </form>
