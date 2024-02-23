@@ -45,7 +45,7 @@ Hooks.once("init", async function () {
 		decimals: 1,
 	};
 
-	const fishDataFile = "systems/hooklineandmecha/data/fish.json";
+	const fishDataFile = "systems/hooklineandmecha/storage/fish.json";
 	game.fishHandler = new FishDataHandler();
 	game.fishHandler.loadNPCData(fishDataFile);
 

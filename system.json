@@ -27,5 +27,6 @@
 	},
 	"gridDistance": 1,
 	"manifest": "",
-	"download": ""
+	"download": "",
+	"persistentStorage": true
 }
