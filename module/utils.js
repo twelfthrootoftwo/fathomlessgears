@@ -84,4 +84,25 @@ export class Utils {
 		];
 		return flat.includes(attributeKey);
 	}
+
+	/**
+	 * Capitalise the first letter in the first word
+	 * @param {str} str 
+	 * @returns 
+	 */
+	static capitaliseFirstLetter(str) {
+		return str[0].toSupperCase+str.substring(1);
+	}
+
+	/**
+	 * Capitalise the first letter in all words
+	 * @param {string} str 
+	 */
+	static capitaliseWords(str) {
+		const words=str.split(" ")
+		for (let i = 0; i < words.length; i++) {
+			words[i] = words[i][0].toUpperCase() + words[i].substring(1);
+		}
+		return words.join(" ");
+	}
 }

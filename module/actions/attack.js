@@ -1,5 +1,5 @@
-import {Utils} from "./utils.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "./constants.js";
+import {Utils} from "../utils.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "../constants.js";
 
 export class AttackHandler {
 	static async rollToHit(

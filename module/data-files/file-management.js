@@ -1,4 +1,4 @@
-import { FILE_CONTENTS } from "./constants.js";
+import { FILE_CONTENTS } from "../constants.js";
 
 /**
  * Looks at a file name to determine what type of info it contains

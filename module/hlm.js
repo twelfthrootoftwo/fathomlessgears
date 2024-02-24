@@ -1,13 +1,14 @@
 // Import Modules
-import {HLMActor} from "./actor.js";
+import {HLMActor} from "./actors/actor.js";
 import {HLMItem} from "./item.js";
 import {HLMActorSheet} from "./actor-sheet.js";
 import {HLMToken, HLMTokenDocument} from "./token.js";
 import {preloadHandlebarsTemplates} from "./templates.js";
-import {FishDataHandler} from "./npcType.js";
+import {FishDataHandler} from "./actors/npc-handler.js";
+import {FrameDataHandler} from "./actors/frame-handler.js";
 import { initialiseHelpers } from "./handlebars.js";
-import { addFshManager } from "./fsh-manager.js";
-import { readDataFiles } from "./file-management.js";
+import { addFshManager } from "./data-files/fsh-manager.js";
+import { readDataFiles } from "./data-files/file-management.js";
 
 
 /* -------------------------------------------- */
@@ -47,6 +48,7 @@ Hooks.once("init", async function () {
 	};
 
 	game.fishHandler = new FishDataHandler();
+	game.frameHandler = new FrameDataHandler();
 	readDataFiles();
 
 	initialiseHelpers();

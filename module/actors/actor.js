@@ -1,7 +1,7 @@
-import {Utils} from "./utils.js";
-import {AttackHandler} from "./attack.js";
-import {FishDataHandler} from "./npcType.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "./constants.js";
+import {Utils} from "../utils.js";
+import {AttackHandler} from "../actions/attack.js";
+import {FishDataHandler} from "./npc-handler.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "../constants.js";
 
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
