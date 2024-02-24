@@ -8,7 +8,6 @@ import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "./constants.js";
  * @extends {Actor}
  */
 export class HLMActor extends Actor {
-	system;
 	/** @inheritdoc */
 	prepareDerivedData() {
 		super.prepareDerivedData();
@@ -20,9 +19,7 @@ export class HLMActor extends Actor {
 		this._setLabels();
 	}
 
-	/* -------------------------------------------- */
-
-		static isTargetedRoll(attributeKey) {
+	static isTargetedRoll(attributeKey) {
 		if ([ATTRIBUTES.close, ATTRIBUTES.far].includes(attributeKey))
 			return ATTRIBUTES.evade;
 		if (attributeKey === ATTRIBUTES.mental) return ATTRIBUTES.willpower;

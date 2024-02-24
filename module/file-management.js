@@ -5,12 +5,13 @@ import { FILE_CONTENTS } from "./constants.js";
  * @param {str} fileName : Name of file to identify
  */
 export function identifyType(fileName) {
+	let result=null
     Object.values(FILE_CONTENTS).forEach((content_type) => {
         if(fileName.includes(content_type)) {
-            return FILE_CONTENTS[content_type];
+            result=FILE_CONTENTS[content_type];
         }
     })
-    return null;
+    return result;
 }
 
 export async function readDataFiles() {
