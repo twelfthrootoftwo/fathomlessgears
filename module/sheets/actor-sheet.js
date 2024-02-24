@@ -1,4 +1,4 @@
-import {Utils} from "./utils.js";
+import {Utils} from "../utilities/utils.js";
 
 /**
  * @extends {ActorSheet}

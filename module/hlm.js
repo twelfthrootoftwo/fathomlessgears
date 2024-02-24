@@ -1,12 +1,12 @@
 // Import Modules
 import {HLMActor} from "./actors/actor.js";
-import {HLMItem} from "./item.js";
-import {HLMActorSheet} from "./actor-sheet.js";
-import {HLMToken, HLMTokenDocument} from "./token.js";
-import {preloadHandlebarsTemplates} from "./templates.js";
+import {HLMItem} from "./items/item.js";
+import {HLMActorSheet} from "./sheets/actor-sheet.js";
+import {HLMToken, HLMTokenDocument} from "./tokens/token.js";
+import {preloadHandlebarsTemplates} from "./utilities/templates.js";
 import {FishDataHandler} from "./actors/npc-handler.js";
 import {FrameDataHandler} from "./actors/frame-handler.js";
-import { initialiseHelpers } from "./handlebars.js";
+import { initialiseHelpers } from "./utilities/handlebars.js";
 import { addFshManager } from "./data-files/fsh-manager.js";
 import { readDataFiles } from "./data-files/file-management.js";
 

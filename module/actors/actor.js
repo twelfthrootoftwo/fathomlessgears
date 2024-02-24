@@ -1,4 +1,4 @@
-import {Utils} from "../utils.js";
+import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
 import {FishDataHandler} from "./npc-handler.js";
 import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "../constants.js";

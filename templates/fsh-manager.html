@@ -12,13 +12,11 @@
         <li class="datafile-row datafile-header">
             <div class="datafile-label" i18n>Data file</div>
             <div class="datafile-version" i18n>Version</div>
-            <div class="datafile-actions" i18n>Actions</div>
         </li>
         {{#each datafiles as |file key|}}
             <li class="datafile-row">
                 <div class="datafile-label">{{file}}</div>
                 <div class="datafile-version">0.0.0</div>
-                <div class="datafile-action-button button remove" id=file i18n>Remove</div>
             </li>
         {{/each}}
     </ol>

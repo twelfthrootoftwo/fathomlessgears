@@ -36,6 +36,7 @@ class FshManager extends Application {
 
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
+			classes: ["hooklineandmecha"],
 			template: "systems/hooklineandmecha/templates/fsh-manager.html",
 			title: ".FSH Manager",
 			width: 400,
@@ -61,6 +62,9 @@ class FshManager extends Application {
 		document.getElementsByClassName("fsh-upload")[0]?.addEventListener("click", () => {
 		  	this._onUploadButtonClick().then();
 		});
+		
+		html.find(".remove").click(this.removeDataFile.bind(this));
+		
 	}
 
 	_selectFsh(ev) {
