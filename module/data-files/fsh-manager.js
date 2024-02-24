@@ -10,7 +10,7 @@ export function addFshManager(app, html) {
 		button.setAttribute("style", "flex-basis: 100%; margin-top: 5px;");
 		button.innerHTML = "<i class='fsh-content-manager i--s'></i> FSH Manager";
 		button.addEventListener("click", () => {
-			new FshManager().render(true);
+			new FshManager()
 		});
 		buttons.after(button);
 	}
@@ -30,6 +30,7 @@ class FshManager extends Application {
 				this.datafiles.push(filename);
 			})
 			console.log(`Files: ${this.datafiles}`)
+			this.render(true)
 		}) ();
 	}
 
@@ -82,6 +83,8 @@ class FshManager extends Application {
 		//convert binary back to (actual) json
 		const fshFile=new File([ev],fileName.replace(".fsh",".json"),{"type":"application/json"});
 		await FilePicker.upload("data","systems/hooklineandmecha/storage/",fshFile);
+		this.datafiles.push(fileName.slice(file.lastIndexOf("/")+1,file.lastIndexOf(".")))
+		this.datafiles.sort();
 	}
 
 	processFsh(fsh) {

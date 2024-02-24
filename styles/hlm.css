@@ -280,8 +280,24 @@
 	font-size: var(--font-size-13);
 	font-weight: bold;
 }
+.import-row {
+	display: flex;
+	flex-direction: row;
+	border: 2px groove var(--color-border-light-1);
+	line-height: 18px;
+}
+.import-row .file-upload {
+	flex-grow: 1;
+	margin: 1px;
+}
+.import-row .file-upload-button {
+	flex: 0 0 70px;
+	height: 20px;
+	font-size: var(--font-size-10);
+}
 .datafile-table {
 	background: rgba(0, 0, 0, 0.1);
+	padding: 0px;
 }
 .datafile-row {
 	display: flex;
@@ -300,21 +316,26 @@
 	flex: 1 0 200px;
 	margin: 2px;
 	display: flex;
+	padding: 5px;
+	align-items: center;
 }
 .datafile-table .datafile-version {
 	flex: 0 0 50px;
 	margin: 2px;
 	margin-left: 0px;
 	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .datafile-table .datafile-action-button {
 	flex: 0 0 50px;
 	padding: 2px;
 	display: flex;
+	align-items: center;
 	justify-content: center;
 }
 .datafile-table .datafile-actions {
-	flex: 0 0 100px;
+	flex: 0 0 50px;
 	padding: 2px;
 	display: flex;
 	justify-content: center;
