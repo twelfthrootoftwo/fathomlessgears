@@ -66,10 +66,13 @@
 						"value": 0
 					}
 				}
+			},
+			"internals": {
+				"internals": []
 			}
 		},
 		"fisher": {
-			"templates": ["attributes", "ballast"],
+			"templates": ["attributes", "ballast", "internals"],
 			"biography": "Good at catching fish",
 			"resources": {
 				"repair": {
@@ -97,12 +100,24 @@
 					"max": 1
 				}
 			},
-			"size": "fisher"
+			"size": "fisher",
+			"frame": ""
 		},
 		"fish": {
-			"templates": ["attributes", "ballast"],
-			"fishType": "aquatic",
+			"templates": ["attributes", "ballast", "internals"],
+			"fishType": "",
 			"size": "small"
 		}
-	}
+	},
+	"Item": {
+		"types": ["tag","internal_pc","internal_npc","frame_pc","size"],
+		"htmlFields": ["description"],
+		"item": {
+			"description": "",
+			"quantity": 1,
+			"weight": 0,
+			"attributes": {},
+			"groups": {}
+		}
+	  }
 }

@@ -11,9 +11,46 @@
 			"url": ""
 		}
 	],
-	"esmodules": ["module/hlm.js"],
+	"esmodules": ["module/hlm.js","scripts/jszip.js"],
 	"styles": ["styles/hlm.css","styles/theme.css"],
-	"packs": [],
+	"packs": [
+		{
+			"name": "tags",
+			"label": "Internal Tags",
+			"system": "hooklineandmecha",
+			"path": "packs/tags",
+			"type": "Item"
+		},
+		{
+			"name": "internal_pc",
+			"label": "Fisher Internals",
+			"system": "hooklineandmecha",
+			"path": "packs/internal_pc",
+			"type": "Item"
+		},
+		{
+			"name": "internal_npc",
+			"label": "Fish Internals",
+			"system": "hooklineandmecha",
+			"path": "packs/internal_npc",
+			"type": "Item",
+			"private": true
+		},
+		{
+			"name": "frames",
+			"label": "Fisher Frames",
+			"system": "hooklineandmecha",
+			"path": "packs/frames",
+			"type": "Item"
+		},
+		{
+			"name": "sizes",
+			"label": "Size Categories",
+			"system": "hooklineandmecha",
+			"path": "packs/sizes",
+			"type": "Item"
+		}
+	],
 	"languages": [
 		{
 			"lang": "en",

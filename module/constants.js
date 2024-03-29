@@ -51,3 +51,12 @@ export const FILE_CONTENTS = {
 	item_data: "item_data",
 	frame_data: "frame_data",
 };
+
+export const CONTENT_TYPES = {
+	tag: "tag",
+	condition: "condition",
+	internal_pc: "internal_pc",
+	internal_npc: "internal_npc",
+	frame_pc: "frame_pc",
+	size: "size",
+}

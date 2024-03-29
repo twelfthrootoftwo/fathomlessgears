@@ -105,4 +105,8 @@ export class Utils {
 		}
 		return words.join(" ");
 	}
+
+	static toLowerHyphen(str) {
+		return str.replace(" ","-").replace("_","-").toLowerCase();
+	}
 }

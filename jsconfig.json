@@ -1,4 +1,4 @@
 {
-  "include": ["module", "foundry"],
+  "include": ["module","module/actions","module/actors","module/data-files","module/items","module/sheets","module/tokens","module/utilities","scripts", "foundry"],
   "exclude": ["foundry/client/config.js"]
 }

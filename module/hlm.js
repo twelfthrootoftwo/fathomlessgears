@@ -4,18 +4,13 @@ import {HLMItem} from "./items/item.js";
 import {HLMActorSheet} from "./sheets/actor-sheet.js";
 import {HLMToken, HLMTokenDocument} from "./tokens/token.js";
 import {preloadHandlebarsTemplates} from "./utilities/templates.js";
-import {FishDataHandler} from "./actors/npc-handler.js";
-import {FrameDataHandler} from "./actors/frame-handler.js";
 import { initialiseHelpers } from "./utilities/handlebars.js";
 import { addFshManager } from "./data-files/fsh-manager.js";
-import { readDataFiles } from "./data-files/file-management.js";
 
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
 /* -------------------------------------------- */
-
-let fishHandler = null;
 
 /**
  * Init hook.
@@ -46,20 +41,18 @@ Hooks.once("init", async function () {
 		formula: "20-@ballast.total.value + 0.1*@attributes.flat.speed.value",
 		decimals: 1,
 	};
+	Hooks.on("renderSidebarTab", async (app, html) => {
+		addFshManager(app, html);
+	});
 
-	game.fishHandler = new FishDataHandler();
-	game.frameHandler = new FrameDataHandler();
-	readDataFiles();
-
+	console.log("Initialising helpers")
 	initialiseHelpers();
 });
 
 export const system_ready = new Promise((success) => {
 	Hooks.once("ready", async function () {
 		//Post-init stuff goes here
-		Hooks.on("renderSidebarTab", async (app, html) => {
-			addFshManager(app, html);
-		});
+		console.log("Ready!")
 		success();
 	});
 });

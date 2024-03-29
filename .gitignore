@@ -14,3 +14,5 @@ foundry/
 # IP
 *.fsh
 storage/
+storage_backup/
+packs/
