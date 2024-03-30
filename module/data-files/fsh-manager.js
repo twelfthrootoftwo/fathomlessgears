@@ -1,4 +1,4 @@
-import { identifyDataTypes } from "./file-management.js";
+import { identifyDataTypes } from "./file-utils.js";
 import { getExtension, getTargetCompendium } from "./file-utils.js";
 
 

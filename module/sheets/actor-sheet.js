@@ -36,42 +36,42 @@ export class HLMActorSheet extends ActorSheet {
 				async: true,
 			}
 		);
-		if (this.actor.type === "fish") {
-			this._getNPCTypes(context);
-			this._getNPCSizes(context);
-			if (this.actor.system.fishType) {
-				context.selectedNpcType = this.actor.system.fishType;
-			}
-			if (this.actor.system.size) {
-				context.selectedNpcSize = this.actor.system.size;
-			}
-		}
+		// if (this.actor.type === "fish") {
+		// 	this._getNPCTypes(context);
+		// 	this._getNPCSizes(context);
+		// 	if (this.actor.system.fishType) {
+		// 		context.selectedNpcType = this.actor.system.fishType;
+		// 	}
+		// 	if (this.actor.system.size) {
+		// 		context.selectedNpcSize = this.actor.system.size;
+		// 	}
+		// }
 		return context;
 	}
 
 	/**@inheritdoc */
 	_getSubmitData(updateData) {
 		let formData = super._getSubmitData(updateData);
-		if(this.updateTypeAndSize) {
-			console.log("Updating type and size");
+		// if(this.updateTypeAndSize) {
+		// 	console.log("Updating type and size");
 
-			formData["system.fishType"]=formData.selectedNpcType;
-			formData["system.size"]=formData.selectedNpcSize;
+		// 	formData["system.fishType"]=formData.selectedNpcType;
+		// 	formData["system.size"]=formData.selectedNpcSize;
 			
-			const npcType = game.fishHandler.knownTypes[formData.selectedNpcType];
-			for (let key in npcType) {
-				console.log("Updating "+key)
-				this.setAttributeValue(formData,key, npcType[key]);
-			}
-			this.actor.npcType=npcType;
+		// 	const npcType = game.fishHandler.knownTypes[formData.selectedNpcType];
+		// 	for (let key in npcType) {
+		// 		console.log("Updating "+key)
+		// 		this.setAttributeValue(formData,key, npcType[key]);
+		// 	}
+		// 	this.actor.npcType=npcType;
 
-			const npcSize = game.fishHandler.knownSizes[formData.selectedNpcSize];
-			for (let key in npcSize) {
-				console.log("Updating "+key)
-				this.setAttributeValue(formData,key, npcSize[key]);
-			}
-			this.actor.npcSize=npcSize;
-		}
+		// 	const npcSize = game.fishHandler.knownSizes[formData.selectedNpcSize];
+		// 	for (let key in npcSize) {
+		// 		console.log("Updating "+key)
+		// 		this.setAttributeValue(formData,key, npcSize[key]);
+		// 	}
+		// 	this.actor.npcSize=npcSize;
+		// }
 		this.actor.calculateBallast();
 		return formData;
 	}
@@ -106,23 +106,15 @@ export class HLMActorSheet extends ActorSheet {
 		return `systems/hooklineandmecha/templates/${this.actor.type}-sheet.html`;
 	}
 
-	_getNPCTypes(context) {
-		context.npcTypes = new Object();
-		for (const typeKey in game.fishHandler.knownTypes) {
-			const type = game.fishHandler.knownTypes[typeKey];
-			type.label = game.i18n.localize("FISHTYPE." + typeKey);
-			context.npcTypes[typeKey] = type;
-		}
-	}
-
 	_getNPCSizes(context) {
 		context.npcSizes = new Object();
-		for (const sizeKey in game.fishHandler.knownSizes) {
-			if (sizeKey==="fisher") continue;
-			const size = game.fishHandler.knownSizes[sizeKey];
-			size.label = game.i18n.localize("FISHSIZE." + sizeKey);
-			context.npcSizes[sizeKey] = size;
-		}
+		//TODO Get/apply size options from compendium
+		// for (const sizeKey in game.fishHandler.knownSizes) {
+		// 	if (sizeKey==="fisher") continue;
+		// 	const size = game.fishHandler.knownSizes[sizeKey];
+		// 	size.label = game.i18n.localize("FISHSIZE." + sizeKey);
+		// 	context.npcSizes[sizeKey] = size;
+		// }
 	}
 
 	setAttributeValue(formData, key, value) {

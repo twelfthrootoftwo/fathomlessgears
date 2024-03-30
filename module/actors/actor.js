@@ -1,7 +1,6 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
-import {FishDataHandler} from "./npc-handler.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "../constants.js";
+import {ATTRIBUTES, RESOURCES, HIT_TYPE} from "../constants.js";
 
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
@@ -13,9 +12,6 @@ export class HLMActor extends Actor {
 		super.prepareDerivedData();
 		this.calculateBallast();
 		this.setNPCSize(this.system.size);
-		if(this.system.fishType) {
-			this.setNPCType(this.system.fishType);
-		}
 		this._setLabels();
 	}
 
@@ -143,14 +139,9 @@ export class HLMActor extends Actor {
 		}
 	}
 
-	setNPCType(targetType) {
-		this.system.fishType=targetType;
-		this.npcType = game.fishHandler.knownTypes[targetType];
-	}
-
 	setNPCSize(targetSize) {
 		this.system.size=targetSize;
-		this.npcSize = game.fishHandler.knownSizes[targetSize];
+		//TODO: Assign size object
 	}
 
 	_getAttributeLabels() {
