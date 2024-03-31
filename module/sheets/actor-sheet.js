@@ -124,4 +124,17 @@ export class HLMActorSheet extends ActorSheet {
 			formData["system.attributes.flat."+key+".value"] = value;
 		}
 	}
+
+	/**
+	 * Accept and process an item dropped on this sheet
+	 * @param {DragEvent} event The initiating drag event
+	 * @param {*} data What's being dropped
+	 */
+	async _onDropItem(event, data) {
+		const targetItem=await fromUuid(data.uuid);
+		console.log(targetItem);
+		if(this.actor.can_drop_item(targetItem)) {
+			this.actor.receiveDrop(targetItem);
+		}
+	}
 }

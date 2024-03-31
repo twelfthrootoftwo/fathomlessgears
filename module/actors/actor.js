@@ -1,6 +1,6 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
-import {ATTRIBUTES, RESOURCES, HIT_TYPE} from "../constants.js";
+import {ATTRIBUTES, RESOURCES, HIT_TYPE, CONTENT_TYPES} from "../constants.js";
 
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
@@ -183,5 +183,30 @@ export class HLMActor extends Actor {
 		this.system.ballast.weight.value=weightBallast;
 		const ballastMods=this.system.ballast.modifiers.value;
 		this.system.ballast.total.value=baseBallast+weightBallast+ballastMods;
+	}
+
+	/**
+	 * Checks whether an item can be dropped onto this actor
+	 * @param {Item} item The item being dropped
+	 * @returns True if this object can be dropped, False otherwise
+	 */
+	can_drop_item(item) {
+		let acceptedTypes=[]
+		switch(this.type) {
+			case "fisher":
+				acceptedTypes=[CONTENT_TYPES.frame_pc, CONTENT_TYPES.internal_pc, CONTENT_TYPES.size];
+				break;
+			case "fish":
+				acceptedTypes=[CONTENT_TYPES.internal_npc, CONTENT_TYPES.size];
+				break;
+		}
+		if(acceptedTypes.includes(item.type)) {
+			return true;
+		}
+		return false;
+	}
+
+	receiveDrop(item) {
+		console.log("Item dropped");
 	}
 }
