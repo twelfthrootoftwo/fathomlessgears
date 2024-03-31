@@ -1,5 +1,7 @@
 import { identifyDataTypes } from "./file-utils.js";
 import { getExtension, getTargetCompendium } from "./file-utils.js";
+import {Utils} from "../utilities/utils.js"
+//import {HLMItem} from "../items/item.js"
 
 
 export function addFshManager(app, html) {
@@ -82,6 +84,11 @@ class FshManager extends Application {
 		switch(getExtension(fileName)) {
 			case "fsh": {
 				this.processFsh(ev);
+				break;
+			}
+			case "json": {
+				this.processJson(ev, fileName);
+				break;
 			}
 		}
 	}
@@ -98,16 +105,24 @@ class FshManager extends Application {
 		zip.loadAsync(rawFsh).then(function (zip) {
 			for(let fileName of Object.keys(zip.files)) {
 				zip.files[fileName].async('string').then(function (fileData) {
-					const preparedData=JSON.parse(fileData);
-					console.log(preparedData);
-					const dataTypes=identifyDataTypes(fileData,fileName);
-					return saveToCompendium(preparedData,dataTypes);
+					return readDataFile(fileData, fileName);
 				}).then(function (promise) {
 					//await;
 				})
 			}
 		})
 	}
+
+	async processJson(rawJson, fileName) {
+		await readDataFile(await rawJson.text(), fileName);
+	}
+}
+
+async function readDataFile(fileData, fileName) {
+	const preparedData=JSON.parse(fileData);
+	console.log(preparedData);
+	const dataTypes=identifyDataTypes(fileData,fileName);
+	await saveToCompendium(preparedData,dataTypes);
 }
 
 /**
@@ -119,15 +134,11 @@ async function saveToCompendium(preparedData, dataTypes) {
 	for(let type of dataTypes) {
 		const targetCompendium = getTargetCompendium(type);
 		await targetCompendium.configure({locked: false});
-		for(let item of Object.keys(preparedData)) {
-			const itemData=preparedData[item];
-			itemData.name=item;
-			itemData.type=type;
-			await Item.create(itemData, {temporary: true}).then(function (item) {
-				return targetCompendium.importDocument(item);
-			}).then(function (promise) {
-				console.log(`Importing Item ${item.name} into Compendium pack ${targetCompendium.collection}`);
-			})
+		for(let itemName of Object.keys(preparedData)) {
+			const name=Utils.capitaliseWords(Utils.fromLowerHyphen(itemName));
+			const item = await Item.create({name: name, type: type}, {});
+			await item?.setFlag("hooklineandmecha","data", preparedData[itemName]);
+			await targetCompendium.importDocument(item);
 		}
 		await targetCompendium.configure({locked: true});
 	}
