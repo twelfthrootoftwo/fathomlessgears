@@ -114,7 +114,7 @@ class FshManager extends Application {
 	}
 
 	async processJson(rawJson, fileName) {
-		await readDataFile(await rawJson.text(), fileName);
+		await readDataFile(rawJson, fileName);
 	}
 }
 

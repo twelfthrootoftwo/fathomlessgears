@@ -107,10 +107,10 @@ export class Utils {
 	}
 
 	static toLowerHyphen(str) {
-		return str.replace(" ","-").replace("_","-").toLowerCase();
+		return str.replaceAll(" ","-").replaceAll("_","-").toLowerCase();
 	}
 
 	static fromLowerHyphen(str) {
-		return str.replace("_"," ");
+		return str.replaceAll("_"," ");
 	}
 }

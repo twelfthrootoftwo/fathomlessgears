@@ -39,7 +39,8 @@ export function getTargetCompendium(dataType) {
 
 const fileNameMapping = {
 	"frame_data": [CONTENT_TYPES.frame_pc],
-	"item_data": [CONTENT_TYPES.internal_pc]
+	"item_data": [CONTENT_TYPES.internal_pc],
+    "sizes":[CONTENT_TYPES.size]
 }
 
 /**
