@@ -133,8 +133,10 @@ export class HLMActorSheet extends ActorSheet {
 	async _onDropItem(event, data) {
 		const targetItem=await fromUuid(data.uuid);
 		console.log(targetItem);
-		if(this.actor.can_drop_item(targetItem)) {
+		if(this.actor.canDropItem(targetItem)) {
 			this.actor.receiveDrop(targetItem);
+		} else {
+			console.log(`Can't drop item type ${targetItem.type} on actor type ${this.actor.type}`);
 		}
 	}
 }

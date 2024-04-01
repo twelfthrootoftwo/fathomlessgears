@@ -11,7 +11,6 @@ export class HLMActor extends Actor {
 	prepareDerivedData() {
 		super.prepareDerivedData();
 		this.calculateBallast();
-		this.setNPCSize(this.system.size);
 		this._setLabels();
 	}
 
@@ -42,7 +41,7 @@ export class HLMActor extends Actor {
 		if (attributeKey) {
 			const rollAttribute = this.system.attributes.rolled[attributeKey];
 			formula =
-				dieCount + "d" + dieSize + "+" + rollAttribute.value.toString();
+				dieCount + "d" + dieSize + "+" + rollAttribute.total.toString();
 		} else {
 			formula = dieCount + "d" + dieSize;
 		}
@@ -68,7 +67,7 @@ export class HLMActor extends Actor {
 			attrStrings.push(
 				Utils.getLocalisedAttributeLabel(attribute) +
 					": " +
-					attr.value.toString()
+					attr.total.toString()
 			);
 		}
 		return attrStrings.join("<br>");
@@ -131,17 +130,28 @@ export class HLMActor extends Actor {
 		});
 	}
 
-	setAttributeValue(attributeKey, value) {
+	setAttributeValue(attributeKey, value,target) {
 		if (Utils.isRollableAttribute(attributeKey)) {
-			this.system.attributes.rolled[attributeKey].value = value;
+			targetAttribute=this.system.attributes.rolled[attributeKey]
+			targetAttribute[target]=value;
+			targetAttribute.total=targetAttribute.base+targetAttribte.internals+targetAttribute.modifiers;
 		} else if (this.system.attributes.flat[attributeKey]) {
-			this.system.attributes.flat[attributeKey].value = value;
+			targetAttribute=this.system.attributes.flat[attributeKey]
+			targetAttribute[target]=value;
+			targetAttribute.total=targetAttribute.base+targetAttribte.internals+targetAttribute.modifiers;
 		}
 	}
 
-	setNPCSize(targetSize) {
-		this.system.size=targetSize;
-		//TODO: Assign size object
+	modifyAttributeValue(attributeKey, value, target){
+		if (Utils.isRollableAttribute(attributeKey)) {
+			targetAttribute=this.system.attributes.rolled[attributeKey]
+			targetAttribute[target]=value;
+			targetAttribute.total=targetAttribute.base+targetAttribte.internals+targetAttribute.modifiers;
+		} else if (this.system.attributes.flat[attributeKey]) {
+			targetAttribute=this.system.attributes.flat[attributeKey]
+			targetAttribute[target]=value;
+			targetAttribute.total=targetAttribute.base+targetAttribte.internals+targetAttribute.modifiers;
+		}
 	}
 
 	_getAttributeLabels() {
@@ -179,7 +189,7 @@ export class HLMActor extends Actor {
 
 	calculateBallast() {
 		const baseBallast=this.system.ballast.base.value;
-		const weightBallast=Math.floor(this.system.attributes.flat.weight.value/5);
+		const weightBallast=Math.floor(this.system.attributes.flat.weight.total/5);
 		this.system.ballast.weight.value=weightBallast;
 		const ballastMods=this.system.ballast.modifiers.value;
 		this.system.ballast.total.value=baseBallast+weightBallast+ballastMods;
@@ -190,23 +200,65 @@ export class HLMActor extends Actor {
 	 * @param {Item} item The item being dropped
 	 * @returns True if this object can be dropped, False otherwise
 	 */
-	can_drop_item(item) {
+	canDropItem(item) {
 		let acceptedTypes=[]
 		switch(this.type) {
 			case "fisher":
-				acceptedTypes=[CONTENT_TYPES.frame_pc, CONTENT_TYPES.internal_pc, CONTENT_TYPES.size];
+				acceptedTypes=[CONTENT_TYPES.frame_pc, CONTENT_TYPES.internal_pc];
 				break;
 			case "fish":
-				acceptedTypes=[CONTENT_TYPES.internal_npc, CONTENT_TYPES.size];
+				acceptedTypes=[CONTENT_TYPES.internal_npc];
 				break;
 		}
 		if(acceptedTypes.includes(item.type)) {
 			return true;
+		} else if(item.type==CONTENT_TYPES.size){
+			return this.checkAllowedSize(item);
 		}
 		return false;
 	}
 
+	checkAllowedSize(sizeItem) {
+		if(sizeItem.key=="fisher") {
+			return this.type="fisher";
+		} else {
+			return this.type!="fisher";
+		}
+	}
+
 	receiveDrop(item) {
-		console.log("Item dropped");
+		switch(item.type) {
+			case CONTENT_TYPES.size:
+				this.applySize(item)
+				break;
+			case CONTENT_TYPES.frame_pc:
+				this.applyFrame(item);
+				break;
+			case CONTENT_TYPES.internal_pc:
+			case CONTENT_TYPES.internal_npc:
+				this.applyInternal(item);
+				break;
+		}
+	}
+
+	applySize(size) {
+		this.setFlag("hooklineandmecha","size",size.flags.hooklineandmecha.data)
+		if(size.type != "fisher") {
+			Object.keys(size).forEach((key) => {
+				this.setAttributeValue(key,size[key],"base");
+			})
+		}
+	}
+
+	applyFrame(frame) {
+		if(this.type != "fisher") return;
+		this.setFlag("hooklineandmecha","frame",frame.flags.hooklineandmecha.data)
+	}
+
+	applyInternal(internal) {
+		this.internals.push(internal);
+		Object.keys(internal).forEach((key) => {
+			this.modifyAttributeValue(key,internal[key],"internals");
+		})
 	}
 }

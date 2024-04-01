@@ -18,7 +18,7 @@ export class AttackHandler {
 		await attackRoll.evaluate();
 		const hitResult = AttackHandler.determineHitMargin(
 			attackRoll,
-			defender.system.attributes.flat[defenceKey].value,
+			defender.system.attributes.flat[defenceKey].total,
 			AttackHandler.canCrit(attacker)
 		);
 
@@ -101,13 +101,14 @@ export class AttackHandler {
 	}
 
 	static async rollHitLocation(defender) {
-		const formula = defender.npcSize.hitLocationRoll
-			? defender.npcSize.hitLocationRoll
+		const hitZoneInfo=defender.getFlag("hooklineandmecha","size")
+		const formula = hitZoneInfo.hitLocationRoll
+			? hitZoneInfo.hitLocationRoll
 			: "1";
 		const locationRoll = new Roll(formula);
 		await locationRoll.evaluate();
 
-		const hitZone = defender.npcSize.hitRegions.find((location) => {
+		const hitZone = hitZoneInfo.hitRegions.find((location) => {
 			return AttackHandler.checkHitZone(locationRoll, location);
 		});
 
