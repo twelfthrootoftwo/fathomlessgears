@@ -46,6 +46,7 @@ export class HLMActorSheet extends ActorSheet {
 		// 		context.selectedNpcSize = this.actor.system.size;
 		// 	}
 		// }
+		console.log(context.actor);
 		return context;
 	}
 
@@ -132,7 +133,6 @@ export class HLMActorSheet extends ActorSheet {
 	 */
 	async _onDropItem(event, data) {
 		const targetItem=await fromUuid(data.uuid);
-		console.log(targetItem);
 		if(this.actor.canDropItem(targetItem)) {
 			this.actor.receiveDrop(targetItem);
 		} else {

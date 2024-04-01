@@ -2,19 +2,7 @@ import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "../constants.js";
 
 export class Utils {
 	static getLocalisedAttributeLabel(attrKey) {
-		const recognisedAttributes = [
-			"close",
-			"far",
-			"mental",
-			"power",
-			"evade",
-			"willpower",
-			"speed",
-			"sensors",
-			"weight",
-			"baseAP",
-		];
-		if (recognisedAttributes.includes(attrKey)) {
+		if (this.isAttribute(attrKey)) {
 			return game.i18n.localize("ATTRIBUTES." + attrKey);
 		} else {
 			console.log("Attribute key not recognised: " + attrKey);
@@ -61,6 +49,22 @@ export class Utils {
 		} else {
 			console.log("Hit zone not recognised: " + hitZoneKey);
 		}
+	}
+
+	static isAttribute(attributeKey) {
+		const recognisedAttributes = [
+			"close",
+			"far",
+			"mental",
+			"power",
+			"evade",
+			"willpower",
+			"speed",
+			"sensors",
+			"weight",
+			"baseAP",
+		];
+		return recognisedAttributes.includes(attributeKey);
 	}
 
 	static isRollableAttribute(attributeKey) {

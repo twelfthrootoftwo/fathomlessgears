@@ -16,6 +16,7 @@ export class AttackHandler {
 			dieSize
 		);
 		await attackRoll.evaluate();
+		console.log(defender);
 		const hitResult = AttackHandler.determineHitMargin(
 			attackRoll,
 			defender.system.attributes.flat[defenceKey].total,

@@ -101,15 +101,11 @@ export class HLMActor extends Actor {
 	}
 
 	async rollNoTarget(attributeKey, dieCount, dieSize) {
-		console.log(attributeKey);
-
 		let roll = this.getAttributeRoller(attributeKey, dieCount, dieSize);
 		await roll.evaluate();
 
 		var label = game.i18n.localize("ROLLTEXT.base");
-		console.log(label);
 		if (attributeKey) {
-			console.log("Replacing with attribute")
 			label=label.replace("_ATTRIBUTE_NAME_", Utils.getLocalisedAttributeLabel(attributeKey));
 		} else {
 			label=label.replace("_ATTRIBUTE_NAME_", roll.formula);
@@ -131,27 +127,37 @@ export class HLMActor extends Actor {
 	}
 
 	setAttributeValue(attributeKey, value,target) {
+		if(!Utils.isAttribute(attributeKey)) return;
+		let targetAttribute=null;
+		let targetAttributeAddress="";
 		if (Utils.isRollableAttribute(attributeKey)) {
 			targetAttribute=this.system.attributes.rolled[attributeKey]
-			targetAttribute[target]=value;
-			targetAttribute.total=targetAttribute.base+targetAttribte.internals+targetAttribute.modifiers;
+			targetAttributeAddress=`system.attributes.rolled.${attributeKey}`
 		} else if (this.system.attributes.flat[attributeKey]) {
 			targetAttribute=this.system.attributes.flat[attributeKey]
-			targetAttribute[target]=value;
-			targetAttribute.total=targetAttribute.base+targetAttribte.internals+targetAttribute.modifiers;
+			targetAttributeAddress=`system.attributes.flat.${attributeKey}`
 		}
+		targetAttribute[target]=value;
+		const totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
+		targetAttribute.total=totalValue;
+		this.update({[`${targetAttributeAddress}.${target}`] : value, [`${targetAttributeAddress}.total`] : totalValue});
 	}
 
 	modifyAttributeValue(attributeKey, value, target){
+		if(!Utils.isAttribute(attributeKey)) return;
+		let targetAttribute=null;
+		let targetAttributeAddress="";
 		if (Utils.isRollableAttribute(attributeKey)) {
 			targetAttribute=this.system.attributes.rolled[attributeKey]
-			targetAttribute[target]=value;
-			targetAttribute.total=targetAttribute.base+targetAttribte.internals+targetAttribute.modifiers;
+			targetAttributeAddress=`system.attributes.rolled.${attributeKey}`
 		} else if (this.system.attributes.flat[attributeKey]) {
 			targetAttribute=this.system.attributes.flat[attributeKey]
-			targetAttribute[target]=value;
-			targetAttribute.total=targetAttribute.base+targetAttribte.internals+targetAttribute.modifiers;
+			targetAttributeAddress=`system.attributes.flat.${attributeKey}`
 		}
+		targetAttribute[target]+=value;
+		const totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
+		targetAttribute.total=totalValue;
+		this.update({[`${targetAttributeAddress}.${target}`] : targetAttribute[target], [`${targetAttributeAddress}.total`] : totalValue});
 	}
 
 	_getAttributeLabels() {
@@ -242,12 +248,14 @@ export class HLMActor extends Actor {
 	}
 
 	applySize(size) {
-		this.setFlag("hooklineandmecha","size",size.flags.hooklineandmecha.data)
-		if(size.type != "fisher") {
-			Object.keys(size).forEach((key) => {
-				this.setAttributeValue(key,size[key],"base");
+		const sizeData=size.flags.hooklineandmecha.data
+		this.setFlag("hooklineandmecha","size",sizeData)
+		if(sizeData.key != "fisher") {
+			Object.keys(sizeData).forEach((key) => {
+				this.setAttributeValue(key,sizeData[key],"base");
 			})
 		}
+		console.log(this)
 	}
 
 	applyFrame(frame) {
@@ -260,5 +268,6 @@ export class HLMActor extends Actor {
 		Object.keys(internal).forEach((key) => {
 			this.modifyAttributeValue(key,internal[key],"internals");
 		})
+		this.update({"internals": this.internals});
 	}
 }

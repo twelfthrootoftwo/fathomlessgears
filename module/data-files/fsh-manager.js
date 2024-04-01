@@ -120,7 +120,6 @@ class FshManager extends Application {
 
 async function readDataFile(fileData, fileName) {
 	const preparedData=JSON.parse(fileData);
-	console.log(preparedData);
 	const dataTypes=identifyDataTypes(fileData,fileName);
 	await saveToCompendium(preparedData,dataTypes);
 }
