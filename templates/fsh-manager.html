@@ -13,10 +13,10 @@
             <div class="datafile-label" i18n>Data file</div>
             <div class="datafile-version" i18n>Version</div>
         </li>
-        {{#each datafiles as |file key|}}
+        {{#each dataFiles as |file key|}}
             <li class="datafile-row">
-                <div class="datafile-label">{{file}}</div>
-                <div class="datafile-version">0.0.0</div>
+                <div class="datafile-label">{{file.filename}}</div>
+                <div class="datafile-version">{{file.version}}</div>
             </li>
         {{/each}}
     </ol>

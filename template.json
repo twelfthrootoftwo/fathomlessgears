@@ -140,7 +140,7 @@
 		}
 	},
 	"Item": {
-		"types": ["tag","internal_pc","internal_npc","frame_pc","size"],
+		"types": ["tag","internal_pc","internal_npc","frame_pc","size","record"],
 		"htmlFields": ["description"],
 		"item": {
 			"description": "",
