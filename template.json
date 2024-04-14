@@ -142,12 +142,31 @@
 	"Item": {
 		"types": ["tag","internal_pc","internal_npc","frame_pc","size","record"],
 		"htmlFields": ["description"],
-		"item": {
-			"description": "",
-			"quantity": 1,
-			"weight": 0,
-			"attributes": {},
-			"groups": {}
+		"templates": {
+			"source":{
+				"source":{
+					"filename": "",
+					"version": ""
+				}
+			},
+			"data": {
+				"data": {}
+			}
+		},
+		"tag": {
+			"templates": ["source","data"]
+		},
+		"internal_pc": {
+			"templates": ["source","data"]
+		},
+		"internal_npc": {
+			"templates": ["source","data"]
+		},
+		"frame_pc": {
+			"templates": ["source","data"]
+		},
+		"size": {
+			"templates": ["source","data"]
 		}
 	  }
 }

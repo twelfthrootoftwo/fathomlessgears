@@ -68,5 +68,11 @@
 	"HITZONE.leftArm": "Left Arm",
 	"HITZONE.rightArm": "Right Arm",
 	"HITZONE.torso": "Torso",
-	"HITZONE.legs": "Legs"
+	"HITZONE.legs": "Legs",
+
+	"ITEMTYPE.size": "Size Category",
+	"ITEMTYPE.frame_pc": "Gear Frame",
+	"ITEMTYPE.internal_pc": "Gear Internal",
+	"ITEMTYPE.internal_npc": "Fish Internal",
+	"ITEMTYPE.tag": "Internal Tag"
 }

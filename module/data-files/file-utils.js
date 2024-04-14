@@ -1,4 +1,5 @@
 import { FILE_CONTENTS, CONTENT_TYPES } from "../constants.js";
+import { Utils } from "../utilities/utils.js";
 
 /**
  * Get the extension of a file
@@ -24,17 +25,31 @@ export function removeExtension(fileName) {
 export function getTargetCompendium(dataType) {
     switch(dataType) {
         case CONTENT_TYPES.tag:
-            return game.packs.find(p => p.metadata.name === "tags");
+            return retrieveOrCreateCompendium("tag");
         case CONTENT_TYPES.internal_pc:
-            return game.packs.find(p => p.metadata.name === "internal_pc");
+            return retrieveOrCreateCompendium("internal_pc");
         case CONTENT_TYPES.internal_npc:
-            return game.packs.find(p => p.metadata.name === "internal_npc");
+            return retrieveOrCreateCompendium("internal_npc");
         case CONTENT_TYPES.frame_pc:
-            return game.packs.find(p => p.metadata.name === "frames");
+            return retrieveOrCreateCompendium("frame_pc");
         case CONTENT_TYPES.size:
-            return game.packs.find(p => p.metadata.name === "sizes");
+            return retrieveOrCreateCompendium("size");
     };
     return null;
+}
+
+async function retrieveOrCreateCompendium(compendiumName) {
+    let targetCompendium=game.packs.find(p => p.metadata.name === compendiumName);
+    if(!targetCompendium) {
+        targetCompendium=await CompendiumCollection.createCompendium({
+			"name": compendiumName,
+			"label": Utils.getLocalisedItemType(compendiumName),
+			"system": "hooklineandmecha",
+			"path": ["packs/",compendiumName].join(),
+			"type": "Item"
+		})
+    }
+    return targetCompendium;
 }
 
 const fileNameMapping = {

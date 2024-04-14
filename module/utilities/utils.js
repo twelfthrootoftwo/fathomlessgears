@@ -51,6 +51,14 @@ export class Utils {
 		}
 	}
 
+	static getLocalisedItemType(itemType) {
+		if (this.isItem(itemType)) {
+			return game.i18n.localize("ITEMTYPE." + itemType);
+		} else {
+			console.log("Item type not recognised: " + itemType);
+		}
+	}
+
 	static isAttribute(attributeKey) {
 		const recognisedAttributes = [
 			"close",
@@ -87,6 +95,17 @@ export class Utils {
 			ATTRIBUTES.baseAP,
 		];
 		return flat.includes(attributeKey);
+	}
+
+	static isItem(itemType) {
+		const recognisedItems = [
+			"tag",
+			"size",
+			"frame_pc",
+			"internal_pc",
+			"internal_npc",
+		];
+		return recognisedItems.includes(itemType);
 	}
 
 	/**

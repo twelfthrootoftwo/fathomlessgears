@@ -208,7 +208,7 @@ async function readDataFile(fileData, fileName, fileId, oldFile) {
 async function saveToCompendium(preparedData, dataTypes, fileId, oldFile) {
 	for(let type of dataTypes) {
 		const relevantData = extractRelevantData(preparedData, type);
-		const targetCompendium = getTargetCompendium(type);
+		const targetCompendium = await getTargetCompendium(type);
 		await targetCompendium.configure({locked: false});
 		if(oldFile!=null){
 			await updateCompendiumItems(relevantData,targetCompendium,type,oldFile,fileId)
@@ -219,11 +219,17 @@ async function saveToCompendium(preparedData, dataTypes, fileId, oldFile) {
 	}
 }
 
-async function createItem(itemName,itemData,itemType,sourceId) {
+async function createItem(itemName,itemData,itemType,sourceId, compendium) {
 	const name=Utils.capitaliseWords(Utils.fromLowerHyphen(itemName));
-	const item = await Item.create({name: name, type: itemType}, {});
-	await item.setFlag("hooklineandmecha","data", itemData);
-	await item.setFlag("hooklineandmecha","source",sourceId)
+	const itemCreationData={
+		"name": name,
+		"type": itemType,
+		"system": {
+			"source": sourceId,
+			"data": itemData
+		}
+	}
+	const item=await compendium.createDocument(itemCreationData);
 	return item
 }
 
@@ -235,7 +241,7 @@ async function createItem(itemName,itemData,itemType,sourceId) {
  */
 async function writeNewCompendiumItems(relevantData, compendium, itemType, fileId) {
 	for(let itemName of Object.keys(relevantData)) {
-		const item = await createItem(itemName,relevantData[itemName],itemType,fileId);
+		const item = await createItem(itemName,relevantData[itemName],itemType,fileId, compendium);
 		await compendium.importDocument(item);
 	}
 }
@@ -253,7 +259,7 @@ async function updateCompendiumItems(relevantData,compendium,itemType,oldFileId,
 		if(itemNameExists(itemName, compendium)) {
 			await overwriteItem(relevantData[itemName],compendium,oldFileId,newFileId);
 		} else {
-			const item = await createItem(itemName,relevantData[itemName],itemType,newFileId);
+			const item = await createItem(itemName,relevantData[itemName],itemType,newFileId, compendium);
 			await compendium.importDocument(item);
 		}
 	}
