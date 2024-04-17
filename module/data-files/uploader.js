@@ -14,7 +14,7 @@ export class FshUploader extends Application {
 		return mergeObject(super.defaultOptions, {
 			classes: ["hooklineandmecha"],
 			template: "systems/hooklineandmecha/templates/uploader.html",
-			title: ".FSH Manager",
+			title: "File Upload",
 			width: 300,
 			height: 100,
 		});

@@ -4,8 +4,23 @@ import { getExtension, getTargetCompendium } from "./file-utils.js";
 import {Utils} from "../utilities/utils.js"
 import IterableWeakMap from "../../foundry/common/utils/iterable-weak-map.mjs";
 import {HLMItem} from "../items/item.js"
+import { ConfirmDialog } from "../utilities/confirm-dialog.js";
 
+class FileRecord {
+	filename
+	version
 
+	constructor(filename, version) {
+		this.filename=filename;
+		this.version=version;
+	}
+}
+
+/**
+ * Adds the .FSH manager button to the sidebar tab
+ * @param {*} app 
+ * @param {*} html 
+ */
 export function addFshManager(app, html) {
 	const compendium=html[0].classList?.contains("compendium-sidebar")? html : html.siblings().filter(`.compendium-sidebar`);
 	const presetManager=$(compendium).find(`.fsh-content-manager`);
@@ -21,8 +36,12 @@ export function addFshManager(app, html) {
 	}
 }
 
+/**
+ * Class to track the data files currently in use
+ */
 class DataFileRecorder {
 	fileDataItem
+
 	constructor() {
 		for(const item of game.items) if (item.name === "datafiles"){
 			this.fileDataItem=item;
@@ -37,6 +56,11 @@ class DataFileRecorder {
 		});		
 	}
 
+	/**
+	 * Adds a file record to the list of files
+	 * @param {FileRecord} fileId 
+	 * @returns the updated list of files
+	 */
 	async addRecord(fileId) {
 		//TODO: Put these onto an item field
 		const fileList=await this.fileDataItem.getFlag("hooklineandmecha","files");
@@ -45,9 +69,15 @@ class DataFileRecorder {
 		return fileList;
 	}
 
+	/**
+	 * Removes a file record from the list
+	 * @param {*} filename 
+	 * @param {*} version 
+	 * @returns the updated list of files
+	 */
 	async removeRecord(filename, version) {
 		//TODO: Put these onto an item field
-		fileList=await this.fileDataItem.getFlag("hooklineandmecha","files");
+		const fileList=await this.fileDataItem.getFlag("hooklineandmecha","files");
 		for(let record of fileList){
 			if(record.filename===filename && record.verion==version){
 				const index=fileList.indexOf(record);
@@ -58,20 +88,29 @@ class DataFileRecorder {
 		return fileList;
 	}
 
+	/**
+	 * Gets the file list
+	 * @returns the list of file records
+	 */
 	getFileList() {
 		return this.fileDataItem?.getFlag("hooklineandmecha","files");
 	}
 }
 
+/**
+ * Core class for the manager window
+ */
 class FshManager extends Application {
 	dataFiles
 	dataFileRecorder
+	dialogConfirm
 
 	constructor(...args) {
 		super(...args);
 		this.dataFileRecorder=new DataFileRecorder();
 		const fileList=this.dataFileRecorder.getFileList();
 		this.dataFiles=fileList ? fileList : [];
+		this.dialogConfirm=false;
 		this.render(true)
 	}
 
@@ -104,85 +143,124 @@ class FshManager extends Application {
 	}
 
 	/**
+	 * -----------------------------------------------------
+	 * Initial processing of uploaded file
+	 * -----------------------------------------------------
+	 */
+
+	/**
 	 * Detect the upload object type and process accordingly
 	 * @param {Event} ev 
 	 * @param {string} fileName Name of the uploaded file
-	 * @param {Object} oldFile The file record to overwrite, if any (null if this is a new file)
+	 * @param {FileRecord} oldFile The file record to overwrite, if any (null if this is a new file)
 	 */
 	async _onFshLoaded(ev,fileName,oldFile) {
-		let versionNumber="0.0.0"
-		switch(getExtension(fileName)) {
+		const fileRecord=await constructFileRecord(ev, fileName);
+		this.checkFileRecordExists(fileRecord,ev,oldFile);
+	}
+
+	/**
+	 * Checks if a file record matches any existing records, and triggers a dialog if it does
+	 * @param {FileRecord} fileId The record for the new file
+	 * @param {Blob} newFile The file itself
+	 * @param {FileRecord} oldFile The record for the file to update, if any (this is passed to the outputs of this function)
+	 */
+	checkFileRecordExists(fileId, newFile,oldFile) {
+		let duplicateFound=false;
+		for(let record of this.dataFiles){
+			if(record.filename===fileId.filename && record.version===fileId.version) {
+				const dialog=new ConfirmDialog(
+					"Overwriting datafile",
+					"There is already a datafile record with this name and version. Overwrite?",
+					this.confirmOverwriteCallback,
+					{"fileId": fileId, "newFile": newFile, "oldFile": oldFile, "fshManager": this}
+				);
+				duplicateFound=true;
+			}
+		}
+		if(!duplicateFound){
+			this.readFile(fileId,newFile,oldFile)
+		}
+	}
+
+	/**
+	 * Callback from the confirm overwrite dialog
+	 * @param {Boolean} proceed Overwrite only if true
+	 * @param {Object} args {fileId: FileRecord, newFile: Blob, oldFile: FileRecord, fshManager: FshManager}
+	 */
+	async confirmOverwriteCallback(proceed,args) {
+		if(proceed) {
+			await deleteFileRecord(args.fileId);
+			let index=0;
+			for(let record of args.fshManager.dataFiles){
+				if(record.filename===args.fileId.filename && record.version===args.fileId.version) {
+					args.fshManager.dataFiles.splice(index);
+					break;
+				}
+				index+=1;
+			}
+			args.fshManager.readFile(args.fileId, args.newFile, args.oldFile);
+		}
+	}
+
+	/**
+	 * Processes the file (based on its extension)
+	 * @param {FileRecord} fileId The record for the file to process
+	 * @param {Blob} newFile The new file
+	 * @param {FileRecord} oldFile The file to update, if any (null if this is not an update)
+	 */
+	async readFile(fileId, newFile, oldFile) {
+		switch(getExtension(fileId.filename)) {
 			case "fsh": {
-				versionNumber=await this.processFsh(ev, fileName, oldFile);
+				await processFsh(newFile, fileId, oldFile);
 				break;
 			}
 			case "json": {
-				versionNumber=await this.processJson(ev, fileName, oldFile);
+				await processJson(newFile, fileId, oldFile);
 				break;
 			}
 		}
-		this.addDataSource(fileName,versionNumber);
-	}
-	
-
-	/**
-	 * Extracts a .fsh file (zipped jsons) into its component files
-	 * @param {Blob} rawFsh Raw .fsh file data
-	 * @param {string} fileName Name of uploaded file
-	 * @param {Object} oldFile The file record to overwrite, if any (null if this is a new file)
-	 */
-	async processFsh(rawFsh, fileName, oldFile) {
-		//renamed .zip
-		const zip=new JSZip();
-		let version="";
-		await zip.loadAsync(rawFsh).then(function (zip) {
-			version=getFshVersion(zip.files);
-			const fileId={filename: fileName, version: version};
-			for(let zippedFile of Object.keys(zip.files)) {
-				zip.files[zippedFile].async('string').then(function (fileData) {
-					return readDataFile(fileData, zippedFile, fileId, oldFile);
-				}).then(function (promise) {
-					//await;
-				})
-			}
-		})
-		return version;
-	}
-
-	/**
-	 * Prepare a json upload for processing
-	 * @param {string} rawJson The read-in json file
-	 * @param {string} fileName The name of the uploaded file
-	 * @param {Object} oldFile The file record to overwrite, if any (null if this is a new file)
-	 * @returns the version number as a string
-	 */
-	async processJson(rawJson, fileName, oldFile) {
-		const version=getJsonVersion(rawJson);
-		const fileId={filename: fileName, version: version};
-		await readDataFile(rawJson, fileName, fileId, oldFile);
-		return version;
+		this.addDataSource(fileId);
 	}
 
 	/**
 	 * Add a new data file to the data file list
-	 * @param {string} fileName The data file's name (files will be tracked by their name)
-	 * @param {string} versionNumber The version number of this file
+	 * @param {FileRecord} fileRecord The file record to add
 	 */
-	addDataSource(fileName, versionNumber) {
-		const fileRecord={filename: fileName, version: versionNumber};
-		//this.dataFiles.push(fileRecord);
+	addDataSource(fileRecord) {
 		this.dataFileRecorder.addRecord(fileRecord);
 		this.render(false);
 	}
-
 }
 
-//TODO: Extract version numbers when available
-function getFshVersion(files) {
-	return "0.0.0";
+	/**
+	 * -----------------------------------------------------
+	 * Type-specific processing
+	 * -----------------------------------------------------
+	 */
+
+/**
+ * Extracts a .fsh file (zipped jsons) into its component files
+ * @param {Blob} rawFsh Raw .fsh file data
+ * @param {FileRecord} fileId The file record
+ * @param {FileRecord} oldFile The file record to overwrite, if any (null if this is a new file)
+ */
+async function processFsh(rawFsh, fileId, oldFile) {
+	//renamed .zip
+	const zip=new JSZip();
+	await zip.loadAsync(rawFsh).then(function (zip) {
+		readZippedFileCollection(fileId,zip.files,oldFile);
+	})
 }
-function getJsonVersion(rawJson) {
-	return "0.0.0";
+
+/**
+ * Prepare a json upload for processing
+ * @param {string} rawJson The read-in json file
+ * @param {FileRecord} fileId The file record
+ * @param {FileRecord} oldFile The file record to overwrite, if any (null if this is a new file)
+ */
+async function processJson(rawJson, fileId, oldFile) {
+	await readDataJson(rawJson, fileId.filename, fileId, oldFile);
 }
 
 /**
@@ -192,11 +270,43 @@ function getJsonVersion(rawJson) {
  * @param {Object} fileId Datafile info in the form {filename: "filename", version: "versionString"}
  * @param {Object} oldFile The file record to overwrite, if any (null if this is a new file)
  */
-async function readDataFile(fileData, fileName, fileId, oldFile) {
+async function readDataJson(fileData, fileName, fileId, oldFile) {
 	const preparedData=JSON.parse(fileData);
 	const dataTypes=identifyDataTypes(fileData,fileName);
 	await saveToCompendium(preparedData,dataTypes, fileId, oldFile);
 }
+
+/**
+ * Extract a specific data type from a read JSON.
+ * Currently all input files contain only a single type, so there's no need to run this
+ * @param {Object} preparedData JSON file that has been read in
+ * @param {CONTENT_TYPE} type Data type to extract
+ */
+function extractRelevantData(preparedData,type) {
+	return preparedData;
+}
+
+/**
+ * Process a zip file (.fsh)
+ * @param {FileRecord} fileId The record for the file to process
+ * @param {Blob} newFile The new file
+ * @param {FileRecord} oldFile The file to update, if any (null if this is not an update)
+ */
+async function readZippedFileCollection(fileId, zippedFiles, oldFile) {
+	for(let zFileName of Object.keys(zippedFiles)) {
+		zippedFiles[zFileName].async('string').then(function (fileData) {
+			return readDataJson(fileData, zFileName, fileId, oldFile);
+		}).then(function (promise) {
+			//await;
+		})
+	}
+}
+
+	/**
+	 * -----------------------------------------------------
+	 * Write items from extracted json data
+	 * -----------------------------------------------------
+	 */
 
 /**
  * Create items from an assembled JSON data file, then write them to the appropriate compendium
@@ -219,6 +329,15 @@ async function saveToCompendium(preparedData, dataTypes, fileId, oldFile) {
 	}
 }
 
+/**
+ * Create an item
+ * @param {string} itemName The item's name
+ * @param {Object} itemData The record for the item
+ * @param {CONTENT_TYPES} itemType The item type
+ * @param {FileRecord} sourceId The record of the source file
+ * @param {CompendiumCollection} compendium The collection to put the item itno
+ * @returns the newly constructed Item
+ */
 async function createItem(itemName,itemData,itemType,sourceId, compendium) {
 	const name=Utils.capitaliseWords(Utils.fromLowerHyphen(itemName));
 	const itemCreationData={
@@ -268,24 +387,76 @@ async function updateCompendiumItems(relevantData,compendium,itemType,oldFileId,
 	removeItemsFromFileSource(compendium, oldFileId);
 }
 
+	/**
+	 * -----------------------------------------------------
+	 * Create file records
+	 * -----------------------------------------------------
+	 */
+
+/**
+ * Constructs a file record for a file
+ * @param {Blob} file The file to record
+ * @param {string} fileName The name of the file
+ * @returns a FileRecord
+ */
+async function constructFileRecord(file,fileName){
+	let versionNumber="";
+	switch(getExtension(fileName)) {
+		case "fsh": {
+			versionNumber=await getFshVersion(file);
+			break;
+		}
+		case "json": {
+			versionNumber=await getJsonVersion(file);
+			break;
+		}
+	}
+	return new FileRecord(fileName, versionNumber)
+}
+
+//TODO: Extract version numbers when available
+function getFshVersion(files) {
+	return "0.0.0";
+}
+function getJsonVersion(rawJson) {
+	return "0.0.0";
+}
+
+	/**
+	 * -----------------------------------------------------
+	 * Manage existing file records & items
+	 * -----------------------------------------------------
+	 */
+
+/**
+ * Checks whether an item comes from a source file
+ * @param {Item} item The item to check
+ * @param {FileRecord} fileId The source file
+ * @returns True if the item is from the source file, False otherwise
+ */
+async function isItemFromFileSource(item,fileId) {
+	itemSource = await item.getFlag("hooklineandmecha","source");
+	return itemSource.filename === fileId.filename && itemSource.version === fileId.version;
+}
+
+/**
+ * Deletes all compendium items from a given source file
+ * @param {FileRecord} fileId The file record to remove
+ */
+async function deleteFileRecord(fileId) {
+	for(compendium in game.packs) {
+		await removeItemsFromFileSource(compendium,fileId);
+	}
+}
+
+/**
+ * Removes all items from a compendium from a specific source
+ * @param {CompendiumCollection} compendium The compendium to process
+ * @param {FileRecord} fileId The source file to clear
+ */
 async function removeItemsFromFileSource(compendium, fileId) {
 	existingItems = await compendium.filter((item) => isItemFromFileSource(item,fileId));
 	existingItems.forEach(item => {
 		compendium.delete(item.id);
 	})
-}
-
-/**
- * Extract a specific data type from a read JSON.
- * Currently all input files contain only a single type, so there's no need to run this
- * @param {Object} preparedData JSON file that has been read in
- * @param {CONTENT_TYPE} type Data type to extract
- */
-function extractRelevantData(preparedData,type) {
-	return preparedData;
-}
-
-async function isItemFromFileSource(item,fileId) {
-	itemSource = await item.getFlag("hooklineandmecha","source");
-	return itemSource.filename === fileId.filename && itemSource.version === fileId.version;
 }

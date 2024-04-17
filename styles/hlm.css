@@ -15,6 +15,11 @@
 .hooklineandmecha form {
 	height: 100%;
 }
+.hooklineandmecha .flexrow {
+	margin: 5px;
+	display: flex;
+	flex-direction: row;
+}
 .hooklineandmecha .sheet-header {
 	flex: 0 0 100px;
 	overflow: hidden;

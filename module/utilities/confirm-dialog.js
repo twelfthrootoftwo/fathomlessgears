@@ -11,7 +11,7 @@ export class ConfirmDialog {
      * @param {function} callbackAction returns True if Proceed is selected, False if Cancel is selected
      * @param {*} args Other inputs to callbackAction
      */
-    constructor(title,content,callbackAction,args) {
+    constructor(title,content,callbackAction,args=null) {
         this.title=title;
         this.content=content;
         this.callbackAction=callbackAction;
@@ -22,22 +22,22 @@ export class ConfirmDialog {
     showDialog() {
         new Dialog({
             title: this.title,
-            content: this.content,
+            content: "<p>"+this.content+"</p>",
             buttons: {
-                confirm: {
-                    label: "Proceed",
-                    callback: async () => {
-                        await this.callbackAction(true,args);
-                    }
-                },
-                confirm: {
+                cancel: {
                     label: "Cancel",
                     callback: async () => {
-                        await this.callbackAction(false,args);
+                        await this.callbackAction(false,this.args);
                     }
                 },
-                default: "Cancel",
-            }
+                confirm: {
+                    label: "Confirm",
+                    callback: async () => {
+                        await this.callbackAction(true,this.args);
+                    }
+                }
+            },
+            default: "cancel",
         }).render(true)
     }
 }
