@@ -48,10 +48,11 @@
 	"FISHTYPE.forgotten": "Forgotten",
 
 	"FISHSIZE.small": "Small",
-	"FISHSIZE.medium-vert": "Medium (Portrait)",
-	"FISHSIZE.medium-horz": "Medium (Landscape)",
+	"FISHSIZE.medium": "Medium",
 	"FISHSIZE.large": "Large",
-	"FISHSIZE.leviathan": "Leviathan",
+	"FISHSIZE.massive": "Massive",
+	"FISHSIZE.leviathan-block": "Leviathan",
+	"FISHSIZE.leviathan-serpent": "SerpentLeviathan",
 
 	"ROLLTEXT.base": "Rolling _ATTRIBUTE_NAME_",
 	"ROLLTEXT.attackHeader": "_ATTACKER_NAME_ attacks _TARGET_NAME_!",
@@ -68,5 +69,10 @@
 	"HITZONE.leftArm": "Left Arm",
 	"HITZONE.rightArm": "Right Arm",
 	"HITZONE.torso": "Torso",
-	"HITZONE.legs": "Legs"
+	"HITZONE.legs": "Legs",
+	"HITZONE.section1": "Section 1",
+	"HITZONE.section2": "Section 2",
+	"HITZONE.section3": "Section 3",
+	"HITZONE.section4": "Section 4",
+	"HITZONE.section5": "Section 5"
 }

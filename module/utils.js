@@ -55,6 +55,11 @@ export class Utils {
 			"rightArm",
 			"torso",
 			"legs",
+			"section1",
+			"section2",
+			"section3",
+			"section4",
+			"section5",
 		];
 		if (recognisedZones.includes(hitZoneKey)) {
 			return game.i18n.localize("HITZONE." + hitZoneKey);
