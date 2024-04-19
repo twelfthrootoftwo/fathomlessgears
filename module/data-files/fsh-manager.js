@@ -43,17 +43,19 @@ class DataFileRecorder {
 	fileDataItem
 
 	constructor() {
-		for(const item of game.items) if (item.name === "datafiles"){
-			this.fileDataItem=item;
-			return this;
-		} 
-		//If no datafile item found:
 		const self=this;
-		Item.create({name: "datafiles", type: "record"}).then(function (item) {
-			item.setFlag("hooklineandmecha","files",[]);
-			self.fileDataItem=item;
-			return self;
-		});		
+		if(!game.settings.settings.has("hooklineandmecha.datafiles")){
+			game.settings.register("hooklineandmecha","datafiles",{
+				name: "Source data files",
+				hint: "Stores the datafile sources for frames, internals, sizes, etc",
+				scope: "world",
+				config: false,
+				type: Array,
+				default: [],
+				requiresReload: false
+			});
+		}
+		this.fileDataItem=game.settings.get("hooklineandmecha","datafiles");
 	}
 
 	/**
@@ -62,11 +64,9 @@ class DataFileRecorder {
 	 * @returns the updated list of files
 	 */
 	async addRecord(fileId) {
-		//TODO: Put these onto an item field
-		const fileList=await this.fileDataItem.getFlag("hooklineandmecha","files");
-		fileList.push(fileId);
-		this.fileDataItem.setFlag("hooklineandmecha","files",fileList);
-		return fileList;
+		this.fileDataItem.push(fileId);
+		game.settings.set("hooklineandmecha","datafiles",this.fileDataItem)
+		return this.fileDataItem;
 	}
 
 	/**
@@ -76,16 +76,14 @@ class DataFileRecorder {
 	 * @returns the updated list of files
 	 */
 	async removeRecord(filename, version) {
-		//TODO: Put these onto an item field
-		const fileList=await this.fileDataItem.getFlag("hooklineandmecha","files");
-		for(let record of fileList){
+		for(let record of this.fileDataItem){
 			if(record.filename===filename && record.verion==version){
-				const index=fileList.indexOf(record);
-				fileList.splice(index,1);
+				const index=this.fileDataItem.indexOf(record);
+				this.fileDataItem.splice(index,1);
 			}
 		}
-		this.fileDataItem.setFlag("hooklineandmecha","files",fileList);
-		return fileList;
+		game.settings.set("hooklineandmecha","datafiles",this.fileDataItem)
+		return this.fileDataItem;
 	}
 
 	/**
@@ -93,7 +91,7 @@ class DataFileRecorder {
 	 * @returns the list of file records
 	 */
 	getFileList() {
-		return this.fileDataItem?.getFlag("hooklineandmecha","files");
+		return this.fileDataItem;
 	}
 }
 
