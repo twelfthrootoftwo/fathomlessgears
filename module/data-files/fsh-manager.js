@@ -71,13 +71,12 @@ class DataFileRecorder {
 
 	/**
 	 * Removes a file record from the list
-	 * @param {*} filename 
-	 * @param {*} version 
+	 * @param {FileRecord} fileId
 	 * @returns the updated list of files
 	 */
-	async removeRecord(filename, version) {
+	async removeRecord(fileId) {
 		for(let record of this.fileDataItem){
-			if(record.filename===filename && record.verion==version){
+			if(record.filename===fileId.filename && record.version===fileId.version){
 				const index=this.fileDataItem.indexOf(record);
 				this.fileDataItem.splice(index,1);
 			}
@@ -117,7 +116,7 @@ class FshManager extends Application {
 			classes: ["hooklineandmecha"],
 			template: "systems/hooklineandmecha/templates/fsh-manager.html",
 			title: ".FSH Manager",
-			width: 400,
+			width: 500,
 			height: 400,
 		});
 	}
@@ -135,9 +134,10 @@ class FshManager extends Application {
 			new FshUploader(this);
 	  	});
 		
-		// if(this.dataFiles.length>0) {
-		// 	html.find(".remove").click(this.removeDataFile.bind(this));
-		// }
+		if(this.dataFiles.length>0) {
+			html.find(".update").click(this.updateCallback.bind(this));
+			html.find(".remove").click(this.removeCallback.bind(this));
+		}
 	}
 
 	/**
@@ -227,7 +227,30 @@ class FshManager extends Application {
 	 */
 	addDataSource(fileRecord) {
 		this.dataFileRecorder.addRecord(fileRecord);
-		this.render(false);
+		this.fileList=this.dataFileRecorder.getFileList();
+		this.render(true);
+	}
+
+	/**
+	 * Remove a data file from the data file list
+	 * @param {FileRecord} fileRecord The file record to add
+	 */
+	removeDataSource(fileRecord) {
+		this.dataFileRecorder.removeRecord(fileRecord);
+		this.fileList=this.dataFileRecorder.getFileList();
+		this.render(true);
+	}
+
+	removeCallback(ev) {
+		console.log("Remove callback triggered");
+		const targetRecord=new FileRecord(ev.target.attributes.filename.value,ev.target.attributes.version.value);
+		deleteFileRecord(targetRecord);
+		this.removeDataSource(targetRecord);
+	}
+
+	updateCallback(ev) {
+		console.log("Update callback triggered");
+		console.log(ev);
 	}
 }
 
@@ -433,8 +456,8 @@ function getJsonVersion(rawJson) {
  * @returns True if the item is from the source file, False otherwise
  */
 async function isItemFromFileSource(item,fileId) {
-	itemSource = await item.getFlag("hooklineandmecha","source");
-	return itemSource.filename === fileId.filename && itemSource.version === fileId.version;
+	//itemSource = await item.getFlag("hooklineandmecha","source");
+	return item.system.source.filename === fileId.filename && item.system.source.version === fileId.version;
 }
 
 /**
@@ -442,7 +465,7 @@ async function isItemFromFileSource(item,fileId) {
  * @param {FileRecord} fileId The file record to remove
  */
 async function deleteFileRecord(fileId) {
-	for(compendium in game.packs) {
+	for(const compendium of game.packs) {
 		await removeItemsFromFileSource(compendium,fileId);
 	}
 }
@@ -453,8 +476,13 @@ async function deleteFileRecord(fileId) {
  * @param {FileRecord} fileId The source file to clear
  */
 async function removeItemsFromFileSource(compendium, fileId) {
-	existingItems = await compendium.filter((item) => isItemFromFileSource(item,fileId));
+	await compendium.configure({locked: false});
+	const index=await compendium.getIndex({fields: ["system.source"]})
+	const existingItems = await index.filter((item) => isItemFromFileSource(item,fileId));
+	const toDelete=[];
 	existingItems.forEach(item => {
-		compendium.delete(item.id);
-	})
+		toDelete.push(item._id);
+	});
+	await compendium.documentClass.deleteDocuments(toDelete,{pack:compendium.collection});
+	await compendium.configure({locked: true});
 }
