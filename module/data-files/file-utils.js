@@ -1,6 +1,17 @@
 import { FILE_CONTENTS, CONTENT_TYPES } from "../constants.js";
 import { Utils } from "../utilities/utils.js";
 
+
+export class FileRecord {
+	filename
+	version
+
+	constructor(filename, version) {
+		this.filename=filename;
+		this.version=version;
+	}
+}
+
 /**
  * Get the extension of a file
  * @param {str} fileName Filename to extract extension of
@@ -71,4 +82,14 @@ export function identifyDataTypes(fileData,fileName) {
 	let result=null
     //TODO some default behaviour for unrecognised file names
     return result;
+}
+
+/**
+ * Checks whether an item comes from a source file
+ * @param {Item} item The item to check
+ * @param {FileRecord} fileId The source file
+ * @returns True if the item is from the source file, False otherwise
+ */
+export function isItemFromFileSource(item,fileId) {
+	return item.system.source.filename === fileId.filename && item.system.source.version === fileId.version;
 }

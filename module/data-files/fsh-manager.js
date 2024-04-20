@@ -1,20 +1,10 @@
 import { identifyDataTypes } from "./file-utils.js";
 import { FshUploader } from "./uploader.js";
-import { getExtension, getTargetCompendium } from "./file-utils.js";
+import { FileRecord, getExtension, getTargetCompendium, isItemFromFileSource } from "./file-utils.js";
 import {Utils} from "../utilities/utils.js"
-import IterableWeakMap from "../../foundry/common/utils/iterable-weak-map.mjs";
 import {HLMItem} from "../items/item.js"
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
 
-class FileRecord {
-	filename
-	version
-
-	constructor(filename, version) {
-		this.filename=filename;
-		this.version=version;
-	}
-}
 
 /**
  * Adds the .FSH manager button to the sidebar tab
@@ -219,6 +209,7 @@ class FshManager extends Application {
 			}
 		}
 		this.addDataSource(fileId);
+		if(oldFile) this.removeDataSource(oldFile);
 	}
 
 	/**
@@ -250,7 +241,8 @@ class FshManager extends Application {
 
 	updateCallback(ev) {
 		console.log("Update callback triggered");
-		console.log(ev);
+		const targetRecord=new FileRecord(ev.target.attributes.filename.value,ev.target.attributes.version.value);
+		new FshUploader(this,targetRecord);
 	}
 }
 
@@ -333,8 +325,8 @@ async function readZippedFileCollection(fileId, zippedFiles, oldFile) {
  * Create items from an assembled JSON data file, then write them to the appropriate compendium
  * @param {Object} preparedData The JSON file of items to write
  * @param {CONTENT_TYPES[]} dataTypes List of content types in this datafile
- * @param {Object} fileId Datafile info in the form {filename: "filename", version: "versionString"}
- * @param {Object} oldFile For an update, the id of the file to update (null if this is a new file)
+ * @param {FileRecord} fileId Datafile info in the form {filename: "filename", version: "versionString"}
+ * @param {FileRecord} oldFile For an update, the id of the file to update (null if this is a new file)
  */
 async function saveToCompendium(preparedData, dataTypes, fileId, oldFile) {
 	for(let type of dataTypes) {
@@ -391,21 +383,44 @@ async function writeNewCompendiumItems(relevantData, compendium, itemType, fileI
  * @param {Object} relevantData JSON extract containing data for a specific content type
  * @param {CompendiumCollection} compendium The compendium for the intended content type
  * @param {CONTENT_TYPES} itemType The item type to update
- * @param {Object} oldFileId The file record to update, in the format {filename: "filename", version: "versionString"}
- * @param {Object} newFileId The record for the updated file
+ * @param {FileRecord} oldFileId The file record to update, in the format {filename: "filename", version: "versionString"}
+ * @param {FileRecord} newFileId The record for the updated file
  */
 async function updateCompendiumItems(relevantData,compendium,itemType,oldFileId,newFileId) {
-	for(let itemName of Object.keys(relevantData)) {
-		if(itemNameExists(itemName, compendium)) {
-			await overwriteItem(relevantData[itemName],compendium,oldFileId,newFileId);
-		} else {
-			const item = await createItem(itemName,relevantData[itemName],itemType,newFileId, compendium);
-			await compendium.importDocument(item);
+	//Update items that already exist
+	const toUpdate=Object.keys(relevantData);
+	const toUpdateCapitalised=[]
+	toUpdate.forEach(function (itemName, index) {
+		toUpdateCapitalised[index]=Utils.capitaliseWords(Utils.fromLowerHyphen(itemName));
+	});
+	const existingItems=await compendium.getDocuments();
+	const updateRecord=[];
+
+	for(let oldItem of existingItems) {
+		if(toUpdateCapitalised.includes(oldItem.name)) {
+			const index=toUpdateCapitalised.indexOf(oldItem.name);
+			const itemUpdateData={
+				"source": newFileId,
+				"data": relevantData[toUpdate[index]]
+			}
+			updateRecord.push({
+				_id: oldItem.id,
+				system: itemUpdateData
+			})
+			toUpdate.splice(index,1);
+			toUpdateCapitalised.splice(index,1);
 		}
+	}
+	await compendium.documentClass.updateDocuments(updateRecord,{pack:compendium.collection});
+
+	//If there's any new items, their names will be left in toUpdate
+	for(let itemName of toUpdate) {
+		const item = await createItem(itemName,relevantData[itemName],itemType,newFileId, compendium);
+		await compendium.importDocument(item);
 	}
 
 	//Delete old items
-	removeItemsFromFileSource(compendium, oldFileId);
+	await removeItemsFromFileSource(compendium, oldFileId);
 }
 
 	/**
@@ -448,17 +463,6 @@ function getJsonVersion(rawJson) {
 	 * Manage existing file records & items
 	 * -----------------------------------------------------
 	 */
-
-/**
- * Checks whether an item comes from a source file
- * @param {Item} item The item to check
- * @param {FileRecord} fileId The source file
- * @returns True if the item is from the source file, False otherwise
- */
-async function isItemFromFileSource(item,fileId) {
-	//itemSource = await item.getFlag("hooklineandmecha","source");
-	return item.system.source.filename === fileId.filename && item.system.source.version === fileId.version;
-}
 
 /**
  * Deletes all compendium items from a given source file
