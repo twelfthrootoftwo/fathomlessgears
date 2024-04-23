@@ -20,7 +20,9 @@ export function addFshManager(app, html) {
 		button.setAttribute("style", "flex-basis: 100%; margin-top: 5px;");
 		button.innerHTML = "<i class='fsh-content-manager i--s'></i> FSH Manager";
 		button.addEventListener("click", () => {
-			new FshManager()
+			if(!FshManager.isOpen) {
+				new FshManager()
+			}
 		});
 		buttons.after(button);
 	}
@@ -88,6 +90,8 @@ class DataFileRecorder {
  * Core class for the manager window
  */
 class FshManager extends Application {
+	static isOpen
+	loading
 	dataFiles
 	dataFileRecorder
 	dialogConfirm
@@ -98,6 +102,8 @@ class FshManager extends Application {
 		const fileList=this.dataFileRecorder.getFileList();
 		this.dataFiles=fileList ? fileList : [];
 		this.dialogConfirm=false;
+		this.loading=false;
+		FshManager.isOpen=true;
 		this.render(true)
 	}
 
@@ -115,6 +121,11 @@ class FshManager extends Application {
 		const context = {}
 		context.dataFiles = this.dataFiles;
 		return context
+	}
+
+	close(...args) {
+		super.close(...args);
+		FshManager.isOpen=false;
 	}
 
 	activateListeners(html) {
