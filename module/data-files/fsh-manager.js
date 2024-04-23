@@ -1,9 +1,9 @@
 import { identifyDataTypes } from "./file-utils.js";
 import { FshUploader } from "./uploader.js";
 import { FileRecord, getExtension, getTargetCompendium, isItemFromFileSource } from "./file-utils.js";
-import {Utils} from "../utilities/utils.js"
-import {HLMItem} from "../items/item.js"
+import {Utils} from "../utilities/utils.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
+import { HLMApplication } from "../sheets/application.js";
 
 
 /**
@@ -89,9 +89,8 @@ class DataFileRecorder {
 /**
  * Core class for the manager window
  */
-class FshManager extends Application {
+class FshManager extends HLMApplication {
 	static isOpen
-	loading
 	dataFiles
 	dataFileRecorder
 	dialogConfirm
@@ -164,7 +163,7 @@ class FshManager extends Application {
 	 * @param {Blob} newFile The file itself
 	 * @param {FileRecord} oldFile The record for the file to update, if any (this is passed to the outputs of this function)
 	 */
-	checkFileRecordExists(fileId, newFile,oldFile) {
+	async checkFileRecordExists(fileId, newFile,oldFile) {
 		let duplicateFound=false;
 		for(let record of this.dataFiles){
 			if(record.filename===fileId.filename && record.version===fileId.version) {
@@ -178,7 +177,9 @@ class FshManager extends Application {
 			}
 		}
 		if(!duplicateFound){
-			this.readFile(fileId,newFile,oldFile)
+			this.startLoading();
+			await this.readFile(fileId,newFile,oldFile);
+			this.stopLoading();
 		}
 	}
 
@@ -189,6 +190,7 @@ class FshManager extends Application {
 	 */
 	async confirmOverwriteCallback(proceed,args) {
 		if(proceed) {
+			this.startLoading();
 			await deleteFileRecord(args.fileId);
 			let index=0;
 			for(let record of args.fshManager.dataFiles){
@@ -198,7 +200,8 @@ class FshManager extends Application {
 				}
 				index+=1;
 			}
-			args.fshManager.readFile(args.fileId, args.newFile, args.oldFile);
+			await args.fshManager.readFile(args.fileId, args.newFile, args.oldFile);
+			this.stopLoading();
 		}
 	}
 
@@ -243,11 +246,13 @@ class FshManager extends Application {
 		this.render(true);
 	}
 
-	removeCallback(ev) {
+	async removeCallback(ev) {
 		console.log("Remove callback triggered");
+		this.startLoading();
 		const targetRecord=new FileRecord(ev.target.attributes.filename.value,ev.target.attributes.version.value);
-		deleteFileRecord(targetRecord);
+		await deleteFileRecord(targetRecord);
 		this.removeDataSource(targetRecord);
+		this.stopLoading();
 	}
 
 	updateCallback(ev) {
@@ -272,9 +277,11 @@ class FshManager extends Application {
 async function processFsh(rawFsh, fileId, oldFile) {
 	//renamed .zip
 	const zip=new JSZip();
-	await zip.loadAsync(rawFsh).then(function (zip) {
-		readZippedFileCollection(fileId,zip.files,oldFile);
-	})
+	const loadedZip=await zip.loadAsync(rawFsh);
+	await readZippedFileCollection(fileId,loadedZip.files,oldFile);
+	// await zip.loadAsync(rawFsh).then(function (zip) {
+	// 	await readZippedFileCollection(fileId,zip.files,oldFile);
+	// })
 }
 
 /**
@@ -318,11 +325,13 @@ function extractRelevantData(preparedData,type) {
  */
 async function readZippedFileCollection(fileId, zippedFiles, oldFile) {
 	for(let zFileName of Object.keys(zippedFiles)) {
-		zippedFiles[zFileName].async('string').then(function (fileData) {
-			return readDataJson(fileData, zFileName, fileId, oldFile);
-		}).then(function (promise) {
-			//await;
-		})
+		const fileData=await zippedFiles[zFileName].async('string');
+		await readDataJson(fileData, zFileName, fileId, oldFile);
+		// zippedFiles[zFileName].async('string').then(function (fileData) {
+		// 	return readDataJson(fileData, zFileName, fileId, oldFile);
+		// }).then(function (promise) {
+		// 	//await;
+		// })
 	}
 }
 
