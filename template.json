@@ -171,6 +171,7 @@
 				"hitRegions": []
 			},
 			"frame": {
+				"ballast": 0,
 				"core_integrity": 0,
 				"repair_kits": 0,
 				"weight_cap": 0,
@@ -184,8 +185,7 @@
 				"ballast": 0,
 				"repair_kits": 0,
 				"tags": "",
-				"type": "",
-				"weight": 0
+				"type": ""
 			}
 		},
 		"tag": {

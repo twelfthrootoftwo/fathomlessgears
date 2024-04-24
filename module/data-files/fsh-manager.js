@@ -380,6 +380,7 @@ async function createItem(itemName,jsonData,itemType,sourceId, compendium) {
 	}
 	const itemData=createHLMItemData(record,jsonData,sourceId);
 	const item=await compendium.createDocument(itemData);
+	console.log(item);
 	return item
 }
 

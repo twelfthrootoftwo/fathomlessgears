@@ -136,4 +136,18 @@ export class Utils {
 	static fromLowerHyphen(str) {
 		return str.replaceAll("_"," ");
 	}
+
+	static isNumeric(str){
+		return /^\d+$/.test(str);
+	}
+
+	static isNumericChar(c) {
+		return /^\d$/.test(c);
+	}
+
+	static extractIntFromString(string) {
+		const digitRegex=new RegExp("\\d+");//matches consecutive digits
+		const valueString=string.match(digitRegex)[0];
+		return parseInt(valueString);
+	}
 }
