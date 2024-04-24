@@ -129,7 +129,7 @@ function constructInternalPCData(data) {
 
 function getAPCost(data) {
 	if(data.type==="passive" || data.action_text.length == 0) return null;
-	const apRegex=new RegExp("\(\\d+ap\)","i"); //looks for something of the form "(Xap)", ignoring case
+	const apRegex=new RegExp("\(\\d+\\s?ap\)","i"); //looks for something of the form "(Xap)", ignoring case
 	const apText=data.action_text.match(apRegex)[0];
 	return Utils.extractIntFromString(apText);
 }
@@ -139,7 +139,7 @@ function constructAttack(data) {
 	if(!attackTypes.includes(data.type)) return null;
 
 	const rangeRegex=new RegExp("range \\d+","i"); //looks for something of the form "range X(X...)", ignoring case
-	const damageRegex=new RegExp("damage \\[\\d+\\]","i") //looks for something of the form "damage [X(X...)]", ignoring case
+	const damageRegex=new RegExp("damage \\[?\\d+\\]?","i") //looks for something of the form "damage [X(X...)]", ignoring case
 
 	const rangeText=data.action_text.match(rangeRegex)[0];
 	const rangeValue=Utils.extractIntFromString(rangeText);
