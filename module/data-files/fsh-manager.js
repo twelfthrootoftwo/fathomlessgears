@@ -1,9 +1,10 @@
 import { identifyDataTypes } from "./file-utils.js";
 import { FshUploader } from "./uploader.js";
 import { FileRecord, getExtension, getTargetCompendium, isItemFromFileSource } from "./file-utils.js";
-import {Utils} from "../utilities/utils.js";
+import { Utils } from "../utilities/utils.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
 import { HLMApplication } from "../sheets/application.js";
+import { createHLMItemData } from "../items/item.js";
 
 
 /**
@@ -344,7 +345,7 @@ async function readZippedFileCollection(fileId, zippedFiles, oldFile) {
 /**
  * Create items from an assembled JSON data file, then write them to the appropriate compendium
  * @param {Object} preparedData The JSON file of items to write
- * @param {CONTENT_TYPES[]} dataTypes List of content types in this datafile
+ * @param {ITEM_TYPES[]} dataTypes List of content types in this datafile
  * @param {FileRecord} fileId Datafile info in the form {filename: "filename", version: "versionString"}
  * @param {FileRecord} oldFile For an update, the id of the file to update (null if this is a new file)
  */
@@ -365,23 +366,20 @@ async function saveToCompendium(preparedData, dataTypes, fileId, oldFile) {
 /**
  * Create an item
  * @param {string} itemName The item's name
- * @param {Object} itemData The record for the item
+ * @param {Object} jsonData The imported data for the item
  * @param {CONTENT_TYPES} itemType The item type
  * @param {FileRecord} sourceId The record of the source file
  * @param {CompendiumCollection} compendium The collection to put the item itno
  * @returns the newly constructed Item
  */
-async function createItem(itemName,itemData,itemType,sourceId, compendium) {
+async function createItem(itemName,jsonData,itemType,sourceId, compendium) {
 	const name=Utils.capitaliseWords(Utils.fromLowerHyphen(itemName));
-	const itemCreationData={
+	const record={
 		"name": name,
 		"type": itemType,
-		"system": {
-			"source": sourceId,
-			"data": itemData
-		}
 	}
-	const item=await compendium.createDocument(itemCreationData);
+	const itemData=createHLMItemData(record,jsonData,sourceId);
+	const item=await compendium.createDocument(itemData);
 	return item
 }
 

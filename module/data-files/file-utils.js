@@ -1,4 +1,4 @@
-import { FILE_CONTENTS, CONTENT_TYPES } from "../constants.js";
+import { FILE_CONTENTS, ITEM_TYPES } from "../constants.js";
 import { Utils } from "../utilities/utils.js";
 
 
@@ -35,15 +35,15 @@ export function removeExtension(fileName) {
  */
 export function getTargetCompendium(dataType) {
     switch(dataType) {
-        case CONTENT_TYPES.tag:
+        case ITEM_TYPES.tag:
             return retrieveOrCreateCompendium("tag");
-        case CONTENT_TYPES.internal_pc:
+        case ITEM_TYPES.internal_pc:
             return retrieveOrCreateCompendium("internal_pc");
-        case CONTENT_TYPES.internal_npc:
+        case ITEM_TYPES.internal_npc:
             return retrieveOrCreateCompendium("internal_npc");
-        case CONTENT_TYPES.frame_pc:
+        case ITEM_TYPES.frame_pc:
             return retrieveOrCreateCompendium("frame_pc");
-        case CONTENT_TYPES.size:
+        case ITEM_TYPES.size:
             return retrieveOrCreateCompendium("size");
     };
     return null;
@@ -64,9 +64,9 @@ async function retrieveOrCreateCompendium(compendiumName) {
 }
 
 const fileNameMapping = {
-	"frame_data": [CONTENT_TYPES.frame_pc],
-	"item_data": [CONTENT_TYPES.internal_pc],
-    "sizes":[CONTENT_TYPES.size]
+	"frame_data": [ITEM_TYPES.frame_pc],
+	"item_data": [ITEM_TYPES.internal_pc],
+    "sizes":[ITEM_TYPES.size]
 }
 
 /**

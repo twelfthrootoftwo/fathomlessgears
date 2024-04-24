@@ -1,6 +1,6 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
-import {ATTRIBUTES, RESOURCES, HIT_TYPE, CONTENT_TYPES} from "../constants.js";
+import {ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES} from "../constants.js";
 
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
@@ -210,15 +210,15 @@ export class HLMActor extends Actor {
 		let acceptedTypes=[]
 		switch(this.type) {
 			case "fisher":
-				acceptedTypes=[CONTENT_TYPES.frame_pc, CONTENT_TYPES.internal_pc];
+				acceptedTypes=[ITEM_TYPES.frame_pc, ITEM_TYPES.internal_pc];
 				break;
 			case "fish":
-				acceptedTypes=[CONTENT_TYPES.internal_npc];
+				acceptedTypes=[ITEM_TYPES.internal_npc];
 				break;
 		}
 		if(acceptedTypes.includes(item.type)) {
 			return true;
-		} else if(item.type==CONTENT_TYPES.size){
+		} else if(item.type==ITEM_TYPES.size){
 			return this.checkAllowedSize(item);
 		}
 		return false;
@@ -234,14 +234,14 @@ export class HLMActor extends Actor {
 
 	receiveDrop(item) {
 		switch(item.type) {
-			case CONTENT_TYPES.size:
+			case ITEM_TYPES.size:
 				this.applySize(item)
 				break;
-			case CONTENT_TYPES.frame_pc:
+			case ITEM_TYPES.frame_pc:
 				this.applyFrame(item);
 				break;
-			case CONTENT_TYPES.internal_pc:
-			case CONTENT_TYPES.internal_npc:
+			case ITEM_TYPES.internal_pc:
+			case ITEM_TYPES.internal_npc:
 				this.applyInternal(item);
 				break;
 		}

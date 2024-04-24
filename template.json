@@ -151,22 +151,58 @@
 			},
 			"data": {
 				"data": {}
+			},
+			"attributes": {
+				"attributes": {
+					"close": 0,
+					"far": 0,
+					"mental": 0,
+					"evade": 0,
+					"willpower": 0,
+					"speed": 0,
+					"power": 0,
+					"weight": 0,
+					"baseAP": 0,
+					"sensors": 0
+				}
+			},
+			"toHit": {
+				"hitLocationRoll": null,
+				"hitRegions": []
+			},
+			"frame": {
+				"core_integrity": 0,
+				"repair_kits": 0,
+				"weight_cap": 0,
+				"gear_ability": "Placeholder ability text",
+				"gear_ability_name": "Placeholder"
+			},
+			"internal": {
+				"action_text": "",
+				"ap_cost": 0,
+				"attack": null,
+				"ballast": 0,
+				"repair_kits": 0,
+				"tags": "",
+				"type": "",
+				"weight": 0
 			}
 		},
 		"tag": {
 			"templates": ["source","data"]
 		},
 		"internal_pc": {
-			"templates": ["source","data"]
+			"templates": ["source","attributes","internal"],
+			"section": ""
 		},
 		"internal_npc": {
-			"templates": ["source","data"]
+			"templates": ["source","attributes","internal"]
 		},
 		"frame_pc": {
-			"templates": ["source","data"]
+			"templates": ["source","attributes","frame"]
 		},
 		"size": {
-			"templates": ["source","data"]
+			"templates": ["source","attributes","toHit"]
 		}
 	  }
 }
