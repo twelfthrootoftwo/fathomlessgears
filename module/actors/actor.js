@@ -225,7 +225,7 @@ export class HLMActor extends Actor {
 	}
 
 	checkAllowedSize(sizeItem) {
-		if(sizeItem.key=="fisher") {
+		if(sizeItem.name.toLowerCase()=="fisher") {
 			return this.type="fisher";
 		} else {
 			return this.type!="fisher";
@@ -247,27 +247,50 @@ export class HLMActor extends Actor {
 		}
 	}
 
-	applySize(size) {
-		const sizeData=size.flags.hooklineandmecha.data
-		this.setFlag("hooklineandmecha","size",sizeData)
-		if(sizeData.key != "fisher") {
-			Object.keys(sizeData).forEach((key) => {
-				this.setAttributeValue(key,sizeData[key],"base");
+	async applySize(size) {
+		//Apply attribute changes
+		if(size.name != "Fisher") {
+			Object.keys(size.system.attributes).forEach((key) => {
+				this.setAttributeValue(key,size.system.attributes[key],"base");
 			})
 		}
+		//Remove existing size item
+		if(this.system.size) {
+			const oldSize=this.items.get(this.system.size);
+			oldSize?.delete();
+		}
+		//Create new size item
+		const item=await Item.create(size,{parent: this});
+		this.system.size=item._id
+		this.update({"system": this.system});
 		console.log(this)
 	}
 
-	applyFrame(frame) {
+	async applyFrame(frame) {
 		if(this.type != "fisher") return;
-		this.setFlag("hooklineandmecha","frame",frame.flags.hooklineandmecha.data)
+		//Apply attribute changes
+		Object.keys(frame.system.attributes).forEach((key) => {
+			this.setAttributeValue(key,frame.system.attributes[key],"base");
+		})
+		//Remove existing size item
+		if(this.system.frame) {
+			const oldFrame=this.items.get(this.system.frame);
+			oldFrame?.delete();
+		}
+		//Create new size item
+		const item=await Item.create(frame,{parent: this});
+		this.system.frame=item._id;
+		this.update({"system": this.system});
+		console.log(this);
 	}
 
-	applyInternal(internal) {
-		this.internals.push(internal);
+	async applyInternal(internal) {
 		Object.keys(internal).forEach((key) => {
-			this.modifyAttributeValue(key,internal[key],"internals");
+			this.modifyAttributeValue(key,internal.system.attributes[key],"internals");
 		})
-		this.update({"internals": this.internals});
+		const item=await Item.create(internal,{parent: this});
+		this.system.internals.push(item._id);
+		this.update({"system": this.system});
+		console.log(this);
 	}
 }
