@@ -247,6 +247,10 @@ class FshManager extends HLMApplication {
 		this.render(true);
 	}
 
+	/**
+	 * Triggers the removal of a data file
+	 * @param {Event} ev The callback event
+	 */
 	async removeCallback(ev) {
 		console.log("Remove callback triggered");
 		this.startLoading();
@@ -256,6 +260,10 @@ class FshManager extends HLMApplication {
 		this.stopLoading();
 	}
 
+	/**
+	 * Triggers the removal of a data file
+	 * @param {Event} ev The callback event
+	 */
 	updateCallback(ev) {
 		console.log("Update callback triggered");
 		const targetRecord=new FileRecord(ev.target.attributes.filename.value,ev.target.attributes.version.value);
@@ -328,11 +336,6 @@ async function readZippedFileCollection(fileId, zippedFiles, oldFile) {
 	for(let zFileName of Object.keys(zippedFiles)) {
 		const fileData=await zippedFiles[zFileName].async('string');
 		await readDataJson(fileData, zFileName, fileId, oldFile);
-		// zippedFiles[zFileName].async('string').then(function (fileData) {
-		// 	return readDataJson(fileData, zFileName, fileId, oldFile);
-		// }).then(function (promise) {
-		// 	//await;
-		// })
 	}
 }
 

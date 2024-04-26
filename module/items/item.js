@@ -1,6 +1,9 @@
 import { ITEM_TYPES } from "../constants.js";
 import { Utils } from "../utilities/utils.js";
 
+/**
+ * Records data for a tag on a specific internal (including value if it has one)
+ */
 class InternalTag {
 	name
 	value
@@ -11,6 +14,9 @@ class InternalTag {
 	}
 }
 
+/**
+ * Records data for an attack (type, damage, range)
+ */
 class Attack {
 	type
 	damage
@@ -71,7 +77,7 @@ export function createHLMItemData(record, data, source) {
 /**
  * Builds the system object for a size item
  * @param {Object} data The original json read
- * @returns the formatted system object
+ * @returns the system object for creating the new Item
  */
 function constructSizeData(data) {
 	const system={
@@ -87,6 +93,11 @@ function constructSizeData(data) {
 	return system
 }
 
+/**
+ * Build system data for a Frame item from JSON data
+ * @param {Object} data The JSON data object
+ * @returns the system object for creating the new Item
+ */
 function constructFrameData(data) {
 	const system={
 		attributes: {}
@@ -105,6 +116,11 @@ function constructFrameData(data) {
 	return system
 }
 
+/**
+ * Build system data for a Internal item from JSON data
+ * @param {Object} data The JSON data object
+ * @returns the system object for creating the new Item
+ */
 function constructInternalPCData(data) {
 	const system={
 		attributes: {}
@@ -127,6 +143,11 @@ function constructInternalPCData(data) {
 	return system
 }
 
+/**
+ * Extract the AP cost of an internal from its action text
+ * @param {Object} data The JSON data read in
+ * @returns the integer AP cost of activating the internal (null if there is no cost)
+ */
 function getAPCost(data) {
 	if(data.type==="passive" || data.action_text.length == 0) return null;
 	const apRegex=new RegExp("\(\\d+\\s?ap\)","i"); //looks for something of the form "(Xap)", ignoring case
@@ -134,6 +155,11 @@ function getAPCost(data) {
 	return Utils.extractIntFromString(apText);
 }
 
+/**
+ * Constructs an Attack object for an attacking internal
+ * @param {Object} data  The JSON data read in
+ * @returns an Attack object with the relevant data (null if it isn't an attacking internal)
+ */
 function constructAttack(data) {
 	const attackTypes=["melee","ranged","mental"];
 	if(!attackTypes.includes(data.type)) return null;
@@ -149,6 +175,11 @@ function constructAttack(data) {
 	return new Attack(data.type, damageValue, rangeValue);
 }
 
+/**
+ * Extracts a single string of tag data into multiple Tag objects
+ * @param {string} tagString The string of tags, separated by comma-spaces ", "
+ * @returns an Array of InternalTag objects
+ */
 function separateTags(tagString) {
 	const tags=[]
 	if(tagString.length>0) {

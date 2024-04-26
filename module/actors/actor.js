@@ -126,6 +126,13 @@ export class HLMActor extends Actor {
 		});
 	}
 
+	/**
+	 * Change an attribute value
+	 * @param {string} attributeKey The attribute to change
+	 * @param {int} value The new value
+	 * @param {string} target The attribute component (base, internals, modifier)
+	 * @returns true if the change was successful, false if the attribute key or target are not valid
+	 */
 	setAttributeValue(attributeKey, value,target) {
 		if(!Utils.isAttribute(attributeKey)) return;
 		let targetAttribute=null;
@@ -143,8 +150,15 @@ export class HLMActor extends Actor {
 		this.update({[`${targetAttributeAddress}.${target}`] : value, [`${targetAttributeAddress}.total`] : totalValue});
 	}
 
+	/**
+	 * Apply a modifier to an attribute value
+	 * @param {string} attributeKey The attribute to change
+	 * @param {int} value The new value to add to the existing value
+	 * @param {string} target The attribute component (base, internals, modifier)
+	 * @returns true if the change was successful, false if the attribute key or target are not valid
+	 */
 	modifyAttributeValue(attributeKey, value, target){
-		if(!Utils.isAttribute(attributeKey)) return;
+		if(!(Utils.isAttribute(attributeKey)&&Utils.isAttributeComponent(target))) return false;
 		let targetAttribute=null;
 		let targetAttributeAddress="";
 		if (Utils.isRollableAttribute(attributeKey)) {
@@ -158,7 +172,15 @@ export class HLMActor extends Actor {
 		const totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
 		targetAttribute.total=totalValue;
 		this.update({[`${targetAttributeAddress}.${target}`] : targetAttribute[target], [`${targetAttributeAddress}.total`] : totalValue});
+		return true;
 	}
+
+	/**
+	 * -----------------------------------------------------
+	 * Get labels for display objects
+	 * #TODO can this go on the sheet?
+	 * -----------------------------------------------------
+	 */
 
 	_getAttributeLabels() {
 		for (const attributeKey in this.system.attributes.rolled) {
@@ -193,6 +215,9 @@ export class HLMActor extends Actor {
 		}
 	}
 
+	/**
+	 * Compute the actor's ballast value
+	 */
 	calculateBallast() {
 		const baseBallast=this.system.ballast.base.value;
 		const weightBallast=Math.floor(this.system.attributes.flat.weight.total/5);
@@ -224,6 +249,11 @@ export class HLMActor extends Actor {
 		return false;
 	}
 
+	/**
+	 * Checks whether a size can be dropped onto this actor
+	 * @param {Item} sizeItem The size being dropped
+	 * @returns True if this size can be dropped, False otherwise
+	 */
 	checkAllowedSize(sizeItem) {
 		if(sizeItem.name.toLowerCase()=="fisher") {
 			return this.type="fisher";
@@ -232,6 +262,10 @@ export class HLMActor extends Actor {
 		}
 	}
 
+	/**
+	 * Directs a new item to the correct process on adding the item to the actor
+	 * @param {Item} item The item to apply
+	 */
 	receiveDrop(item) {
 		switch(item.type) {
 			case ITEM_TYPES.size:
@@ -247,6 +281,10 @@ export class HLMActor extends Actor {
 		}
 	}
 
+	/**
+	 * Item drop processing for size
+	 * @param {Item} size 
+	 */
 	async applySize(size) {
 		//Apply attribute changes
 		if(size.name != "Fisher") {
@@ -266,6 +304,10 @@ export class HLMActor extends Actor {
 		console.log(this)
 	}
 
+	/**
+	 * Item drop processing for frames
+	 * @param {Item} frame
+	 */
 	async applyFrame(frame) {
 		if(this.type != "fisher") return;
 		//Apply attribute changes
@@ -284,6 +326,10 @@ export class HLMActor extends Actor {
 		console.log(this);
 	}
 
+	/**
+	 * Item drop processing for internals
+	 * @param {Item} internal
+	 */
 	async applyInternal(internal) {
 		Object.keys(internal).forEach((key) => {
 			this.modifyAttributeValue(key,internal.system.attributes[key],"internals");

@@ -97,6 +97,15 @@ export class Utils {
 		return flat.includes(attributeKey);
 	}
 
+	static isAttributeComponent(key) {
+		const recognisedComponents = [
+			"base",
+			"internals",
+			"modifier"
+		];
+		return recognisedComponents.includes(key);
+	}
+
 	static isItem(itemType) {
 		const recognisedItems = [
 			"tag",
