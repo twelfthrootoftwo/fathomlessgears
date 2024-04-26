@@ -68,7 +68,7 @@ export class Utils {
 			"evade",
 			"willpower",
 			"speed",
-			"sensors",
+			"sensor",
 			"weight",
 			"baseAP",
 		];

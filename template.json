@@ -57,12 +57,12 @@
 							"total": 1,
 							"key": "speed"
 						},
-						"sensors": {
+						"sensor": {
 							"base": 1,
 							"internals": 0,
 							"modifier": 0,
 							"total": 1,
-							"key": "sensors"
+							"key": "sensor"
 						},
 						"weight": {
 							"base": 1,
@@ -163,7 +163,7 @@
 					"power": 0,
 					"weight": 0,
 					"baseAP": 0,
-					"sensors": 0
+					"sensor": 0
 				}
 			},
 			"toHit": {
