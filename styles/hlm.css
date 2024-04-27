@@ -20,18 +20,6 @@
 	display: flex;
 	flex-direction: row;
 }
-.hooklineandmecha .sheet-header {
-	flex: 0 0 100px;
-	overflow: hidden;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: flex-start;
-	margin-bottom: 10px;
-	padding-right: 5px;
-	background: var(--color-bg-header);
-	color: var(--color-text-light-heading);
-}
 .hooklineandmecha .sheet-header .profile-img {
 	flex: 0 0 100px;
 	height: 100px;

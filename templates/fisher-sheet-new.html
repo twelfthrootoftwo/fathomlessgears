@@ -1,0 +1,75 @@
+<form class="flexcol {{cssClass}}" autocomplete="off">
+	{{!-- Sheet Header --}}
+	<header class="sheet-header">
+		<h1 class="charname">
+            <input
+                name="name"
+                type="text"
+                value="{{actor.name}}"
+                placeholder="Name"
+            />
+        </h1>
+	</header>
+    <div class="actor-sheet-main">
+        <div class="attribute-col">
+            <div class="attribute-box">
+                <div class="attribute-top-row">
+                    <div class="attribute-name">
+                        <div class="name-box">Ballast</div>
+                    </div>
+                    <div class="attribute-piece">
+                        <p class="piece-label">
+                            Total
+                        </p>
+                        <div class="piece-value">
+                            {{actor.system.ballast.total.value}}
+                        </div>
+                    </div>
+                </div>
+                <div class="attribute-bottom-row">
+                    <div class="attribute-piece">
+                        <p class="piece-label">
+                            Base
+                        </p>
+                        <div class="piece-value">
+                            {{actor.system.ballast.base.value}}
+                        </div>
+                    </div>
+                    <div class="attribute-piece">
+                        <p class="piece-label">
+                            Weight
+                        </p>
+                        <div class="piece-value">
+                            {{actor.system.ballast.weight.value}}
+                        </div>
+                    </div>
+                    <div class="attribute-piece">
+                        <p class="piece-label">
+                            Mods
+                        </p>                        
+                        <input
+                            class="piece-value editable"
+                            type="number"
+                            name="actor.system.ballast.modifiers.value"
+                            value="{{actor.system.ballast.modifiers.value}}"
+                            data-dtype="Number"
+                        />
+                    </div>
+                </div>
+            </div>
+            <hr class="divider">
+            {{#each actor.system.attributes.rolled as |attrib key|}}
+            {{>
+                "systems/hooklineandmecha/templates/partials/attribute-box.html"
+                attribute=attrib
+                key=key
+                type=rolled
+            }}
+            {{/each}}
+        </div>
+        <div class="sheet-data">
+            Rest of sheet here
+        </div>
+    </div>
+
+</form>

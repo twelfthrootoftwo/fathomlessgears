@@ -1,0 +1,45 @@
+<div class="attribute-box">
+    <div class="attribute-top-row">
+        <div class="attribute-name">
+            <div class="name-box">{{label}}</div>
+        </div>
+        <div class="attribute-piece">
+            <p class="piece-label">
+                Total
+            </p>
+            <div class="piece-value">
+                {{attribute.total}}
+            </div>
+        </div>
+    </div>
+    <div class="attribute-bottom-row">
+        <div class="attribute-piece">
+            <p class="piece-label">
+                Base
+            </p>
+            <div class="piece-value">
+                {{attribute.base}}
+            </div>
+        </div>
+        <div class="attribute-piece">
+            <p class="piece-label">
+                Internals
+            </p>
+            <div class="piece-value">
+                {{attribute.internals}}
+            </div>
+        </div>
+        <div class="attribute-piece">
+            <p class="piece-label">
+                Mods
+            </p>                        
+            <input
+                class="piece-value editable"
+                type="number"
+                name="system.attributes.{{type}}.{{key}}.value"
+                value="{{attribute.modifier}}"
+                data-dtype="Number"
+            />
+        </div>
+    </div>
+</div>

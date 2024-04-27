@@ -1,0 +1,87 @@
+.hooklineandmecha .sheet-header {
+	flex: 0 0 50px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+    padding-left: 5px;
+    padding-right: 5px;
+	background: var(--color-bg-header);
+	color: var(--color-text-light-heading);
+}
+.actor-sheet-main {
+    display: flex;
+    flex-direction: row;
+}
+.attribute-col {
+    flex: 0 0 150px;
+    background-color: var(--color-bg-header-secondary);
+    display: flex;
+    flex-direction: column;
+}
+.attribute-box {
+    display: flex;
+    flex-direction: column;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.attribute-top-row {
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+    justify-content: space-between;
+}
+.attribute-bottom-row {
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+    justify-content: space-between;
+}
+.attribute-name {
+    flex: 0 0 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.attribute-name .name-box {
+    font-size: 12pt;
+    text-align: center;
+}
+.attribute-piece {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 35px;
+}
+.piece-label {
+    height: 15px;
+    font-size: 8pt;
+    text-align: center;
+    margin: 0;
+    padding-top: 2px;
+}
+.piece-value {
+    height:15px;
+    font-size: 10pt;
+    text-align: center;
+    padding: 0px 3px;
+    margin-top: 0.5px;
+}
+input.piece-value.editable {
+    background-color: var(--color-bg-dialog);
+    border: none;
+    border-bottom: 1px var(--color-border-light-tertiary);
+    border-radius: 0;
+    text-align: center;
+    height: 15px;
+    padding: 0px 3px;
+}
+.sheet-data {
+    flex: 1 0 300px;
+    background-color: var(--silver);
+}
+.divider {
+    border-top: 1px solid var(--palatinate-blue);
+    border-bottom: none;
+    margin: 4px 15px;
+}

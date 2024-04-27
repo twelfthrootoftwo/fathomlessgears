@@ -7,6 +7,7 @@ export const preloadHandlebarsTemplates = async function () {
 	const templatePaths = [
 		// Attribute list partial.
 		"systems/hooklineandmecha/templates/partials/attributes-tab.html",
+		"systems/hooklineandmecha/templates/partials/attribute-box.html",
 	];
 
 	// Load the template parts
