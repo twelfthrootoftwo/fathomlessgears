@@ -138,7 +138,7 @@ export class HLMActor extends Actor {
 			attr.total=attr.base+attr.internals+attr.modifier;
 			updateData.flat[key]=attr;
 		});
-		this.update({"system.attributes": updateData});
+		if(this._id) this.update({"system.attributes": updateData});
 		this.calculateBallast();
 	}
 
@@ -174,6 +174,7 @@ export class HLMActor extends Actor {
 	 * @returns true if the change was successful, false if the attribute key or target are not valid
 	 */
 	modifyAttributeValue(attributeKey, value, target){
+		console.log("Modifying attribute");
 		if(!(Utils.isAttribute(attributeKey)&&Utils.isAttributeComponent(target))) return false;
 		let targetAttribute=null;
 		let targetAttributeAddress="";
@@ -347,7 +348,7 @@ export class HLMActor extends Actor {
 	 * @param {Item} internal
 	 */
 	async applyInternal(internal) {
-		Object.keys(internal).forEach((key) => {
+		Object.keys(internal.system.attributes).forEach((key) => {
 			this.modifyAttributeValue(key,internal.system.attributes[key],"internals");
 		})
 		const item=await Item.create(internal,{parent: this});
