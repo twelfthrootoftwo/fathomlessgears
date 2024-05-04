@@ -10,7 +10,7 @@ export class HLMActor extends Actor {
 	/** @inheritdoc */
 	prepareDerivedData() {
 		super.prepareDerivedData();
-		this.calculateBallast();
+		this.calculateAttributeTotals();
 		this._setLabels();
 	}
 
@@ -124,6 +124,22 @@ export class HLMActor extends Actor {
 			speaker: {actor: this},
 			content: hitRollDisplay,
 		});
+	}
+
+	calculateAttributeTotals() {
+		const updateData={"rolled":{},"flat":{}};
+		Object.keys(this.system.attributes.rolled).forEach((key) => {
+			const attr=this.system.attributes.rolled[key];
+			attr.total=attr.base+attr.internals+attr.modifier;
+			updateData.rolled[key]=attr;
+		});
+		Object.keys(this.system.attributes.flat).forEach((key) => {
+			const attr=this.system.attributes.flat[key];
+			attr.total=attr.base+attr.internals+attr.modifier;
+			updateData.flat[key]=attr;
+		});
+		this.update({"system.attributes": updateData});
+		this.calculateBallast();
 	}
 
 	/**
