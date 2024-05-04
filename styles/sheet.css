@@ -22,58 +22,64 @@
 }
 .attribute-box {
     display: flex;
-    flex-direction: column;
-    padding-left: 5px;
-    padding-right: 5px;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 3px 5px;
+    border-bottom: 1px solid var(--color-border-light-primary)
 }
 .attribute-top-row {
     display: flex;
     flex-direction: row;
-    height: 30px;
+    width: 70px;
     justify-content: space-between;
+    align-items: center;
 }
 .attribute-bottom-row {
     display: flex;
-    flex-direction: row;
-    height: 30px;
+    flex-direction: column;
+    width: 60px;
     justify-content: space-between;
 }
-.attribute-name {
-    flex: 0 0 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.name-box {
+    font-size: 12pt;
+    text-align: center;
 }
-.attribute-name .name-box {
+.value-box {
     font-size: 12pt;
     text-align: center;
 }
 .attribute-piece {
     display: flex;
-    flex-direction: column;
-    flex: 0 0 35px;
+    flex-direction: row;
+    justify-content: space-between;
+    flex: 0 0 15px;
+    font-size: 8pt;
+    text-align: center;
+    padding: 2px 0px 0px 3px;
 }
 .piece-label {
     height: 15px;
     font-size: 8pt;
     text-align: center;
     margin: 0;
-    padding-top: 2px;
 }
 .piece-value {
     height:15px;
-    font-size: 10pt;
+    width: 15px;
+    font-size: 8pt;
     text-align: center;
-    padding: 0px 3px;
-    margin-top: 0.5px;
+}
+input.piece-value {
+    width: 15px;
 }
 input.piece-value.editable {
     background-color: var(--color-bg-dialog);
     border: none;
-    border-bottom: 1px var(--color-border-light-tertiary);
+    border-bottom: 1px var(--color-border-light-secondary);
     border-radius: 0;
     text-align: center;
     height: 15px;
+    min-width: 15px;
     padding: 0px 3px;
 }
 .sheet-data {
