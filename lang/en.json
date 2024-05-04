@@ -9,7 +9,7 @@
 	"ATTRIBUTES.evade": "Evade",
 	"ATTRIBUTES.willpower": "Willpower",
 	"ATTRIBUTES.speed": "Speed",
-	"ATTRIBUTES.sensors": "Sensors",
+	"ATTRIBUTES.sensor": "Sensors",
 	"ATTRIBUTES.weight": "Weight",
 	"ATTRIBUTES.baseAP": "Base AP",
 

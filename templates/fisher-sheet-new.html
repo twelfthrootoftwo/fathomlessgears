@@ -14,17 +14,8 @@
         <div class="attribute-col">
             <div class="attribute-box">
                 <div class="attribute-top-row">
-                    <div class="attribute-name">
-                        <div class="name-box">Ballast</div>
-                    </div>
-                    <div class="attribute-piece">
-                        <p class="piece-label">
-                            Total
-                        </p>
-                        <div class="piece-value">
-                            {{actor.system.ballast.total.value}}
-                        </div>
-                    </div>
+                    <div class="name-box">Ballast</div>
+                    <div class="value-box">{{actor.system.ballast.total.value}}</div>
                 </div>
                 <div class="attribute-bottom-row">
                     <div class="attribute-piece">
@@ -57,7 +48,7 @@
                     </div>
                 </div>
             </div>
-            <hr class="divider">
+            <hr class="divider primary">
             {{#each actor.system.attributes.rolled as |attrib key|}}
             {{>
                 "systems/hooklineandmecha/templates/partials/attribute-box.html"
@@ -65,6 +56,21 @@
                 key=key
                 type=rolled
             }}
+            {{#unless @last}}
+                <hr class="divider secondary">
+            {{/unless}}
+            {{/each}}
+            <hr class="divider primary">
+            {{#each actor.system.attributes.flat as |attrib key|}}
+            {{>
+                "systems/hooklineandmecha/templates/partials/attribute-box.html"
+                attribute=attrib
+                key=key
+                type=rolled
+            }}
+            {{#unless @last}}
+                <hr class="divider secondary">
+            {{/unless}}
             {{/each}}
         </div>
         <div class="sheet-data">

@@ -15,7 +15,7 @@
     flex-direction: row;
 }
 .attribute-col {
-    flex: 0 0 150px;
+    flex: 0 0 170px;
     background-color: var(--color-bg-header-secondary);
     display: flex;
     flex-direction: column;
@@ -24,13 +24,12 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 3px 5px;
-    border-bottom: 1px solid var(--color-border-light-primary)
+    padding: 0px 5px;
 }
 .attribute-top-row {
     display: flex;
     flex-direction: row;
-    width: 70px;
+    width: 100px;
     justify-content: space-between;
     align-items: center;
 }
@@ -43,34 +42,51 @@
 .name-box {
     font-size: 12pt;
     text-align: center;
+    width: 75px;
+    padding: 2px 0px;
+    flex-grow: 0;
 }
 .value-box {
     font-size: 12pt;
     text-align: center;
+    padding: 0px 5px;
+    flex-grow: 1;
+}
+.attribute-top-row .attribute-button {
+	background: rgba(0, 0, 0, 0.1);
+	border: 2px groove var(--color-border-light-primary);
+	margin: 0;
+    padding: 0;
+	border-radius: 2px;
+}
+.attribute-top-row .attribute-button:hover {
+	background-color: #44444466;
+    cursor: pointer;
 }
 .attribute-piece {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     flex: 0 0 15px;
-    font-size: 8pt;
-    text-align: center;
-    padding: 2px 0px 0px 3px;
-}
-.piece-label {
     height: 15px;
     font-size: 8pt;
     text-align: center;
+    padding-top: 2px;
+}
+.piece-label {
     margin: 0;
 }
 .piece-value {
-    height:15px;
     width: 15px;
-    font-size: 8pt;
-    text-align: center;
 }
-input.piece-value {
+input.piece-value.static {
+    background-color: var(--color-bg-header-secondary);
+    border: none;
+    text-align: center;
+    height: 13px;
     width: 15px;
+    min-width: 15px;
+    padding: 0px 2px;
 }
 input.piece-value.editable {
     background-color: var(--color-bg-dialog);
@@ -78,16 +94,22 @@ input.piece-value.editable {
     border-bottom: 1px var(--color-border-light-secondary);
     border-radius: 0;
     text-align: center;
-    height: 15px;
+    height: 13px;
+    width: 15px;
     min-width: 15px;
-    padding: 0px 3px;
+    padding: 0px 2px;
 }
 .sheet-data {
     flex: 1 0 300px;
     background-color: var(--silver);
 }
 .divider {
-    border-top: 1px solid var(--palatinate-blue);
     border-bottom: none;
-    margin: 4px 15px;
+    margin: 5px 15px 4px 15px;
+}
+.divider.primary {
+    border-top: 1px solid var(--palatinate-blue);
+}
+.divider.secondary {
+    border-top: 1px solid var(--color-border-light-primary);
 }

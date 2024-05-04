@@ -37,7 +37,6 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		);
         context.items=context.actor.itemTypes;
-		console.log(context);
 		return context;
 	}
 
@@ -50,6 +49,17 @@ export class HLMActorSheet extends ActorSheet {
 
 	/** @inheritdoc */
 	activateListeners(html) {
+		Object.keys(this.actor.system.attributes.rolled).forEach((key) => {
+			document.getElementById(key).querySelector(".name-box").classList.add("attribute-button","rollable");
+		});
+		const background_attributes=["mental","willpower"];
+		background_attributes.forEach((key) => {
+			const basePiece=document.getElementById(key).querySelector("#base").querySelector(".piece-value");
+			basePiece.classList.toggle("static");
+			basePiece.classList.toggle("editable");
+			basePiece.disabled=false;
+		});
+
 		super.activateListeners(html);
 		html.find(".rollable").click(this._onRoll.bind(this));
 	}
