@@ -24,6 +24,8 @@ export class RollDialog extends HLMApplication {
     dieModifiers
     actor
     attribute
+    additionalFlat
+    additionalDie
 
     constructor(modifiers, actor, attribute) {
         super();
@@ -38,6 +40,8 @@ export class RollDialog extends HLMApplication {
         });
         this.actor=actor;
         this.attribute=attribute;
+        this.additionalFlat=0;
+        this.additionalDie=0;
         this.render(true);
     }
 
@@ -55,6 +59,8 @@ export class RollDialog extends HLMApplication {
         const context=await super.getData(options);
         context.flat=this.flatModifiers;
         context.die=this.dieModifiers;
+        context.additionalDie=this.additionalDie;
+        context.additionalFlat=this.additionalFlat;
         console.log(context);
         return context;
     }
@@ -62,17 +68,40 @@ export class RollDialog extends HLMApplication {
     activateListeners(html) {
         super.activateListeners(html);
 		html.find(".button").click(this.triggerRoll.bind(this));
+        html.find('[data-selector="additionalDie"]').change(async (_evt) => {
+            this.additionalDie=_evt.target.value;
+        })
+        html.find('[data-selector="additionalFlat"]').change(async (_evt) => {
+            this.additionalFlat=_evt.target.value;
+        })
+    }
+    
+
+    _getSubmitData(data) {
+        let formData=super._getSubmitData(data);
+        console.log(formData);
     }
 
     triggerRoll() {
+        this.dieModifiers.push({
+            value: this.additionalDie,
+            type: "die",
+            description: "Additional"
+        });
+        this.flatModifiers.push({
+            value: this.additionalFlat,
+            type: "die",
+            description: "Additional"
+        });
+
         let totalDieCount=0;
         let totalFlat=0;
 
         this.dieModifiers.forEach((modifier) => {
-            totalDieCount+=modifier.value;
+            totalDieCount+=parseInt(modifier.value);
         });
         this.flatModifiers.forEach((modifier) => {
-            totalFlat+=modifier.value;
+            totalFlat+=parseInt(modifier.value);
         });
 
         this.actor.rollAttribute(this.attribute,totalDieCount,totalFlat);

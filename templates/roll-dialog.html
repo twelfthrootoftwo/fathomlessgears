@@ -1,20 +1,32 @@
 <form autocomplete="off">
     <div class="col">
-        <p>Dice pool</p>
-        {{#each die as |modifier key|}}
-        <div>
-            <p>{{modifier.description}}</p>
-            <p>{{modifier.value}}d6</p>
-        </div>
-        {{/each}}
+        <p class="roll-component-header">Dice pool</p>
+        <ol class="roll-components">
+            {{#each die as |modifier key|}}
+            <li class="roll-component-item">
+                <p class="roll-component-description">{{modifier.description}}</p>
+                <p class="roll-component-value">{{modifier.value}}d6</p>
+            </li>
+            {{/each}}
+            <li class="roll-component-item">
+                <p class="roll-component-description">Additional</p>
+                <input class="roll-component-value additional-value" type="number" data-selector="additionalDie" value="{{additionalDie}}"><p class="roll-component-value">d6</p>
+            </li>
+        </ol>
         
-        <p>Flat modifiers</p>
-        {{#each flat as |modifier key|}}
-        <div>
-            <p>{{modifier.description}}</p>
-            <p>{{modifier.value}}</p>
-        </div>
-        {{/each}}
+        <p class="roll-component-header">Flat modifiers</p>
+        <ol class="roll-components">
+            {{#each flat as |modifier key|}}
+            <li class="roll-component-item">
+                <p class="roll-component-description">{{modifier.description}}</p>
+                <p class="roll-component-value">{{modifier.value}}</p>
+            </li>
+            {{/each}}
+            <li class="roll-component-item">
+                <p class="roll-component-description">Additional</p>
+                <input class="roll-component-value additional-value" type="number" data-selector="additionalFlat" value="{{additionalFlat}}">
+            </li>
+        </ol>
     </div>
     <div class="button">Roll it!</div>
 </form>
