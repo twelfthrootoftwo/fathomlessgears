@@ -10,13 +10,13 @@
             />
         </h1>
 	</header>
-    <div class="actor-sheet-main">
+    <div class="flex-row">
         {{>
             "systems/hooklineandmecha/templates/partials/attribute-sidebar.html"
             actor=actor
         }}
         <div class="sheet-data">
-            <nav class="sheet-tabs">
+            <nav class="sheet-tabs flex-row">
                 <a data-tab="character">Fisher</a>
                 <a data-tab="gear">Gear</a>
                 <a data-tab="internals">Internals</a>
@@ -24,7 +24,97 @@
             </nav>
 
             <section class="sheet-body">
-                <div class="tab" data-tab="character">Character tab</div>
+                <div class="tab" data-tab="character">
+                    <div class="tab-content flex-row">
+                        <div class="col half-col">
+                            <div class="fisher-info flex-row">
+                                <input
+                                    class="actor-name sheet-input"
+                                    value="{{actor.system.fisher_history.callsign}}"
+                                    name="system.fisher_history.callsign"
+                                    type="text"
+                                    placeholder="Callsign"
+                                />
+                                <p class="actor-el">EL </p>
+                                <input
+                                    class="actor-el sheet-input"
+                                    value="1"
+                                    type="number"
+                                />
+                            </div>
+                            <div class="flex-row">
+                                <img
+                                    class="profile-img"
+                                    src="{{actor.img}}"
+                                    data-edit="img"
+                                    title="{{actor.name}}"
+                                    height="200"
+                                    width="130"
+                                />
+                                <div class="col">
+                                    <input
+                                        class="background sheet-input"
+                                        value="{{actor.system.fisher_history.background}}"
+                                        name="system.fisher_history.background"
+                                        type="text"
+                                        placeholder="Background"
+                                    />
+                                    <div class="resource-row flex-row">
+                                        <label class="marbles">{{localize "RESOURCES.marbles"}}</label>
+                                        <input
+                                            class="marbles sheet-input"
+                                            value="{{actor.system.resources.marbles.value}}"
+                                            name="system.resources.marbles.value"
+                                            type="number"
+                                        />
+                                        <div class="marbles">/</div>
+                                        <input
+                                            class="marbles sheet-input"
+                                            value="{{actor.system.resources.marbles.max}}"
+                                            name="system.resources.marbles.max"
+                                            type="number"
+                                        />
+                                    </div>
+                                    <div class="resource-row flex-row">
+                                        <label class="marbles">{{localize "RESOURCES.backlash"}}</label>
+                                        <input
+                                            class="marbles sheet-input"
+                                            value="{{actor.system.resources.backlash.value}}"
+                                            name="system.resources.backlash.value"
+                                            type="number"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="options-set">
+                                <h2 class="options-header">
+                                    Injuries
+                                </h2>
+                                Injuries coming soon<sup>TM</sup>
+                            </div>
+                            <div class="options-set">
+                                <h2 class="options-header">
+                                    Touch of the Deep
+                                </h2>
+                                Touch of the Deep coming soon<sup>TM</sup>
+                            </div>
+                        </div>
+                        <div class="col half-col">
+                            <div class="options-set">
+                                <h2 class="options-header">
+                                    Developments
+                                </h2>
+                                Developments coming soon<sup>TM</sup>
+                            </div>
+                            <div class="options-set">
+                                <h2 class="options-header">
+                                    Maneuvers
+                                </h2>
+                                Maneuvers coming soon<sup>TM</sup>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="tab" data-tab="gear">Gear tab</div>
                 <div class="tab" data-tab="internals">Internals tab</div>
                 <div class="tab" data-tab="downtime">Downtime tab</div>

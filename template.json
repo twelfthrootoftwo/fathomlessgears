@@ -99,37 +99,48 @@
 			},
 			"internals": {
 				"internals": []
+			},
+			"fisher_history": {
+				"fisher_history": {
+					"character-name": "",
+					"callsign": "",
+					"background": "",
+					"el": "",
+					"touch": []
+				}
+			},
+			"resources": {
+				"resources": {
+					"repair": {
+						"key": "repair",
+						"value": 1,
+						"min": 0,
+						"max": 1
+					},
+					"marbles": {
+						"key": "marbles",
+						"value": 1,
+						"min": 0,
+						"max": 1
+					},
+					"core": {
+						"key": "core",
+						"value": 1,
+						"min": 0,
+						"max": 1
+					},
+					"backlash": {
+						"key": "backlash",
+						"value": 0,
+						"min": 0,
+						"max": 1
+					}
+				}
 			}
 		},
 		"fisher": {
-			"templates": ["attributes", "ballast", "internals"],
+			"templates": ["attributes", "ballast", "internals", "resources", "fisher_history"],
 			"biography": "Good at catching fish",
-			"resources": {
-				"repair": {
-					"key": "repair",
-					"value": 1,
-					"min": 0,
-					"max": 1
-				},
-				"marbles": {
-					"key": "marbles",
-					"value": 1,
-					"min": 0,
-					"max": 1
-				},
-				"core": {
-					"key": "core",
-					"value": 1,
-					"min": 0,
-					"max": 1
-				},
-				"backlash": {
-					"key": "backlash",
-					"value": 1,
-					"min": 0,
-					"max": 1
-				}
-			},
 			"size": "fisher",
 			"frame": ""
 		},

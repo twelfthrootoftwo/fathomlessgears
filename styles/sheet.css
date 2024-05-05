@@ -1,8 +1,6 @@
 .hooklineandmecha .sheet-header {
 	flex: 0 0 50px;
 	overflow: hidden;
-	display: flex;
-	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: flex-start;
     padding-left: 5px;
@@ -14,6 +12,12 @@
     display: flex;
     flex-direction: row;
 }
+
+/*
+---------------------------------
+    ATTRIBUTE SIDEBAR
+---------------------------------
+*/
 .attribute-col {
     flex: 0 0 170px;
     background-color: var(--color-bg-header-secondary);
@@ -23,21 +27,15 @@
     border-top: 1px solid var(--color-border-highlight);
 }
 .attribute-box {
-    display: flex;
-    flex-direction: row;
     justify-content: space-between;
     padding: 0px 5px;
 }
 .attribute-top-row {
-    display: flex;
-    flex-direction: row;
     width: 100px;
     justify-content: space-between;
     align-items: center;
 }
 .attribute-bottom-row {
-    display: flex;
-    flex-direction: column;
     width: 60px;
     justify-content: space-between;
 }
@@ -66,14 +64,13 @@
     cursor: pointer;
 }
 .attribute-piece {
-    display: flex;
-    flex-direction: row;
     justify-content: space-between;
     flex: 0 0 15px;
     height: 15px;
     font-size: 8pt;
     text-align: center;
     padding-top: 2px;
+    align-items: baseline;
 }
 .piece-label {
     margin: 0;
@@ -92,9 +89,6 @@ input.piece-value.static {
 }
 input.piece-value.editable {
     background-color: var(--color-bg-dialog);
-    border: none;
-    border-bottom: 1px var(--color-border-light-secondary);
-    border-radius: 0;
     text-align: center;
     height: 13px;
     width: 15px;
@@ -111,13 +105,17 @@ input.piece-value.editable {
 .divider.secondary {
     border-top: 1px solid var(--color-border-light-primary);
 }
+
+/*
+---------------------------------
+    NAV ROW
+---------------------------------
+*/
 .sheet-data {
     flex: 1 0 300px;
 }
 .sheet nav.sheet-tabs {
     width: 100%;
-    display: flex;
-    flex-direction: row;
     font-size: 16px;
     background-color: var(--color-bg-dialog-contrast);
     border-top: 1px solid var(--color-border-highlight);
@@ -137,4 +135,56 @@ input.piece-value.editable {
 .sheet-tabs .active {
     background-color: var(--color-bg-dialog-highlight);
     text-decoration: underline;
+}
+.tab-content {
+    margin: 3px;
+}
+
+/*
+---------------------------------
+    CHARACTER PAGE
+---------------------------------
+*/
+.half-col {
+    width: 50%;
+    padding: 0px 3px;
+}
+.fisher-info {
+    font-size: 16px;
+    align-items: baseline;
+}
+.actor-name {
+    flex: 1 0 50px;
+    margin: 1px 3px;
+}
+input.actor-name {
+    margin: 1px 3px;
+}
+.actor-el {
+    flex: 0 0 20px;
+}
+.options-set {
+    border-top: 1px solid var(--color-border-highlight);
+    border-bottom: 1px solid var(--color-border-highlight);
+    margin: 5px 3px;
+    padding: 2px 0px;
+}
+.options-header {
+    width: 100%;
+    font-size: 14px;
+    border: none;
+    background-color: var(--color-bg-dialog-contrast);
+}
+input.background {
+    margin: 15px 5px;
+}
+.resource-row {
+    align-items: baseline;
+    padding-left: 5px;
+}
+.marbles {
+    flex: 0 0 0px;
+}
+label.marbles {
+    flex: 1 0 40px;
 }

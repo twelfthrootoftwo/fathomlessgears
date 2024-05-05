@@ -56,6 +56,7 @@ export class HLMActorSheet extends ActorSheet {
 			const basePiece=document.getElementById(key).querySelector("#base").querySelector(".piece-value");
 			basePiece.classList.toggle("static");
 			basePiece.classList.toggle("editable");
+			basePiece.classList.toggle("sheet-input");
 			basePiece.disabled=false;
 		});
 

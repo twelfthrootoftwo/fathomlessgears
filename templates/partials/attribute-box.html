@@ -1,10 +1,10 @@
-<div class="attribute-box" id="{{key}}">
-    <div class="attribute-top-row">
+<div class="attribute-box flex-row" id="{{key}}">
+    <div class="attribute-top-row flex-row">
         <div class="name-box" attribute="{{key}}" diesize="6" diecount="2">{{label}}</div>
         <div class="value-box">{{attribute.total}}</div>
     </div>
-    <div class="attribute-bottom-row">
-        <div class="attribute-piece" id="base">
+    <div class="attribute-bottom-row flex-col">
+        <div class="attribute-piece flex-row" id="base">
             <p class="piece-label">
                 Base
             </p>
@@ -17,7 +17,7 @@
                 data-dtype="Number"
             />
         </div>
-        <div class="attribute-piece" id="internals">
+        <div class="attribute-piece flex-row" id="internals">
             <p class="piece-label">
                 Internals
             </p>
@@ -30,12 +30,12 @@
                 data-dtype="Number"
             />
         </div>
-        <div class="attribute-piece" id="modifiers">
+        <div class="attribute-piece flex-row" id="modifiers">
             <p class="piece-label">
                 Mods
             </p>                        
             <input
-                class="piece-value editable"
+                class="piece-value editable sheet-input"
                 type="number"
                 name="system.attributes.{{type}}.{{key}}.modifier"
                 value="{{attribute.modifier}}"

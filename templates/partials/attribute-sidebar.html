@@ -1,11 +1,11 @@
-<div class="attribute-col">
-    <div class="attribute-box">
-        <div class="attribute-top-row">
+<div class="attribute-col flex-col">
+    <div class="attribute-box flex-row">
+        <div class="attribute-top-row flex-row">
             <div class="name-box">Ballast</div>
             <div class="value-box">{{actor.system.ballast.total.value}}</div>
         </div>
-        <div class="attribute-bottom-row">
-            <div class="attribute-piece">
+        <div class="attribute-bottom-row flex-col">
+            <div class="attribute-piece flex-row">
                 <p class="piece-label">
                     Base
                 </p>
@@ -13,7 +13,7 @@
                     {{actor.system.ballast.base.value}}
                 </div>
             </div>
-            <div class="attribute-piece">
+            <div class="attribute-piece flex-row">
                 <p class="piece-label">
                     Weight
                 </p>
@@ -21,12 +21,12 @@
                     {{actor.system.ballast.weight.value}}
                 </div>
             </div>
-            <div class="attribute-piece">
+            <div class="attribute-piece flex-row">
                 <p class="piece-label">
                     Mods
                 </p>                        
                 <input
-                    class="piece-value editable"
+                    class="piece-value editable sheet-input"
                     type="number"
                     name="actor.system.ballast.modifiers.value"
                     value="{{actor.system.ballast.modifiers.value}}"
