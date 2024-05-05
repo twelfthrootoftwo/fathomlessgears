@@ -49,7 +49,7 @@
     --color-border-dark-primary: #222423;
     --color-border-dark-secondary: #3b3f3d;
     --color-border-dark-tertiary: #4f5452;
-    --color-border-highlight: #ff6400;
+    --color-border-highlight: #0e1f81;
     --color-border-highlight-alt: #ff0000;
     --color-bg-btn-minor-inactive: #a1a5a3;
     --color-bg-btn-minor-active: #505452;
@@ -57,6 +57,8 @@
     --color-bg-header: #222423;
     --color-bg-header-secondary: #a0a5a7;
     --color-bg-dialog: #cacecc;
+    --color-bg-dialog-contrast: #aaafb1;
+    --color-bg-dialog-highlight: #bbbfc0;
     --color-checkbox-checked: #666;
     --color-ownership-none: #5500ff;
     --color-ownership-observer: #7a7971;

@@ -18,10 +18,9 @@ export class HLMActorSheet extends ActorSheet {
 				{
 					navSelector: ".sheet-tabs",
 					contentSelector: ".sheet-body",
-					initial: "attributes",
+					initial: "character",
 				},
 			],
-			scrollY: [".biography", ".attributes"],
 			dragDrop: [{dragSelector: ".item-list .item", dropSelector: null}],
 		});
 	}

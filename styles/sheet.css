@@ -19,6 +19,8 @@
     background-color: var(--color-bg-header-secondary);
     display: flex;
     flex-direction: column;
+    border-right: 1px solid var(--color-border-highlight);
+    border-top: 1px solid var(--color-border-highlight);
 }
 .attribute-box {
     display: flex;
@@ -99,17 +101,40 @@ input.piece-value.editable {
     min-width: 15px;
     padding: 0px 2px;
 }
-.sheet-data {
-    flex: 1 0 300px;
-    background-color: var(--silver);
-}
 .divider {
     border-bottom: none;
     margin: 5px 15px 4px 15px;
 }
 .divider.primary {
-    border-top: 1px solid var(--palatinate-blue);
+    border-top: 1px solid var(--color-border-highlight);
 }
 .divider.secondary {
     border-top: 1px solid var(--color-border-light-primary);
+}
+.sheet-data {
+    flex: 1 0 300px;
+}
+.sheet nav.sheet-tabs {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    font-size: 16px;
+    background-color: var(--color-bg-dialog-contrast);
+    border-top: 1px solid var(--color-border-highlight);
+    border-bottom: 1px solid var(--color-border-highlight);
+    margin: 0;
+}
+.sheet-tabs a {
+    width: 25%;
+    padding: 5px 10px;
+    text-align: center;
+}
+.sheet-tabs a:hover {
+    text-shadow: none;
+    text-decoration: underline;
+    color: var(--color-text-dark-3);
+}
+.sheet-tabs .active {
+    background-color: var(--color-bg-dialog-highlight);
+    text-decoration: underline;
 }
