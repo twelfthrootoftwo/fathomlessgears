@@ -1,0 +1,20 @@
+<form autocomplete="off">
+    <div class="col">
+        <p>Dice pool</p>
+        {{#each die as |modifier key|}}
+        <div>
+            <p>{{modifier.description}}</p>
+            <p>{{modifier.value}}d6</p>
+        </div>
+        {{/each}}
+        
+        <p>Flat modifiers</p>
+        {{#each flat as |modifier key|}}
+        <div>
+            <p>{{modifier.description}}</p>
+            <p>{{modifier.value}}</p>
+        </div>
+        {{/each}}
+    </div>
+    <div class="button">Roll it!</div>
+</form>

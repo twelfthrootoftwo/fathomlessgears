@@ -66,11 +66,9 @@ export class HLMActorSheet extends ActorSheet {
 
 	async _onRoll(event) {
 		event.preventDefault();
-		const dieCount = event.target.attributes.diecount.value;
-		const dieSize = event.target.attributes.diesize.value;
 		const attribute = event.target.attributes.attribute?.value;
 
-		this.actor.rollAttribute(attribute, dieCount, dieSize);
+		this.actor.startRollDialog(attribute);
 	}
 
 	/** @override */

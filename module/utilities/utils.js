@@ -159,4 +159,9 @@ export class Utils {
 		const valueString=string.match(digitRegex)[0];
 		return parseInt(valueString);
 	}
+
+	static getRoller(dieCount, flatModifier) {
+		const formula = dieCount + "d6" + "+" + flatModifier;
+		return new Roll(formula);
+	}
 }

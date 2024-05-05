@@ -1,6 +1,7 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
 import {ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES} from "../constants.js";
+import { RollElement, RollDialog } from "../actions/roll-dialog.js";
 
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
@@ -21,32 +22,28 @@ export class HLMActor extends Actor {
 		return false;
 	}
 
-	/**
-	 *	Roll an attribute (or a flat roll)
-	 * @param {*} attributeKey: The string key of the attribute
-	 * @param {*} dieCount: The number of dice to roll
-	 * @param {*} dieSize : The size of dice to roll
-	 */
-	async rollAttribute(attributeKey, dieCount, dieSize) {
-		const defenceKey = HLMActor.isTargetedRoll(attributeKey);
-		if (defenceKey) {
-			this.rollTargeted(attributeKey, defenceKey, dieCount, dieSize);
-		} else {
-			this.rollNoTarget(attributeKey, dieCount, dieSize);
-		}
+	startRollDialog(attributeKey) {
+		console.log("Building modifiers");
+		const modifiers=[];
+		const baseDice=new RollElement(2,"die","Base");
+		const baseMod=new RollElement(this.system.attributes.rolled[attributeKey].total,"flat","Base stat");
+		modifiers.push(baseDice, baseMod);
+		new RollDialog(modifiers,this,attributeKey);
 	}
 
-	getAttributeRoller(attributeKey, dieCount, dieSize) {
-		var formula = "";
-		if (attributeKey) {
-			const rollAttribute = this.system.attributes.rolled[attributeKey];
-			formula =
-				dieCount + "d" + dieSize + "+" + rollAttribute.total.toString();
+	/**
+	 *	Roll an attribute (or a flat roll)
+	 * @param {ATTRIBUTES} attributeKey: The string key of the attribute
+	 * @param {int} dieCount: The total number of dice to roll
+	 * @param {int} flatModifier : The total modifier to add to the roll
+	 */
+	async rollAttribute(attributeKey, dieCount, flatModifier) {
+		const defenceKey = HLMActor.isTargetedRoll(attributeKey);
+		if (defenceKey) {
+			this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier);
 		} else {
-			formula = dieCount + "d" + dieSize;
+			this.rollNoTarget(attributeKey, dieCount, flatModifier);
 		}
-
-		return new Roll(formula);
 	}
 
 	/**
@@ -83,10 +80,10 @@ export class HLMActor extends Actor {
 		return html;
 	}
 
-	async rollTargeted(attackKey, defenceKey, dieCount, dieSize) {
+	async rollTargeted(attackKey, defenceKey, dieCount, flatModifier) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
-			this.rollNoTarget(attackKey, dieCount, dieSize);
+			this.rollNoTarget(attackKey, dieCount, flatModifier);
 		} else {
 			const target = targetSet.values().next().value;
 			AttackHandler.rollToHit(
@@ -95,13 +92,13 @@ export class HLMActor extends Actor {
 				target.actor,
 				defenceKey,
 				dieCount,
-				dieSize
+				flatModifier
 			);
 		}
 	}
 
-	async rollNoTarget(attributeKey, dieCount, dieSize) {
-		let roll = this.getAttributeRoller(attributeKey, dieCount, dieSize);
+	async rollNoTarget(attributeKey, dieCount, flatModifier) {
+		let roll = Utils.getRoller(dieCount, flatModifier);
 		await roll.evaluate();
 
 		var label = game.i18n.localize("ROLLTEXT.base");

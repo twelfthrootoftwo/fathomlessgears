@@ -8,15 +8,13 @@ export class AttackHandler {
 		defender,
 		defenceKey,
 		dieCount,
-		dieSize
+		flatModifier
 	) {
-		const attackRoll = attacker.getAttributeRoller(
-			attackKey,
+		const attackRoll = Utils.getRoller(
 			dieCount,
-			dieSize
+			flatModifier
 		);
 		await attackRoll.evaluate();
-		console.log(defender);
 		const hitResult = AttackHandler.determineHitMargin(
 			attackRoll,
 			defender.system.attributes.flat[defenceKey].total,
