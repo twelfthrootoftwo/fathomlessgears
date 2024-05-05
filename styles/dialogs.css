@@ -21,7 +21,17 @@ li.roll-component-item {
     margin: 0;
 }
 .roll-component-value {
-    flex: 0 0 30px;
+    flex: 0 0 15px;
+    width: 30px;
     padding: 2px 5px;
     margin: 0;
+}
+input.roll-component-value {
+    text-align: end;
+    height: 19px;
+    width: 15px;
+    min-width: none;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid var(--color-border-light-tertiary);
 }
