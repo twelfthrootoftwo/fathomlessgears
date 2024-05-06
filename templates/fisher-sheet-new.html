@@ -24,6 +24,9 @@
             </nav>
 
             <section class="sheet-body">
+                <!---------------------------------------------------
+                        CHARACTER TAB
+                ---------------------------------------------------->
                 <div class="tab" data-tab="character">
                     <div class="tab-content flex-row">
                         <div class="col half-col">
@@ -115,7 +118,74 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab" data-tab="gear">Gear tab</div>
+
+                
+                <!---------------------------------------------------
+                        GEAR TAB
+                ---------------------------------------------------->
+                <div class="tab" data-tab="gear">
+                    <div class="tab-content flex-row">
+                        <div class="flex-col">
+                            <input
+                                class="actor-name sheet-input"
+                                value="{{actor.system.gear_name}}"
+                                name="system.gear_name"
+                                type="text"
+                                placeholder="Gear name"
+                            />
+                            <h2 class="frame-name">{{frame.name}}</h2>
+                            <div class="flex-row">
+                                <h3 class="frame-ability-name">{{frame.system.gear_ability_name}}</h3>
+                                <button class="button" id="post-frame-ability">Post</button>
+                            </div>
+                            <p class="frabe-ability-text">{{frame.system.gear_ability}}</p>
+                        </div>
+                        <div class="flex-col">
+                            <img
+                                class="grid-img"
+                                src="{{actor.system.grid}}"
+                                data-edit="img"
+                                title="{{actor.name}}"
+                                max-height="350"
+                                width="350"
+                            />
+                            <div class="flex-row">
+                                <div class="resource-row flex-row">
+                                    <label class="marbles">{{localize "RESOURCES.repair"}}</label>
+                                    <input
+                                        class="marbles sheet-input"
+                                        value="{{actor.system.resources.repair.value}}"
+                                        name="system.resources.repair.value"
+                                        type="number"
+                                    />
+                                    <div class="marbles">/</div>
+                                    <input
+                                        class="marbles sheet-input"
+                                        value="{{actor.system.resources.repair.max}}"
+                                        name="system.resources.repair.max"
+                                        type="number"
+                                    />
+                                </div>
+                                <div class="resource-row flex-row">
+                                    <label class="marbles">{{localize "RESOURCES.core"}}</label>
+                                    <input
+                                        class="marbles sheet-input"
+                                        value="{{actor.system.resources.core.value}}"
+                                        name="system.resources.core.value"
+                                        type="number"
+                                    />
+                                    <div class="marbles">/</div>
+                                    <input
+                                        class="marbles sheet-input"
+                                        value="{{actor.system.resources.core.max}}"
+                                        name="system.resources.core.max"
+                                        type="number"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="tab" data-tab="internals">Internals tab</div>
                 <div class="tab" data-tab="downtime">Downtime tab</div>
             </section>

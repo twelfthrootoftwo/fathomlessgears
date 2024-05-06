@@ -142,12 +142,14 @@
 			"templates": ["attributes", "ballast", "internals", "resources", "fisher_history"],
 			"biography": "Good at catching fish",
 			"size": "fisher",
-			"frame": ""
+			"frame": "",
+			"gear-name": "",
+			"pilot-portrait": "",
+			"grid": ""
 		},
 		"fish": {
 			"templates": ["attributes", "ballast", "internals"],
-			"fishType": "",
-			"size": "small"
+			"grid": ""
 		}
 	},
 	"Item": {

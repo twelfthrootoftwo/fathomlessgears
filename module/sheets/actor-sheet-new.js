@@ -35,7 +35,9 @@ export class HLMActorSheet extends ActorSheet {
 				async: true,
 			}
 		);
-        context.items=context.actor.itemTypes;
+        const items=context.actor.itemTypes;
+		context.frame=items.frame_pc[0];
+		context.internals=items.internals;
 		return context;
 	}
 
