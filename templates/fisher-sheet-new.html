@@ -125,26 +125,37 @@
                 ---------------------------------------------------->
                 <div class="tab" data-tab="gear">
                     <div class="tab-content flex-row">
-                        <div class="flex-col">
+                        <div class="flex-col gear-col">
                             <input
-                                class="actor-name sheet-input"
+                                class="gear-name sheet-input"
                                 value="{{actor.system.gear_name}}"
                                 name="system.gear_name"
                                 type="text"
                                 placeholder="Gear name"
                             />
+                            <img
+                                class="profile-img"
+                                src="{{actor.img}}"
+                                data-edit="img"
+                                title="{{actor.name}}"
+                                max-height="200"
+                                width="130"
+                            />
                             <h2 class="frame-name">{{frame.name}}</h2>
-                            <div class="flex-row">
-                                <h3 class="frame-ability-name">{{frame.system.gear_ability_name}}</h3>
-                                <button class="button" id="post-frame-ability">Post</button>
+                            <div class="frame-ability">
+                                <div class="flex-row frame-ability-row">
+                                    <h3 class="frame-ability-name">{{frame.system.gear_ability_name}}</h3>
+                                    <button class="button post-message" id="post-frame-ability">Post</button>
+                                </div>
+                                <p class="frame-ability-text">{{frame.system.gear_ability}}</p>
                             </div>
-                            <p class="frabe-ability-text">{{frame.system.gear_ability}}</p>
                         </div>
                         <div class="flex-col">
                             <img
                                 class="grid-img"
+                                id="grid-img"
                                 src="{{actor.system.grid}}"
-                                data-edit="img"
+                                data-edit="system.grid"
                                 title="{{actor.name}}"
                                 max-height="350"
                                 width="350"

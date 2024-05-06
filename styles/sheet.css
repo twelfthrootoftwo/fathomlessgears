@@ -155,13 +155,15 @@ input.piece-value.editable {
 }
 .actor-name {
     flex: 1 0 50px;
-    margin: 1px 3px;
+    font-size: var(--font-size-18);
+    margin: 1px 3px 5px;
 }
 input.actor-name {
-    margin: 1px 3px;
+    margin: 1px 3px 5px;
 }
 .actor-el {
     flex: 0 0 20px;
+    margin: 0;
 }
 .options-set {
     border-top: 1px solid var(--color-border-highlight);
@@ -181,10 +183,50 @@ input.background {
 .resource-row {
     align-items: baseline;
     padding-left: 5px;
+    padding-right: 5px;
 }
 .marbles {
     flex: 0 0 0px;
 }
 label.marbles {
     flex: 1 0 40px;
+}
+
+/*
+---------------------------------
+    CHARACTER PAGE
+---------------------------------
+*/
+.gear-col {
+    padding: 0px 3px;
+}
+input.gear-name {
+    font-size: var(--font-size-18);
+    margin: 1px 3px 5px;
+}
+.frame-name {
+    font-size: var(--font-size-16);
+    border-bottom: 1px solid var(--color-border-highlight);
+    margin: 3px 0px;
+}
+.frame-ability-name {
+    border: none;
+    font-size: var(--font-size-15);
+    margin: 0;
+    padding: 1px;
+    padding-left: 5px;
+}
+.frame-ability {
+    border-bottom: 1px solid var(--color-border-light-primary);
+    margin: 5px 0px;
+    padding: 2px;
+}
+.frame-ability-row {
+    justify-content: space-between;
+    background-color: var(--color-bg-dialog-contrast);
+}
+button.button.post-message {
+    font-size: var(--font-size-10);
+    width: 40px;
+    height: 16px;
 }
