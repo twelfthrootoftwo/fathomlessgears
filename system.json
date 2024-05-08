@@ -12,7 +12,7 @@
 		}
 	],
 	"esmodules": ["module/hlm.js","scripts/jszip.js"],
-	"styles": ["styles/hlm.css","styles/theme.css","styles/sheet.css","styles/dialogs.css","styles/utils.css"],
+	"styles": ["styles/theme.css","styles/sheet.css","styles/dialogs.css","styles/utils.css","styles/chat.css"],
 	"packs": [],
 	"languages": [
 		{

@@ -1,0 +1,60 @@
+.chat-message {
+	background: var(--color-bg-dialog);
+}
+.chat-message .message-header {
+	padding-left: 4px;
+	padding-right: 4px;
+	color: var(--color-text-light-heading);
+}
+.hit-result {
+	display: flex;
+	flex-direction: row;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	border-top:1px solid var(--color-border-light-1);
+	border-bottom:1px solid var(--color-border-light-1);
+}
+.hit-result .dice-roll {
+	flex: 2 0 0;
+}
+.hit-result .roll-label {
+	display: flex;
+	align-items: center;
+}
+.hit-result .outcome {
+	flex: 2 0 0;
+	justify-content: center;
+}
+.hit-result .descriptor {
+	flex: 3 0 0;
+	justify-content: left;
+}
+.hit-result .roll-outcome-text{
+	font-size: var(--font-size-13);
+	font-weight: bold;
+}
+.message-header {
+	background: var(--color-bg-header);
+	font-size: var(--font-size-14);
+	font-weight: bold;
+}
+.flat-display-row {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	margin-top: 2px;
+	padding-inline: 4px;
+	border-bottom: 1px solid var(--color-border-light-1);
+}
+.flat-display-row .attribute-label {
+	font-size: var(--font-size-12);
+}
+.flat-display-row .attribute-value {
+	font-size: var(--font-size-12);
+	font-weight: bold;
+}
+.attribute-value {
+	text-align: center !important;
+}

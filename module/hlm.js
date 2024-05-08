@@ -1,7 +1,7 @@
 // Import Modules
 import {HLMActor} from "./actors/actor.js";
 import {HLMItem} from "./items/item.js";
-import {HLMActorSheet} from "./sheets/actor-sheet-new.js";
+import {HLMActorSheet} from "./sheets/actor-sheet.js";
 import {HLMToken, HLMTokenDocument} from "./tokens/token.js";
 import {preloadHandlebarsTemplates} from "./utilities/templates.js";
 import { initialiseHelpers } from "./utilities/handlebars.js";

@@ -12,16 +12,15 @@ export class HLMActorSheet extends ActorSheet {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["hooklineandmecha", "sheet", "actor"],
 			template: "systems/hooklineandmecha/templates/fisher-sheet.html",
-			width: 600,
-			height: 600,
+			width: 700,
+			height: 700,
 			tabs: [
 				{
 					navSelector: ".sheet-tabs",
 					contentSelector: ".sheet-body",
-					initial: "attributes",
+					initial: "character",
 				},
 			],
-			scrollY: [".biography", ".attributes"],
 			dragDrop: [{dragSelector: ".item-list .item", dropSelector: null}],
 		});
 	}
@@ -36,86 +35,54 @@ export class HLMActorSheet extends ActorSheet {
 				async: true,
 			}
 		);
-		// if (this.actor.type === "fish") {
-		// 	this._getNPCTypes(context);
-		// 	this._getNPCSizes(context);
-		// 	if (this.actor.system.fishType) {
-		// 		context.selectedNpcType = this.actor.system.fishType;
-		// 	}
-		// 	if (this.actor.system.size) {
-		// 		context.selectedNpcSize = this.actor.system.size;
-		// 	}
-		// }
-		console.log(context.actor);
+        const items=context.actor.itemTypes;
+		context.frame=items.frame_pc[0] ? items.frame_pc : {
+			name: "",
+			system: {
+				"gear_ability": "No frame assigned"
+			}
+		};
+		context.internals=items.internals;
+		console.log(context);
 		return context;
 	}
 
 	/**@inheritdoc */
 	_getSubmitData(updateData) {
 		let formData = super._getSubmitData(updateData);
-		// if(this.updateTypeAndSize) {
-		// 	console.log("Updating type and size");
-
-		// 	formData["system.fishType"]=formData.selectedNpcType;
-		// 	formData["system.size"]=formData.selectedNpcSize;
-			
-		// 	const npcType = game.fishHandler.knownTypes[formData.selectedNpcType];
-		// 	for (let key in npcType) {
-		// 		console.log("Updating "+key)
-		// 		this.setAttributeValue(formData,key, npcType[key]);
-		// 	}
-		// 	this.actor.npcType=npcType;
-
-		// 	const npcSize = game.fishHandler.knownSizes[formData.selectedNpcSize];
-		// 	for (let key in npcSize) {
-		// 		console.log("Updating "+key)
-		// 		this.setAttributeValue(formData,key, npcSize[key]);
-		// 	}
-		// 	this.actor.npcSize=npcSize;
-		// }
 		this.actor.calculateBallast();
 		return formData;
 	}
 
 	/** @inheritdoc */
 	activateListeners(html) {
+		Object.keys(this.actor.system.attributes.rolled).forEach((key) => {
+			document.getElementById(key).querySelector(".name-box").classList.add("attribute-button","rollable", "btn");
+		});
+		const background_attributes=["mental","willpower"];
+		background_attributes.forEach((key) => {
+			const basePiece=document.getElementById(key).querySelector("#base").querySelector(".piece-value");
+			basePiece.classList.toggle("static");
+			basePiece.classList.toggle("editable");
+			basePiece.classList.toggle("sheet-input");
+			basePiece.disabled=false;
+		});
+
 		super.activateListeners(html);
 		html.find(".rollable").click(this._onRoll.bind(this));
-		html.find(".set-types").click(this.setTypes.bind(this));
-
-		// Everything below here is only needed if the sheet is editable
-		if (!this.isEditable) return;
+		document.getElementById("post-frame-ability").click(this.postFrameAbility.bind(this));
 	}
 
 	async _onRoll(event) {
 		event.preventDefault();
-		const dieCount = event.target.attributes.diecount.value;
-		const dieSize = event.target.attributes.diesize.value;
 		const attribute = event.target.attributes.attribute?.value;
 
-		this.actor.rollAttribute(attribute, dieCount, dieSize);
-	}
-
-	setTypes(event) {
-		this.updateTypeAndSize=true;
-		this.submit();
-		this.updateTypeAndSize=false;
+		this.actor.startRollDialog(attribute);
 	}
 
 	/** @override */
 	get template() {
 		return `systems/hooklineandmecha/templates/${this.actor.type}-sheet.html`;
-	}
-
-	_getNPCSizes(context) {
-		context.npcSizes = new Object();
-		//TODO Get/apply size options from compendium
-		// for (const sizeKey in game.fishHandler.knownSizes) {
-		// 	if (sizeKey==="fisher") continue;
-		// 	const size = game.fishHandler.knownSizes[sizeKey];
-		// 	size.label = game.i18n.localize("FISHSIZE." + sizeKey);
-		// 	context.npcSizes[sizeKey] = size;
-		// }
 	}
 
 	setAttributeValue(formData, key, value) {
@@ -138,5 +105,9 @@ export class HLMActorSheet extends ActorSheet {
 		} else {
 			console.log(`Can't drop item type ${targetItem.type} on actor type ${this.actor.type}`);
 		}
+	}
+
+	postFrameAbility() {
+		console.log("Send frame ability to chat!");
 	}
 }
