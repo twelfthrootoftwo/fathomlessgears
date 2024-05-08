@@ -17,10 +17,10 @@
         }}
         <div class="sheet-data">
             <nav class="sheet-tabs flex-row">
-                <a data-tab="character">Fisher</a>
-                <a data-tab="gear">Gear</a>
-                <a data-tab="internals">Internals</a>
-                <a data-tab="downtime">Shore Leave</a>
+                <a data-tab="character">{{localize "TABS.character"}}</a>
+                <a data-tab="gear">{{localize "TABS.gear"}}</a>
+                <a data-tab="internals">{{localize "TABS.internals"}}</a>
+                <a data-tab="downtime">{{localize "TABS.downtime"}}</a>
             </nav>
 
             <section class="sheet-body">
@@ -41,8 +41,9 @@
                                 <p class="actor-el">EL </p>
                                 <input
                                     class="actor-el sheet-input"
-                                    value="1"
+                                    value="{{actor.system.fisher_history.el}}"
                                     type="number"
+                                    name="system.fisher_history.el"
                                 />
                             </div>
                             <div class="flex-row">
@@ -55,13 +56,6 @@
                                     width="130"
                                 />
                                 <div class="col">
-                                    <input
-                                        class="background sheet-input"
-                                        value="{{actor.system.fisher_history.background}}"
-                                        name="system.fisher_history.background"
-                                        type="text"
-                                        placeholder="Background"
-                                    />
                                     <div class="resource-row flex-row">
                                         <label class="marbles">{{localize "RESOURCES.marbles"}}</label>
                                         <input
@@ -141,13 +135,15 @@
                                 max-height="200"
                                 width="130"
                             />
-                            <h2 class="frame-name">{{frame.name}}</h2>
-                            <div class="frame-ability">
-                                <div class="flex-row frame-ability-row">
-                                    <h3 class="frame-ability-name">{{frame.system.gear_ability_name}}</h3>
-                                    <button class="button post-message" id="post-frame-ability">Post</button>
+                            <div class="holder">
+                                <h2 class="frame-name">{{frame.name}}</h2>
+                                <div class="frame-ability">
+                                    <div class="flex-row frame-ability-row">
+                                        <h3 class="frame-ability-name">{{frame.system.gear_ability_name}}</h3>
+                                        <button class="button post-message" id="post-frame-ability">Post</button>
+                                    </div>
+                                    <p class="frame-ability-text">{{frame.system.gear_ability}}</p>
                                 </div>
-                                <p class="frame-ability-text">{{frame.system.gear_ability}}</p>
                             </div>
                         </div>
                         <div class="flex-col">
@@ -197,8 +193,91 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab" data-tab="internals">Internals tab</div>
-                <div class="tab" data-tab="downtime">Downtime tab</div>
+
+                
+                <!---------------------------------------------------
+                        INTERNALS TAB
+                ---------------------------------------------------->
+                <div class="tab" data-tab="internals">
+                    <div class="tab-content">
+                        <div class="internal-category flex-row">
+                            <h3 class="internal-category-header">{{localize "INTERNALS.weapons"}}</h3>
+                            <p>Internals coming soon!</p>
+                        </div>
+                        <div class="internal-category flex-row">
+                            <h3 class="internal-category-header">{{localize "INTERNALS.active"}}</h3>
+                            <p>Internals coming soon!</p>
+                        </div>
+                        <div class="internal-category flex-row">
+                            <h3 class="internal-category-header">{{localize "INTERNALS.passive"}}</h3>
+                            <p>Internals coming soon!</p>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!---------------------------------------------------
+                        DOWNTIME TAB
+                ---------------------------------------------------->
+                <div class="tab" data-tab="downtime">
+                    <div class="tab-content flex-row">
+                        <div class="flex-col shoreleave-col">
+                            <div class="holder">
+                                <img
+                                    class="profile-img"
+                                    src="{{actor.system.pilot-portrait}}"
+                                    data-edit="system.pilot-portrait"
+                                    title="{{actor.system.pilot-name}}"
+                                    max-height="200"
+                                    width="170"
+                                />
+                            </div>
+                            <div class="holder">
+                                <input
+                                    class="background sheet-input"
+                                    value="{{actor.system.fisher_history.background}}"
+                                    name="system.fisher_history.background"
+                                    type="text"
+                                    placeholder="Background"
+                                />
+                                {{#each actor.system.downtime.rollable as |attrib key|}}
+                                <div class="resource-row flex-row">
+                                    <div class="downtime-attribute rollable" attribute="{{key}}">{{attrib.label}}</div>
+                                    <input
+                                        class="downtime-value sheet-input"
+                                        value="{{attrib.value}}"
+                                        type="number"
+                                        name="system.downtime.rollable.{{key}}.value"
+                                    />
+                                </div>
+                                {{/each}}
+                                <div class="resource-row flex-row">
+                                    <p class="novok">Novok</p>
+                                    <input
+                                        class="downtime-value sheet-input"
+                                        value="{{actor.system.downtime.novok}}"
+                                        type="number"
+                                        name="system.downtime.novok"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-col">
+                            <input
+                                class="pilot-name sheet-input"
+                                value="{{actor.system.fisher_history.character-name}}"
+                                name="system.fisher_history.character-name"
+                                type="text"
+                                placeholder="Pilot name"
+                            />
+                            <div class="holder">
+                                <h3 class="description-header">Description</h3>
+                                {{editor actor.system.biography target="system.biography"
+                                button=true owner=owner editable=editable}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     </div>

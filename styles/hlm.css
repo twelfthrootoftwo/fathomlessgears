@@ -89,9 +89,11 @@
 	overflow-y: auto;
 }
 .hooklineandmecha .editor {
+	min-height: 100px;
 	height: 100%;
 }
 .hooklineandmecha .editor-content {
+	min-height: 100px;
 	height: 100%;
 }
 .hooklineandmecha .attributes {
@@ -346,4 +348,13 @@
 	background-color: rgba(0,0,0,0.5);
 	z-index: 2;
 	cursor: wait;
+  }
+  .rollable {
+	background: rgba(0, 0, 0, 0.1);
+	border: 2px groove var(--color-border-light-primary);
+	border-radius: 2px;
+  }
+  .rollable:hover {
+	background-color: #44444466;
+    cursor: pointer;
   }

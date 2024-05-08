@@ -26,7 +26,13 @@ export class HLMActor extends Actor {
 		console.log("Building modifiers");
 		const modifiers=[];
 		const baseDice=new RollElement(2,"die","Base");
-		const baseMod=new RollElement(this.system.attributes.rolled[attributeKey].total,"flat","Base stat");
+		let totalVal=0;
+		if(Utils.isRollableAttribute(attributeKey)) {
+			totalVal=this.system.attributes.rolled[attributeKey].total;
+		} else if(Utils.isDowntimeAttribute(attributeKey)) {
+			totalVal=this.system.downtime.rollable[attributeKey].value;
+		}
+		const baseMod=new RollElement(totalVal,"flat","Base stat");
 		modifiers.push(baseDice, baseMod);
 		new RollDialog(modifiers,this,attributeKey);
 	}
@@ -221,11 +227,21 @@ export class HLMActor extends Actor {
 		}
 	}
 
+	_getDowntimeLabels() {
+		for (const downtimeKey in this.system.downtime.rollable) {
+			const attribute = this.system.downtime.rollable[downtimeKey];
+			attribute.label = Utils.getLocalisedDowntimeLabel(downtimeKey);
+		}
+	}
+
 	_setLabels() {
 		this._getAttributeLabels();
 		this._getBallastLabels();
 		if (this.system.resources) {
 			this._getResourceLabels();
+		}
+		if (this.system.downtime) {
+			this._getDowntimeLabels();
 		}
 	}
 

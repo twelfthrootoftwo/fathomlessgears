@@ -23,11 +23,22 @@
 	"BALLAST.modifiers": "Modifiers", 
 	"BALLAST.total": "Total",
 
+	"DOWNTIME.physical": "Physical",
+	"DOWNTIME.social": "Social",
+	"DOWNTIME.engineering": "Engineering",
+	"DOWNTIME.enlightenment": "Enlightenment",
+
+	"INTERNALS.weapons": "Weapons",
+	"INTERNALS.active": "Active Internals",
+	"INTERNALS.passive": "Passive internals",
+
 	"HEADER.setTypes": "Apply types",
 
-	"TABS.attributes": "Attributes",
-	"TABS.description": "Description",
+	"TABS.character": "Fisher",
+	"TABS.gear": "Gear",
 	"TABS.internals": "Internals",
+	"TABS.downtime": "Shore Leave",
+	"TABS.fish": "Fish",
 
 	"ATTRIBUTETAB.rollable": "Rollable Attributes",
 	"ATTRIBUTETAB.noAttribute": "Flat Rolls",

@@ -185,8 +185,10 @@ input.background {
     padding-left: 5px;
     padding-right: 5px;
 }
-.marbles {
+input.marbles {
     flex: 0 0 0px;
+    height: 20px;
+    margin: 3px;
 }
 label.marbles {
     flex: 1 0 40px;
@@ -198,7 +200,8 @@ label.marbles {
 ---------------------------------
 */
 .gear-col {
-    padding: 0px 3px;
+    padding: 0px 5px 0px 3px;
+    min-width: 160px;
 }
 input.gear-name {
     font-size: var(--font-size-18);
@@ -229,4 +232,71 @@ button.button.post-message {
     font-size: var(--font-size-10);
     width: 40px;
     height: 16px;
+}
+
+/*
+---------------------------------
+    INTERNALS PAGE
+---------------------------------
+*/
+.internal-category {
+    border-top: 1px solid var(--color-border-highlight);
+    border-bottom: 1px solid var(--color-border-highlight);
+    flex-wrap: wrap;
+    margin: 5px 0px;
+}
+.internal-category-header {
+    font-size: var(--font-size-16);
+    border-bottom: 1px solid var(--color-border-light-primary);
+    width: 100%;
+    padding: 1px 3px;
+}
+
+/*
+---------------------------------
+    DOWNTIME PAGE
+---------------------------------
+*/
+
+input.pilot-name {
+    margin: 5px 0px;
+    font-size: var(--font-size-18);
+    height: 26px;
+    width: 170px;
+}
+.downtime-attribute {
+    height: 20px;
+    flex: 0 0 105px;
+    font-size: var(--font-size-7);
+    margin-right: auto;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    text-align: center;
+    align-items: baseline;
+}
+input.downtime-value {
+    height: 20px;
+    flex: 0 0 30px;
+}
+input.background {
+    margin: 5px 3px;
+    width: 170px;
+}
+.novok {
+    margin: 3px;
+    margin-right: auto;
+}
+.description-header {
+  font-size: var(--font-size-14);
+  border-bottom: 1px solid var(--color-border-light-primary);
+  width: 300px;
+}
+.shoreleave-col {
+    width: 200px;
+    margin-right: 3px;
+}
+.holder {
+    padding-bottom: 3px;
+    width: 100%;
+    border-bottom: 1px solid var(--color-border-highlight);
 }

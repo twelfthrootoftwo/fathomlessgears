@@ -27,6 +27,15 @@ export class Utils {
 		}
 	}
 
+	static getLocalisedDowntimeLabel(downtimeKey) {
+		const recognisedDowntime = ["physical","social","engineering","enlightenment"];
+		if (recognisedDowntime.includes(downtimeKey)) {
+			return game.i18n.localize("DOWNTIME." + downtimeKey);
+		} else {
+			console.log("Downtime key not recognised: " + downtimeKey);
+		}
+	}
+
 	static getLocalisedHitType(hitTypeKey) {
 		const recognisedHits = ["crit", "hit", "miss"];
 		if (recognisedHits.includes(hitTypeKey)) {
@@ -95,6 +104,16 @@ export class Utils {
 			ATTRIBUTES.baseAP,
 		];
 		return flat.includes(attributeKey);
+	}
+
+	static isDowntimeAttribute(attributeKey) {
+		const recognisedDowntime=[
+			"physical",
+			"social",
+			"engineering",
+			"enlightenment"
+		]
+		return recognisedDowntime.includes(attributeKey);
 	}
 
 	static isAttributeComponent(key) {

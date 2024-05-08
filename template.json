@@ -105,7 +105,7 @@
 					"character-name": "",
 					"callsign": "",
 					"background": "",
-					"el": "",
+					"el": 0,
 					"touch": []
 				}
 			},
@@ -136,16 +136,35 @@
 						"max": 1
 					}
 				}
+			},
+			"downtime": {
+				"downtime": {
+					"novok": 0,
+					"rollable": {
+						"physical": {
+							"value": 0
+						},
+						"social": {
+							"value": 0
+						},
+						"engineering": {
+							"value": 0
+						},
+						"enlightenment": {
+							"value": 0
+						}
+					}
+				}
 			}
 		},
 		"fisher": {
-			"templates": ["attributes", "ballast", "internals", "resources", "fisher_history"],
+			"templates": ["attributes", "ballast", "internals", "resources", "fisher_history","downtime"],
 			"biography": "Good at catching fish",
 			"size": "fisher",
 			"frame": "",
 			"gear-name": "",
-			"pilot-portrait": "",
-			"grid": ""
+			"pilot-portrait": "icons/svg/mystery-man.svg",
+			"grid": "systems/hooklineandmecha/assets/blank-grid.jpg"
 		},
 		"fish": {
 			"templates": ["attributes", "ballast", "internals"],

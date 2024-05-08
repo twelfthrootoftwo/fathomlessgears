@@ -36,8 +36,14 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		);
         const items=context.actor.itemTypes;
-		context.frame=items.frame_pc[0];
+		context.frame=items.frame_pc[0] ? items.frame_pc : {
+			name: "",
+			system: {
+				"gear_ability": "No frame assigned"
+			}
+		};
 		context.internals=items.internals;
+		console.log(context);
 		return context;
 	}
 
@@ -64,6 +70,7 @@ export class HLMActorSheet extends ActorSheet {
 
 		super.activateListeners(html);
 		html.find(".rollable").click(this._onRoll.bind(this));
+		document.getElementById("post-frame-ability").click(this.postFrameAbility.bind(this));
 	}
 
 	async _onRoll(event) {
@@ -98,5 +105,9 @@ export class HLMActorSheet extends ActorSheet {
 		} else {
 			console.log(`Can't drop item type ${targetItem.type} on actor type ${this.actor.type}`);
 		}
+	}
+
+	postFrameAbility() {
+		console.log("Send frame ability to chat!");
 	}
 }
