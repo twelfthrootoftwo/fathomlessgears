@@ -58,3 +58,10 @@
 .attribute-value {
 	text-align: center !important;
 }
+.message-subheader {
+	font-size: var(--font-size-18);
+	width: 100%;
+	border-bottom: 1px solid var(--color-border-highlight);
+	padding: 3px;
+	margin-bottom: 3px;
+}

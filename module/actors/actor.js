@@ -369,4 +369,29 @@ export class HLMActor extends Actor {
 		this.update({"system": this.system});
 		console.log(this);
 	}
+
+	/**
+	 * Send this actor's flat attributes to the chat log
+	 */
+	async shareFrameAbility() {
+		const content=await this.getFrameAbilityChatMessage();
+		ChatMessage.create({
+			speaker: {actor: this},
+			content: content,
+		});
+	}
+
+	async getFrameAbilityChatMessage() {
+		const frame=this.itemTypes.frame_pc[0];
+		console.log(frame);
+		const display = await renderTemplate(
+			"systems/hooklineandmecha/templates/messages/frame-ability.html",
+			{
+				frame_ability_name: frame.system.gear_ability_name,
+				frame_ability_text: frame.system.gear_ability,
+			}
+		);
+		console.log(display);
+		return display;		
+	}
 }
