@@ -69,19 +69,11 @@ export class Utils {
 	}
 
 	static isAttribute(attributeKey) {
-		const recognisedAttributes = [
-			"close",
-			"far",
-			"mental",
-			"power",
-			"evade",
-			"willpower",
-			"speed",
-			"sensor",
-			"weight",
-			"baseAP",
-		];
-		return recognisedAttributes.includes(attributeKey);
+		let returnVal=false;
+		Object.values(ATTRIBUTES).forEach((attribute) => {
+			if(attribute==attributeKey) returnVal=true;
+		})
+		return returnVal;
 	}
 
 	static isRollableAttribute(attributeKey) {
@@ -99,11 +91,19 @@ export class Utils {
 			ATTRIBUTES.evade,
 			ATTRIBUTES.willpower,
 			ATTRIBUTES.speed,
-			ATTRIBUTES.sensors,
+			ATTRIBUTES.sensor,
 			ATTRIBUTES.weight,
 			ATTRIBUTES.baseAP,
 		];
 		return flat.includes(attributeKey);
+	}
+
+	static isResource(attributeKey) {
+		let returnVal=false;
+		Object.values(RESOURCES).forEach((attribute) => {
+			if(attribute==attributeKey) returnVal=true;
+		})
+		return returnVal;
 	}
 
 	static isDowntimeAttribute(attributeKey) {

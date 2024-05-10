@@ -84,6 +84,8 @@
 			"ballast": {
 				"ballast": {
 					"base": {
+						"frame": 0,
+						"internals": 0,
 						"value": 0
 					},
 					"weight": {

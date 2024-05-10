@@ -11,7 +11,7 @@ export const ATTRIBUTES = {
 	evade: "evade",
 	willpower: "willpower",
 	speed: "speed",
-	sensors: "sensors",
+	sensor: "sensor",
 	weight: "weight",
 	baseAP: "baseAP",
 };

@@ -180,6 +180,9 @@ export class HLMActor extends Actor {
 		//Apply ballast change
 		if(attributeKey=="ballast") {
 			this.system.ballast.base.value=this.system.ballast.base.value+value;
+		} else if(attributeKey=="repair_kits") {
+			this.system.resources.repair.value+=value;
+			this.system.resources.repair.max+=value;
 		} else {
 			//Check the target is an attribute, quit if not
 			if(!(Utils.isAttribute(attributeKey)&&Utils.isAttributeComponent(target))) return false;
@@ -199,6 +202,13 @@ export class HLMActor extends Actor {
 			this.update({[`${targetAttributeAddress}.${target}`] : targetAttribute[target], [`${targetAttributeAddress}.total`] : totalValue});
 			return true;
 		}
+	}
+
+	modifyResourceValue(resourceKey,value) {
+		console.log("Modifying resource")
+		if(!Utils.isResource(resourceKey)) return false;
+		this.system.resources[resourceKey].value+=value;
+		this.system.resources[resourceKey].max+=value;
 	}
 
 	/**
@@ -358,16 +368,24 @@ export class HLMActor extends Actor {
 	 * @param {Item} frame
 	 */
 	async applyFrame(frame) {
+		console.log("Applying frame");
 		if(this.type != "fisher") return;
 		//Apply attribute changes
 		Object.keys(frame.system.attributes).forEach((key) => {
 			this.setAttributeValue(key,frame.system.attributes[key],"base");
 		})
+		this.system.ballast.base.frame=frame.system.ballast;
 		//Remove existing size item
 		if(this.system.frame) {
 			const oldFrame=this.items.get(this.system.frame);
+			this.modifyResourceValue("repair",-oldFrame.system.repair_kits);
+			this.modifyResourceValue("core",-oldFrame.system.core_integrity);
 			oldFrame?.delete();
 		}
+		this.modifyResourceValue("repair",frame.system.repair_kits);
+		this.modifyResourceValue("core",frame.system.core_integrity);
+		await this.update({"system": this.system});
+
 		//Create new size item
 		const item=await Item.create(frame,{parent: this});
 		this.system.frame=item._id;
@@ -381,9 +399,14 @@ export class HLMActor extends Actor {
 	 * @param {Item} internal
 	 */
 	async applyInternal(internal) {
+		//Apply attributes
 		Object.keys(internal.system.attributes).forEach((key) => {
 			this.modifyAttributeValue(key,internal.system.attributes[key],"internals");
 		})
+		//Modify resources
+		this.modifyResourceValue("repair",internal.system.repair_kits);
+		await this.update({"system": this.system});
+
 		const item=await Item.create(internal,{parent: this});
 		this.system.internals.push(item._id);
 		this.update({"system": this.system});
