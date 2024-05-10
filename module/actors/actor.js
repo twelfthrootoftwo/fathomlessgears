@@ -1,6 +1,6 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
-import {ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES} from "../constants.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES} from "../constants.js";
 import { RollElement, RollDialog } from "../actions/roll-dialog.js";
 
 /**
@@ -177,22 +177,28 @@ export class HLMActor extends Actor {
 	 * @returns true if the change was successful, false if the attribute key or target are not valid
 	 */
 	modifyAttributeValue(attributeKey, value, target){
-		console.log("Modifying attribute");
-		if(!(Utils.isAttribute(attributeKey)&&Utils.isAttributeComponent(target))) return false;
-		let targetAttribute=null;
-		let targetAttributeAddress="";
-		if (Utils.isRollableAttribute(attributeKey)) {
-			targetAttribute=this.system.attributes.rolled[attributeKey]
-			targetAttributeAddress=`system.attributes.rolled.${attributeKey}`
-		} else if (this.system.attributes.flat[attributeKey]) {
-			targetAttribute=this.system.attributes.flat[attributeKey]
-			targetAttributeAddress=`system.attributes.flat.${attributeKey}`
+		//Apply ballast change
+		if(attributeKey=="ballast") {
+			this.system.ballast.base.value=this.system.ballast.base.value+value;
+		} else {
+			//Check the target is an attribute, quit if not
+			if(!(Utils.isAttribute(attributeKey)&&Utils.isAttributeComponent(target))) return false;
+			//Apply changes in appropriate place
+			let targetAttribute=null;
+			let targetAttributeAddress="";
+			if (Utils.isRollableAttribute(attributeKey)) {
+				targetAttribute=this.system.attributes.rolled[attributeKey]
+				targetAttributeAddress=`system.attributes.rolled.${attributeKey}`
+			} else if (this.system.attributes.flat[attributeKey]) {
+				targetAttribute=this.system.attributes.flat[attributeKey]
+				targetAttributeAddress=`system.attributes.flat.${attributeKey}`
+			}
+			targetAttribute[target]+=value;
+			const totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
+			targetAttribute.total=totalValue;
+			this.update({[`${targetAttributeAddress}.${target}`] : targetAttribute[target], [`${targetAttributeAddress}.total`] : totalValue});
+			return true;
 		}
-		targetAttribute[target]+=value;
-		const totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
-		targetAttribute.total=totalValue;
-		this.update({[`${targetAttributeAddress}.${target}`] : targetAttribute[target], [`${targetAttributeAddress}.total`] : totalValue});
-		return true;
 	}
 
 	/**
@@ -249,11 +255,24 @@ export class HLMActor extends Actor {
 	 * Compute the actor's ballast value
 	 */
 	calculateBallast() {
-		const baseBallast=this.system.ballast.base.value;
-		const weightBallast=Math.floor(this.system.attributes.flat.weight.total/5);
+		const items=this.itemTypes;
+		let baseVal=0;
+		let weight=0;
+		if(this.type==ACTOR_TYPES.fisher) {
+			console.log("Calculating ballast")
+			if(items.frame_pc.length > 0) baseVal=items.frame_pc[0].system.ballast;
+			items.internal_pc.forEach((internal) => {
+				baseVal+=internal.system.ballast;
+				weight+=internal.system.attributes.weight;
+			})
+		} else {
+			//TODO NPC ballast calc
+		}
+		this.system.ballast.base.value=baseVal;
+		const weightBallast=Math.floor(weight/5);
 		this.system.ballast.weight.value=weightBallast;
 		const ballastMods=this.system.ballast.modifiers.value;
-		this.system.ballast.total.value=baseBallast+weightBallast+ballastMods;
+		this.system.ballast.total.value=baseVal+weightBallast+ballastMods;
 	}
 
 	/**
@@ -352,6 +371,7 @@ export class HLMActor extends Actor {
 		//Create new size item
 		const item=await Item.create(frame,{parent: this});
 		this.system.frame=item._id;
+		this.calculateBallast();
 		this.update({"system": this.system});
 		console.log(this);
 	}
