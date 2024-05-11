@@ -43,7 +43,28 @@ export class HLMActorSheet extends ActorSheet {
 				"gear_ability": "No frame assigned"
 			}
 		};
-		context.internals=items.internal_pc.concat(items.internal_npc);
+
+		//Gather internal categories
+		context.weapons=[];
+		context.active=[];
+		context.passive=[];
+		const internals=items.internal_pc.concat(items.internal_npc);
+		internals.forEach((internal) => {
+			switch(internal.system.type) {
+				case "melee":
+				case "ranged":
+					context.weapons.push(internal);
+					break;
+				case "active":
+					context.active.push(internal);
+					break;
+				case "mitigation":
+				case "passive":
+					context.passive.push(internal);
+					break;
+			}
+		})
+		
 		console.log(context);
 		return context;
 	}

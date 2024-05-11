@@ -202,8 +202,7 @@
                     <div class="tab-content">
                         <div class="internal-category flex-row">
                             <h3 class="internal-category-header">{{localize "INTERNALS.weapons"}}</h3>
-                            {{log internals}}
-                            {{#each internals}}
+                            {{#each weapons}}
                             {{>
                                 "systems/hooklineandmecha/templates/partials/internal-partial.html"
                                 internal=this
@@ -212,11 +211,21 @@
                         </div>
                         <div class="internal-category flex-row">
                             <h3 class="internal-category-header">{{localize "INTERNALS.active"}}</h3>
-                            <p>Internals coming soon!</p>
+                            {{#each active}}
+                            {{>
+                                "systems/hooklineandmecha/templates/partials/internal-partial.html"
+                                internal=this
+                            }}
+                            {{/each}}
                         </div>
                         <div class="internal-category flex-row">
                             <h3 class="internal-category-header">{{localize "INTERNALS.passive"}}</h3>
-                            <p>Internals coming soon!</p>
+                            {{#each passive}}
+                            {{>
+                                "systems/hooklineandmecha/templates/partials/internal-partial.html"
+                                internal=this
+                            }}
+                            {{/each}}
                         </div>
                     </div>
                 </div>
