@@ -32,16 +32,19 @@ input.sheet-input {
 	background-color: rgba(0,0,0,0.5);
 	z-index: 2;
 	cursor: wait;
-  }
-  .btn {
-	background: rgba(0, 0, 0, 0.1);
-	border: 2px groove var(--color-border-light-primary);
-	border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .btn:hover {
-	background-color: #44444466;
-    cursor: pointer;
-  }
+}
+.btn {
+background: rgba(0, 0, 0, 0.1);
+border: 2px groove var(--color-border-light-primary);
+border-radius: 2px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.btn:hover {
+background-color: #44444466;
+cursor: pointer;
+}
+.spacer {
+	flex-grow: 10;
+}

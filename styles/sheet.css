@@ -201,7 +201,7 @@ label.marbles {
 
 /*
 ---------------------------------
-    CHARACTER PAGE
+    GEAR PAGE
 ---------------------------------
 */
 .gear-col {
@@ -255,6 +255,47 @@ button.button.post-message {
     border-bottom: 1px solid var(--color-border-light-primary);
     width: 100%;
     padding: 1px 3px;
+}
+.internal-box {
+    border: 2px solid var(--color-border-dark-primary);
+    margin: 4px;
+}
+.internal-header {
+    background-color: var(--color-bg-dialog-high-contrast);
+    height: 30px;
+    padding: 2px;
+}
+.internal-name {
+    font-size: var(--font-size-15);
+    margin: 0px 3px;
+}
+.internal-ap {
+    font-size: var(--font-size-14);
+    margin: 0px 3px;
+}
+.break-button {
+
+}
+.post-button {
+
+}
+.internal-top-row {
+    margin: 5px;
+}
+.tag-row {
+    flex-grow: 1;
+}
+.tag-display {
+    background-color: var(--color-bg-dialog-contrast);
+    padding: 2px 3px;
+    margin: 2px;
+}
+.delete-internal {
+    flex: 0 0 50px;
+}
+.internal-text {
+    margin: 3px;
+    font-size: var(--font-size-10);
 }
 
 /*

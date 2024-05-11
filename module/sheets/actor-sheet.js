@@ -27,6 +27,7 @@ export class HLMActorSheet extends ActorSheet {
 
 	/** @inheritdoc */
 	async getData(options) {
+		console.log("Getting data");
 		const context = await super.getData(options);
 		context.biographyHTML = await TextEditor.enrichHTML(
 			context.actor.system.biography,
@@ -42,7 +43,7 @@ export class HLMActorSheet extends ActorSheet {
 				"gear_ability": "No frame assigned"
 			}
 		};
-		context.internals=items.internals;
+		context.internals=items.internal_pc.concat(items.internal_npc);
 		console.log(context);
 		return context;
 	}

@@ -40,23 +40,9 @@
 	"TABS.downtime": "Shore Leave",
 	"TABS.fish": "Fish",
 
-	"ATTRIBUTETAB.rollable": "Rollable Attributes",
-	"ATTRIBUTETAB.noAttribute": "Flat Rolls",
-	"ATTRIBUTETAB.flat": "Flat Attributes",
-	"ATTRIBUTETAB.weightClass": "Weight Class",
-	"ATTRIBUTETAB.ballast": "Ballast",
-
-	"WEIGHT.ultraLight": "Ultra Light",
-	"WEIGHT.light": "Light",
-	"WEIGHT.medium": "Medium",
-	"WEIGHT.heavy": "Heavy",
-	"WEIGHT.ultraHeavy": "Ultra Heavy",
-
-	"FISHTYPE.aquatic": "Aquatic",
-	"FISHTYPE.amphibian": "Amphibian",
-	"FISHTYPE.abyssal": "Abyssal",
-	"FISHTYPE.pirate": "Pirate",
-	"FISHTYPE.forgotten": "Forgotten",
+	"SHEET.internalbreak": "Break",
+	"SHEET.post": "Post",
+	"SHEET.delete": "Delete",
 
 	"FISHSIZE.small": "Small",
 	"FISHSIZE.medium-vert": "Medium (Portrait)",

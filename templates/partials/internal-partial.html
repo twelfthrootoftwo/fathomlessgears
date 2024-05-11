@@ -1,0 +1,24 @@
+<div class="internal-box">
+    {{log internal}}
+    <div class="internal-header flex-row">
+        <div class="expander-icon"></div>
+        <h3 class="internal-name">{{internal.name}}</h3>
+        <div class="spacer"></div>
+        <p class="internal-ap">{{internal.system.ap_cost}} AP</p>
+        <div class="btn break-button" id="{{internal._id}}">{{localize "SHEET.internalbreak"}}</div>
+        <div class="btn post-button" id="{{internal._id}}">{{localize "SHEET.post"}}</div>
+    </div>
+    <div class="internal-top-row flex-row">
+        <div class="tag-row flex-row">
+            {{#each internal.system.tags}}
+                <div class="tag-display" id="{{this.name}}">{{this.name}}</div>
+            {{/each}}
+        </div>
+        <div class="delete-internal btn" id="{{internal._id}}">
+            {{localize "SHEET.delete"}}
+        </div>
+    </div>
+    <div class="internal-text">
+        {{internal.system.action_text}}
+    </div>
+</div>
