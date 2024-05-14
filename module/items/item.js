@@ -23,7 +23,7 @@ class Attack {
 	range
 
 	constructor(type, damage, range) {
-		this.type=type;
+		this.type=Utils.capitaliseFirstLetter(type);
 		this.damage=damage;
 		this.range=range;
 	}

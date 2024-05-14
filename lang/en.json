@@ -31,6 +31,8 @@
 	"INTERNALS.weapons": "Weapons",
 	"INTERNALS.active": "Active Internals",
 	"INTERNALS.passive": "Passive internals",
+	"INTERNALS.damage": "Damage",
+	"INTERNALS.range": "Range",
 
 	"HEADER.setTypes": "Apply types",
 
