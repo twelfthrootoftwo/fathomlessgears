@@ -198,8 +198,10 @@ export class HLMActor extends Actor {
 			}
 			targetAttribute[target]+=value;
 			const totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
+			if(totalValue<0) totalValue=0;
+			if(totalValue>9) totalValue=9;
 			targetAttribute.total=totalValue;
-			this.update({[`${targetAttributeAddress}.${target}`] : targetAttribute[target], [`${targetAttributeAddress}.total`] : totalValue});
+			this.update({"system": this.system});
 			return true;
 		}
 	}
@@ -209,6 +211,7 @@ export class HLMActor extends Actor {
 		if(!Utils.isResource(resourceKey)) return false;
 		this.system.resources[resourceKey].value+=value;
 		this.system.resources[resourceKey].max+=value;
+		this.update({"system": this.system});
 	}
 
 	/**
@@ -451,5 +454,15 @@ export class HLMActor extends Actor {
 				this.modifyAttributeValue(key,multiplier*internal.system.attributes[key],"internals");
 			}
 		})
+	}
+
+	async removeInternal(uuid) {
+		const internal=this.items.get(uuid);
+		Object.keys(internal.system.attributes).forEach((key) => {
+				this.modifyAttributeValue(key,-1*internal.system.attributes[key],"internals");
+		})
+		this.modifyResourceValue("repair",-1*internal.system.repair_kits);
+		this.update({"system": this.system});
+		internal.delete();
 	}
 }

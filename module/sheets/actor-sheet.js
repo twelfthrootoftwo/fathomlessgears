@@ -150,7 +150,6 @@ export class HLMActorSheet extends ActorSheet {
 	}
 
 	breakInternal(event) {
-		console.log("Breaking internal "+event.target.id);
 		this.toggleInternalBrokenDisplay(event.target.id);
 		this.actor.toggleInternalBroken(event.target.id);
 	}
@@ -168,5 +167,6 @@ export class HLMActorSheet extends ActorSheet {
 
 	deleteInternal(event) {
 		console.log("Deleting internal"+event.target.id);
+		this.actor.removeInternal(event.target.id);
 	}
 }
