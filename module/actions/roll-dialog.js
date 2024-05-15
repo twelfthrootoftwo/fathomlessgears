@@ -79,7 +79,6 @@ export class RollDialog extends HLMApplication {
 
     _getSubmitData(data) {
         let formData=super._getSubmitData(data);
-        console.log(formData);
     }
 
     triggerRoll() {

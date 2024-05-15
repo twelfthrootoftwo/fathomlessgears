@@ -36,7 +36,6 @@ class Attack {
 export class HLMItem extends Item {
 
 	async toggleBroken() {
-		console.log("Toggling");
 		if(!this.isInternal()) {
 			return null;
 		}

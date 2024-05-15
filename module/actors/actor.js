@@ -207,7 +207,6 @@ export class HLMActor extends Actor {
 	}
 
 	modifyResourceValue(resourceKey,value) {
-		console.log("Modifying resource")
 		if(!Utils.isResource(resourceKey)) return false;
 		this.system.resources[resourceKey].value+=value;
 		this.system.resources[resourceKey].max+=value;
@@ -363,7 +362,6 @@ export class HLMActor extends Actor {
 		const item=await Item.create(size,{parent: this});
 		this.system.size=item._id
 		this.update({"system": this.system});
-		console.log(this)
 	}
 
 	/**
@@ -394,7 +392,6 @@ export class HLMActor extends Actor {
 		this.system.frame=item._id;
 		this.calculateBallast();
 		this.update({"system": this.system});
-		console.log(this);
 	}
 
 	/**
@@ -402,6 +399,7 @@ export class HLMActor extends Actor {
 	 * @param {Item} internal
 	 */
 	async applyInternal(internal) {
+		console.log("Applying internal");
 		//Apply attributes
 		Object.keys(internal.system.attributes).forEach((key) => {
 			this.modifyAttributeValue(key,internal.system.attributes[key],"internals");
@@ -429,7 +427,6 @@ export class HLMActor extends Actor {
 
 	async getFrameAbilityChatMessage() {
 		const frame=this.itemTypes.frame_pc[0];
-		console.log(frame);
 		const display = await renderTemplate(
 			"systems/hooklineandmecha/templates/messages/frame-ability.html",
 			{
@@ -437,10 +434,13 @@ export class HLMActor extends Actor {
 				frame_ability_text: frame.system.gear_ability,
 			}
 		);
-		console.log(display);
 		return display;		
 	}
 
+	/**
+	 * Mark an internal as broken
+	 * @param {string} uuid The UUID of the internal to break
+	 */
 	async toggleInternalBroken(uuid) {
 		const internal=this.items.get(uuid);
 		await internal.toggleBroken();
@@ -456,6 +456,10 @@ export class HLMActor extends Actor {
 		})
 	}
 
+	/**
+	 * Deletes an internal from this actor
+	 * @param {string} uuid The UUID of the internal to delete
+	 */
 	async removeInternal(uuid) {
 		const internal=this.items.get(uuid);
 		Object.keys(internal.system.attributes).forEach((key) => {

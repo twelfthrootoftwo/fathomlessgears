@@ -27,7 +27,6 @@ export class HLMActorSheet extends ActorSheet {
 
 	/** @inheritdoc */
 	async getData(options) {
-		console.log("Getting data");
 		const context = await super.getData(options);
 		context.biographyHTML = await TextEditor.enrichHTML(
 			context.actor.system.biography,
@@ -97,7 +96,6 @@ export class HLMActorSheet extends ActorSheet {
 		internals.forEach((internal) => {
 			internal.isBroken().then(result => {
 				if(result) {
-					console.log("Found a broken internal");
 					this.toggleInternalBrokenDisplay(internal._id);
 				}
 			});
@@ -150,23 +148,21 @@ export class HLMActorSheet extends ActorSheet {
 	}
 
 	breakInternal(event) {
-		this.toggleInternalBrokenDisplay(event.target.id);
-		this.actor.toggleInternalBroken(event.target.id);
+		this.toggleInternalBrokenDisplay(event.target.dataset.id);
+		this.actor.toggleInternalBroken(event.target.dataset.id);
 	}
 
 	toggleInternalBrokenDisplay(uuid) {
-		console.log("Toggling broken display");
-		document.querySelector(`#${uuid}`,".internal-box").classList.toggle("broken");
-		document.querySelector(`#${uuid}`,".break-button").classList.toggle("btn-dark");
-		document.querySelector(`#${uuid}`,".post-button").classList.toggle("btn-dark");
+		document.querySelector(`[data-id=${uuid}]`,".internal-box").classList.toggle("broken");
+		document.querySelector(`[data-id=${uuid}]`,".break-button").classList.toggle("btn-dark");
+		document.querySelector(`[data-id=${uuid}]`,".post-button").classList.toggle("btn-dark");
 	}
 
 	postInternal(event) {
-		console.log("Posting internal"+event.target.id);
+		console.log("Posting internal"+event.target.dataset.id);
 	}
 
 	deleteInternal(event) {
-		console.log("Deleting internal"+event.target.id);
-		this.actor.removeInternal(event.target.id);
+		this.actor.removeInternal(event.target.dataset.id);
 	}
 }

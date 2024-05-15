@@ -252,7 +252,6 @@ class FshManager extends HLMApplication {
 	 * @param {Event} ev The callback event
 	 */
 	async removeCallback(ev) {
-		console.log("Remove callback triggered");
 		this.startLoading();
 		const targetRecord=new FileRecord(ev.target.attributes.filename.value,ev.target.attributes.version.value);
 		await deleteFileRecord(targetRecord);
@@ -265,7 +264,6 @@ class FshManager extends HLMApplication {
 	 * @param {Event} ev The callback event
 	 */
 	updateCallback(ev) {
-		console.log("Update callback triggered");
 		const targetRecord=new FileRecord(ev.target.attributes.filename.value,ev.target.attributes.version.value);
 		new FshUploader(this,targetRecord);
 	}
@@ -391,7 +389,6 @@ async function createItem(itemName,jsonData,itemType,sourceId, compendium) {
 		console.log(message);
 		ui.notifications.error(message);
 	}
-	console.log(item);
 	return item
 }
 
