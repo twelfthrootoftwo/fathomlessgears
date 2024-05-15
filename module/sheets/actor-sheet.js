@@ -78,6 +78,7 @@ export class HLMActorSheet extends ActorSheet {
 
 	/** @inheritdoc */
 	activateListeners(html) {
+		//Add classes to attribute boxes with special properties
 		Object.keys(this.actor.system.attributes.rolled).forEach((key) => {
 			document.getElementById(key).querySelector(".name-box").classList.add("attribute-button","rollable", "btn");
 		});
@@ -90,8 +91,23 @@ export class HLMActorSheet extends ActorSheet {
 			basePiece.disabled=false;
 		});
 
+		//Mark broken internals
+		const items=this.actor.itemTypes;
+		const internals=items.internal_pc.concat(items.internal_npc);
+		internals.forEach((internal) => {
+			internal.isBroken().then(result => {
+				if(result) {
+					console.log("Found a broken internal");
+					this.toggleInternalBrokenDisplay(internal._id);
+				}
+			});
+		});
+
 		super.activateListeners(html);
 		html.find(".rollable").click(this._onRoll.bind(this));
+		html.find(".break-button").click(this.breakInternal.bind(this));
+		html.find(".post-button").click(this.postInternal.bind(this));
+		html.find(".delete-internal").click(this.deleteInternal.bind(this));
 		document.getElementById("post-frame-ability").addEventListener("click",this.postFrameAbility.bind(this));
 	}
 
@@ -131,5 +147,26 @@ export class HLMActorSheet extends ActorSheet {
 
 	postFrameAbility() {
 		this.actor.shareFrameAbility();
+	}
+
+	breakInternal(event) {
+		console.log("Breaking internal "+event.target.id);
+		this.toggleInternalBrokenDisplay(event.target.id);
+		this.actor.toggleInternalBroken(event.target.id);
+	}
+
+	toggleInternalBrokenDisplay(uuid) {
+		console.log("Toggling broken display");
+		document.querySelector(`#${uuid}`,".internal-box").classList.toggle("broken");
+		document.querySelector(`#${uuid}`,".break-button").classList.toggle("btn-dark");
+		document.querySelector(`#${uuid}`,".post-button").classList.toggle("btn-dark");
+	}
+
+	postInternal(event) {
+		console.log("Posting internal"+event.target.id);
+	}
+
+	deleteInternal(event) {
+		console.log("Deleting internal"+event.target.id);
 	}
 }

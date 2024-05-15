@@ -35,6 +35,26 @@ class Attack {
  */
 export class HLMItem extends Item {
 
+	async toggleBroken() {
+		console.log("Toggling");
+		if(!this.isInternal()) {
+			return null;
+		}
+		const flag=!await this.getFlag("hooklineandmecha","broken");
+		await this.setFlag("hooklineandmecha","broken",flag);
+		return flag;
+	}
+
+	async isBroken() {
+		if(!this.isInternal()) {
+			return null;
+		}
+		return await this.getFlag("hooklineandmecha","broken");
+	}
+
+	isInternal() {
+		return [ITEM_TYPES.internal_npc, ITEM_TYPES.internal_pc].includes(this.type);
+	}
 }
 
 /**

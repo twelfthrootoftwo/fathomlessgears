@@ -408,9 +408,9 @@ export class HLMActor extends Actor {
 		await this.update({"system": this.system});
 
 		const item=await Item.create(internal,{parent: this});
+		item.setFlag("hooklineandmecha","broken",false);
 		this.system.internals.push(item._id);
 		this.update({"system": this.system});
-		console.log(this);
 	}
 
 	/**
@@ -436,5 +436,20 @@ export class HLMActor extends Actor {
 		);
 		console.log(display);
 		return display;		
+	}
+
+	async toggleInternalBroken(uuid) {
+		const internal=this.items.get(uuid);
+		await internal.toggleBroken();
+
+		//Apply attribute changes
+		const isBroken=await internal.isBroken();
+		console.log("Toggling internal to "+isBroken)
+		const multiplier=isBroken ? -1 : 1
+		Object.keys(internal.system.attributes).forEach((key) => {
+			if(key!=ATTRIBUTES.weight) {
+				this.modifyAttributeValue(key,multiplier*internal.system.attributes[key],"internals");
+			}
+		})
 	}
 }

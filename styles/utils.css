@@ -45,6 +45,10 @@ justify-content: center;
 background-color: #44444466;
 cursor: pointer;
 }
+.btn.btn-dark {
+	background: rgba(255, 255, 255, 0.1);
+	border: 2px groove var(--color-border-dark-primary);
+}
 .spacer {
 	flex-grow: 10;
 }
