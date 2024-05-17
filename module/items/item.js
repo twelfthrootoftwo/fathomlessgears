@@ -67,7 +67,7 @@ export function createHLMItemData(record, data, source) {
 	switch(record.type) {
 		case ITEM_TYPES.tag:
 			console.log("Tags not implemented yet");
-			break;
+			return null;
 		case ITEM_TYPES.size:
 			console.log("Constructing size...");
 			system=constructSizeData(data);
@@ -82,7 +82,7 @@ export function createHLMItemData(record, data, source) {
 			break;
 		case ITEM_TYPES.internal_npc:
 			console.log("NPC internals not implemented yet");
-			break;
+			return null;
 	}
 	system.source=source
 	const itemData={

@@ -24,6 +24,9 @@
     display: flex;
     flex-direction: row;
 }
+.sheet-contents {
+    width: 100%;
+}
 
 /*
 ---------------------------------
@@ -143,6 +146,7 @@ input.piece-value.editable {
 }
 .tab-content {
     margin: 3px;
+    width: 100%;
 }
 
 /*
@@ -206,7 +210,7 @@ label.marbles {
 */
 .gear-col {
     padding: 0px 5px 0px 3px;
-    min-width: 160px;
+    flex: 0 0 180px;
 }
 input.gear-name {
     font-size: var(--font-size-18);

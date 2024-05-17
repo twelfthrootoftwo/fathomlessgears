@@ -66,7 +66,8 @@ async function retrieveOrCreateCompendium(compendiumName) {
 const fileNameMapping = {
 	"frame_data": [ITEM_TYPES.frame_pc],
 	"item_data": [ITEM_TYPES.internal_pc],
-    "sizes":[ITEM_TYPES.size]
+    "sizes":[ITEM_TYPES.size],
+    "npc_item_data": [ITEM_TYPES.internal_npc],
 }
 
 /**

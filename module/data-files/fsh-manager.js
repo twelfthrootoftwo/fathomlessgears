@@ -286,9 +286,6 @@ async function processFsh(rawFsh, fileId, oldFile) {
 	const zip=new JSZip();
 	const loadedZip=await zip.loadAsync(rawFsh);
 	await readZippedFileCollection(fileId,loadedZip.files,oldFile);
-	// await zip.loadAsync(rawFsh).then(function (zip) {
-	// 	await readZippedFileCollection(fileId,zip.files,oldFile);
-	// })
 }
 
 /**
@@ -311,7 +308,11 @@ async function processJson(rawJson, fileId, oldFile) {
 async function readDataJson(fileData, fileName, fileId, oldFile) {
 	const preparedData=JSON.parse(fileData);
 	const dataTypes=identifyDataTypes(fileData,fileName);
-	await saveToCompendium(preparedData,dataTypes, fileId, oldFile);
+	if(dataTypes!= null) {
+		await saveToCompendium(preparedData,dataTypes, fileId, oldFile);
+	} else {
+		ui.notifications.info(`Can't identify item types for ${fileName}, skipping...`);
+	}
 }
 
 /**
@@ -332,8 +333,10 @@ function extractRelevantData(preparedData,type) {
  */
 async function readZippedFileCollection(fileId, zippedFiles, oldFile) {
 	for(let zFileName of Object.keys(zippedFiles)) {
-		const fileData=await zippedFiles[zFileName].async('string');
-		await readDataJson(fileData, zFileName, fileId, oldFile);
+		if(getExtension(zFileName)=="json") {
+			const fileData=await zippedFiles[zFileName].async('string');
+			await readDataJson(fileData, zFileName, fileId, oldFile);
+		}
 	}
 }
 
@@ -374,7 +377,7 @@ async function saveToCompendium(preparedData, dataTypes, fileId, oldFile) {
  * @returns the newly constructed Item
  */
 async function createItem(itemName,jsonData,itemType,sourceId, compendium) {
-	const name=Utils.capitaliseWords(Utils.fromLowerHyphen(itemName));
+	const name=jsonData.name ? jsonData.name : Utils.capitaliseWords(Utils.fromLowerHyphen(itemName));
 	const record={
 		"name": name,
 		"type": itemType,
@@ -387,7 +390,7 @@ async function createItem(itemName,jsonData,itemType,sourceId, compendium) {
 	catch(error) {
 		const message="Could not create item from file data, name: "+name+", type "+Utils.getLocalisedItemType(itemType);
 		console.log(message);
-		ui.notifications.error(message);
+		//ui.notifications.error(message);
 	}
 	return item
 }
@@ -401,7 +404,7 @@ async function createItem(itemName,jsonData,itemType,sourceId, compendium) {
 async function writeNewCompendiumItems(relevantData, compendium, itemType, fileId) {
 	for(let itemName of Object.keys(relevantData)) {
 		const item = await createItem(itemName,relevantData[itemName],itemType,fileId, compendium);
-		await compendium.importDocument(item);
+		if (item) {await compendium.importDocument(item)};
 	}
 }
 
@@ -443,7 +446,7 @@ async function updateCompendiumItems(relevantData,compendium,itemType,oldFileId,
 	//If there's any new items, their names will be left in toUpdate
 	for(let itemName of toUpdate) {
 		const item = await createItem(itemName,relevantData[itemName],itemType,newFileId, compendium);
-		await compendium.importDocument(item);
+		if (item) {await compendium.importDocument(item)};
 	}
 
 	//Delete old items

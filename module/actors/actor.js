@@ -164,7 +164,9 @@ export class HLMActor extends Actor {
 			targetAttributeAddress=`system.attributes.flat.${attributeKey}`
 		}
 		targetAttribute[target]=value;
-		const totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
+		let totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
+		if(totalValue<0) totalValue=0;
+		if(totalValue>9) totalValue=9;
 		targetAttribute.total=totalValue;
 		this.update({[`${targetAttributeAddress}.${target}`] : value, [`${targetAttributeAddress}.total`] : totalValue});
 	}
@@ -197,7 +199,7 @@ export class HLMActor extends Actor {
 				targetAttributeAddress=`system.attributes.flat.${attributeKey}`
 			}
 			targetAttribute[target]+=value;
-			const totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
+			let totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
 			if(totalValue<0) totalValue=0;
 			if(totalValue>9) totalValue=9;
 			targetAttribute.total=totalValue;
