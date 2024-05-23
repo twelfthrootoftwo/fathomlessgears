@@ -45,7 +45,6 @@ export class HLMActor extends Actor {
 	 */
 	async rollAttribute(attributeKey, dieCount, flatModifier) {
 		const defenceKey = HLMActor.isTargetedRoll(attributeKey);
-		console.log("rollAttribute");
 		if (defenceKey) {
 			this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier);
 		} else {

@@ -7,6 +7,7 @@
     font-size: 14px;
     border-bottom: 1px solid var(--color-border-light-primary);
     margin-left: 10px;
+	margin-bottom: 2px;
 }
 .roll-components {
 	border: none;
@@ -14,6 +15,7 @@
     border-bottom: 1px solid var(--color-border-light-primary);
     font-size: 12px;
     margin-left: 10px;
+	margin-top: 2px;
 }
 li.roll-component-item {
     display: flex;
@@ -39,6 +41,11 @@ input.roll-component-value {
     border: none;
     border-radius: 0;
     border-bottom: 1px solid var(--color-border-light-tertiary);
+}
+input.inline-checkbox {
+	height: 15px;
+	margin: 0;
+	margin: 2px 5px;
 }
 
 /*

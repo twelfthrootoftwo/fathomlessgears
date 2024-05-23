@@ -26,6 +26,7 @@ export class RollDialog extends HLMApplication {
     attribute
     additionalFlat
     additionalDie
+    focused
 
     constructor(modifiers, actor, attribute) {
         super();
@@ -42,6 +43,7 @@ export class RollDialog extends HLMApplication {
         this.attribute=attribute;
         this.additionalFlat=0;
         this.additionalDie=0;
+        this.focused=false;
         this.render(true);
     }
 
@@ -73,15 +75,18 @@ export class RollDialog extends HLMApplication {
         html.find('[data-selector="additionalFlat"]').change(async (_evt) => {
             this.additionalFlat=_evt.target.value;
         })
+        html.find('[data-selector="focused"]').change(async (_evt) => {
+            this.focused=_evt.target.checked;
+        })
     }
     
 
     _getSubmitData(data) {
         let formData=super._getSubmitData(data);
+        console.log(formData);
     }
 
     triggerRoll() {
-        console.log("triggerRoll");
         this.dieModifiers.push({
             value: this.additionalDie,
             type: "die",
@@ -102,6 +107,9 @@ export class RollDialog extends HLMApplication {
         this.flatModifiers.forEach((modifier) => {
             totalFlat+=parseInt(modifier.value);
         });
+        if(this.focused) {
+            totalDieCount+=1;
+        }
 
         this.actor.rollAttribute(this.attribute,totalDieCount,totalFlat);
         this.close();
