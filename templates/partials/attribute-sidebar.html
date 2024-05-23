@@ -36,7 +36,7 @@
         </div>
     </div>
     <hr class="divider primary">
-    {{#each actor.system.attributes.rolled as |attrib key|}}
+    {{#each rolled as |attrib key|}}
     {{>
         "systems/hooklineandmecha/templates/partials/attribute-box.html"
         attribute=attrib
@@ -48,7 +48,7 @@
     {{/unless}}
     {{/each}}
     <hr class="divider primary">
-    {{#each actor.system.attributes.flat as |attrib key|}}
+    {{#each flat as |attrib key|}}
     {{>
         "systems/hooklineandmecha/templates/partials/attribute-box.html"
         attribute=attrib

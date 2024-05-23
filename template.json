@@ -5,79 +5,75 @@
 		"templates": {
 			"attributes": {
 				"attributes": {
-					"rolled": {
-						"close": {
-							"base": 1,
-							"internals": 0,
-							"modifier": 0,
-							"total": 1,
-							"key": "close"
-						},
-						"far": {
-							"base": 1,
-							"internals": 0,
-							"modifier": 0,
-							"total": 1,
-							"key": "far"
-						},
-						"mental": {
-							"base": 1,
-							"internals": 0,
-							"modifier": 0,
-							"total": 1,
-							"key": "mental"
-						},
-						"power": {
-							"base": 1,
-							"internals": 0,
-							"modifier": 0,
-							"total": 1,
-							"key": "power"
-						}
+					"close": {
+						"base": 1,
+						"internals": 0,
+						"modifier": 0,
+						"total": 1,
+						"key": "close"
 					},
-					"flat": {
-						"evade": {
-							"base": 1,
-							"internals": 0,
-							"modifier": 0,
-							"total": 1,
-							"key": "evade"
-						},
-						"willpower": {
-							"base": 1,
-							"internals": 0,
-							"modifier": 0,
-							"total": 1,
-							"key": "willpower"
-						},
-						"speed": {
-							"base": 1,
-							"internals": 0,
-							"modifier": 0,
-							"total": 1,
-							"key": "speed"
-						},
-						"sensor": {
-							"base": 1,
-							"internals": 0,
-							"modifier": 0,
-							"total": 1,
-							"key": "sensor"
-						},
-						"weight": {
-							"base": 1,
-							"internals": 0,
-							"modifier": 0,
-							"total": 1,
-							"key": "weight"
-						},
-						"baseAP": {
-							"base": 1,
-							"internals": 0,
-							"modifier": 0,
-							"total": 1,
-							"key": "baseAP"
-						}
+					"far": {
+						"base": 1,
+						"internals": 0,
+						"modifier": 0,
+						"total": 1,
+						"key": "far"
+					},
+					"mental": {
+						"base": 1,
+						"internals": 0,
+						"modifier": 0,
+						"total": 1,
+						"key": "mental"
+					},
+					"power": {
+						"base": 1,
+						"internals": 0,
+						"modifier": 0,
+						"total": 1,
+						"key": "power"
+					},
+					"evade": {
+						"base": 1,
+						"internals": 0,
+						"modifier": 0,
+						"total": 1,
+						"key": "evade"
+					},
+					"willpower": {
+						"base": 1,
+						"internals": 0,
+						"modifier": 0,
+						"total": 1,
+						"key": "willpower"
+					},
+					"speed": {
+						"base": 1,
+						"internals": 0,
+						"modifier": 0,
+						"total": 1,
+						"key": "speed"
+					},
+					"sensor": {
+						"base": 1,
+						"internals": 0,
+						"modifier": 0,
+						"total": 1,
+						"key": "sensor"
+					},
+					"weight": {
+						"base": 1,
+						"internals": 0,
+						"modifier": 0,
+						"total": 1,
+						"key": "weight"
+					},
+					"baseAP": {
+						"base": 1,
+						"internals": 0,
+						"modifier": 0,
+						"total": 1,
+						"key": "baseAP"
 					}
 				}
 			},

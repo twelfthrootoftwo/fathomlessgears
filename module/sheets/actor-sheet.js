@@ -43,6 +43,13 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		};
 
+		//Split attribute types
+		context.rolled={};
+		context.flat={};
+		for (const [key, value] of Object.entries(context.actor.system.attributes)) {
+			Utils.isRollableAttribute(key) ? context.rolled[key]=value : context.flat[key]=value;
+		}
+
 		//Gather internal categories
 		context.weapons=[];
 		context.active=[];
@@ -64,7 +71,6 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		})
 		
-		console.log(context);
 		return context;
 	}
 
@@ -78,8 +84,10 @@ export class HLMActorSheet extends ActorSheet {
 	/** @inheritdoc */
 	activateListeners(html) {
 		//Add classes to attribute boxes with special properties
-		Object.keys(this.actor.system.attributes.rolled).forEach((key) => {
-			document.getElementById(key).querySelector(".name-box").classList.add("attribute-button","rollable", "btn");
+		Object.keys(this.actor.system.attributes).forEach((key) => {
+			if(Utils.isRollableAttribute(key)) {
+				document.getElementById(key).querySelector(".name-box").classList.add("attribute-button","rollable", "btn");
+			}
 		});
 		const background_attributes=["mental","willpower"];
 		background_attributes.forEach((key) => {
@@ -112,7 +120,6 @@ export class HLMActorSheet extends ActorSheet {
 	async _onRoll(event) {
 		event.preventDefault();
 		const attribute = event.target.attributes.attribute?.value;
-
 		this.actor.startRollDialog(attribute);
 	}
 
@@ -122,10 +129,8 @@ export class HLMActorSheet extends ActorSheet {
 	}
 
 	setAttributeValue(formData, key, value) {
-		if (Utils.isRollableAttribute(key)) {
-			formData["system.attributes.rolled."+key+".value"] = value;
-		} else if (Utils.isFlatAttribute(key)) {
-			formData["system.attributes.flat."+key+".value"] = value;
+		if (Utils.isAttribute(key)) {
+			formData["system.attributes."+key+".value"] = value;
 		}
 	}
 

@@ -28,7 +28,7 @@ export class HLMActor extends Actor {
 		const baseDice=new RollElement(2,"die","Base");
 		let totalVal=0;
 		if(Utils.isRollableAttribute(attributeKey)) {
-			totalVal=this.system.attributes.rolled[attributeKey].total;
+			totalVal=this.system.attributes[attributeKey].total;
 		} else if(Utils.isDowntimeAttribute(attributeKey)) {
 			totalVal=this.system.downtime.rollable[attributeKey].value;
 		}
@@ -45,6 +45,7 @@ export class HLMActor extends Actor {
 	 */
 	async rollAttribute(attributeKey, dieCount, flatModifier) {
 		const defenceKey = HLMActor.isTargetedRoll(attributeKey);
+		console.log("rollAttribute");
 		if (defenceKey) {
 			this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier);
 		} else {
@@ -130,16 +131,11 @@ export class HLMActor extends Actor {
 	}
 
 	calculateAttributeTotals() {
-		const updateData={"rolled":{},"flat":{}};
-		Object.keys(this.system.attributes.rolled).forEach((key) => {
-			const attr=this.system.attributes.rolled[key];
+		const updateData={};
+		Object.keys(this.system.attributes).forEach((key) => {
+			const attr=this.system.attributes[key];
 			attr.total=attr.base+attr.internals+attr.modifier;
-			updateData.rolled[key]=attr;
-		});
-		Object.keys(this.system.attributes.flat).forEach((key) => {
-			const attr=this.system.attributes.flat[key];
-			attr.total=attr.base+attr.internals+attr.modifier;
-			updateData.flat[key]=attr;
+			updateData[key]=attr;
 		});
 		if(this._id) this.update({"system.attributes": updateData});
 		this.calculateBallast();
@@ -154,15 +150,8 @@ export class HLMActor extends Actor {
 	 */
 	setAttributeValue(attributeKey, value,target) {
 		if(!Utils.isAttribute(attributeKey)) return;
-		let targetAttribute=null;
-		let targetAttributeAddress="";
-		if (Utils.isRollableAttribute(attributeKey)) {
-			targetAttribute=this.system.attributes.rolled[attributeKey]
-			targetAttributeAddress=`system.attributes.rolled.${attributeKey}`
-		} else if (this.system.attributes.flat[attributeKey]) {
-			targetAttribute=this.system.attributes.flat[attributeKey]
-			targetAttributeAddress=`system.attributes.flat.${attributeKey}`
-		}
+		const targetAttribute=this.system.attributes[attributeKey]
+		const targetAttributeAddress=`system.attributes.${attributeKey}`
 		targetAttribute[target]=value;
 		let totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
 		if(totalValue<0) totalValue=0;
@@ -189,23 +178,16 @@ export class HLMActor extends Actor {
 			//Check the target is an attribute, quit if not
 			if(!(Utils.isAttribute(attributeKey)&&Utils.isAttributeComponent(target))) return false;
 			//Apply changes in appropriate place
-			let targetAttribute=null;
-			let targetAttributeAddress="";
-			if (Utils.isRollableAttribute(attributeKey)) {
-				targetAttribute=this.system.attributes.rolled[attributeKey]
-				targetAttributeAddress=`system.attributes.rolled.${attributeKey}`
-			} else if (this.system.attributes.flat[attributeKey]) {
-				targetAttribute=this.system.attributes.flat[attributeKey]
-				targetAttributeAddress=`system.attributes.flat.${attributeKey}`
-			}
+			const targetAttribute=this.system.attributes[attributeKey]
+			const targetAttributeAddress=`system.attributes.${attributeKey}`
 			targetAttribute[target]+=value;
 			let totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
 			if(totalValue<0) totalValue=0;
 			if(totalValue>9) totalValue=9;
 			targetAttribute.total=totalValue;
-			this.update({"system": this.system});
-			return true;
 		}
+		this.update({"system": this.system});
+		return true;
 	}
 
 	modifyResourceValue(resourceKey,value) {
@@ -223,12 +205,8 @@ export class HLMActor extends Actor {
 	 */
 
 	_getAttributeLabels() {
-		for (const attributeKey in this.system.attributes.rolled) {
-			const attribute = this.system.attributes.rolled[attributeKey];
-			attribute.label = Utils.getLocalisedAttributeLabel(attributeKey);
-		}
-		for (const attributeKey in this.system.attributes.flat) {
-			const attribute = this.system.attributes.flat[attributeKey];
+		for (const attributeKey in this.system.attributes) {
+			const attribute = this.system.attributes[attributeKey];
 			attribute.label = Utils.getLocalisedAttributeLabel(attributeKey);
 		}
 	}

@@ -61,13 +61,12 @@ export class RollDialog extends HLMApplication {
         context.die=this.dieModifiers;
         context.additionalDie=this.additionalDie;
         context.additionalFlat=this.additionalFlat;
-        console.log(context);
         return context;
     }
 
     activateListeners(html) {
         super.activateListeners(html);
-		html.find(".button").click(this.triggerRoll.bind(this));
+		html.find(".btn").click(this.triggerRoll.bind(this));
         html.find('[data-selector="additionalDie"]').change(async (_evt) => {
             this.additionalDie=_evt.target.value;
         })
@@ -82,6 +81,7 @@ export class RollDialog extends HLMApplication {
     }
 
     triggerRoll() {
+        console.log("triggerRoll");
         this.dieModifiers.push({
             value: this.additionalDie,
             type: "die",
