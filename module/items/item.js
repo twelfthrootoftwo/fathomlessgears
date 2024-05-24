@@ -29,6 +29,20 @@ class Attack {
 	}
 }
 
+class GridPoint {
+	x
+	y
+
+	constructor(coordString) {
+		coordString=coordString.replace("[","");
+		coordString=coordString.replace("]","");
+		coordString=coordString.replace(" ","");
+		const coordArray=coordString.split(",");
+		this.x=parseInt(coordArray[0]);
+		this.y=parseInt(coordArray[1]);
+	}
+}
+
 /**
  * Extend the base Item to support custom behaviour.
  * @extends {Item}
@@ -81,8 +95,12 @@ export function createHLMItemData(record, data, source) {
 			system=constructInternalPCData(data);
 			break;
 		case ITEM_TYPES.internal_npc:
-			console.log("NPC internals not implemented yet");
-			return null;
+			console.log("Constructing NPC internal...");
+			if(record.name=="Ingrown Rifle") {
+				console.log("Found the restorator!");
+			}
+			system=constructInternalNPCData(data);
+			break;
 	}
 	system.source=source
 	const itemData={
@@ -136,7 +154,7 @@ function constructFrameData(data) {
 }
 
 /**
- * Build system data for a Internal item from JSON data
+ * Build system data for a Internal (PC) item from JSON data
  * @param {Object} data The JSON data object
  * @returns the system object for creating the new Item
  */
@@ -158,6 +176,33 @@ function constructInternalPCData(data) {
 	system.tags=separateTags(data.tags);
 	system.type=data.type;
 	system.section=data.section;
+	system.grid_coords=unpackGridCoords(data.grid);
+	
+	return system
+}
+
+/**
+ * Build system data for a Internal (NPC) item from JSON data
+ * @param {Object} data The JSON data object
+ * @returns the system object for creating the new Item
+ */
+function constructInternalNPCData(data) {
+	const system={
+		attributes: {}
+	};
+	Object.keys(data).forEach((key) => {
+		if (Utils.isAttribute(key)){
+			system.attributes[key]=data[key];
+		}
+	});
+	
+	system.action_text=data.action_text;
+	system.ap_cost=getAPCost(data);
+	system.attack=constructAttack(data);
+	system.ballast=data.ballast;
+	system.tags=separateTags(data.tags);
+	system.type=data.type;
+	system.grid_coords=unpackGridCoords(data.grid);
 	
 	return system
 }
@@ -170,8 +215,8 @@ function constructInternalPCData(data) {
 function getAPCost(data) {
 	if(data.type==="passive" || data.action_text.length == 0) return null;
 	const apRegex=new RegExp("\(\\d+\\s?ap\)","i"); //looks for something of the form "(Xap)", ignoring case
-	const apText=data.action_text.match(apRegex)[0];
-	return Utils.extractIntFromString(apText);
+	const apText=data.action_text.match(apRegex);
+	return apText ? Utils.extractIntFromString(apText[0]) : null;
 }
 
 /**
@@ -217,4 +262,13 @@ function separateTags(tagString) {
 		});
 	}
 	return tags;
+}
+
+function unpackGridCoords(gridList) {
+	const coords=[];
+	gridList.forEach((gridString) => {
+		const coord=new GridPoint(gridString);
+		coords.push(coord);
+	});
+	return coords;
 }

@@ -215,7 +215,8 @@
 				"ballast": 0,
 				"repair_kits": 0,
 				"tags": "",
-				"type": ""
+				"type": "",
+				"grid_coords": []
 			}
 		},
 		"tag": {

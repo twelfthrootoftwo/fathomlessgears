@@ -191,7 +191,7 @@ class FshManager extends HLMApplication {
 	 */
 	async confirmOverwriteCallback(proceed,args) {
 		if(proceed) {
-			this.startLoading();
+			args.fshManager.startLoading();
 			await deleteFileRecord(args.fileId);
 			let index=0;
 			for(let record of args.fshManager.dataFiles){
@@ -202,7 +202,7 @@ class FshManager extends HLMApplication {
 				index+=1;
 			}
 			await args.fshManager.readFile(args.fileId, args.newFile, args.oldFile);
-			this.stopLoading();
+			args.fshManager.stopLoading();
 		}
 	}
 
