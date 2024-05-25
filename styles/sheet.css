@@ -322,6 +322,7 @@ button.button.post-message {
 .internal-text {
     padding: 3px;
     font-size: var(--font-size-12);
+    white-space: pre-line;
 }
 .internal-body {
     position: relative;

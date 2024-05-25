@@ -1,4 +1,4 @@
-import { ITEM_TYPES } from "../constants.js";
+import { ITEM_TYPES, ATTRIBUTES } from "../constants.js";
 import { Utils } from "../utilities/utils.js";
 
 /**
@@ -96,9 +96,6 @@ export function createHLMItemData(record, data, source) {
 			break;
 		case ITEM_TYPES.internal_npc:
 			console.log("Constructing NPC internal...");
-			if(record.name=="Ingrown Rifle") {
-				console.log("Found the restorator!");
-			}
 			system=constructInternalNPCData(data);
 			break;
 	}
@@ -155,28 +152,15 @@ function constructFrameData(data) {
 
 /**
  * Build system data for a Internal (PC) item from JSON data
+ * PC internals are identical to NPC internals, just with a few extra fields
  * @param {Object} data The JSON data object
  * @returns the system object for creating the new Item
  */
 function constructInternalPCData(data) {
-	const system={
-		attributes: {}
-	};
-	Object.keys(data).forEach((key) => {
-		if (Utils.isAttribute(key)){
-			system.attributes[key]=data[key];
-		}
-	});
+	const system=constructInternalNPCData(data);
 	
-	system.action_text=data.action_text;
-	system.ap_cost=getAPCost(data);
-	system.attack=constructAttack(data);
-	system.ballast=data.ballast;
 	system.repair_kits=data.repair_kits;
-	system.tags=separateTags(data.tags);
-	system.type=data.type;
 	system.section=data.section;
-	system.grid_coords=unpackGridCoords(data.grid);
 	
 	return system
 }
@@ -188,7 +172,8 @@ function constructInternalPCData(data) {
  */
 function constructInternalNPCData(data) {
 	const system={
-		attributes: {}
+		attributes: {},
+		action_text: ""
 	};
 	Object.keys(data).forEach((key) => {
 		if (Utils.isAttribute(key)){
@@ -196,7 +181,7 @@ function constructInternalNPCData(data) {
 		}
 	});
 	
-	system.action_text=data.action_text;
+	system.action_text=system.action_text.concat(data.action_text);
 	system.ap_cost=getAPCost(data);
 	system.attack=constructAttack(data);
 	system.ballast=data.ballast;

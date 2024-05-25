@@ -1,3 +1,4 @@
+import { ATTRIBUTES } from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 
 /**
@@ -56,9 +57,11 @@ export class HLMActorSheet extends ActorSheet {
 		context.passive=[];
 		const internals=items.internal_pc.concat(items.internal_npc);
 		internals.forEach((internal) => {
+			internal.description_text=this.getDescriptionText(internal);
 			switch(internal.system.type) {
 				case "melee":
 				case "ranged":
+				case "mental":
 					context.weapons.push(internal);
 					break;
 				case "active":
@@ -70,7 +73,6 @@ export class HLMActorSheet extends ActorSheet {
 					break;
 			}
 		})
-		
 		return context;
 	}
 
@@ -169,5 +171,16 @@ export class HLMActorSheet extends ActorSheet {
 
 	deleteInternal(event) {
 		this.actor.removeInternal(event.target.dataset.id);
+	}
+
+	getDescriptionText(internal) {
+		let description_text="";
+		Object.keys(internal.system.attributes).forEach((key) => {
+			if(internal.system.attributes[key] > 0 && key != ATTRIBUTES.weight) {
+				description_text=description_text.concat(internal.system.attributes[key].toString()," ",Utils.getLocalisedAttributeLabel(key),"\n")
+			}
+		});
+		description_text=description_text.concat(internal.system.action_text);
+		return description_text;
 	}
 }

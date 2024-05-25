@@ -250,7 +250,6 @@ export class HLMActor extends Actor {
 		let baseVal=0;
 		let weight=0;
 		if(this.type==ACTOR_TYPES.fisher) {
-			console.log("Calculating ballast")
 			if(items.frame_pc.length > 0) baseVal=items.frame_pc[0].system.ballast;
 			items.internal_pc.forEach((internal) => {
 				baseVal+=internal.system.ballast;
