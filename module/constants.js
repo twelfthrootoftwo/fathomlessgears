@@ -59,3 +59,7 @@ export const ITEM_TYPES = {
 	frame_pc: "frame_pc",
 	size: "size",
 }
+
+export const ATTRIBUTE_MIN=0;
+export const ATTRIBUTE_MAX_ROLLED=9;
+export const ATTRIBUTE_MAX_FLAT=16;

@@ -86,6 +86,14 @@ export class Utils {
 		return rollable.includes(attributeKey);
 	}
 
+	static isDefenceAttribute(attributeKey) {
+		const def = [
+			ATTRIBUTES.evade,
+			ATTRIBUTES.willpower,
+		];
+		return def.includes(attributeKey);
+	}
+
 	static isFlatAttribute(attributeKey) {
 		const flat = [
 			ATTRIBUTES.evade,

@@ -1,6 +1,6 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES} from "../constants.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT} from "../constants.js";
 import { RollElement, RollDialog } from "../actions/roll-dialog.js";
 
 /**
@@ -132,12 +132,20 @@ export class HLMActor extends Actor {
 	calculateAttributeTotals() {
 		const updateData={};
 		Object.keys(this.system.attributes).forEach((key) => {
-			const attr=this.system.attributes[key];
-			attr.total=attr.base+attr.internals+attr.modifier;
-			updateData[key]=attr;
+			updateData[key]=this.calculateSingleAttribute(key);
 		});
 		if(this._id) this.update({"system.attributes": updateData});
 		this.calculateBallast();
+	}
+
+	calculateSingleAttribute(key) {
+		const attr=this.system.attributes[key];
+		let total=attr.base+attr.internals+attr.modifier;
+		if(total<ATTRIBUTE_MIN) total=ATTRIBUTE_MIN;
+		if(Utils.isRollableAttribute(key) && total>ATTRIBUTE_MAX_ROLLED) total=ATTRIBUTE_MAX_ROLLED;
+		if(Utils.isDefenceAttribute(key) && total>ATTRIBUTE_MAX_FLAT) total=ATTRIBUTE_MAX_FLAT;
+		attr.total=total;
+		return attr;
 	}
 
 	/**
@@ -150,13 +158,9 @@ export class HLMActor extends Actor {
 	setAttributeValue(attributeKey, value,target) {
 		if(!Utils.isAttribute(attributeKey)) return;
 		const targetAttribute=this.system.attributes[attributeKey]
-		const targetAttributeAddress=`system.attributes.${attributeKey}`
 		targetAttribute[target]=value;
-		let totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
-		if(totalValue<0) totalValue=0;
-		if(totalValue>9) totalValue=9;
-		targetAttribute.total=totalValue;
-		this.update({[`${targetAttributeAddress}.${target}`] : value, [`${targetAttributeAddress}.total`] : totalValue});
+		this.calculateSingleAttribute(attributeKey)
+		this.update({"system": this.system});
 	}
 
 	/**
@@ -178,12 +182,8 @@ export class HLMActor extends Actor {
 			if(!(Utils.isAttribute(attributeKey)&&Utils.isAttributeComponent(target))) return false;
 			//Apply changes in appropriate place
 			const targetAttribute=this.system.attributes[attributeKey]
-			const targetAttributeAddress=`system.attributes.${attributeKey}`
 			targetAttribute[target]+=value;
-			let totalValue=targetAttribute.base+targetAttribute.internals+targetAttribute.modifier;
-			if(totalValue<0) totalValue=0;
-			if(totalValue>9) totalValue=9;
-			targetAttribute.total=totalValue;
+			this.calculateSingleAttribute(attributeKey);
 		}
 		this.update({"system": this.system});
 		return true;
