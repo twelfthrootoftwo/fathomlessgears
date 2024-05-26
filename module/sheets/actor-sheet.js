@@ -1,4 +1,4 @@
-import { ATTRIBUTES } from "../constants.js";
+import { ATTRIBUTES, ACTOR_TYPES } from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 
 /**
@@ -43,6 +43,7 @@ export class HLMActorSheet extends ActorSheet {
 				"gear_ability": "No frame assigned"
 			}
 		};
+		context.size=items.size[0] ? items.size[0] : null;
 
 		//Split attribute types
 		context.rolled={};
@@ -116,7 +117,9 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".break-button").click(this.breakInternal.bind(this));
 		html.find(".post-button").click(this.postInternal.bind(this));
 		html.find(".delete-internal").click(this.deleteInternal.bind(this));
-		document.getElementById("post-frame-ability").addEventListener("click",this.postFrameAbility.bind(this));
+		if(this.actor.type===ACTOR_TYPES.fisher) {
+			document.getElementById("post-frame-ability").addEventListener("click",this.postFrameAbility.bind(this));
+		}
 	}
 
 	async _onRoll(event) {

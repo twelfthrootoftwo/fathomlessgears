@@ -65,8 +65,8 @@ export class HLMActor extends Actor {
 
 	getFlatAttributeString() {
 		const attrStrings = [];
-		for (const attribute in this.system.attributes.flat) {
-			const attr = this.system.attributes.flat[attribute];
+		for (const attribute in this.system.attributes) {
+			const attr = this.system.attributes[attribute];
 			attrStrings.push(
 				Utils.getLocalisedAttributeLabel(attribute) +
 					": " +
@@ -383,7 +383,7 @@ export class HLMActor extends Actor {
 			this.modifyAttributeValue(key,internal.system.attributes[key],"internals");
 		})
 		//Modify resources
-		this.modifyResourceValue("repair",internal.system.repair_kits);
+		if(internal.system.repair_kits) {this.modifyResourceValue("repair",internal.system.repair_kits);}
 		await this.update({"system": this.system});
 
 		const item=await Item.create(internal,{parent: this});
