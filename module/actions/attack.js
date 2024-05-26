@@ -22,7 +22,7 @@ export class AttackHandler {
 		);
 
 		let locationResult = null;
-		if (hitResult === HIT_TYPE.hit) {
+		if (AttackHandler.requiresLocationDisplay(hitResult)) {
 			locationResult = await AttackHandler.rollHitLocation(defender);
 		}
 
@@ -41,15 +41,24 @@ export class AttackHandler {
 
 	static determineHitMargin(attackRoll, defenceVal, canCrit) {
 		const hitMargin = attackRoll.total - defenceVal;
-		console.log(attackRoll);
+		const combinedResult={original: "", upgraded: null};
 
 		if (hitMargin >= 5 && canCrit) {
-			return HIT_TYPE.crit;
+			combinedResult.original= HIT_TYPE.crit;
 		} else if (hitMargin >= 0) {
-			return HIT_TYPE.hit;
+			combinedResult.original= HIT_TYPE.hit;
 		} else {
-			return HIT_TYPE.miss;
+			combinedResult.original= HIT_TYPE.miss;
 		}
+		if(AttackHandler.upgradeRoll(attackRoll)) {
+			let upgradeResult=""
+			if(canCrit) upgradeResult=HIT_TYPE.crit;
+			else upgradeResult=HIT_TYPE.hit;
+			if(upgradeResult!=combinedResult.original) {
+				combinedResult.upgraded=upgradeResult;
+			}
+		}
+		return combinedResult;
 	}
 
 	static async createHitRollMessage(
@@ -70,6 +79,12 @@ export class AttackHandler {
 		displayString.push(introductionHtml);
 
 		//To hit
+		let hitResultText="";
+		if(hitResult.upgraded) {
+			hitResultText="<s>"+game.i18n.localize("HIT."+hitResult.original)+"</s> "+game.i18n.localize("HIT."+hitResult.upgraded);
+		} else {
+			hitResultText=game.i18n.localize("HIT."+hitResult.original);
+		}
 		const hitRollDisplay = await renderTemplate(
 			"systems/hooklineandmecha/templates/partials/labelled-roll-partial.html",
 			{
@@ -78,12 +93,12 @@ export class AttackHandler {
 				.replace("_ATTRIBUTE_NAME_", attackAttrLabel),
 				total: attackRoll.total,
 				tooltip: `${attackRoll.formula}:  ${attackRoll.result}`,
-				outcome: game.i18n.localize("HIT."+hitResult),
+				outcome: hitResultText,
 			}
 		);
 		displayString.push(hitRollDisplay);
 
-		if (hitResult === HIT_TYPE.hit) {
+		if (AttackHandler.requiresLocationDisplay(hitResult)) {
 			const locationDisplay = await AttackHandler.generateLocationDisplay(
 				locationResult
 			);
@@ -150,5 +165,34 @@ export class AttackHandler {
 		);
 		locationDisplayParts.push(column);
 		return locationDisplayParts.join("");
+	}
+
+	static upgradeRoll(rollResult) {
+		//Extract d6 terms from list of terms
+		const diceResults=[];
+		rollResult.terms.forEach((term) => {
+			if(term.faces && term.faces===6) {
+				diceResults.push(term);
+			}
+		})
+
+		//Count 6s
+		let counter=0;
+		diceResults.forEach((term) => {
+			term.results.forEach((die) => {
+				if(die.result===6) counter+=1;
+			})
+		})
+
+		return counter>1;
+	}
+
+	static requiresLocationDisplay(hitResult) {
+		if(hitResult.upgraded) {
+			return hitResult.upgraded===HIT_TYPE.hit;
+		} 
+		else {
+			return hitResult.original===HIT_TYPE.hit;
+		}
 	}
 }
