@@ -52,8 +52,7 @@ export class RollDialog extends HLMApplication {
 			classes: ["hooklineandmecha"],
 			template: "systems/hooklineandmecha/templates/roll-dialog.html",
 			title: "Roll Inputs",
-			width: 300,
-			height: 220,
+			width: 200,
 		});
 	}
 

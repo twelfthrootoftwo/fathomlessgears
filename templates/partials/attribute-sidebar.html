@@ -36,6 +36,13 @@
         </div>
     </div>
     <hr class="divider primary">
+    {{log specialAttr}}
+    {{>
+        "systems/hooklineandmecha/templates/partials/attribute-box-new.html"
+        attribute=specialAttr
+        key=specialAttr.key
+        type="rolled"
+    }}
     {{#each rolled as |attrib key|}}
     {{>
         "systems/hooklineandmecha/templates/partials/attribute-box.html"

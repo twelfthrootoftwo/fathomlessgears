@@ -49,8 +49,9 @@ export class HLMActorSheet extends ActorSheet {
 		context.rolled={};
 		context.flat={};
 		for (const [key, value] of Object.entries(context.actor.system.attributes)) {
-			Utils.isRollableAttribute(key) ? context.rolled[key]=value : context.flat[key]=value;
+			Utils.isRollableAttribute(key) && key !="close" ? context.rolled[key]=value : context.flat[key]=value;
 		}
+		context.specialAttr=context.actor.system.attributes.close;
 
 		//Gather internal categories
 		context.weapons=[];
@@ -74,6 +75,7 @@ export class HLMActorSheet extends ActorSheet {
 					break;
 			}
 		})
+		console.log(context);
 		return context;
 	}
 
@@ -131,12 +133,6 @@ export class HLMActorSheet extends ActorSheet {
 	/** @override */
 	get template() {
 		return `systems/hooklineandmecha/templates/${this.actor.type}-sheet.html`;
-	}
-
-	setAttributeValue(formData, key, value) {
-		if (Utils.isAttribute(key)) {
-			formData["system.attributes."+key+".value"] = value;
-		}
 	}
 
 	/**
