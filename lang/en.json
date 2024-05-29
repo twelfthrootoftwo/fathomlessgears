@@ -42,6 +42,7 @@
 	"SHEET.internalfix": "Repair",
 	"SHEET.post": "Post",
 	"SHEET.delete": "Remove",
+	"SHEET.hitlocation": "Hit location",
 
 	"FISHSIZE.small": "Small",
 	"FISHSIZE.medium-vert": "Medium (Portrait)",
@@ -70,5 +71,6 @@
 	"ITEMTYPE.frame_pc": "Gear Frame",
 	"ITEMTYPE.internal_pc": "Gear Internal",
 	"ITEMTYPE.internal_npc": "Fish Internal",
-	"ITEMTYPE.tag": "Internal Tag"
+	"ITEMTYPE.tag": "Internal Tag",
+	"ITEMTYPE.template": "Template"
 }

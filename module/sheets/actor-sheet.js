@@ -113,6 +113,7 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".break-button").click(this.breakInternal.bind(this));
 		html.find(".post-button").click(this.postInternal.bind(this));
 		html.find(".delete-internal").click(this.deleteInternal.bind(this));
+		html.find(".hit-location-button").click(this.locationHitMessage.bind(this));
 		if(this.actor.type===ACTOR_TYPES.fisher) {
 			document.getElementById("post-frame-ability").addEventListener("click",this.postFrameAbility.bind(this));
 		}
@@ -171,6 +172,10 @@ export class HLMActorSheet extends ActorSheet {
 
 	deleteInternal(event) {
 		this.actor.removeInternal(event.target.dataset.id);
+	}
+
+	locationHitMessage(event) {
+		this.actor.locationHitMessage();
 	}
 
 	/**

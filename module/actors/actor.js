@@ -118,6 +118,17 @@ export class HLMActor extends Actor {
 		return html;
 	}
 
+	async locationHitMessage() {
+		const locationResult=await AttackHandler.rollHitLocation(this);
+		if(locationResult) {
+			const displayString=await AttackHandler.generateLocationDisplay(locationResult);
+			ChatMessage.create({
+				speaker: {actor: this},
+				content: displayString,
+			});
+		}
+	}
+
 	async rollTargeted(attackKey, defenceKey, dieCount, flatModifier) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
