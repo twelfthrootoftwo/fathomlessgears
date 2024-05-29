@@ -239,7 +239,7 @@ function separateTags(tagString) {
 			let value=null;
 			if(Utils.isNumeric(tagWords[tagWords.length-1])) {
 				name=Utils.capitaliseWords(tagWords.slice(0,-1).join(" "));
-				value=parseInt(tagWords[-1]);
+				value=parseInt(tagWords[tagWords.length-1]);
 			} else {
 				name=Utils.capitaliseWords(tagText);
 			}
