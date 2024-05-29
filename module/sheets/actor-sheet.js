@@ -14,7 +14,7 @@ export class HLMActorSheet extends ActorSheet {
 			classes: ["hooklineandmecha", "sheet", "actor"],
 			template: "systems/hooklineandmecha/templates/fisher-sheet.html",
 			width: 700,
-			height: 700,
+			height: 550,
 			tabs: [
 				{
 					navSelector: ".sheet-tabs",
@@ -49,9 +49,11 @@ export class HLMActorSheet extends ActorSheet {
 		context.rolled={};
 		context.flat={};
 		for (const [key, value] of Object.entries(context.actor.system.attributes)) {
-			Utils.isRollableAttribute(key) && key !="close" ? context.rolled[key]=value : context.flat[key]=value;
+			if(key=="ballast") {context.ballast=value; }
+			else {
+				Utils.isRollableAttribute(key) ? context.rolled[key]=value : context.flat[key]=value;
+			}
 		}
-		context.specialAttr=context.actor.system.attributes.close;
 
 		//Gather internal categories
 		context.weapons=[];
@@ -93,14 +95,6 @@ export class HLMActorSheet extends ActorSheet {
 			if(Utils.isRollableAttribute(key)) {
 				document.getElementById(key).querySelector(".name-box").classList.add("attribute-button","rollable", "btn");
 			}
-		});
-		const background_attributes=["mental","willpower"];
-		background_attributes.forEach((key) => {
-			const basePiece=document.getElementById(key).querySelector("#base").querySelector(".piece-value");
-			basePiece.classList.toggle("static");
-			basePiece.classList.toggle("editable");
-			basePiece.classList.toggle("sheet-input");
-			basePiece.disabled=false;
 		});
 
 		//Mark broken internals
@@ -149,10 +143,17 @@ export class HLMActorSheet extends ActorSheet {
 		}
 	}
 
+	/**
+	 * Share the actor's frame ability
+	 */
 	postFrameAbility() {
 		this.actor.shareFrameAbility();
 	}
 
+	/**
+	 * Mark an internal as broken/repaired
+	 * @param {event} event The triggering event
+	 */
 	breakInternal(event) {
 		this.toggleInternalBrokenDisplay(event.target.dataset.id);
 		this.actor.toggleInternalBroken(event.target.dataset.id);
@@ -172,6 +173,11 @@ export class HLMActorSheet extends ActorSheet {
 		this.actor.removeInternal(event.target.dataset.id);
 	}
 
+	/**
+	 * Prepares an informative display string for an internal
+	 * @param {HLMItem} internal The internal to get text for
+	 * @returns a formatted string showing the internal's relevant information
+	 */
 	getDescriptionText(internal) {
 		let description_text="";
 		Object.keys(internal.system.attributes).forEach((key) => {

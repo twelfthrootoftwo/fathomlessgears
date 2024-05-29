@@ -1,46 +1,30 @@
+{{log attribute}}
+{{log key}}
 <div class="attribute-box flex-row" id="{{key}}">
     <div class="attribute-top-row flex-row">
-        <div class="name-box" attribute="{{key}}">{{label}}</div>
-        <div class="value-box">{{attribute.total}}</div>
-    </div>
-    <div class="attribute-bottom-row flex-col">
-        <div class="attribute-piece flex-row" id="base">
-            <p class="piece-label">
-                Base
-            </p>
-            <input
-                class="piece-value static"
-                disabled
-                type="number"
-                name="system.attributes.{{key}}.base"
-                value="{{attribute.base}}"
-                data-dtype="Number"
-            />
+        <div class="name-box" attribute="{{key}}">{{attribute.label}}</div>
+        <div class="value-box">
+            {{attribute.total}}
+            <div class="tooltip">
+                Base: {{attribute.values.standard.base}}<br>
+                {{#if attribute.values.standard.weight}}
+                    Weight: {{attribute.values.standard.weight}}<br>
+                {{/if}}
+                {{#each attribute.values.standard.additions}}
+                    {{this.label}}: {{this.value}}<br>
+                {{/each}}
+                {{#each attribute.values.bonus}}
+                    {{this.label}}: {{this.value}}<br>
+                {{/each}}
+            </div>
         </div>
-        <div class="attribute-piece flex-row" id="internals">
-            <p class="piece-label">
-                Internals
-            </p>
-            <input
-                class="piece-value static"
-                disabled
-                type="number"
-                name="system.attributes.{{key}}.internals"
-                value="{{attribute.internals}}"
-                data-dtype="Number"
-            />
-        </div>
-        <div class="attribute-piece flex-row" id="modifiers">
-            <p class="piece-label">
-                Mods
-            </p>                        
-            <input
-                class="piece-value editable sheet-input"
-                type="number"
-                name="system.attributes.{{key}}.modifier"
-                value="{{attribute.modifier}}"
-                data-dtype="Number"
-            />
-        </div>
+        <span> + </span>
+        <input
+            class="piece-value editable sheet-input"
+            type="number"
+            name="system.attributes.{{key}}.values.custom"
+            value="{{attribute.values.custom}}"
+            data-dtype="Number"
+        />
     </div>
 </div>

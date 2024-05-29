@@ -34,7 +34,7 @@
 ---------------------------------
 */
 .attribute-col {
-    flex: 0 0 170px;
+    flex: 0 0 130px;
     background-color: var(--color-bg-header-secondary);
     display: flex;
     flex-direction: column;
@@ -67,13 +67,7 @@
     padding: 0px 5px;
     flex-grow: 1;
 }
-.value-box-new {
-    font-size: 12pt;
-    text-align: center;
-    padding: 0px 5px;
-    flex-grow: 1;
-}
-.value-box-new .tooltip {
+.value-box .tooltip {
     visibility: hidden;
     position: absolute;
     z-index: 1;
@@ -82,10 +76,10 @@
     border: 1px solid var(--color-border-dark-primary);
     padding: 2px 3px;
 }
-.value-box-new:hover .tooltip {
+.value-box:hover .tooltip {
     visibility: visible;
 }
-input.piece-value-new.editable {
+input.piece-value.editable {
     background-color: var(--color-bg-dialog);
     text-align: center;
     font-size: 12pt;
@@ -110,26 +104,6 @@ input.piece-value-new.editable {
 }
 .piece-label {
     margin: 0;
-}
-.piece-value {
-    width: 15px;
-}
-input.piece-value.static {
-    background-color: var(--color-bg-header-secondary);
-    border: none;
-    text-align: center;
-    height: 13px;
-    width: 15px;
-    min-width: 15px;
-    padding: 0px 2px;
-}
-input.piece-value.editable {
-    background-color: var(--color-bg-dialog);
-    text-align: center;
-    height: 13px;
-    width: 15px;
-    min-width: 15px;
-    padding: 0px 2px;
 }
 .divider {
     border-bottom: none;
@@ -291,7 +265,7 @@ button.button.post-message {
 .internal-box {
     border: 2px solid var(--color-border-dark-primary);
     margin: 4px;
-    flex: 0 0 248px;
+    flex: 0 0 265px;
 }
 .internal-header {
     background-color: var(--color-bg-dialog-high-contrast);

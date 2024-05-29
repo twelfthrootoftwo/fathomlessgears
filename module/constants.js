@@ -14,6 +14,7 @@ export const ATTRIBUTES = {
 	sensor: "sensor",
 	weight: "weight",
 	baseAP: "baseAP",
+	ballast: "ballast",
 };
 
 export const RESOURCES = {

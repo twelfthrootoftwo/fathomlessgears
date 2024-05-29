@@ -14,89 +14,127 @@
 							"bonus": [],
 							"custom": 0
 						},
-						"total": 1,
+						"total": 0,
 						"key": "close"
 					},
 					"far": {
-						"base": 1,
-						"internals": 0,
-						"modifier": 0,
-						"total": 1,
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
 						"key": "far"
 					},
 					"mental": {
-						"base": 1,
-						"internals": 0,
-						"modifier": 0,
-						"total": 1,
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
 						"key": "mental"
 					},
 					"power": {
-						"base": 1,
-						"internals": 0,
-						"modifier": 0,
-						"total": 1,
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
 						"key": "power"
 					},
 					"evade": {
-						"base": 1,
-						"internals": 0,
-						"modifier": 0,
-						"total": 1,
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
 						"key": "evade"
 					},
 					"willpower": {
-						"base": 1,
-						"internals": 0,
-						"modifier": 0,
-						"total": 1,
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
 						"key": "willpower"
 					},
 					"speed": {
-						"base": 1,
-						"internals": 0,
-						"modifier": 0,
-						"total": 1,
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
 						"key": "speed"
 					},
 					"sensor": {
-						"base": 1,
-						"internals": 0,
-						"modifier": 0,
-						"total": 1,
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
 						"key": "sensor"
 					},
 					"weight": {
-						"base": 1,
-						"internals": 0,
-						"modifier": 0,
-						"total": 1,
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
 						"key": "weight"
 					},
 					"baseAP": {
-						"base": 1,
-						"internals": 0,
-						"modifier": 0,
-						"total": 1,
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
 						"key": "baseAP"
-					}
-				}
-			},
-			"ballast": {
-				"ballast": {
-					"base": {
-						"frame": 0,
-						"internals": 0,
-						"value": 0
 					},
-					"weight": {
-						"value": 0
-					},
-					"modifiers": {
-						"value": 0
-					},
-					"total": {
-						"value": 0
+					"ballast": {
+						"values": {
+							"standard": {
+								"base": 0,
+								"weight": 0,
+								"additions": []
+							},
+							"custom": 0
+						},
+						"total": 0
 					}
 				}
 			},
@@ -198,7 +236,8 @@
 					"power": 0,
 					"weight": 0,
 					"baseAP": 0,
-					"sensor": 0
+					"sensor": 0,
+					"ballast": 0
 				}
 			},
 			"toHit": {
@@ -206,7 +245,6 @@
 				"hitRegions": []
 			},
 			"frame": {
-				"ballast": 0,
 				"core_integrity": 0,
 				"repair_kits": 0,
 				"weight_cap": 0,
@@ -217,7 +255,6 @@
 				"action_text": "",
 				"ap_cost": 0,
 				"attack": null,
-				"ballast": 0,
 				"repair_kits": 0,
 				"tags": "",
 				"type": "",

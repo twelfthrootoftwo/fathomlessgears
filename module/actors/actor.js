@@ -41,42 +41,31 @@ export class HLMActor extends Actor {
 		const modifiers=[];
 		const baseDice=new RollElement(2,"die","Base");
 		modifiers.push(baseDice);
-		if(attributeKey=="close") {
-			const attribute=this.system.attributes[attributeKey];
+		const attribute=this.system.attributes[attributeKey];
+		modifiers.push(new RollElement(
+			attribute.values.standard.base,
+			"flat",
+			"Frame base"
+		));
+		attribute.values.standard.additions.forEach((term) => {
 			modifiers.push(new RollElement(
-				attribute.values.standard.base,
+				term.value,
 				"flat",
-				"Frame base"
-			));
-			attribute.values.standard.additions.forEach((term) => {
-				modifiers.push(new RollElement(
-					term.value,
-					"flat",
-					term.label
-				))
-			});
-			attribute.values.bonus.forEach((term) => {
-				modifiers.push(new RollElement(
-					term.value,
-					"flat",
-					term.label
-				))
-			});
+				term.label
+			))
+		});
+		attribute.values.bonus.forEach((term) => {
 			modifiers.push(new RollElement(
-				attribute.values.custom,
+				term.value,
 				"flat",
-				"Custom modifier"
-			));
-		} else {
-			let totalVal=0;
-			if(Utils.isRollableAttribute(attributeKey)) {
-				totalVal=this.system.attributes[attributeKey].total;
-			} else if(Utils.isDowntimeAttribute(attributeKey)) {
-				totalVal=this.system.downtime.rollable[attributeKey].value;
-			}
-			const baseMod=new RollElement(totalVal,"flat","Base stat");
-			modifiers.push(baseMod);
-		}
+				term.label
+			))
+		});
+		modifiers.push(new RollElement(
+			attribute.values.custom,
+			"flat",
+			"Custom modifier"
+		));
 		new RollDialog(modifiers,this,attributeKey);
 	}
 
@@ -172,98 +161,63 @@ export class HLMActor extends Actor {
 		});
 	}
 
+	/**
+	 * Evaluate totals for all attributes & save results
+	 */
 	calculateAttributeTotals() {
 		const updateData={};
 		Object.keys(this.system.attributes).forEach((key) => {
 			updateData[key]=this.calculateSingleAttribute(key);
 		});
 		if(this._id) this.update({"system.attributes": updateData});
-		this.calculateBallast();
 	}
 
+	/**
+	 * Calculate the total value of a chosen attribute
+	 * @param {ATTRIBUTE} key Attribute to calculate
+	 * @returns none
+	 */
 	calculateSingleAttribute(key) {
+		if(key=="ballast") {
+			this.calculateBallast();
+			return;
+		}
 		const attr=this.system.attributes[key];
 		let total=0;
-		if(key=="close") {
-			total=attr.values.standard.base;
-			attr.values.standard.additions.forEach((val) => {
-				total+=val.value;
-			});
-			if(total<ATTRIBUTE_MIN) total=ATTRIBUTE_MIN;
-			if(Utils.isRollableAttribute(key) && total>ATTRIBUTE_MAX_ROLLED) total=ATTRIBUTE_MAX_ROLLED;
-			if(Utils.isDefenceAttribute(key) && total>ATTRIBUTE_MAX_FLAT) total=ATTRIBUTE_MAX_FLAT;
-			attr.values.bonus.forEach((val) => {
-				total+=val.value;
-			});
-		} else {
-			const attr=this.system.attributes[key];
-			total=attr.base+attr.internals+attr.modifier;
-			if(total<ATTRIBUTE_MIN) total=ATTRIBUTE_MIN;
-			if(Utils.isRollableAttribute(key) && total>ATTRIBUTE_MAX_ROLLED) total=ATTRIBUTE_MAX_ROLLED;
-			if(Utils.isDefenceAttribute(key) && total>ATTRIBUTE_MAX_FLAT) total=ATTRIBUTE_MAX_FLAT;
-		}
+		total=attr.values.standard.base;
+		attr.values.standard.additions.forEach((val) => {
+			total+=val.value;
+		});
+		if(total<ATTRIBUTE_MIN) total=ATTRIBUTE_MIN;
+		if(Utils.isRollableAttribute(key) && total>ATTRIBUTE_MAX_ROLLED) total=ATTRIBUTE_MAX_ROLLED;
+		if(Utils.isDefenceAttribute(key) && total>ATTRIBUTE_MAX_FLAT) total=ATTRIBUTE_MAX_FLAT;
+		attr.values.bonus.forEach((val) => {
+			total+=val.value;
+		});
 		attr.total=total;
-		return attr;
+		return;
 	}
 
 	/**
-	 * Change an attribute value
+	 * Change the base attribute value
 	 * @param {string} attributeKey The attribute to change
 	 * @param {int} value The new value
-	 * @param {string} target The attribute component (base, internals, modifier)
-	 * @returns true if the change was successful, false if the attribute key or target are not valid
+	 * @returns true if the change was successful, false if the attribute key is not valid
 	 */
-	setAttributeValue(attributeKey, value,target) {
-		if(!Utils.isAttribute(attributeKey)) return;
+	setBaseAttributeValue(attributeKey, value) {
+		if(!Utils.isAttribute(attributeKey)) return false;
 		const targetAttribute=this.system.attributes[attributeKey]
-		if(attributeKey=="close") {
-			if(target=="base") {
-				targetAttribute.values.standard.base=value;
-			} else if(target=="modifier") {
-				targetAttribute.values.custom=value;
-			}
-		} else {
-			targetAttribute[target]=value;
-		}
+		targetAttribute.values.standard.base=value;
 		this.calculateSingleAttribute(attributeKey)
-		this.update({"system": this.system});
-	}
-
-	/**
-	 * Apply a modifier to an attribute value
-	 * @param {string} attributeKey The attribute to change
-	 * @param {int} value The new value to add to the existing value
-	 * @param {string} target The attribute component (base, internals, modifier)
-	 * @returns true if the change was successful, false if the attribute key or target are not valid
-	 */
-	modifyAttributeValue(attributeKey, value, target){
-		//Apply ballast change
-		if(attributeKey=="ballast") {
-			this.system.ballast.base.value=this.system.ballast.base.value+value;
-		} else if(attributeKey=="repair_kits") {
-			this.system.resources.repair.value+=value;
-			this.system.resources.repair.max+=value;
-		} else if(attributeKey=="close") {
-			// const targetAttribute=this.system.attributes[attributeKey];
-			// targetAttribute.values.standard.additions.push(new AttributeElement(
-			// 	value,
-			// 	"test",
-			// 	"test",
-			// 	"Test"
-			// ));
-			// this.calculateSingleAttribute(attributeKey);
-		} else {
-			//Check the target is an attribute, quit if not
-			if(!(Utils.isAttribute(attributeKey)&&Utils.isAttributeComponent(target))) return false;
-			//Apply changes in appropriate place
-			const targetAttribute=this.system.attributes[attributeKey];
-			targetAttribute[target]+=value;
-			this.calculateSingleAttribute(attributeKey);
-		}
 		this.update({"system": this.system});
 		return true;
 	}
 
+	/**
+	 * Apply a (standard) modifier to an attribute
+	 * @param {ATTRIBUTE} key The attribute to add the modifier to
+	 * @param {AttributeElement} modifier The modifier to add
+	 */
 	addAttributeModifier(key,modifier) {
 		const targetAttribute=this.system.attributes[key];
 		targetAttribute.values.standard.additions.push(modifier);
@@ -271,6 +225,11 @@ export class HLMActor extends Actor {
 		this.update({"system": this.system});
 	}
 
+	/**
+	 * Removes an attribute modifier, if it exists
+	 * @param {ATTRIBUTE} key The attribute to modify
+	 * @param {string} source The id of the modifier to remove (usually the id of the object that created it)
+	 */
 	removeAttributeModifier(key,source) {
 		const targetAttribute=this.system.attributes[key];
 		let delIndex=-1;
@@ -281,16 +240,23 @@ export class HLMActor extends Actor {
 			}
 			index+=1;
 		})
-		targetAttribute.values.standard.additions.splice(delIndex);
+		if(delIndex>=0) {targetAttribute.values.standard.additions.splice(delIndex,1);}
 		this.calculateSingleAttribute(key);
 		this.update({"system": this.system});
 	}
 
+	/**
+	 * Change the current & maximum values of a resource
+	 * @param {string} resourceKey The resource to modify
+	 * @param {int} value The value change to apply
+	 * @returns True if the change was successful, False if the key is not a resource
+	 */
 	modifyResourceValue(resourceKey,value) {
 		if(!Utils.isResource(resourceKey)) return false;
 		this.system.resources[resourceKey].value+=value;
 		this.system.resources[resourceKey].max+=value;
 		this.update({"system": this.system});
+		return true;
 	}
 
 	/**
@@ -330,7 +296,6 @@ export class HLMActor extends Actor {
 
 	_setLabels() {
 		this._getAttributeLabels();
-		this._getBallastLabels();
 		if (this.system.resources) {
 			this._getResourceLabels();
 		}
@@ -343,23 +308,14 @@ export class HLMActor extends Actor {
 	 * Compute the actor's ballast value
 	 */
 	calculateBallast() {
-		const items=this.itemTypes;
-		let baseVal=0;
-		let weight=0;
-		if(this.type==ACTOR_TYPES.fisher) {
-			if(items.frame_pc.length > 0) baseVal=items.frame_pc[0].system.ballast;
-			items.internal_pc.forEach((internal) => {
-				baseVal+=internal.system.ballast;
-				weight+=internal.system.attributes.weight;
-			})
-		} else {
-			//TODO NPC ballast calc
-		}
-		this.system.ballast.base.value=baseVal;
-		const weightBallast=Math.floor(weight/5);
-		this.system.ballast.weight.value=weightBallast;
-		const ballastMods=this.system.ballast.modifiers.value;
-		this.system.ballast.total.value=baseVal+weightBallast+ballastMods;
+		const ballast=this.system.attributes.ballast;
+		const weightBallast=Math.floor(this.system.attributes.weight.total/5);
+		ballast.values.standard.weight=weightBallast;
+		let ballastMods=0;
+		ballast.values.standard.additions.forEach((element) => {
+			ballastMods+=element.value;
+		})
+		ballast.total=ballast.values.standard.base+weightBallast+ballastMods+ballast.values.custom;
 	}
 
 	/**
@@ -425,7 +381,7 @@ export class HLMActor extends Actor {
 		//Apply attribute changes
 		if(size.name != "Fisher") {
 			Object.keys(size.system.attributes).forEach((key) => {
-				this.setAttributeValue(key,size.system.attributes[key],"base");
+				this.setBaseAttributeValue(key,size.system.attributes[key]);
 			})
 		}
 		//Remove existing size item
@@ -448,9 +404,8 @@ export class HLMActor extends Actor {
 		if(this.type != "fisher") return;
 		//Apply attribute changes
 		Object.keys(frame.system.attributes).forEach((key) => {
-			this.setAttributeValue(key,frame.system.attributes[key],"base");
+			this.setBaseAttributeValue(key,frame.system.attributes[key]);
 		})
-		this.system.ballast.base.frame=frame.system.ballast;
 		//Remove existing size item
 		if(this.system.frame) {
 			const oldFrame=this.items.get(this.system.frame);
@@ -475,28 +430,24 @@ export class HLMActor extends Actor {
 	 */
 	async applyInternal(internal) {
 		console.log("Applying internal");
+		const item=await Item.create(internal,{parent: this});
+		item.setFlag("hooklineandmecha","broken",false);
+		this.system.internals.push(item._id);
 		//Apply attributes
 		Object.keys(internal.system.attributes).forEach((key) => {
-			if(key=="close") {
+			if(Utils.isAttribute(key) && internal.system.attributes[key]!=0) {
 				const modifier=new AttributeElement(
 					internal.system.attributes[key],
-					internal._id,
+					item._id,
 					"internal",
 					internal.name
 				);
 				this.addAttributeModifier(key,modifier);
-			} else {
-				this.modifyAttributeValue(key,internal.system.attributes[key],"internals");
 			}
 		})
 		//Modify resources
 		if(internal.system.repair_kits) {this.modifyResourceValue("repair",internal.system.repair_kits);}
 		await this.update({"system": this.system});
-
-		const item=await Item.create(internal,{parent: this});
-		item.setFlag("hooklineandmecha","broken",false);
-		this.system.internals.push(item._id);
-		this.update({"system": this.system});
 	}
 
 	/**
@@ -510,6 +461,9 @@ export class HLMActor extends Actor {
 		});
 	}
 
+	/**
+	 * Send this actor's frame ability to the chat log
+	 */
 	async getFrameAbilityChatMessage() {
 		const frame=this.itemTypes.frame_pc[0];
 		const display = await renderTemplate(
@@ -533,23 +487,18 @@ export class HLMActor extends Actor {
 		//Apply attribute changes
 		const isBroken=await internal.isBroken();
 		console.log("Toggling internal to "+isBroken)
-		const multiplier=isBroken ? -1 : 1
 		Object.keys(internal.system.attributes).forEach((key) => {
-			if(key!=ATTRIBUTES.weight) {
-				if(key=="close") {
-					if(isBroken) {
-						this.removeAttributeModifier(key,uuid);
-					} else {
-						const modifier=new AttributeElement(
-							internal.system.attributes[key],
-							internal._id,
-							"internal",
-							internal.name
-						);
-						this.addAttributeModifier(key,modifier);
-					}
+			if(key!=ATTRIBUTES.weight && internal.system.attributes[key]!=0) {
+				if(isBroken) {
+					this.removeAttributeModifier(key,uuid);
 				} else {
-					this.modifyAttributeValue(key,multiplier*internal.system.attributes[key],"internals");
+					const modifier=new AttributeElement(
+						internal.system.attributes[key],
+						internal._id,
+						"internal",
+						internal.name
+					);
+					this.addAttributeModifier(key,modifier);
 				}
 			}
 		})
@@ -562,12 +511,9 @@ export class HLMActor extends Actor {
 	async removeInternal(uuid) {
 		const internal=this.items.get(uuid);
 		Object.keys(internal.system.attributes).forEach((key) => {
-			if(key=="close") {
-				this.removeAttributeModifier(key,uuid);
-			} else {
-				this.modifyAttributeValue(key,-1*internal.system.attributes[key],"internals");
-			}
-		})
+			this.removeAttributeModifier(key,uuid);
+		});
+		this.calculateBallast();
 		this.modifyResourceValue("repair",-1*internal.system.repair_kits);
 		this.update({"system": this.system});
 		internal.delete();
