@@ -72,5 +72,9 @@
 	"ITEMTYPE.internal_pc": "Gear Internal",
 	"ITEMTYPE.internal_npc": "Fish Internal",
 	"ITEMTYPE.tag": "Internal Tag",
-	"ITEMTYPE.template": "Template"
+	"ITEMTYPE.template": "Template",
+
+	"COVERSTATE.none": "No cover",
+	"COVERSTATE.soft": "Soft cover",
+	"COVERSTATE.hard": "Hard cover"
 }

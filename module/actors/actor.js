@@ -75,11 +75,11 @@ export class HLMActor extends Actor {
 	 * @param {int} dieCount: The total number of dice to roll
 	 * @param {int} flatModifier : The total modifier to add to the roll
 	 */
-	async rollAttribute(attributeKey, dieCount, flatModifier) {
+	async rollAttribute(attributeKey, dieCount, flatModifier,cover) {
 		const defenceKey = HLMActor.isTargetedRoll(attributeKey);
 		let message="";
 		if (defenceKey) {
-			message=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier);
+			message=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier,cover);
 		} else {
 			message=await this.rollNoTarget(attributeKey, dieCount, flatModifier);
 		}
@@ -134,7 +134,7 @@ export class HLMActor extends Actor {
 		}
 	}
 
-	async rollTargeted(attackKey, defenceKey, dieCount, flatModifier) {
+	async rollTargeted(attackKey, defenceKey, dieCount, flatModifier,cover) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
 			return await this.rollNoTarget(attackKey, dieCount, flatModifier);
@@ -146,7 +146,8 @@ export class HLMActor extends Actor {
 				target.actor,
 				defenceKey,
 				dieCount,
-				flatModifier
+				flatModifier,
+				cover
 			);
 		}
 	}
@@ -475,10 +476,10 @@ export class HLMActor extends Actor {
 		internal.postToChat(this);
 	}
 
-	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat) {
+	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat, cover) {
 		const internal=this.items.get(uuid);
 		const defenceKey=HLMActor.isTargetedRoll(attackKey);
-		const rollString=await this.rollTargeted(attackKey,defenceKey,totalDieCount,totalFlat);
+		const rollString=await this.rollTargeted(attackKey,defenceKey,totalDieCount,totalFlat, cover);
 		const displayString=await renderTemplate(
 			"systems/hooklineandmecha/templates/messages/internal.html",
 			{

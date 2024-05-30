@@ -1,5 +1,5 @@
 import {Utils} from "../utilities/utils.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "../constants.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, COVER_STATES} from "../constants.js";
 
 export class AttackHandler {
 	static async rollToHit(
@@ -8,7 +8,8 @@ export class AttackHandler {
 		defender,
 		defenceKey,
 		dieCount,
-		flatModifier
+		flatModifier,
+		cover
 	) {
 		const attackRoll = Utils.getRoller(
 			dieCount,
@@ -18,7 +19,8 @@ export class AttackHandler {
 		const hitResult = AttackHandler.determineHitMargin(
 			attackRoll,
 			defender.system.attributes[defenceKey].total,
-			AttackHandler.canCrit(attacker)
+			AttackHandler.canCrit(attacker),
+			cover
 		);
 
 		let locationResult = null;
@@ -39,8 +41,9 @@ export class AttackHandler {
 		);
 	}
 
-	static determineHitMargin(attackRoll, defenceVal, canCrit) {
-		const hitMargin = attackRoll.total - defenceVal;
+	static determineHitMargin(attackRoll, defenceVal, canCrit, cover) {
+		const modifiedDefence=AttackHandler.applyCover(defenceVal,cover);
+		const hitMargin = attackRoll.total - modifiedDefence;
 		const combinedResult={original: "", upgraded: null};
 
 		if (hitMargin >= 5 && canCrit) {
@@ -213,6 +216,17 @@ export class AttackHandler {
 		} 
 		else {
 			return hitResult.original===HIT_TYPE.hit;
+		}
+	}
+
+	static applyCover(defenceVal, cover) {
+		switch(cover) {
+			case COVER_STATES.none:
+				return defenceVal;
+			case COVER_STATES.soft:
+				return defenceVal+2;
+			case COVER_STATES.hard:
+				return defenceVal+4;
 		}
 	}
 }

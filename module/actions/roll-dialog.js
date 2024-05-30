@@ -1,5 +1,5 @@
 import { HLMApplication } from "../sheets/application.js";
-import { ATTRIBUTES } from "../constants.js";
+import { ATTRIBUTES, COVER_STATES } from "../constants.js";
 
 export class RollElement {
     value
@@ -28,6 +28,7 @@ export class RollDialog extends HLMApplication {
     additionalDie
     focused
     internal
+    cover
 
     constructor(modifiers, actor, attribute,internal) {
         super();
@@ -46,6 +47,7 @@ export class RollDialog extends HLMApplication {
         this.additionalFlat=0;
         this.additionalDie=0;
         this.focused=false;
+        this.cover=COVER_STATES.none;
         this.render(true);
     }
 
@@ -54,7 +56,7 @@ export class RollDialog extends HLMApplication {
 			classes: ["hooklineandmecha"],
 			template: "systems/hooklineandmecha/templates/roll-dialog.html",
 			title: "Roll Inputs",
-			width: 200,
+			width: 250,
 		});
 	}
 
@@ -64,6 +66,7 @@ export class RollDialog extends HLMApplication {
         context.die=this.dieModifiers;
         context.additionalDie=this.additionalDie;
         context.additionalFlat=this.additionalFlat;
+        context.ranged=this.attribute==ATTRIBUTES.far;
         return context;
     }
 
@@ -78,6 +81,9 @@ export class RollDialog extends HLMApplication {
         })
         html.find('[data-selector="focused"]').change(async (_evt) => {
             this.focused=_evt.target.checked;
+        })
+        html.find('[name="cover"]').change(async (_evt) => {
+            this.cover=_evt.target.value;
         })
     }
     
@@ -111,9 +117,9 @@ export class RollDialog extends HLMApplication {
             totalDieCount+=1;
         }
         if(this.internal) {
-            this.actor.triggerRolledInternal(this.internal,this.attribute,totalDieCount,totalFlat)
+            this.actor.triggerRolledInternal(this.internal,this.attribute,totalDieCount,totalFlat,this.cover);
         } else {
-            this.actor.rollAttribute(this.attribute,totalDieCount,totalFlat);
+            this.actor.rollAttribute(this.attribute,totalDieCount,totalFlat, this.cover);
         }
         this.close();
     }

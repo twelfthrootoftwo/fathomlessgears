@@ -48,6 +48,13 @@ input.inline-checkbox {
 	margin: 0;
 	margin: 2px 5px;
 }
+.cover-row {
+	align-items: center;
+}
+.cover-label {
+	font-size: 12px;
+	padding: 2px 1px 1px 7px;
+}
 
 /*
 ---------------------------------

@@ -61,6 +61,12 @@ export const ITEM_TYPES = {
 	size: "size",
 }
 
+export const COVER_STATES = {
+	none: "none",
+	soft: "soft",
+	hard: "hard",
+}
+
 export const ATTRIBUTE_MIN=0;
 export const ATTRIBUTE_MAX_ROLLED=9;
 export const ATTRIBUTE_MAX_FLAT=16;

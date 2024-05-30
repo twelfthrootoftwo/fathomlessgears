@@ -19,6 +19,16 @@
         </ol>
         
         <p class="roll-component-header">Flat modifiers</p>
+        {{#if ranged}}
+        <div class="flex-row cover-row">
+            <label class="cover-label" for="none">{{localize "COVERSTATE.none"}}</label>
+            <input type="radio" name="cover" value="none" id="none" checked>
+            <label class="cover-label" for="none">{{localize "COVERSTATE.soft"}}</label>
+            <input type="radio" name="cover" value="soft" id="soft">
+            <label class="cover-label" for="none">{{localize "COVERSTATE.hard"}}</label>
+            <input type="radio" name="cover" value="hard" id="hard">
+        </div>
+        {{/if}}
         <ol class="roll-components">
             {{#each flat as |modifier key|}}
             <li class="roll-component-item">
