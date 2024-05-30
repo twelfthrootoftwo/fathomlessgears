@@ -144,6 +144,20 @@ export class Utils {
 		return recognisedItems.includes(itemType);
 	}
 
+	static identifyAttackKey(internalType) {
+		switch(internalType) {
+			case "melee":
+				return ATTRIBUTES.close;
+			case "ranged":
+				return ATTRIBUTES.far;
+			case "mental":
+				return ATTRIBUTES.mental;
+			default:
+				console.log("Attack type not recognised: "+internalType);
+				return false;
+		}
+	}
+
 	/**
 	 * Capitalise the first letter in the first word
 	 * @param {str} str 

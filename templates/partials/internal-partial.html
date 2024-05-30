@@ -26,18 +26,16 @@
         <div class="break-overlay">
         </div>
         {{#if internal.system.attack}}
-        <div class="attack-info flex-row">
-            {{internal.system.attack.type}}  -  {{localize "INTERNALS.range"}} {{internal.system.attack.range}}  -  {{localize "INTERNALS.damage"}} {{internal.system.attack.damage}}
-        </div>
+        {{>
+            "systems/hooklineandmecha/templates/partials/attack-info.html"
+            attack=internal.system.attack
+        }}
         {{/if}}
         {{#if internal.system.tags}}
-        <div class="internal-top-row flex-row">
-            <div class="tag-row flex-row">
-                {{#each internal.system.tags}}
-                    <div class="tag-display" id="{{this.name}}">{{this.name}}{{#if this.value}} {{this.value}}{{/if}}</div>
-                {{/each}}
-            </div>
-        </div>
+        {{>
+            "systems/hooklineandmecha/templates/partials/tag-row.html"
+            tags=internal.system.tags
+        }}
         {{/if}}
         <div class="internal-text">{{internal.description_text}}</div>
     </div>

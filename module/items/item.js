@@ -102,7 +102,8 @@ export class HLMItem extends Item {
 	}
 
 	async internalAttack(actor) {
-
+		const attackKey=Utils.identifyAttackKey(this.system.type);
+		actor.startRollDialog(attackKey,this._id);
 	}
 
 	async postFlatInternal(actor) {

@@ -2,12 +2,13 @@
     <div class="message-subheader">
         {{internal.name}}
     </div>
-    <div class="tag-row flex-row">
-        {{#each internal.system.tags}}
-            <div class="tag-display" id="{{this.name}}">{{this.name}}{{#if this.value}} {{this.value}}{{/if}}</div>
-        {{/each}}
-    </div>
+    {{#if internal.system.tags}}
+    {{>
+        "systems/hooklineandmecha/templates/partials/tag-row.html"
+        tags=internal.system.tags
+    }}
+    {{/if}}
     <div class="message-text">
-        {{text}}
+        {{{text}}}
     </div>
 </div>

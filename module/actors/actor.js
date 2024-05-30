@@ -36,7 +36,7 @@ export class HLMActor extends Actor {
 		return false;
 	}
 
-	startRollDialog(attributeKey) {
+	startRollDialog(attributeKey,internalId) {
 		console.log("Building modifiers");
 		const modifiers=[];
 		const baseDice=new RollElement(2,"die","Base");
@@ -66,7 +66,7 @@ export class HLMActor extends Actor {
 			"flat",
 			"Custom modifier"
 		));
-		new RollDialog(modifiers,this,attributeKey);
+		new RollDialog(modifiers,this,attributeKey,internalId);
 	}
 
 	/**
@@ -77,11 +77,16 @@ export class HLMActor extends Actor {
 	 */
 	async rollAttribute(attributeKey, dieCount, flatModifier) {
 		const defenceKey = HLMActor.isTargetedRoll(attributeKey);
+		let message="";
 		if (defenceKey) {
-			this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier);
+			message=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier);
 		} else {
-			this.rollNoTarget(attributeKey, dieCount, flatModifier);
+			message=await this.rollNoTarget(attributeKey, dieCount, flatModifier);
 		}
+		const hitMessage = await ChatMessage.create({
+			speaker: {actor: this},
+			content: message,
+		});
 	}
 
 	/**
@@ -132,10 +137,10 @@ export class HLMActor extends Actor {
 	async rollTargeted(attackKey, defenceKey, dieCount, flatModifier) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
-			this.rollNoTarget(attackKey, dieCount, flatModifier);
+			return await this.rollNoTarget(attackKey, dieCount, flatModifier);
 		} else {
 			const target = targetSet.values().next().value;
-			AttackHandler.rollToHit(
+			return await AttackHandler.rollToHit(
 				this,
 				attackKey,
 				target.actor,
@@ -165,11 +170,7 @@ export class HLMActor extends Actor {
 				tooltip: `${roll.formula}:  ${roll.result}`,
 			}
 		);
-
-		const hitMessage = await ChatMessage.create({
-			speaker: {actor: this},
-			content: hitRollDisplay,
-		});
+		return hitRollDisplay;
 	}
 
 	/**
@@ -472,6 +473,23 @@ export class HLMActor extends Actor {
 	async postInternal(uuid) {
 		const internal=this.items.get(uuid);
 		internal.postToChat(this);
+	}
+
+	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat) {
+		const internal=this.items.get(uuid);
+		const defenceKey=HLMActor.isTargetedRoll(attackKey);
+		const rollString=await this.rollTargeted(attackKey,defenceKey,totalDieCount,totalFlat);
+		const displayString=await renderTemplate(
+			"systems/hooklineandmecha/templates/messages/internal.html",
+			{
+				internal: internal,
+				text: rollString
+			}
+		);
+		await ChatMessage.create({
+			speaker: {actor: this},
+			content: displayString,
+		});
 	}
 
 	/**

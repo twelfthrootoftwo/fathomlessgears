@@ -168,7 +168,6 @@ export class HLMActorSheet extends ActorSheet {
 
 	postInternal(event) {
 		this.actor.postInternal(event.target.dataset.id);
-		console.log("Posting internal"+event.target.dataset.id);
 	}
 
 	deleteInternal(event) {

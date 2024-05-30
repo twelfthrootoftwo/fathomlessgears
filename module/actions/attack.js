@@ -29,7 +29,7 @@ export class AttackHandler {
 		const attackAttrLabel = game.i18n.localize(
 			Utils.getLocalisedAttributeLabel(attackKey)
 		);
-		AttackHandler.createHitRollMessage(
+		return await AttackHandler.createHitRollMessage(
 			attackRoll,
 			attacker,
 			defender,
@@ -75,9 +75,26 @@ export class AttackHandler {
 			.localize("ROLLTEXT.attackHeader")
 			.replace("_ATTACKER_NAME_", attacker.name)
 			.replace("_TARGET_NAME_", defender.name);
-		const introductionHtml=`<div class="message-header">${introductionMessage}</div>`
+		const introductionHtml=`<div class="attack-target">${introductionMessage}</div>`
 		displayString.push(introductionHtml);
 
+		const hitRollMessage=await AttackHandler.hitRollText(
+			attackRoll,
+			attackAttrLabel,
+			hitResult,
+			locationResult
+		);
+		displayString.push(hitRollMessage);
+		return displayString.join("");
+	}
+
+	static async hitRollText(
+		attackRoll,
+		attackAttrLabel,
+		hitResult,
+		locationResult
+	) {
+		const displayString=[];
 		//To hit
 		let hitResultText="";
 		if(hitResult.upgraded) {
@@ -104,11 +121,7 @@ export class AttackHandler {
 			);
 			displayString.push(locationDisplay);
 		}
-
-		const hitMessage = await ChatMessage.create({
-			speaker: {actor: attacker},
-			content: displayString.join(""),
-		});
+		return displayString.join("");
 	}
 
 	static canCrit(actor) {
