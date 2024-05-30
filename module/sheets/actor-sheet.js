@@ -61,7 +61,7 @@ export class HLMActorSheet extends ActorSheet {
 		context.passive=[];
 		const internals=items.internal_pc.concat(items.internal_npc);
 		internals.forEach((internal) => {
-			internal.description_text=this.getDescriptionText(internal);
+			internal.description_text=internal.getInternalDescriptionText();
 			switch(internal.system.type) {
 				case "melee":
 				case "ranged":
@@ -167,6 +167,7 @@ export class HLMActorSheet extends ActorSheet {
 	}
 
 	postInternal(event) {
+		this.actor.postInternal(event.target.dataset.id);
 		console.log("Posting internal"+event.target.dataset.id);
 	}
 
@@ -176,21 +177,5 @@ export class HLMActorSheet extends ActorSheet {
 
 	locationHitMessage(event) {
 		this.actor.locationHitMessage();
-	}
-
-	/**
-	 * Prepares an informative display string for an internal
-	 * @param {HLMItem} internal The internal to get text for
-	 * @returns a formatted string showing the internal's relevant information
-	 */
-	getDescriptionText(internal) {
-		let description_text="";
-		Object.keys(internal.system.attributes).forEach((key) => {
-			if(internal.system.attributes[key] > 0 && key != ATTRIBUTES.weight) {
-				description_text=description_text.concat(internal.system.attributes[key].toString()," ",Utils.getLocalisedAttributeLabel(key),"\n")
-			}
-		});
-		description_text=description_text.concat(internal.system.action_text);
-		return description_text;
 	}
 }

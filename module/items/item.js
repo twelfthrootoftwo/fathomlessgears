@@ -68,6 +68,73 @@ export class HLMItem extends Item {
 	isInternal() {
 		return [ITEM_TYPES.internal_npc, ITEM_TYPES.internal_pc].includes(this.type);
 	}
+
+	postToChat(actor) {
+		switch(this.type) {
+			case ITEM_TYPES.frame_pc:
+				this.postFrameMessage(actor);
+				break;
+			case ITEM_TYPES.internal_npc:
+			case ITEM_TYPES.internal_pc:
+				if(this.system.attack) {
+					this.internalAttack(actor);
+				} else {
+					this.postFlatInternal(actor);
+				}
+				break;
+			default:
+				console.log("No item message for type "+this.type);
+		}
+	}
+
+	async postFrameMessage(actor) {
+		const displayMessage = await renderTemplate(
+			"systems/hooklineandmecha/templates/messages/frame-ability.html",
+			{
+				frame_ability_name: this.system.gear_ability_name,
+				frame_ability_text: this.system.gear_ability,
+			}
+		);
+		await ChatMessage.create({
+			speaker: {actor: actor},
+			content: displayMessage,
+		});
+	}
+
+	async internalAttack(actor) {
+
+	}
+
+	async postFlatInternal(actor) {
+		const displayMessage = await renderTemplate(
+			"systems/hooklineandmecha/templates/messages/internal.html",
+			{
+				internal: this,
+				text: this.getInternalDescriptionText(),
+			}
+		);
+		await ChatMessage.create({
+			speaker: {actor: actor},
+			content: displayMessage,
+		});
+	}
+
+	
+	/**
+	 * Prepares an informative display string for an internal
+	 * @returns a formatted string showing the internal's relevant information
+	 */
+	getInternalDescriptionText() {
+		if(!this.isInternal()) {return false;}
+		let description_text="";
+		Object.keys(this.system.attributes).forEach((key) => {
+			if(this.system.attributes[key] > 0 && key != ATTRIBUTES.weight) {
+				description_text=description_text.concat(this.system.attributes[key].toString()," ",Utils.getLocalisedAttributeLabel(key),"\n")
+			}
+		});
+		description_text=description_text.concat(this.system.action_text);
+		return description_text;
+	}
 }
 
 /**

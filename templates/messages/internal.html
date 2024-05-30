@@ -1,0 +1,13 @@
+<div class="message-body">
+    <div class="message-subheader">
+        {{internal.name}}
+    </div>
+    <div class="tag-row flex-row">
+        {{#each internal.system.tags}}
+            <div class="tag-display" id="{{this.name}}">{{this.name}}{{#if this.value}} {{this.value}}{{/if}}</div>
+        {{/each}}
+    </div>
+    <div class="message-text">
+        {{text}}
+    </div>
+</div>

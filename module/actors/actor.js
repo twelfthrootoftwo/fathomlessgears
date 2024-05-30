@@ -465,26 +465,13 @@ export class HLMActor extends Actor {
 	 * Send this actor's flat attributes to the chat log
 	 */
 	async shareFrameAbility() {
-		const content=await this.getFrameAbilityChatMessage();
-		ChatMessage.create({
-			speaker: {actor: this},
-			content: content,
-		});
+		const frame=this.itemTypes.frame_pc[0];
+		frame.postToChat(this);
 	}
 
-	/**
-	 * Send this actor's frame ability to the chat log
-	 */
-	async getFrameAbilityChatMessage() {
-		const frame=this.itemTypes.frame_pc[0];
-		const display = await renderTemplate(
-			"systems/hooklineandmecha/templates/messages/frame-ability.html",
-			{
-				frame_ability_name: frame.system.gear_ability_name,
-				frame_ability_text: frame.system.gear_ability,
-			}
-		);
-		return display;		
+	async postInternal(uuid) {
+		const internal=this.items.get(uuid);
+		internal.postToChat(this);
 	}
 
 	/**

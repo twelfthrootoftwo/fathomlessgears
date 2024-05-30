@@ -27,8 +27,9 @@ export class RollDialog extends HLMApplication {
     additionalFlat
     additionalDie
     focused
+    internal
 
-    constructor(modifiers, actor, attribute) {
+    constructor(modifiers, actor, attribute,internal) {
         super();
         this.flatModifiers=[];
         this.dieModifiers=[];
@@ -41,6 +42,7 @@ export class RollDialog extends HLMApplication {
         });
         this.actor=actor;
         this.attribute=attribute;
+        this.internal=internal;
         this.additionalFlat=0;
         this.additionalDie=0;
         this.focused=false;
@@ -108,8 +110,11 @@ export class RollDialog extends HLMApplication {
         if(this.focused) {
             totalDieCount+=1;
         }
-
-        this.actor.rollAttribute(this.attribute,totalDieCount,totalFlat);
+        if(this.internal) {
+            this.actor.triggerRolledInternal(this.internal,this.attribute,totalDieCount,totalFlat)
+        } else {
+            this.actor.rollAttribute(this.attribute,totalDieCount,totalFlat);
+        }
         this.close();
     }
 }
