@@ -155,7 +155,7 @@ export class HLMActorSheet extends ActorSheet {
 	 * Mark an internal as broken/repaired
 	 * @param {event} event The triggering event
 	 */
-	breakInternal(event) {
+	async breakInternal(event) {
 		this.toggleInternalBrokenDisplay(event.target.dataset.id);
 		this.actor.toggleInternalBroken(event.target.dataset.id);
 	}

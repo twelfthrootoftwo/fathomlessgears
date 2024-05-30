@@ -519,6 +519,11 @@ export class HLMActor extends Actor {
 				}
 			}
 		})
+
+		ChatMessage.create({
+			whisper: this.getObservers(),
+			content: `${this.name}'s ${internal.name} ${isBroken ? "breaks!" : "is repaired"}`
+		})
 	}
 
 	/**
@@ -534,5 +539,15 @@ export class HLMActor extends Actor {
 		this.modifyResourceValue("repair",-1*internal.system.repair_kits);
 		this.update({"system": this.system});
 		internal.delete();
+	}
+
+	getObservers() {
+		const observers = game.users.filter((user) => {
+			const isOwner=this.testUserPermission(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER);
+			const isObserver=this.testUserPermission(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER);
+			return isOwner || isObserver
+		});
+		console.log(observers);
+		return observers;
 	}
 }

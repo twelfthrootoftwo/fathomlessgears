@@ -1,6 +1,9 @@
 .chat-message {
 	background: var(--color-bg-dialog);
 }
+.chat-message.whisper {
+	background: var(--color-bg-dialog-contrast);
+}
 .chat-message .message-header {
 	padding-left: 4px;
 	padding-right: 4px;
