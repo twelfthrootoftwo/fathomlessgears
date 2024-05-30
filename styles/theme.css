@@ -64,6 +64,7 @@
     --color-ownership-none: #5500ff;
     --color-ownership-observer: #7a7971;
     --color-ownership-owner: #b5b3a4;
+    --color-scrollbar:  #272a2a;
     --z-index-canvas: 0;
     --z-index-app: 30;
     --z-index-ui: 60;

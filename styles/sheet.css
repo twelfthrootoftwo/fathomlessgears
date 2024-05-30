@@ -7,6 +7,7 @@
     padding-right: 5px;
 	background: var(--color-bg-header);
 	color: var(--color-text-light-heading);
+    height: 50px;
 }
 .sheet-header h1.charname {
 	height: 40px;
@@ -26,6 +27,7 @@
 }
 .sheet-contents {
     width: 100%;
+    height: calc(100% - 50px);
 }
 
 /*
@@ -123,9 +125,14 @@ input.piece-value.editable {
 */
 .sheet-data {
     flex: 1 0 300px;
+    height: 100%;
+}
+.sheet-body {
+    height: calc(100% - 30px);
 }
 .sheet nav.sheet-tabs {
     width: 100%;
+    height: 30px;
     font-size: 16px;
     background-color: var(--color-bg-dialog-contrast);
     border-top: 1px solid var(--color-border-highlight);
@@ -146,9 +153,17 @@ input.piece-value.editable {
     background-color: var(--color-bg-dialog-highlight);
     text-decoration: underline;
 }
+.tab.active {
+    height: 100%;
+}
 .tab-content {
     margin: 3px;
     width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--color-scrollbar)
 }
 
 /*
@@ -269,7 +284,7 @@ button.button.post-message {
 .internal-box {
     border: 2px solid var(--color-border-dark-primary);
     margin: 4px;
-    flex: 0 0 265px;
+    flex: 0 0 263px;
 }
 .internal-header {
     background-color: var(--color-bg-dialog-high-contrast);
