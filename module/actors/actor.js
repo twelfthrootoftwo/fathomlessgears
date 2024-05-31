@@ -1,6 +1,6 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT} from "../constants.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE} from "../constants.js";
 import { RollElement, RollDialog } from "../actions/roll-dialog.js";
 
 export class AttributeElement {
@@ -303,13 +303,13 @@ export class HLMActor extends Actor {
 				acceptedTypes=[ITEM_TYPES.frame_pc, ITEM_TYPES.internal_pc];
 				break;
 			case "fish":
-				acceptedTypes=[ITEM_TYPES.internal_npc];
+				acceptedTypes=[ITEM_TYPES.internal_npc,ITEM_TYPES.size];
 				break;
 		}
 		if(acceptedTypes.includes(item.type)) {
 			return true;
-		} else if(item.type==ITEM_TYPES.size){
-			return this.checkAllowedSize(item);
+		} else if(item.type==ITEM_TYPES.grid){
+			return this.checkAllowedGrid(item);
 		}
 		return false;
 	}
@@ -319,11 +319,11 @@ export class HLMActor extends Actor {
 	 * @param {Item} sizeItem The size being dropped
 	 * @returns True if this size can be dropped, False otherwise
 	 */
-	checkAllowedSize(sizeItem) {
-		if(sizeItem.name.toLowerCase()=="fisher") {
-			return this.type="fisher";
+	checkAllowedGrid(grid) {
+		if(grid.name.toLowerCase()=="fisher") {
+			return this.type==ACTOR_TYPES.fisher;
 		} else {
-			return this.type!="fisher";
+			return this.type!=ACTOR_TYPES.fisher;
 		}
 	}
 
@@ -339,6 +339,9 @@ export class HLMActor extends Actor {
 			case ITEM_TYPES.frame_pc:
 				this.applyFrame(item);
 				break;
+			case ITEM_TYPES.grid:
+				this.applyGrid(item);
+				break;
 			case ITEM_TYPES.internal_pc:
 			case ITEM_TYPES.internal_npc:
 				this.applyInternal(item);
@@ -347,16 +350,36 @@ export class HLMActor extends Actor {
 	}
 
 	/**
+	 * Item drop processing for grid
+	 * @param {Item} grid
+	 */
+	async applyGrid(grid) {
+		if(this.type==ACTOR_TYPES.fisher && grid.system.type!=GRID_TYPE.fisher) {
+			return false;
+		} else if(this.type!=ACTOR_TYPES.fisher && grid.system.type==GRID_TYPE.fisher) {
+			return false;
+		}
+		//Remove existing size item
+		if(this.system.gridType) {
+			const oldGrid=this.items.get(this.system.gridType);
+			oldGrid?.delete();
+		}
+		//Create new size item
+		const item=await Item.create(grid,{parent: this});
+		this.system.gridType=item._id
+		this.update({"system": this.system});
+	}
+
+	/**
 	 * Item drop processing for size
 	 * @param {Item} size 
 	 */
 	async applySize(size) {
+		if(this.type==ACTOR_TYPES.fisher) return false;
 		//Apply attribute changes
-		if(size.name != "Fisher") {
-			Object.keys(size.system.attributes).forEach((key) => {
-				this.setBaseAttributeValue(key,size.system.attributes[key]);
-			})
-		}
+		Object.keys(size.system.attributes).forEach((key) => {
+			this.setBaseAttributeValue(key,size.system.attributes[key]);
+		})
 		//Remove existing size item
 		if(this.system.size) {
 			const oldSize=this.items.get(this.system.size);
@@ -374,7 +397,7 @@ export class HLMActor extends Actor {
 	 */
 	async applyFrame(frame) {
 		console.log("Applying frame");
-		if(this.type != "fisher") return;
+		if(this.type != ACTOR_TYPES.fisher) return false;
 		//Apply attribute changes
 		Object.keys(frame.system.attributes).forEach((key) => {
 			this.setBaseAttributeValue(key,frame.system.attributes[key]);

@@ -166,8 +166,12 @@ export function createHLMItemData(record, data, source) {
 			console.log("Constructing NPC internal...");
 			system=constructInternalNPCData(data);
 			break;
+		case ITEM_TYPES.grid:
+			console.log("Constructing grid...");
+			system=constructGridData(data);
+			break;
 	}
-	system.source=source
+	//system.source=source
 	const itemData={
 		"name": record.name,
 		"type": record.type,
@@ -190,9 +194,15 @@ function constructSizeData(data) {
 			system.attributes[key]=data[key];
 		}
 	});
+	return system
+}
+
+function constructGridData(data) {
+	const system={};
 	system.hitLocationRoll=data.hitLocationRoll;
 	system.hitRegions=data.hitRegions;
-	return system
+	system.type=data.key;
+	return system;
 }
 
 /**

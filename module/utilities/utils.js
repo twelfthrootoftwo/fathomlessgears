@@ -137,6 +137,7 @@ export class Utils {
 		const recognisedItems = [
 			"tag",
 			"size",
+			"grid",
 			"frame_pc",
 			"internal_pc",
 			"internal_npc",

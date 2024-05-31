@@ -32,12 +32,14 @@ export const FISH_TYPE = {
 	forgotten: "forgotten",
 };
 
-export const FISH_SIZE = {
+export const GRID_TYPE = {
+	fisher: "fisher",
 	small: "small",
-	medVert: "medVert",
-	medHorz: "medHorz",
+	medium: "medium",
 	large: "large",
+	massive: "massive",
 	leviathan: "leviathan",
+	serpent: "serpent",
 };
 
 export const HIT_TYPE = {
@@ -59,6 +61,7 @@ export const ITEM_TYPES = {
 	internal_npc: "internal_npc",
 	frame_pc: "frame_pc",
 	size: "size",
+	grid: "grid",
 }
 
 export const COVER_STATES = {

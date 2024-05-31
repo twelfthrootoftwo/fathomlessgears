@@ -201,7 +201,7 @@
 		"fisher": {
 			"templates": ["attributes", "ballast", "internals", "resources", "fisher_history","downtime"],
 			"biography": "Good at catching fish",
-			"size": "fisher",
+			"gridType": "",
 			"frame": "",
 			"gear-name": "",
 			"pilot-portrait": "icons/svg/mystery-man.svg",
@@ -209,11 +209,13 @@
 		},
 		"fish": {
 			"templates": ["attributes", "ballast", "internals"],
-			"grid": ""
+			"grid": "systems/hooklineandmecha/assets/blank-grid.jpg",
+			"gridType": "",
+			"size": ""
 		}
 	},
 	"Item": {
-		"types": ["tag","internal_pc","internal_npc","frame_pc","size","record"],
+		"types": ["tag","internal_pc","internal_npc","frame_pc","size","grid"],
 		"htmlFields": ["description"],
 		"templates": {
 			"source":{
@@ -242,7 +244,8 @@
 			},
 			"toHit": {
 				"hitLocationRoll": null,
-				"hitRegions": []
+				"hitRegions": [],
+				"type": ""
 			},
 			"frame": {
 				"core_integrity": 0,
@@ -275,7 +278,10 @@
 			"templates": ["source","attributes","frame"]
 		},
 		"size": {
-			"templates": ["source","attributes","toHit"]
+			"templates": ["source","attributes"]
+		},
+		"grid": {
+			"templates": ["toHit"]
 		}
 	  }
 }

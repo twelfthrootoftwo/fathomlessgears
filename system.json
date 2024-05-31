@@ -20,7 +20,14 @@
 		  "system": "hooklineandmecha",
 		  "path": "./packs/core_macros.db",
 		  "type": "Macro"
-		}
+		},
+		{
+			"name": "grid_type",
+			"label": "Grid Types",
+			"system": "hooklineandmecha",
+			"path": "./packs/grid_types.db",
+			"type": "Item"
+		  }
 	],
 	"languages": [
 		{

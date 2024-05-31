@@ -45,6 +45,8 @@ export function getTargetCompendium(dataType) {
             return retrieveOrCreateCompendium("frame_pc");
         case ITEM_TYPES.size:
             return retrieveOrCreateCompendium("size");
+        case ITEM_TYPES.grid:
+            return retrieveOrCreateCompendium("grid_type");
     };
     return null;
 }
@@ -66,8 +68,9 @@ async function retrieveOrCreateCompendium(compendiumName) {
 const fileNameMapping = {
 	"frame_data": [ITEM_TYPES.frame_pc],
 	"item_data": [ITEM_TYPES.internal_pc],
-    "sizes":[ITEM_TYPES.size],
+    "grids":[ITEM_TYPES.grid],
     "npc_item_data": [ITEM_TYPES.internal_npc],
+    "fish_size_data": [ITEM_TYPES.size],
 }
 
 /**
@@ -92,5 +95,5 @@ export function identifyDataTypes(fileData,fileName) {
  * @returns True if the item is from the source file, False otherwise
  */
 export function isItemFromFileSource(item,fileId) {
-	return item.system.source.filename === fileId.filename && item.system.source.version === fileId.version;
+	return item.system?.source?.filename === fileId.filename && item.system?.source?.version === fileId.version;
 }

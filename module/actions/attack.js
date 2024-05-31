@@ -132,7 +132,7 @@ export class AttackHandler {
 	}
 
 	static async rollHitLocation(defender) {
-		const hitZoneInfo=defender.items.get(defender.system.size);
+		const hitZoneInfo=defender.items.get(defender.system.gridType);
 		if(!hitZoneInfo) {
 			ChatMessage.create({
 				speaker: {actor: defender},
