@@ -78,5 +78,7 @@
 
 	"COVERSTATE.none": "No cover",
 	"COVERSTATE.soft": "Soft cover",
-	"COVERSTATE.hard": "Hard cover"
+	"COVERSTATE.hard": "Hard cover",
+
+	"MESSAGE.totalweight": "Total Weight"
 }

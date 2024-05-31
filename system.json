@@ -13,7 +13,15 @@
 	],
 	"esmodules": ["module/hlm.js","scripts/jszip.js"],
 	"styles": ["styles/theme.css","styles/sheet.css","styles/dialogs.css","styles/utils.css","styles/chat.css"],
-	"packs": [],
+	"packs": [
+		{
+		  "name": "core_macros",
+		  "label": "HLM Macros",
+		  "system": "hooklineandmecha",
+		  "path": "./packs/core_macros.db",
+		  "type": "Macro"
+		}
+	],
 	"languages": [
 		{
 			"lang": "en",
