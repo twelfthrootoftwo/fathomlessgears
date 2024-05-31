@@ -273,51 +273,6 @@ export class HLMActor extends Actor {
 	}
 
 	/**
-	 * -----------------------------------------------------
-	 * Get labels for display objects
-	 * #TODO can this go on the sheet?
-	 * -----------------------------------------------------
-	 */
-
-	_getAttributeLabels() {
-		for (const attributeKey in this.system.attributes) {
-			const attribute = this.system.attributes[attributeKey];
-			attribute.label = Utils.getLocalisedAttributeLabel(attributeKey);
-		}
-	}
-
-	_getResourceLabels() {
-		for (const resourceKey in this.system.resources) {
-			const resource = this.system.resources[resourceKey];
-			resource.label = Utils.getLocalisedResourceLabel(resourceKey);
-		}
-	}
-
-	_getBallastLabels() {
-		for (const ballastKey in this.system.ballast) {
-			const bal = this.system.ballast[ballastKey];
-			bal.label = Utils.getLocalisedBallastLabel(ballastKey);
-		}
-	}
-
-	_getDowntimeLabels() {
-		for (const downtimeKey in this.system.downtime.rollable) {
-			const attribute = this.system.downtime.rollable[downtimeKey];
-			attribute.label = Utils.getLocalisedDowntimeLabel(downtimeKey);
-		}
-	}
-
-	_setLabels() {
-		this._getAttributeLabels();
-		if (this.system.resources) {
-			this._getResourceLabels();
-		}
-		if (this.system.downtime) {
-			this._getDowntimeLabels();
-		}
-	}
-
-	/**
 	 * Compute the actor's ballast value
 	 */
 	calculateBallast() {

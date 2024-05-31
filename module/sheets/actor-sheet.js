@@ -36,6 +36,8 @@ export class HLMActorSheet extends ActorSheet {
 				async: true,
 			}
 		);
+		this.getLabels(context.actor);
+
         const items=context.actor.itemTypes;
 		context.frame=items.frame_pc[0] ? items.frame_pc[0] : {
 			name: "",
@@ -116,6 +118,30 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".hit-location-button").click(this.locationHitMessage.bind(this));
 		if(this.actor.type===ACTOR_TYPES.fisher) {
 			document.getElementById("post-frame-ability").addEventListener("click",this.postFrameAbility.bind(this));
+		}
+	}
+
+	getLabels(actor) {
+		//Attributes
+		for (const attributeKey in actor.system.attributes) {
+			const attribute = actor.system.attributes[attributeKey];
+			attribute.label = Utils.getLocalisedAttributeLabel(attributeKey);
+		}
+
+		//Resources
+		if (actor.system.resources) {
+			for (const resourceKey in actor.system.resources) {
+				const resource = actor.system.resources[resourceKey];
+				resource.label = Utils.getLocalisedResourceLabel(resourceKey);
+			}
+		}
+
+		//Downtime
+		if (actor.system.downtime) {
+			for (const downtimeKey in actor.system.downtime.rollable) {
+				const attribute = actor.system.downtime.rollable[downtimeKey];
+				attribute.label = Utils.getLocalisedDowntimeLabel(downtimeKey);
+			}
 		}
 	}
 
