@@ -58,6 +58,8 @@
 	"ROLLTEXT.hitZone": "Hit zone:",
 	"ROLLTEXT.hitColumn": "Hit column:",
 	"ROLLTEXT.flat": "Flat Attributes:",
+	"ROLLTEXT.reel": "Reeling _TARGET_NAME_:",
+	"ROLLTEXT.target": "against _TARGET_NAME_",
 
 	"HIT.miss": "Miss",
 	"HIT.hit": "Hit",
@@ -81,5 +83,7 @@
 	"COVERSTATE.soft": "Soft cover",
 	"COVERSTATE.hard": "Hard cover",
 
-	"MESSAGE.totalweight": "Total Weight"
+	"MESSAGE.totalweight": "Total Weight",
+	"MESSAGE.reelPC": "Reel 'em in!",
+	"MESSAGE.reelNPC": "Get off the hook!"
 }

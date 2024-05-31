@@ -2,6 +2,7 @@ import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
 import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE} from "../constants.js";
 import { RollElement, RollDialog } from "../actions/roll-dialog.js";
+import { ReelHandler } from "../actions/reel.js";
 
 export class AttributeElement {
 	value
@@ -38,6 +39,7 @@ export class HLMActor extends Actor {
 		if ([ATTRIBUTES.close, ATTRIBUTES.far].includes(attributeKey))
 			return ATTRIBUTES.evade;
 		if (attributeKey === ATTRIBUTES.mental) return ATTRIBUTES.willpower;
+		if (attributeKey===ATTRIBUTES.power) return ATTRIBUTES.power;
 		return false;
 	}
 
@@ -83,7 +85,9 @@ export class HLMActor extends Actor {
 	async rollAttribute(attributeKey, dieCount, flatModifier,cover) {
 		const defenceKey = HLMActor.isTargetedRoll(attributeKey);
 		let message="";
-		if (defenceKey) {
+		if(defenceKey===ATTRIBUTES.power) {
+			message=await this.initiateReel(dieCount, flatModifier);
+		} else if (defenceKey) {
 			message=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier,cover);
 		} else {
 			message=await this.rollNoTarget(attributeKey, dieCount, flatModifier);
@@ -153,6 +157,21 @@ export class HLMActor extends Actor {
 				dieCount,
 				flatModifier,
 				cover
+			);
+		}
+	}
+
+	async initiateReel(dieCount, flatModifier) {
+		const targetSet = game.user.targets;
+		if (targetSet.size < 1) {
+			return await this.rollNoTarget(attackKey, dieCount, flatModifier);
+		} else {
+			const target = targetSet.values().next().value;
+			return await ReelHandler.reel(
+				this,
+				target.actor,
+				dieCount,
+				flatModifier
 			);
 		}
 	}
