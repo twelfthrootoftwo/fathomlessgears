@@ -26,7 +26,12 @@ export class HLMActor extends Actor {
 	prepareDerivedData() {
 		super.prepareDerivedData();
 		this.calculateAttributeTotals();
-		this._setLabels();
+		if(this.type==ACTOR_TYPES.fish) {
+			const flag=this.getFlag("hooklineandmecha","scanned");
+			if(flag==null || flag==undefined) {
+				this.setFlag("hooklineandmecha","scanned",false);
+			}
+		}
 	}
 
 	static isTargetedRoll(attributeKey) {
@@ -504,5 +509,39 @@ export class HLMActor extends Actor {
 		});
 		console.log(observers);
 		return observers;
+	}
+
+	/**
+	 * Toggle the scan state for this actor
+	 * Written by VoidPhoenix, used with permission (thanks!)
+	 */
+	async toggleScan() {
+		if(this.type!=ACTOR_TYPES.fish) {return false;}
+		const scanned=!await this.getFlag("hooklineandmecha","scanned");
+		this.setFlag("hooklineandmecha","scanned",scanned);
+		let ownership = foundry.utils.deepClone(this.ownership);
+		ownership["default"] = scanned ? 2 : 0;
+		console.log(ownership)
+		await this.update({ownership});
+
+		// Print the result to chat.
+		let message =
+		`<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="${this.img}" style="border:none; max-height: 150px;"/>
+			<div style="font-size: 16px;">Scan data available!</div>
+		</div>`;
+		if(!scanned) {
+			message=
+			`<div style="display: flex; flex-direction: column; align-items: center;">
+				<div style="font-size: 16px; font-style: italic;">Scan revoked</div>
+			</div>`;
+		}
+
+		// Send to chat
+
+		ChatMessage.create({
+			speaker: ChatMessage.getSpeaker(),
+			content: message
+		});
 	}
 }

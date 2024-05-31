@@ -37,6 +37,11 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		);
 		this.getLabels(context.actor);
+		if(await context.actor.getFlag("hooklineandmecha","scanned")) {
+			context.scan_text=game.i18n.localize("SHEET.scantrue");
+		} else {
+			context.scan_text=game.i18n.localize("SHEET.scanfalse");
+		}
 
         const items=context.actor.itemTypes;
 		context.frame=items.frame_pc[0] ? items.frame_pc[0] : {
@@ -115,10 +120,15 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".break-button").click(this.breakInternal.bind(this));
 		html.find(".post-button").click(this.postInternal.bind(this));
 		html.find(".delete-internal").click(this.deleteInternal.bind(this));
-		html.find(".hit-location-button").click(this.locationHitMessage.bind(this));
+		html.find("#hit-location").click(this.locationHitMessage.bind(this));
+		html.find("#scan").click(this.toggleScan.bind(this));
 		if(this.actor.type===ACTOR_TYPES.fisher) {
 			document.getElementById("post-frame-ability").addEventListener("click",this.postFrameAbility.bind(this));
 		}
+	}
+
+	testOwnership() {
+		return this.actor.testUserPermission(game.user,"OWNER");
 	}
 
 	getLabels(actor) {
@@ -147,6 +157,7 @@ export class HLMActorSheet extends ActorSheet {
 
 	async _onRoll(event) {
 		event.preventDefault();
+		if(!this.testOwnership()) {return false;}
 		const attribute = event.target.attributes.attribute?.value;
 		this.actor.startRollDialog(attribute);
 	}
@@ -162,6 +173,7 @@ export class HLMActorSheet extends ActorSheet {
 	 * @param {*} data What's being dropped
 	 */
 	async _onDropItem(event, data) {
+		if(!this.testOwnership()) {return false;}
 		const targetItem=await fromUuid(data.uuid);
 		if(this.actor.canDropItem(targetItem)) {
 			this.actor.receiveDrop(targetItem);
@@ -174,6 +186,7 @@ export class HLMActorSheet extends ActorSheet {
 	 * Share the actor's frame ability
 	 */
 	postFrameAbility() {
+		if(!this.testOwnership()) {return false;}
 		this.actor.shareFrameAbility();
 	}
 
@@ -182,6 +195,7 @@ export class HLMActorSheet extends ActorSheet {
 	 * @param {event} event The triggering event
 	 */
 	async breakInternal(event) {
+		if(!this.testOwnership()) {return false;}
 		this.toggleInternalBrokenDisplay(event.target.dataset.id);
 		this.actor.toggleInternalBroken(event.target.dataset.id);
 	}
@@ -193,14 +207,22 @@ export class HLMActorSheet extends ActorSheet {
 	}
 
 	postInternal(event) {
+		if(!this.testOwnership()) {return false;}
 		this.actor.postInternal(event.target.dataset.id);
 	}
 
 	deleteInternal(event) {
+		if(!this.testOwnership()) {return false;}
 		this.actor.removeInternal(event.target.dataset.id);
 	}
 
 	locationHitMessage(event) {
+		if(!this.testOwnership()) {return false;}
 		this.actor.locationHitMessage();
+	}
+
+	async toggleScan(event) {
+		if(!this.testOwnership()) {return false;}
+		this.actor.toggleScan();
 	}
 }

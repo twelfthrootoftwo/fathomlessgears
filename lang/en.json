@@ -43,6 +43,8 @@
 	"SHEET.post": "Post",
 	"SHEET.delete": "Remove",
 	"SHEET.hitlocation": "Hit location",
+	"SHEET.scantrue": "Revoke scan",
+	"SHEET.scanfalse": "Scan",
 
 	"FISHSIZE.small": "Small",
 	"FISHSIZE.medium-vert": "Medium (Portrait)",
