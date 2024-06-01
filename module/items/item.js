@@ -171,7 +171,7 @@ export function createHLMItemData(record, data, source) {
 			system=constructGridData(data);
 			break;
 	}
-	//system.source=source
+	system.source=source
 	const itemData={
 		"name": record.name,
 		"type": record.type,
