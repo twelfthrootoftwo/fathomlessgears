@@ -70,6 +70,10 @@
 	"HITZONE.rightArm": "Right Arm",
 	"HITZONE.torso": "Torso",
 	"HITZONE.legs": "Legs",
+	"HITZONE.section2": "Section 2",
+	"HITZONE.section3": "Section 3",
+	"HITZONE.section4": "Section 4",
+	"HITZONE.tail": "Tail",
 
 	"ITEMTYPE.size": "Size Category",
 	"ITEMTYPE.grid_type": "Grid Type",

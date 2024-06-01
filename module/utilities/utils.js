@@ -52,7 +52,12 @@ export class Utils {
 			"rightArm",
 			"torso",
 			"legs",
+			"section2",
+			"section3",
+			"section4",
+			"tail"
 		];
+		console.log(hitZoneKey);
 		if (recognisedZones.includes(hitZoneKey)) {
 			return game.i18n.localize("HITZONE." + hitZoneKey);
 		} else {
@@ -205,5 +210,15 @@ export class Utils {
 	static getRoller(dieCount, flatModifier) {
 		const formula = dieCount + "d6" + "+" + flatModifier;
 		return new Roll(formula);
+	}
+
+	static async getGridFromSize(sizeName) {
+		console.log("Finding grid!");
+		const gridCollection=await game.packs.get("hooklineandmecha.grid_type");
+		console.log(gridCollection);
+		const record = gridCollection.index.filter(p => p.name == sizeName);
+		const grid=await gridCollection.getDocument(record[0]._id);
+		console.log(grid);
+		return grid;
 	}
 }

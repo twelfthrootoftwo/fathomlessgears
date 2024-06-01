@@ -35,6 +35,21 @@ export class HLMActor extends Actor {
 		}
 	}
 
+	/** @inheritdoc */
+	_onCreate(...args) {
+		super._onCreate(...args);
+		if(this.type==ACTOR_TYPES.fish) {
+			const flag=this.getFlag("hooklineandmecha","scanned");
+			if(flag==null || flag==undefined) {
+				this.setFlag("hooklineandmecha","scanned",false);
+			}
+		} else if(this.type==ACTOR_TYPES.fisher && !this.system.gridType){
+			Utils.getGridFromSize("Fisher").then((grid) => {
+				this.applyGrid(grid);
+			});
+		}
+	}
+
 	static isTargetedRoll(attributeKey) {
 		if ([ATTRIBUTES.close, ATTRIBUTES.far].includes(attributeKey))
 			return ATTRIBUTES.evade;
@@ -327,23 +342,8 @@ export class HLMActor extends Actor {
 		}
 		if(acceptedTypes.includes(item.type)) {
 			return true;
-		} else if(item.type==ITEM_TYPES.grid){
-			return this.checkAllowedGrid(item);
 		}
 		return false;
-	}
-
-	/**
-	 * Checks whether a size can be dropped onto this actor
-	 * @param {Item} sizeItem The size being dropped
-	 * @returns True if this size can be dropped, False otherwise
-	 */
-	checkAllowedGrid(grid) {
-		if(grid.name.toLowerCase()=="fisher") {
-			return this.type==ACTOR_TYPES.fisher;
-		} else {
-			return this.type!=ACTOR_TYPES.fisher;
-		}
 	}
 
 	/**
@@ -357,9 +357,6 @@ export class HLMActor extends Actor {
 				break;
 			case ITEM_TYPES.frame_pc:
 				this.applyFrame(item);
-				break;
-			case ITEM_TYPES.grid:
-				this.applyGrid(item);
 				break;
 			case ITEM_TYPES.internal_pc:
 			case ITEM_TYPES.internal_npc:
@@ -408,6 +405,10 @@ export class HLMActor extends Actor {
 		const item=await Item.create(size,{parent: this});
 		this.system.size=item._id
 		this.update({"system": this.system});
+
+		//Apply grid
+		const newGrid=await Utils.getGridFromSize(size.name);
+		await this.applyGrid(newGrid);
 	}
 
 	/**
