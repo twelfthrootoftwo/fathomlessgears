@@ -487,7 +487,8 @@ export class HLMActor extends Actor {
 			"systems/hooklineandmecha/templates/messages/internal.html",
 			{
 				internal: internal,
-				text: rollString
+				text: rollString,
+				damageText: game.i18n.localize("INTERNALS.damage")
 			}
 		);
 		await ChatMessage.create({
@@ -522,9 +523,9 @@ export class HLMActor extends Actor {
 				}
 			}
 		})
-
+		console.log(this.getObservers());
 		ChatMessage.create({
-			whisper: this.getObservers(),
+			whisper: await this.getObservers(),
 			content: `${this.name}'s ${internal.name} ${isBroken ? "breaks!" : "is repaired"}`
 		})
 	}
@@ -544,8 +545,8 @@ export class HLMActor extends Actor {
 		internal.delete();
 	}
 
-	getObservers() {
-		const observers = game.users.filter((user) => {
+	async getObservers() {
+		const observers = await game.users.filter((user) => {
 			const isOwner=this.testUserPermission(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER);
 			const isObserver=this.testUserPermission(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER);
 			return isOwner || isObserver

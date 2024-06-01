@@ -1,6 +1,7 @@
 <div class="message-body">
-    <div class="message-subheader">
-        {{internal.name}}
+    <div class="message-subheader flex-row">
+        <div>{{internal.name}}</div>
+        <div>{{internal.system.ap_cost}} AP</div>
     </div>
     {{#if internal.system.tags}}
     {{>
@@ -8,15 +9,20 @@
         tags=internal.system.tags
     }}
     {{/if}}
-    {{#if internal.system.attack}}
-    <div class="flex-row message-attack-row">
-        <p class="message-attack-info">{{localize "INTERNALS.range"}}: {{internal.system.attack.range}}</p>
-        <p class="message-attack-info">{{localize "INTERNALS.damage"}}: {{internal.system.attack.damage}}</p>
-    </div>
-    {{/if}}
     <div class="internal-text">{{internal.system.action_text}}</div>
     <hr class="divider primary">
     <div class="message-text">
         {{{text}}}
     </div>
+    {{#if internal.system.attack}}
+    <div class="message-text">
+        {{log damageText}}
+    {{>
+        "systems/hooklineandmecha/templates/partials/labelled-roll-partial.html"
+        label_left=damageText
+        total=internal.system.attack.damage
+        outcome=""
+    }}
+    </div>
+    {{/if}}
 </div>

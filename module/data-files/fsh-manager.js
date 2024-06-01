@@ -385,11 +385,11 @@ async function createItem(itemName,jsonData,itemType,sourceId, compendium) {
 	let item=null;
 	try {
 		const itemData=createHLMItemData(record,jsonData,sourceId);
+		console.log(itemData);
 		item=await compendium.createDocument(itemData);
 	}
 	catch(error) {
 		const message="Could not create item from file data, name: "+name+", type "+Utils.getLocalisedItemType(itemType);
-		console.log(message);
 		ui.notifications.error(message);
 	}
 	return item

@@ -80,7 +80,6 @@ export class HLMActorSheet extends ActorSheet {
 					break;
 			}
 		})
-		console.log(context);
 		return context;
 	}
 
@@ -192,24 +191,24 @@ export class HLMActorSheet extends ActorSheet {
 	 */
 	async breakInternal(event) {
 		if(!this.testOwnership()) {return false;}
-		this.toggleInternalBrokenDisplay(event.target.dataset.id);
-		this.actor.toggleInternalBroken(event.target.dataset.id);
+		this.toggleInternalBrokenDisplay(safeIdClean(event.target.dataset.id));
+		this.actor.toggleInternalBroken(safeIdClean(event.target.dataset.id));
 	}
 
 	toggleInternalBrokenDisplay(uuid) {
-		document.querySelector(`[data-id=${uuid}]`,".internal-box").classList.toggle("broken");
-		document.querySelector(`[data-id=${uuid}]`,".break-button").classList.toggle("btn-dark");
-		document.querySelector(`[data-id=${uuid}]`,".post-button").classList.toggle("btn-dark");
+		document.querySelector(`[data-id=id${uuid}]`,".internal-box").classList.toggle("broken");
+		document.querySelector(`[data-id=id${uuid}]`,".break-button").classList.toggle("btn-dark");
+		document.querySelector(`[data-id=id${uuid}]`,".post-button").classList.toggle("btn-dark");
 	}
 
 	postInternal(event) {
 		if(!this.testOwnership()) {return false;}
-		this.actor.postInternal(event.target.dataset.id);
+		this.actor.postInternal(safeIdClean(event.target.dataset.id));
 	}
 
 	deleteInternal(event) {
 		if(!this.testOwnership()) {return false;}
-		this.actor.removeInternal(event.target.dataset.id);
+		this.actor.removeInternal(safeIdClean(event.target.dataset.id));
 	}
 
 	locationHitMessage(event) {
@@ -221,4 +220,7 @@ export class HLMActorSheet extends ActorSheet {
 		if(!this.testOwnership()) {return false;}
 		this.actor.toggleScan();
 	}
+}
+function safeIdClean(safeId) {
+	return safeId.substring(2);
 }
