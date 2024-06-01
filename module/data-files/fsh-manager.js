@@ -390,7 +390,7 @@ async function createItem(itemName,jsonData,itemType,sourceId, compendium) {
 	catch(error) {
 		const message="Could not create item from file data, name: "+name+", type "+Utils.getLocalisedItemType(itemType);
 		console.log(message);
-		//ui.notifications.error(message);
+		ui.notifications.error(message);
 	}
 	return item
 }

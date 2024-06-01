@@ -550,7 +550,6 @@ export class HLMActor extends Actor {
 			const isObserver=this.testUserPermission(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER);
 			return isOwner || isObserver
 		});
-		console.log(observers);
 		return observers;
 	}
 
@@ -564,7 +563,6 @@ export class HLMActor extends Actor {
 		this.setFlag("hooklineandmecha","scanned",scanned);
 		let ownership = foundry.utils.deepClone(this.ownership);
 		ownership["default"] = scanned ? 2 : 0;
-		console.log(ownership)
 		await this.update({ownership});
 
 		// Print the result to chat.
