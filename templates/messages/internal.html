@@ -8,6 +8,14 @@
         tags=internal.system.tags
     }}
     {{/if}}
+    {{#if internal.system.attack}}
+    <div class="flex-row message-attack-row">
+        <p class="message-attack-info">{{localize "INTERNALS.range"}}: {{internal.system.attack.range}}</p>
+        <p class="message-attack-info">{{localize "INTERNALS.damage"}}: {{internal.system.attack.damage}}</p>
+    </div>
+    {{/if}}
+    <div class="internal-text">{{internal.system.action_text}}</div>
+    <hr class="divider primary">
     <div class="message-text">
         {{{text}}}
     </div>

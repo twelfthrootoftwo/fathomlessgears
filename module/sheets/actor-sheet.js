@@ -37,11 +37,7 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		);
 		this.getLabels(context.actor);
-		if(await context.actor.getFlag("hooklineandmecha","scanned")) {
-			context.scan_text=game.i18n.localize("SHEET.scantrue");
-		} else {
-			context.scan_text=game.i18n.localize("SHEET.scanfalse");
-		}
+		context.scan_text=await context.actor.getScanText();
 
         const items=context.actor.itemTypes;
 		context.frame=items.frame_pc[0] ? items.frame_pc[0] : {

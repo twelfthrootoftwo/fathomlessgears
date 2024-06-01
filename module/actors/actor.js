@@ -586,4 +586,12 @@ export class HLMActor extends Actor {
 			content: message
 		});
 	}
+
+	async getScanText() {
+		if(await this.getFlag("hooklineandmecha","scanned")) {
+			return game.i18n.localize("SHEET.scantrue");
+		} else {
+			return game.i18n.localize("SHEET.scanfalse");
+		}
+	}
 }
