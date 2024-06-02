@@ -26,27 +26,22 @@ export class HLMActor extends Actor {
 	/** @inheritdoc */
 	prepareDerivedData() {
 		super.prepareDerivedData();
-		this.calculateAttributeTotals();
-		if(this.type==ACTOR_TYPES.fish) {
-			const flag=this.getFlag("hooklineandmecha","scanned");
-			if(flag==null || flag==undefined) {
-				this.setFlag("hooklineandmecha","scanned",false);
-			}
-		}
 	}
 
 	/** @inheritdoc */
-	_onCreate(...args) {
-		super._onCreate(...args);
-		if(this.type==ACTOR_TYPES.fish) {
-			const flag=this.getFlag("hooklineandmecha","scanned");
-			if(flag==null || flag==undefined) {
-				this.setFlag("hooklineandmecha","scanned",false);
+	_onCreate(data, options, userId) {
+		super._onCreate(data, options, userId);
+		if(game.user._id==userId) {
+			if(this.type==ACTOR_TYPES.fish) {
+				const flag=this.getFlag("hooklineandmecha","scanned");
+				if(flag==null || flag==undefined) {
+					this.setFlag("hooklineandmecha","scanned",false);
+				}
+			} else if(this.type==ACTOR_TYPES.fisher && !this.system.gridType){
+				Utils.getGridFromSize("Fisher").then((grid) => {
+					this.applyGrid(grid);
+				});
 			}
-		} else if(this.type==ACTOR_TYPES.fisher && !this.system.gridType){
-			Utils.getGridFromSize("Fisher").then((grid) => {
-				this.applyGrid(grid);
-			});
 		}
 	}
 
