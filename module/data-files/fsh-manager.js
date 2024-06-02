@@ -385,7 +385,6 @@ async function createItem(itemName,jsonData,itemType,sourceId, compendium) {
 	let item=null;
 	try {
 		const itemData=createHLMItemData(record,jsonData,sourceId);
-		console.log(itemData);
 		item=await compendium.createDocument(itemData);
 	}
 	catch(error) {

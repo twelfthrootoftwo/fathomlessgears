@@ -152,18 +152,22 @@ export function createHLMItemData(record, data, source) {
 			return null;
 		case ITEM_TYPES.size:
 			console.log("Constructing size...");
+			if(!testSizeStructure(data)) throw new Error("Invalid item data");
 			system=constructSizeData(data);
 			break;
 		case ITEM_TYPES.frame_pc:
 			console.log("Constructing PC frame...");
+			if(!testFrameStructure(data)) throw new Error("Invalid item data");
 			system=constructFrameData(data);
 			break;
 		case ITEM_TYPES.internal_pc:
 			console.log("Constructing PC internal...");
+			if(!testInternalStructure(data)) throw new Error("Invalid item data");
 			system=constructInternalPCData(data);
 			break;
 		case ITEM_TYPES.internal_npc:
 			console.log("Constructing NPC internal...");
+			if(!testInternalStructure(data)) throw new Error("Invalid item data");
 			system=constructInternalNPCData(data);
 			break;
 		case ITEM_TYPES.grid:
@@ -334,4 +338,51 @@ function unpackGridCoords(gridList) {
 		coords.push(coord);
 	});
 	return coords;
+}
+
+function testFrameStructure(data) {
+	const expectedFields=["core_integrity","gear_ability","gear_ability_name","repair_kits"];
+	Object.values(ATTRIBUTES).forEach((attribute) => {
+		if(![ATTRIBUTES.mental,ATTRIBUTES.willpower].includes(attribute)){
+			if(attribute==ATTRIBUTES.baseAP) attribute="ap";
+			expectedFields.push(attribute);
+		}
+	})
+	return testFieldsExist(data, expectedFields);
+
+}
+
+function testInternalStructure(data) {
+	const expectedFields=["action_text","grid","name","tags","type"];
+	Object.values(ATTRIBUTES).forEach((attribute) => {
+		if(attribute==ATTRIBUTES.baseAP) attribute="ap";
+		expectedFields.push(attribute);
+	})
+	return testFieldsExist(data, expectedFields);
+
+}
+
+function testSizeStructure(data) {
+	const expectedFields=["size"];
+	Object.values(ATTRIBUTES).forEach((attribute) => {
+		if(attribute!=ATTRIBUTES.ballast){
+			if(attribute==ATTRIBUTES.baseAP) attribute="ap";
+			expectedFields.push(attribute);
+		}
+	})
+	return testFieldsExist(data, expectedFields);
+}
+
+/**
+ * Test the expected fields exist on an object
+ * @param {Object} data Object to test
+ * @param {Array(str)} fields List of expected fields
+ */
+function testFieldsExist(data, fields) {
+	let valid=true;
+	fields.forEach((field) => {
+		const record=data[field];
+		if(record==undefined) valid=false;
+	})
+	return valid;
 }
