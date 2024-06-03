@@ -6,6 +6,7 @@ import {HLMToken, HLMTokenDocument} from "./tokens/token.js";
 import {preloadHandlebarsTemplates} from "./utilities/templates.js";
 import { initialiseHelpers } from "./utilities/handlebars.js";
 import { addFshManager } from "./data-files/fsh-manager.js";
+import { HLMItemSheet } from "./sheets/item-sheet.js";
 
 
 /* -------------------------------------------- */
@@ -32,6 +33,11 @@ Hooks.once("init", async function () {
 	// Register sheet application classes
 	Actors.unregisterSheet("core", ActorSheet);
 	Actors.registerSheet("fathomlessgears", HLMActorSheet, {
+		makeDefault: true,
+	});
+
+	Items.unregisterSheet("core", ItemSheet);
+	Items.registerSheet("fathomlessgears", HLMItemSheet, {
 		makeDefault: true,
 	});
 

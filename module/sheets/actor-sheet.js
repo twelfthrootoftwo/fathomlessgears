@@ -5,9 +5,6 @@ import {Utils} from "../utilities/utils.js";
  * @extends {ActorSheet}
  */
 export class HLMActorSheet extends ActorSheet {
-	selectedNpcType = "";
-	selectedNpcSize = "";
-	updateTypeAndSize=false;
 	/** @inheritdoc */
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
