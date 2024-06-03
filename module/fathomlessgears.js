@@ -57,6 +57,8 @@ Hooks.once("init", async function () {
 
 export const system_ready = new Promise((success) => {
 	Hooks.once("ready", async function () {
+		const gridCollection=await game.packs.get("fathomlessgears.grid_type");
+		gridCollection.configure({ownership:{PLAYER:"NONE"}})
 		//Post-init stuff goes here
 		console.log("Ready!")
 		success();
