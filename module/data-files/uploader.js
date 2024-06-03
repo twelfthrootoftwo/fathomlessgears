@@ -15,7 +15,7 @@ export class FshUploader extends Application {
 			classes: ["hooklineandmecha"],
 			template: "systems/hooklineandmecha/templates/uploader.html",
 			title: "File Upload",
-			width: 300,
+			width: 400,
 			height: 100,
 		});
 	}

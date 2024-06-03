@@ -216,7 +216,10 @@ export class HLMActor extends Actor {
 		Object.keys(this.system.attributes).forEach((key) => {
 			updateData[key]=this.calculateSingleAttribute(key);
 		});
-		if(this._id) this.update({"system.attributes": updateData});
+		if(this._id) {
+			console.log("calculateAttributeTotals");
+			this.update({"system.attributes": updateData});
+		}
 	}
 
 	/**
@@ -256,7 +259,8 @@ export class HLMActor extends Actor {
 		const targetAttribute=this.system.attributes[attributeKey]
 		targetAttribute.values.standard.base=value;
 		this.calculateSingleAttribute(attributeKey)
-		this.update({"system": this.system});
+		//console.log("setBaseAttributeValue");
+		//this.update({"system": this.system});
 		return true;
 	}
 
@@ -269,7 +273,8 @@ export class HLMActor extends Actor {
 		const targetAttribute=this.system.attributes[key];
 		targetAttribute.values.standard.additions.push(modifier);
 		this.calculateSingleAttribute(key);
-		this.update({"system": this.system});
+		//console.log("addAttributeModifier");
+		//this.update({"system": this.system});
 	}
 
 	/**
@@ -289,7 +294,8 @@ export class HLMActor extends Actor {
 		})
 		if(delIndex>=0) {targetAttribute.values.standard.additions.splice(delIndex,1);}
 		this.calculateSingleAttribute(key);
-		this.update({"system": this.system});
+		//console.log("removeAttributeModifier");
+		//this.update({"system": this.system});
 	}
 
 	/**
@@ -302,7 +308,8 @@ export class HLMActor extends Actor {
 		if(!Utils.isResource(resourceKey)) return false;
 		this.system.resources[resourceKey].value+=value;
 		this.system.resources[resourceKey].max+=value;
-		this.update({"system": this.system});
+		//console.log("modifyResourceValue");
+		//this.update({"system": this.system});
 		return true;
 	}
 
@@ -378,6 +385,7 @@ export class HLMActor extends Actor {
 		//Create new size item
 		const item=await Item.create(grid,{parent: this});
 		this.system.gridType=item._id
+		console.log("applyGrid");
 		this.update({"system": this.system});
 	}
 
@@ -399,6 +407,7 @@ export class HLMActor extends Actor {
 		//Create new size item
 		const item=await Item.create(size,{parent: this});
 		this.system.size=item._id
+		console.log("applySize");
 		this.update({"system": this.system});
 
 		//Apply grid
@@ -426,12 +435,14 @@ export class HLMActor extends Actor {
 		}
 		this.modifyResourceValue("repair",frame.system.repair_kits);
 		this.modifyResourceValue("core",frame.system.core_integrity);
+		console.log("applyFrame 1");
 		await this.update({"system": this.system});
 
 		//Create new size item
 		const item=await Item.create(frame,{parent: this});
 		this.system.frame=item._id;
 		this.calculateBallast();
+		console.log("applyFrame 2");
 		this.update({"system": this.system});
 	}
 
@@ -458,6 +469,8 @@ export class HLMActor extends Actor {
 		})
 		//Modify resources
 		if(internal.system.repair_kits) {this.modifyResourceValue("repair",internal.system.repair_kits);}
+		
+		console.log("applyInternal");
 		await this.update({"system": this.system});
 	}
 
@@ -518,7 +531,8 @@ export class HLMActor extends Actor {
 				}
 			}
 		})
-		console.log(this.getObservers());
+		console.log("toggleInternalBroken");
+		this.update({"system": this.system});
 		ChatMessage.create({
 			whisper: await this.getObservers(),
 			content: `${this.name}'s ${internal.name} ${isBroken ? "breaks!" : "is repaired"}`
@@ -532,10 +546,13 @@ export class HLMActor extends Actor {
 	async removeInternal(uuid) {
 		const internal=this.items.get(uuid);
 		Object.keys(internal.system.attributes).forEach((key) => {
-			this.removeAttributeModifier(key,uuid);
+			if(internal.system.attributes[key]!=0) {
+				this.removeAttributeModifier(key,uuid);
+			}
 		});
 		this.calculateBallast();
 		this.modifyResourceValue("repair",-1*internal.system.repair_kits);
+		console.log("removeInternal");
 		this.update({"system": this.system});
 		internal.delete();
 	}

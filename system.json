@@ -37,7 +37,7 @@
 		}
 	],
 	"compatibility": {
-		"minimum": "10",
+		"minimum": "11",
 		"verified": "11"
 	},
 	"gridDistance": 1,
