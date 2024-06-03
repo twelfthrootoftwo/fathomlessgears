@@ -47,10 +47,11 @@
 	"SHEET.scanfalse": "Scan",
 
 	"FISHSIZE.small": "Small",
-	"FISHSIZE.medium-vert": "Medium (Portrait)",
-	"FISHSIZE.medium-horz": "Medium (Landscape)",
+	"FISHSIZE.medium": "Medium",
 	"FISHSIZE.large": "Large",
-	"FISHSIZE.leviathan": "Leviathan",
+	"FISHSIZE.massive": "Massive",
+	"FISHSIZE.leviathan-block": "Leviathan",
+	"FISHSIZE.leviathan-serpent": "SerpentLeviathan",
 
 	"ROLLTEXT.base": "Rolling _ATTRIBUTE_NAME_",
 	"ROLLTEXT.attackHeader": "_ATTACKER_NAME_ attacks _TARGET_NAME_!",
