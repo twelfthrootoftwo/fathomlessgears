@@ -106,7 +106,7 @@ export class AttackHandler {
 			hitResultText=game.i18n.localize("HIT."+hitResult.original);
 		}
 		const hitRollDisplay = await renderTemplate(
-			"systems/hooklineandmecha/templates/partials/labelled-roll-partial.html",
+			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
 			{
 				label_left: game.i18n
 				.localize("ROLLTEXT.attackIntro")
@@ -167,7 +167,7 @@ export class AttackHandler {
 		const locationDisplayParts = [];
 		if (locationResult.locationRoll.formula !== "1") {
 			let hitZone = await renderTemplate(
-				"systems/hooklineandmecha/templates/partials/labelled-roll-partial.html",
+				"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
 				{
 					label_left: game.i18n.localize("ROLLTEXT.hitZone"),
 					tooltip: `${locationResult.locationRoll.formula}:  ${locationResult.locationRoll.result}`,
@@ -179,7 +179,7 @@ export class AttackHandler {
 			locationDisplayParts.push(hitZone);
 		}
 		const column = await renderTemplate(
-			"systems/hooklineandmecha/templates/partials/labelled-roll-partial.html",
+			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
 			{
 				label_left: game.i18n.localize("ROLLTEXT.hitColumn"),
 				tooltip: locationResult.columnRoll.formula,

@@ -57,7 +57,7 @@ async function retrieveOrCreateCompendium(compendiumName) {
         targetCompendium=await CompendiumCollection.createCompendium({
 			"name": compendiumName,
 			"label": Utils.getLocalisedItemType(compendiumName),
-			"system": "hooklineandmecha",
+			"system": "fathomlessgears",
 			"path": ["packs/",compendiumName].join(),
 			"type": "Item"
 		})

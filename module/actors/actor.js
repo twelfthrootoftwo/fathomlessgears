@@ -33,9 +33,9 @@ export class HLMActor extends Actor {
 		super._onCreate(data, options, userId);
 		if(game.user._id==userId) {
 			if(this.type==ACTOR_TYPES.fish) {
-				const flag=this.getFlag("hooklineandmecha","scanned");
+				const flag=this.getFlag("fathomlessgears","scanned");
 				if(flag==null || flag==undefined) {
-					this.setFlag("hooklineandmecha","scanned",false);
+					this.setFlag("fathomlessgears","scanned",false);
 				}
 			} else if(this.type==ACTOR_TYPES.fisher && !this.system.gridType){
 				Utils.getGridFromSize("Fisher").then((grid) => {
@@ -134,7 +134,7 @@ export class HLMActor extends Actor {
 
 	async getFlatAttributeChatMessage() {
 		const html= await renderTemplate(
-			"systems/hooklineandmecha/templates/messages/flat-attributes.html",
+			"systems/fathomlessgears/templates/messages/flat-attributes.html",
 			{
 				attributes: this.system.attributes.flat
 			}
@@ -198,7 +198,7 @@ export class HLMActor extends Actor {
 		}
 
 		const hitRollDisplay = await renderTemplate(
-			"systems/hooklineandmecha/templates/partials/labelled-roll-partial.html",
+			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
 			{
 				label_left: label,
 				total: roll.total,
@@ -453,7 +453,7 @@ export class HLMActor extends Actor {
 	async applyInternal(internal) {
 		console.log("Applying internal");
 		const item=await Item.create(internal,{parent: this});
-		item.setFlag("hooklineandmecha","broken",false);
+		item.setFlag("fathomlessgears","broken",false);
 		this.system.internals.push(item._id);
 		//Apply attributes
 		Object.keys(internal.system.attributes).forEach((key) => {
@@ -492,7 +492,7 @@ export class HLMActor extends Actor {
 		const defenceKey=HLMActor.isTargetedRoll(attackKey);
 		const rollString=await this.rollTargeted(attackKey,defenceKey,totalDieCount,totalFlat, cover);
 		const displayString=await renderTemplate(
-			"systems/hooklineandmecha/templates/messages/internal.html",
+			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: internal,
 				text: rollString,
@@ -572,8 +572,8 @@ export class HLMActor extends Actor {
 	 */
 	async toggleScan() {
 		if(this.type!=ACTOR_TYPES.fish) {return false;}
-		const scanned=!await this.getFlag("hooklineandmecha","scanned");
-		this.setFlag("hooklineandmecha","scanned",scanned);
+		const scanned=!await this.getFlag("fathomlessgears","scanned");
+		this.setFlag("fathomlessgears","scanned",scanned);
 		let ownership = foundry.utils.deepClone(this.ownership);
 		ownership["default"] = scanned ? 2 : 0;
 		await this.update({ownership});
@@ -600,7 +600,7 @@ export class HLMActor extends Actor {
 	}
 
 	async getScanText() {
-		if(await this.getFlag("hooklineandmecha","scanned")) {
+		if(await this.getFlag("fathomlessgears","scanned")) {
 			return game.i18n.localize("SHEET.scantrue");
 		} else {
 			return game.i18n.localize("SHEET.scanfalse");

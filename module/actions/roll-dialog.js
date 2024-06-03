@@ -53,8 +53,8 @@ export class RollDialog extends HLMApplication {
 
     static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
-			classes: ["hooklineandmecha"],
-			template: "systems/hooklineandmecha/templates/roll-dialog.html",
+			classes: ["fathomlessgears"],
+			template: "systems/fathomlessgears/templates/roll-dialog.html",
 			title: "Roll Inputs",
 			width: 250,
 		});

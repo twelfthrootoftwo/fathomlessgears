@@ -213,7 +213,7 @@ export class Utils {
 
 	static async getGridFromSize(sizeName) {
 		console.log("Finding grid!");
-		const gridCollection=await game.packs.get("hooklineandmecha.grid_type");
+		const gridCollection=await game.packs.get("fathomlessgears.grid_type");
 		const record = gridCollection.index.filter(p => p.name == sizeName);
 		const grid=await gridCollection.getDocument(record[0]._id);
 		return grid;

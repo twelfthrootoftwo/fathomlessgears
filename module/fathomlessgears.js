@@ -18,7 +18,7 @@ import { addFshManager } from "./data-files/fsh-manager.js";
 Hooks.once("init", async function () {
 	console.log(`Initializing Hook, Line & Mecha System`);
 
-	game.hooklineandmecha = {
+	game.fathomlessgears = {
 		HLMActor,
 		HLMItem,
 	};
@@ -31,7 +31,7 @@ Hooks.once("init", async function () {
 
 	// Register sheet application classes
 	Actors.unregisterSheet("core", ActorSheet);
-	Actors.registerSheet("hooklineandmecha", HLMActorSheet, {
+	Actors.registerSheet("fathomlessgears", HLMActorSheet, {
 		makeDefault: true,
 	});
 

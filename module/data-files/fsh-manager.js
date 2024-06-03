@@ -37,8 +37,8 @@ class DataFileRecorder {
 
 	constructor() {
 		const self=this;
-		if(!game.settings.settings.has("hooklineandmecha.datafiles")){
-			game.settings.register("hooklineandmecha","datafiles",{
+		if(!game.settings.settings.has("fathomlessgears.datafiles")){
+			game.settings.register("fathomlessgears","datafiles",{
 				name: "Source data files",
 				hint: "Stores the datafile sources for frames, internals, sizes, etc",
 				scope: "world",
@@ -48,7 +48,7 @@ class DataFileRecorder {
 				requiresReload: false
 			});
 		}
-		this.fileDataItem=game.settings.get("hooklineandmecha","datafiles");
+		this.fileDataItem=game.settings.get("fathomlessgears","datafiles");
 	}
 
 	/**
@@ -58,7 +58,7 @@ class DataFileRecorder {
 	 */
 	async addRecord(fileId) {
 		this.fileDataItem.push(fileId);
-		game.settings.set("hooklineandmecha","datafiles",this.fileDataItem)
+		game.settings.set("fathomlessgears","datafiles",this.fileDataItem)
 		return this.fileDataItem;
 	}
 
@@ -74,7 +74,7 @@ class DataFileRecorder {
 				this.fileDataItem.splice(index,1);
 			}
 		}
-		game.settings.set("hooklineandmecha","datafiles",this.fileDataItem)
+		game.settings.set("fathomlessgears","datafiles",this.fileDataItem)
 		return this.fileDataItem;
 	}
 
@@ -109,8 +109,8 @@ class FshManager extends HLMApplication {
 
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
-			classes: ["hooklineandmecha"],
-			template: "systems/hooklineandmecha/templates/fsh-manager.html",
+			classes: ["fathomlessgears"],
+			template: "systems/fathomlessgears/templates/fsh-manager.html",
 			title: ".FSH Manager",
 			width: 500,
 			height: 400,

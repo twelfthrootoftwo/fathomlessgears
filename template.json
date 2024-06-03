@@ -205,11 +205,11 @@
 			"frame": "",
 			"gear-name": "",
 			"pilot-portrait": "icons/svg/mystery-man.svg",
-			"grid": "systems/hooklineandmecha/assets/blank-grid.jpg"
+			"grid": "systems/fathomlessgears/assets/blank-grid.jpg"
 		},
 		"fish": {
 			"templates": ["attributes", "ballast", "internals"],
-			"grid": "systems/hooklineandmecha/assets/blank-grid.jpg",
+			"grid": "systems/fathomlessgears/assets/blank-grid.jpg",
 			"gridType": "",
 			"size": ""
 		}

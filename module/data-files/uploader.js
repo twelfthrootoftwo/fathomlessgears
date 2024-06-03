@@ -12,8 +12,8 @@ export class FshUploader extends Application {
 
     static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
-			classes: ["hooklineandmecha"],
-			template: "systems/hooklineandmecha/templates/uploader.html",
+			classes: ["fathomlessgears"],
+			template: "systems/fathomlessgears/templates/uploader.html",
 			title: "File Upload",
 			width: 400,
 			height: 100,

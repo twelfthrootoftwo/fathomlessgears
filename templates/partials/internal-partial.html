@@ -7,7 +7,7 @@
         <p class="internal-ap">{{internal.system.ap_cost}} AP</p>
         {{/if}}
         <div class="btn break-button" data-id="id{{internal._id}}">
-            {{#if internal.flags.hooklineandmecha.broken}}
+            {{#if internal.flags.fathomlessgears.broken}}
             {{localize "SHEET.internalfix"}}
             {{else}}
             {{localize "SHEET.internalbreak"}}
@@ -27,13 +27,13 @@
         </div>
         {{#if internal.system.attack}}
         {{>
-            "systems/hooklineandmecha/templates/partials/attack-info.html"
+            "systems/fathomlessgears/templates/partials/attack-info.html"
             attack=internal.system.attack
         }}
         {{/if}}
         {{#if internal.system.tags}}
         {{>
-            "systems/hooklineandmecha/templates/partials/tag-row.html"
+            "systems/fathomlessgears/templates/partials/tag-row.html"
             tags=internal.system.tags
         }}
         {{/if}}

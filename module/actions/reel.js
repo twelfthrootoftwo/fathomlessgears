@@ -16,7 +16,7 @@ export class ReelHandler {
         const reelMessageText=initiator.type==ACTOR_TYPES.fisher ? "MESSAGE.reelPC" : "MESSAGE.reelNPC"
         const reelMessage=game.i18n.localize(reelMessageText);
         const rollString=await renderTemplate(
-            "systems/hooklineandmecha/templates/partials/labelled-roll-partial.html",
+            "systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
             {
                 label_left: game.i18n.localize("ROLLTEXT.reel").replace("_TARGET_NAME_", target.name),
                 tooltip: `${powerRoll.formula}:  ${powerRoll.result}`,

@@ -11,8 +11,8 @@ export class HLMActorSheet extends ActorSheet {
 	/** @inheritdoc */
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
-			classes: ["hooklineandmecha", "sheet", "actor"],
-			template: "systems/hooklineandmecha/templates/fisher-sheet.html",
+			classes: ["fathomlessgears", "sheet", "actor"],
+			template: "systems/fathomlessgears/templates/fisher-sheet.html",
 			width: 700,
 			height: 550,
 			tabs: [
@@ -159,7 +159,7 @@ export class HLMActorSheet extends ActorSheet {
 
 	/** @override */
 	get template() {
-		return `systems/hooklineandmecha/templates/${this.actor.type}-sheet.html`;
+		return `systems/fathomlessgears/templates/${this.actor.type}-sheet.html`;
 	}
 
 	/**

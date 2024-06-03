@@ -53,8 +53,8 @@ export class HLMItem extends Item {
 		if(!this.isInternal()) {
 			return null;
 		}
-		const flag=!await this.getFlag("hooklineandmecha","broken");
-		await this.setFlag("hooklineandmecha","broken",flag);
+		const flag=!await this.getFlag("fathomlessgears","broken");
+		await this.setFlag("fathomlessgears","broken",flag);
 		return flag;
 	}
 
@@ -62,7 +62,7 @@ export class HLMItem extends Item {
 		if(!this.isInternal()) {
 			return null;
 		}
-		return await this.getFlag("hooklineandmecha","broken");
+		return await this.getFlag("fathomlessgears","broken");
 	}
 
 	isInternal() {
@@ -89,7 +89,7 @@ export class HLMItem extends Item {
 
 	async postFrameMessage(actor) {
 		const displayMessage = await renderTemplate(
-			"systems/hooklineandmecha/templates/messages/frame-ability.html",
+			"systems/fathomlessgears/templates/messages/frame-ability.html",
 			{
 				frame_ability_name: this.system.gear_ability_name,
 				frame_ability_text: this.system.gear_ability,
@@ -108,7 +108,7 @@ export class HLMItem extends Item {
 
 	async postFlatInternal(actor) {
 		const displayMessage = await renderTemplate(
-			"systems/hooklineandmecha/templates/messages/internal.html",
+			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: this,
 				text: this.getInternalDescriptionText(),
