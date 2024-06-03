@@ -53,7 +53,7 @@
 						"total": 0,
 						"key": "power"
 					},
-					"evade": {
+					"evasion": {
 						"values": {
 							"standard": {
 								"base": 0,
@@ -63,7 +63,7 @@
 							"custom": 0
 						},
 						"total": 0,
-						"key": "evade"
+						"key": "evasion"
 					},
 					"willpower": {
 						"values": {
@@ -89,7 +89,7 @@
 						"total": 0,
 						"key": "speed"
 					},
-					"sensor": {
+					"sensors": {
 						"values": {
 							"standard": {
 								"base": 0,
@@ -99,7 +99,7 @@
 							"custom": 0
 						},
 						"total": 0,
-						"key": "sensor"
+						"key": "sensors"
 					},
 					"weight": {
 						"values": {
@@ -232,13 +232,13 @@
 					"close": 0,
 					"far": 0,
 					"mental": 0,
-					"evade": 0,
+					"evasion": 0,
 					"willpower": 0,
 					"speed": 0,
 					"power": 0,
 					"weight": 0,
 					"baseAP": 0,
-					"sensor": 0,
+					"sensors": 0,
 					"ballast": 0
 				}
 			},

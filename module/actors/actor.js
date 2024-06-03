@@ -47,7 +47,7 @@ export class HLMActor extends Actor {
 
 	static isTargetedRoll(attributeKey) {
 		if ([ATTRIBUTES.close, ATTRIBUTES.far].includes(attributeKey))
-			return ATTRIBUTES.evade;
+			return ATTRIBUTES.evasion;
 		if (attributeKey === ATTRIBUTES.mental) return ATTRIBUTES.willpower;
 		if (attributeKey===ATTRIBUTES.power) return ATTRIBUTES.power;
 		return false;

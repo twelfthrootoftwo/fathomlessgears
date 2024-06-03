@@ -92,7 +92,7 @@ export class Utils {
 
 	static isDefenceAttribute(attributeKey) {
 		const def = [
-			ATTRIBUTES.evade,
+			ATTRIBUTES.evasion,
 			ATTRIBUTES.willpower,
 		];
 		return def.includes(attributeKey);
@@ -100,10 +100,10 @@ export class Utils {
 
 	static isFlatAttribute(attributeKey) {
 		const flat = [
-			ATTRIBUTES.evade,
+			ATTRIBUTES.evasion,
 			ATTRIBUTES.willpower,
 			ATTRIBUTES.speed,
-			ATTRIBUTES.sensor,
+			ATTRIBUTES.sensors,
 			ATTRIBUTES.weight,
 			ATTRIBUTES.baseAP,
 		];
