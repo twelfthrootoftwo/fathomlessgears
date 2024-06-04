@@ -1,0 +1,124 @@
+/*
+---------------------------------
+    Roll Intercept
+---------------------------------
+*/
+.roll-component-header {
+    font-size: 14px;
+    border-bottom: 1px solid var(--color-border-light-primary);
+    margin-left: 10px;
+	margin-bottom: 2px;
+}
+.roll-components {
+	border: none;
+	border-radius: 0;
+    border-bottom: 1px solid var(--color-border-light-primary);
+    font-size: 12px;
+    margin-left: 10px;
+	margin-top: 2px;
+	padding-right: 10px;
+}
+li.roll-component-item {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+}
+.roll-component-description {
+    flex: 1 0 100px;
+    padding: 2px 5px;
+    margin: 0;
+}
+.roll-component-value {
+    flex: 0 0 15px;
+    width: 30px;
+    padding: 2px 5px;
+    margin: 0;
+}
+input.roll-component-value {
+    text-align: end;
+    height: 19px;
+    width: 15px;
+    min-width: none;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid var(--color-border-light-tertiary);
+}
+input.inline-checkbox {
+	height: 15px;
+	margin: 0;
+	margin: 2px 5px;
+}
+.cover-row {
+	align-items: center;
+}
+.cover-label {
+	font-size: 12px;
+	padding: 2px 1px 1px 7px;
+}
+
+/*
+---------------------------------
+    Importer
+---------------------------------
+*/
+.import-row {
+	display: flex;
+	flex-direction: row;
+	border: 2px groove var(--color-border-light-1);
+	line-height: 18px;
+}
+.import-row .file-upload {
+	flex-grow: 1;
+	margin: 1px;
+}
+.import-row .file-upload-button {
+	flex: 0 0 70px;
+	height: 20px;
+	font-size: var(--font-size-10);
+}
+.datafile-table {
+	background: rgba(0, 0, 0, 0.1);
+	padding: 0px;
+}
+.datafile-row {
+	display: flex;
+	flex-direction: row;
+	border-bottom: 1px solid var(--color-border-light-1);
+	line-height: 24px;
+}
+.datafile-table .datafile-header {
+	background: var(--color-bg-header);
+	font-size: var(--font-size-14);
+	font-weight: bold;
+	color: var(--color-text-light-heading);
+	justify-content: center;
+}
+.datafile-table .datafile-label {
+	flex: 1 0 200px;
+	margin: 2px;
+	display: flex;
+	padding: 5px;
+	align-items: center;
+}
+.datafile-table .datafile-version {
+	flex: 0 0 50px;
+	margin: 2px;
+	margin-left: 0px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.datafile-table .datafile-action-button {
+	flex: 0 0 50px;
+	padding: 2px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.datafile-table .datafile-actions {
+	flex: 0 0 50px;
+	padding: 2px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

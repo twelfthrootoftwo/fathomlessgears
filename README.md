@@ -1,14 +1,15 @@
 # Fathomless Gears
 
-An in-development Foundry system for Fathomless Gears
+An in-development Foundry system for Fathomless Gears.
+There is an optional companion HUD module: https://github.com/twelfthrootoftwo/fvtt-token-action-hud-FG
 
-Meant for use with Gearwright
-
-NO MIGRATIONS IN THE NEAR FUTURE - don't rely on Foundry to keep actor data between updates to the package!
+Meant for use with Gearwright for character building.
 
 ## Installation Instructions
-In your `FoundryVTT/Data/Systems` folder, create a `hooklineandmecha` folder and put the contents of this repository inside.
-In the `hooklineandmecha/data` folder, paste the `fish.json` file (available from the Discord server).
+
+### Local/Self-Hosted/Webserver
+Download the repository (Code -> Download Zip)
+In your `FoundryVTT/Data/Systems` folder, create a `fathomlessgears` folder and put the contents of this repository inside.
 
 The folder structure should look like:
 
@@ -16,11 +17,15 @@ The folder structure should look like:
 FoundryVTT
 └── Data
     └── systems
-        └── hooklineandmecha
+        └── fathomlessgears
             ├── assets
             ├── data
-            │   └──fish.json
             ├──lang
             ├──module
             ...
 ```
+
+### Forge
+Download the repository (Code -> Download Zip)
+On your Forge setup page, click "Summon import wizard".
+Upload the .zip and analyse. It should recognise the system.

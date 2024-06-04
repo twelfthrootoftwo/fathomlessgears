@@ -1,0 +1,32 @@
+<div class="attribute-col flex-col">
+    {{>
+        "systems/fathomlessgears/templates/partials/attribute-box.html"
+        attribute=ballast
+        key="ballast"
+        type="flat"    
+    }}
+    <hr class="divider primary">
+    {{#each rolled as |attrib key|}}
+    {{>
+        "systems/fathomlessgears/templates/partials/attribute-box.html"
+        attribute=attrib
+        key=key
+        type="rolled"
+    }}
+    {{#unless @last}}
+        <hr class="divider secondary">
+    {{/unless}}
+    {{/each}}
+    <hr class="divider primary">
+    {{#each flat as |attrib key|}}
+    {{>
+        "systems/fathomlessgears/templates/partials/attribute-box.html"
+        attribute=attrib
+        key=key
+        type="flat"
+    }}
+    {{#unless @last}}
+        <hr class="divider secondary">
+    {{/unless}}
+    {{/each}}
+</div>

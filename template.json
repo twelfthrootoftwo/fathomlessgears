@@ -5,104 +5,283 @@
 		"templates": {
 			"attributes": {
 				"attributes": {
-					"rolled": {
-						"close": {
-							"value": 1,
-							"key": "close"
+					"close": {
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
 						},
-						"far": {
-							"value": 1,
-							"key": "far"
-						},
-						"mental": {
-							"value": 1,
-							"key": "mental"
-						},
-						"power": {
-							"value": 1,
-							"key": "power"
-						}
+						"total": 0,
+						"key": "close"
 					},
-					"flat": {
-						"evade": {
-							"value": 1,
-							"key": "evade"
+					"far": {
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
 						},
-						"willpower": {
-							"value": 1,
-							"key": "willpower"
+						"total": 0,
+						"key": "far"
+					},
+					"mental": {
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
 						},
-						"speed": {
-							"value": 1,
-							"key": "speed"
+						"total": 0,
+						"key": "mental"
+					},
+					"power": {
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
 						},
-						"sensors": {
-							"value": 1,
-							"key": "sensors"
+						"total": 0,
+						"key": "power"
+					},
+					"evasion": {
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
 						},
-						"weight": {
-							"value": 1,
-							"key": "weight"
+						"total": 0,
+						"key": "evasion"
+					},
+					"willpower": {
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
 						},
-						"baseAP": {
-							"value": 1,
-							"key": "baseAP"
-						}
+						"total": 0,
+						"key": "willpower"
+					},
+					"speed": {
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
+						"key": "speed"
+					},
+					"sensors": {
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
+						"key": "sensors"
+					},
+					"weight": {
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
+						"key": "weight"
+					},
+					"baseAP": {
+						"values": {
+							"standard": {
+								"base": 0,
+								"additions": []
+							},
+							"bonus": [],
+							"custom": 0
+						},
+						"total": 0,
+						"key": "baseAP"
+					},
+					"ballast": {
+						"values": {
+							"standard": {
+								"base": 0,
+								"weight": 0,
+								"additions": []
+							},
+							"custom": 0
+						},
+						"total": 0
 					}
 				}
 			},
-			"ballast": {
-				"ballast": {
-					"base": {
-						"value": 0
+			"internals": {
+				"internals": []
+			},
+			"fisher_history": {
+				"fisher_history": {
+					"character-name": "",
+					"callsign": "",
+					"background": "",
+					"el": 0,
+					"touch": []
+				}
+			},
+			"resources": {
+				"resources": {
+					"repair": {
+						"key": "repair",
+						"value": 1,
+						"min": 0,
+						"max": 1
 					},
-					"weight": {
-						"value": 0
+					"marbles": {
+						"key": "marbles",
+						"value": 1,
+						"min": 0,
+						"max": 1
 					},
-					"modifiers": {
-						"value": 0
+					"core": {
+						"key": "core",
+						"value": 1,
+						"min": 0,
+						"max": 1
 					},
-					"total": {
-						"value": 0
+					"backlash": {
+						"key": "backlash",
+						"value": 0,
+						"min": 0,
+						"max": 1
+					}
+				}
+			},
+			"downtime": {
+				"downtime": {
+					"novok": 0,
+					"rollable": {
+						"physical": {
+							"value": 0
+						},
+						"social": {
+							"value": 0
+						},
+						"engineering": {
+							"value": 0
+						},
+						"enlightenment": {
+							"value": 0
+						}
 					}
 				}
 			}
 		},
 		"fisher": {
-			"templates": ["attributes", "ballast"],
+			"templates": ["attributes", "ballast", "internals", "resources", "fisher_history","downtime"],
 			"biography": "Good at catching fish",
-			"resources": {
-				"repair": {
-					"key": "repair",
-					"value": 1,
-					"min": 0,
-					"max": 1
-				},
-				"marbles": {
-					"key": "marbles",
-					"value": 1,
-					"min": 0,
-					"max": 1
-				},
-				"core": {
-					"key": "core",
-					"value": 1,
-					"min": 0,
-					"max": 1
-				},
-				"backlash": {
-					"key": "backlash",
-					"value": 1,
-					"min": 0,
-					"max": 1
-				}
-			},
-			"size": "fisher"
+			"gridType": "",
+			"frame": "",
+			"gear-name": "",
+			"pilot-portrait": "icons/svg/mystery-man.svg",
+			"grid": "systems/fathomlessgears/assets/blank-grid.jpg"
 		},
 		"fish": {
-			"templates": ["attributes", "ballast"],
-			"fishType": "aquatic",
-			"size": "small"
+			"templates": ["attributes", "ballast", "internals"],
+			"grid": "systems/fathomlessgears/assets/blank-grid-fish.jpg",
+			"gridType": "",
+			"size": ""
 		}
-	}
+	},
+	"Item": {
+		"types": ["tag","internal_pc","internal_npc","frame_pc","size","grid"],
+		"htmlFields": ["description"],
+		"templates": {
+			"source":{
+				"source":{
+					"filename": "",
+					"version": ""
+				}
+			},
+			"data": {
+				"data": {}
+			},
+			"attributes": {
+				"attributes": {
+					"close": 0,
+					"far": 0,
+					"mental": 0,
+					"evasion": 0,
+					"willpower": 0,
+					"speed": 0,
+					"power": 0,
+					"weight": 0,
+					"baseAP": 0,
+					"sensors": 0,
+					"ballast": 0
+				}
+			},
+			"toHit": {
+				"hitLocationRoll": null,
+				"hitRegions": [],
+				"type": ""
+			},
+			"frame": {
+				"core_integrity": 0,
+				"repair_kits": 0,
+				"weight_cap": 0,
+				"gear_ability": "Placeholder ability text",
+				"gear_ability_name": "Placeholder"
+			},
+			"internal": {
+				"action_text": "",
+				"ap_cost": 0,
+				"attack": null,
+				"repair_kits": 0,
+				"tags": "",
+				"type": "",
+				"grid_coords": []
+			}
+		},
+		"tag": {
+			"templates": ["source","data"]
+		},
+		"internal_pc": {
+			"templates": ["source","attributes","internal"],
+			"section": ""
+		},
+		"internal_npc": {
+			"templates": ["source","attributes","internal"]
+		},
+		"frame_pc": {
+			"templates": ["source","attributes","frame"]
+		},
+		"size": {
+			"templates": ["source","attributes"]
+		},
+		"grid": {
+			"templates": ["toHit"]
+		}
+	  }
 }

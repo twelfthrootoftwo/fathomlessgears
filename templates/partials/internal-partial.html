@@ -1,0 +1,42 @@
+<div class="internal-box flex-col" data-id="id{{internal._id}}">
+    <div class="internal-header flex-row">
+        <div class="expander-icon"></div>
+        <h3 class="internal-name">{{internal.name}}</h3>
+        <div class="spacer"></div>
+        {{#if internal.system.ap_cost}}
+        <p class="internal-ap">{{internal.system.ap_cost}} AP</p>
+        {{/if}}
+        <div class="btn break-button" data-id="id{{internal._id}}">
+            {{#if internal.flags.fathomlessgears.broken}}
+            {{localize "SHEET.internalfix"}}
+            {{else}}
+            {{localize "SHEET.internalbreak"}}
+            {{/if}}
+        </div>
+        <div class="btn post-button" data-id="id{{internal._id}}">{{localize "SHEET.post"}}</div>
+    </div>
+    <div class="internal-body">
+        <div class="delete-overlay">
+            <div class="delete-box">
+                <div class="delete-internal btn" data-id="id{{internal._id}}">
+                    {{localize "SHEET.delete"}}
+                </div>
+            </div>
+        </div>
+        <div class="break-overlay">
+        </div>
+        {{#if internal.system.attack}}
+        {{>
+            "systems/fathomlessgears/templates/partials/attack-info.html"
+            attack=internal.system.attack
+        }}
+        {{/if}}
+        {{#if internal.system.tags}}
+        {{>
+            "systems/fathomlessgears/templates/partials/tag-row.html"
+            tags=internal.system.tags
+        }}
+        {{/if}}
+        <div class="internal-text">{{internal.description_text}}</div>
+    </div>
+</div>

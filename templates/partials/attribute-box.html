@@ -1,0 +1,28 @@
+<div class="attribute-box flex-row" id="{{key}}">
+    <div class="attribute-top-row flex-row">
+        <div class="name-box" attribute="{{key}}">{{attribute.label}}</div>
+        <div class="value-box">
+            {{attribute.total}}
+            <div class="tooltip">
+                Base: {{attribute.values.standard.base}}<br>
+                {{#if attribute.values.standard.weight}}
+                    Weight: {{attribute.values.standard.weight}}<br>
+                {{/if}}
+                {{#each attribute.values.standard.additions}}
+                    {{this.label}}: {{this.value}}<br>
+                {{/each}}
+                {{#each attribute.values.bonus}}
+                    {{this.label}}: {{this.value}}<br>
+                {{/each}}
+            </div>
+        </div>
+        <span> + </span>
+        <input
+            class="piece-value editable sheet-input"
+            type="number"
+            name="system.attributes.{{key}}.values.custom"
+            value="{{attribute.values.custom}}"
+            data-dtype="Number"
+        />
+    </div>
+</div>

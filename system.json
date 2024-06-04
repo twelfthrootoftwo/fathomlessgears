@@ -1,19 +1,34 @@
 {
-	"id": "hooklineandmecha",
-	"version": "0.1",
-	"title": "Hook, Line & Mecha",
-	"url": "",
-	"description": "Hook, Line & Mecha (WIP system)",
-	"background": "systems/hooklineandmecha/assets/hlm-logo-simple.png",
+	"id": "fathomlessgears",
+	"version": "0.2",
+	"title": "Fathomless Gears",
+	"url": "https://github.com/twelfthrootoftwo/fathomlessgears",
+	"description": "A Foundry VTT system for Fathomless Gears, the mech fishing game by Ralf Ziegler",
+	"background": "systems/fathomlessgears/assets/fg-logo-simple.png",
 	"authors": [
 		{
 			"name": "Twelfth",
 			"url": ""
 		}
 	],
-	"esmodules": ["module/hlm.js"],
-	"styles": ["styles/hlm.css","styles/theme.css"],
-	"packs": [],
+	"esmodules": ["module/fathomlessgears.js","scripts/jszip.js"],
+	"styles": ["styles/theme.css","styles/sheet.css","styles/dialogs.css","styles/utils.css","styles/chat.css"],
+	"packs": [
+		{
+		  "name": "core_macros",
+		  "label": "HLM Macros",
+		  "system": "fathomlessgears",
+		  "path": "./packs/core_macros.db",
+		  "type": "Macro"
+		},
+		{
+			"name": "grid_type",
+			"label": "Grid Types",
+			"system": "fathomlessgears",
+			"path": "./packs/grid_types.db",
+			"type": "Item"
+		  }
+	],
 	"languages": [
 		{
 			"lang": "en",
@@ -22,10 +37,11 @@
 		}
 	],
 	"compatibility": {
-		"minimum": "10",
+		"minimum": "11",
 		"verified": "11"
 	},
 	"gridDistance": 1,
 	"manifest": "",
-	"download": ""
+	"download": "",
+	"persistentStorage": true
 }
