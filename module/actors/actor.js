@@ -435,14 +435,12 @@ export class HLMActor extends Actor {
 		}
 		this.modifyResourceValue("repair",frame.system.repair_kits);
 		this.modifyResourceValue("core",frame.system.core_integrity);
-		console.log("applyFrame 1");
 		await this.update({"system": this.system});
 
 		//Create new size item
 		const item=await Item.create(frame,{parent: this});
 		this.system.frame=item._id;
 		this.calculateBallast();
-		console.log("applyFrame 2");
 		this.update({"system": this.system});
 	}
 
