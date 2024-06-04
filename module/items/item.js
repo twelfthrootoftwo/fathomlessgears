@@ -1,4 +1,4 @@
-import { ITEM_TYPES, ATTRIBUTES } from "../constants.js";
+import { ITEM_TYPES, ATTRIBUTES, ATTRIBUTE_KEY_MAP } from "../constants.js";
 import { Utils } from "../utilities/utils.js";
 
 /**
@@ -193,9 +193,10 @@ function constructSizeData(data) {
 	const system={
 		attributes: {}
 	};
-	Object.keys(data).forEach((key) => {
-		if (Utils.isAttribute(key)){
-			system.attributes[key]=data[key];
+	
+	Object.values(ATTRIBUTES).forEach((key) => {
+		if (Utils.isAttribute(key) && key != ATTRIBUTES.ballast){
+			system.attributes[key]=data[ATTRIBUTE_KEY_MAP[key]];
 		}
 	});
 	return system
@@ -218,12 +219,11 @@ function constructFrameData(data) {
 	const system={
 		attributes: {}
 	};
-	Object.keys(data).forEach((key) => {
+	Object.values(ATTRIBUTES).forEach((key) => {
 		if (Utils.isAttribute(key)){
-			system.attributes[key]=data[key];
+			system.attributes[key]=data[ATTRIBUTE_KEY_MAP[key]];
 		}
 	});
-	system.attributes.baseAP=data.ap; //AP attribute is named differently - #TODO convert?
 	system.core_integrity=data.core_integrity;
 	system.repair_kits=data.repair_kits;
 	system.weight_cap=data.weight_cap;
@@ -257,9 +257,9 @@ function constructInternalNPCData(data) {
 		attributes: {},
 		action_text: ""
 	};
-	Object.keys(data).forEach((key) => {
+	Object.values(ATTRIBUTES).forEach((key) => {
 		if (Utils.isAttribute(key)){
-			system.attributes[key]=data[key];
+			system.attributes[key]=data[ATTRIBUTE_KEY_MAP[key]];
 		}
 	});
 	
@@ -344,8 +344,7 @@ function testFrameStructure(data) {
 	const expectedFields=["core_integrity","gear_ability","gear_ability_name","repair_kits"];
 	Object.values(ATTRIBUTES).forEach((attribute) => {
 		if(![ATTRIBUTES.mental,ATTRIBUTES.willpower].includes(attribute)){
-			if(attribute==ATTRIBUTES.baseAP) attribute="ap";
-			expectedFields.push(attribute);
+			expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
 		}
 	})
 	return testFieldsExist(data, expectedFields);
@@ -355,8 +354,7 @@ function testFrameStructure(data) {
 function testInternalStructure(data) {
 	const expectedFields=["action_text","grid","name","tags","type"];
 	Object.values(ATTRIBUTES).forEach((attribute) => {
-		if(attribute==ATTRIBUTES.baseAP) attribute="ap";
-		expectedFields.push(attribute);
+		expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
 	})
 	return testFieldsExist(data, expectedFields);
 
@@ -366,8 +364,7 @@ function testSizeStructure(data) {
 	const expectedFields=["size"];
 	Object.values(ATTRIBUTES).forEach((attribute) => {
 		if(attribute!=ATTRIBUTES.ballast){
-			if(attribute==ATTRIBUTES.baseAP) attribute="ap";
-			expectedFields.push(attribute);
+			expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
 		}
 	})
 	return testFieldsExist(data, expectedFields);

@@ -73,3 +73,17 @@ export const COVER_STATES = {
 export const ATTRIBUTE_MIN=0;
 export const ATTRIBUTE_MAX_ROLLED=9;
 export const ATTRIBUTE_MAX_FLAT=16;
+
+export const ATTRIBUTE_KEY_MAP = {
+	[ATTRIBUTES.close]: "close",
+	[ATTRIBUTES.far]: "far",
+	[ATTRIBUTES.mental]: "mental",
+	[ATTRIBUTES.power]: "power",
+	[ATTRIBUTES.evasion]: "evasion",
+	[ATTRIBUTES.willpower]: "willpower",
+	[ATTRIBUTES.speed]: "speed",
+	[ATTRIBUTES.sensors]: "sensors",
+	[ATTRIBUTES.weight]: "weight",
+	[ATTRIBUTES.baseAP]: "ap",
+	[ATTRIBUTES.ballast]: "ballast",
+}
