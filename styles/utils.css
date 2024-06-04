@@ -41,13 +41,13 @@ display: flex;
 align-items: center;
 justify-content: center;
 }
-.btn:hover {
-background-color: #44444466;
-cursor: pointer;
-}
 .btn.btn-dark {
 	background: rgba(255, 255, 255, 0.1);
 	border: 2px groove var(--color-border-dark-primary);
+}
+.btn.btn-active:hover {
+	background-color: #44444466;
+	cursor: pointer;
 }
 .spacer {
 	flex-grow: 10;

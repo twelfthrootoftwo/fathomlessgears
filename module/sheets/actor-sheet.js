@@ -96,6 +96,14 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		});
 
+		//Activate buttons for owners only
+		if(this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {
+			Utils.activateButtons(html);
+			html.find(".internal-body").each(function() {
+				this.classList.add("interactable");
+			});
+		}
+
 		//Mark broken internals
 		const items=this.actor.itemTypes;
 		const internals=items.internal_pc.concat(items.internal_npc);

@@ -1,3 +1,5 @@
+import { Utils } from "../utilities/utils.js";
+
 export class FshUploader extends Application {
     targetFile
     manager
@@ -22,6 +24,7 @@ export class FshUploader extends Application {
 
     activateListeners(html) {
 		super.activateListeners(html);
+		Utils.activateButtons(html);
 		let fileInput = document.getElementById("fsh-file-select");
 		if (fileInput) {
 			fileInput.onchange = (ev) => {

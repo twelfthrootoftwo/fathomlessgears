@@ -218,4 +218,10 @@ export class Utils {
 		const grid=await gridCollection.getDocument(record[0]._id);
 		return grid;
 	}
+
+	static activateButtons(html) {
+		html.find(".btn").each(function() {
+			this.classList.add("btn-active");
+		});
+	}
 }

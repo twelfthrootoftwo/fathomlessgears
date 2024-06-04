@@ -130,6 +130,7 @@ class FshManager extends HLMApplication {
 
 	activateListeners(html) {
 		super.activateListeners(html);
+		Utils.activateButtons(html);
 
 		document.getElementsByClassName("add-new-fsh")[0]?.addEventListener("click", () => {
 			new FshUploader(this);

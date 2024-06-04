@@ -1,5 +1,6 @@
 import { HLMApplication } from "../sheets/application.js";
 import { ATTRIBUTES, COVER_STATES } from "../constants.js";
+import { Utils } from "../utilities/utils.js";
 
 export class RollElement {
     value
@@ -72,6 +73,7 @@ export class RollDialog extends HLMApplication {
 
     activateListeners(html) {
         super.activateListeners(html);
+        Utils.activateButtons(html);
 		html.find(".btn").click(this.triggerRoll.bind(this));
         html.find('[data-selector="additionalDie"]').change(async (_evt) => {
             this.additionalDie=_evt.target.value;
