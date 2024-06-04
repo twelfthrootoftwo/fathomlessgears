@@ -9,8 +9,10 @@
         tags=internal.system.tags
     }}
     {{/if}}
+    {{#if internal.system.attack}}
     <div class="internal-text">{{internal.system.action_text}}</div>
     <hr class="divider primary">
+    {{/if}}
     <div class="message-text">
         {{{text}}}
     </div>
