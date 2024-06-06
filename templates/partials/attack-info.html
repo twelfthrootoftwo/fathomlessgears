@@ -1,3 +1,3 @@
 <div class="attack-info flex-row">
-    {{attack.type}}  -  {{localize "INTERNALS.range"}} {{attack.range}}  -  {{localize "INTERNALS.damage"}} {{attack.damage}}
+    {{attack.type}}  -  {{localize "INTERNALS.range"}} {{attack.range}}{{#if attack.damage}}  -  {{localize "INTERNALS.damage"}} {{attack.damage}}{{/if}}{{#if attack.marbles}}  -  {{localize "INTERNALS.marbles"}} {{attack.marbles}}{{/if}}
 </div>

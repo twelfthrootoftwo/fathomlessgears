@@ -18,13 +18,22 @@
     </div>
     {{#if internal.system.attack}}
     <div class="message-text">
-        {{log damageText}}
+    {{#if internal.system.attack.damage}}
     {{>
         "systems/fathomlessgears/templates/partials/labelled-roll-partial.html"
         label_left=damageText
         total=internal.system.attack.damage
         outcome=""
     }}
+    {{/if}}
+    {{#if internal.system.attack.marbles}}
+    {{>
+        "systems/fathomlessgears/templates/partials/labelled-roll-partial.html"
+        label_left=marbleText
+        total=internal.system.attack.marbles
+        outcome=""
+    }}
+    {{/if}}
     </div>
     {{/if}}
 </div>

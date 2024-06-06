@@ -483,7 +483,8 @@ export class HLMActor extends Actor {
 			{
 				internal: internal,
 				text: rollString,
-				damageText: game.i18n.localize("INTERNALS.damage")
+				damageText: game.i18n.localize("INTERNALS.damage"),
+				marbleText: game.i18n.localize("INTERNALS.marbles")
 			}
 		);
 		await ChatMessage.create({
