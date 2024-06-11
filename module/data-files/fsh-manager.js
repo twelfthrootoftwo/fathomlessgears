@@ -4,7 +4,7 @@ import { FileRecord, getExtension, getTargetCompendium, isItemFromFileSource } f
 import { Utils } from "../utilities/utils.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
 import { HLMApplication } from "../sheets/application.js";
-import { createHLMItemData } from "../items/item.js";
+import { createHLMItemData, createHLMItemSystem } from "../items/item.js";
 
 
 /**
@@ -421,7 +421,8 @@ async function updateCompendiumItems(relevantData,compendium,itemType,oldFileId,
 	const toUpdate=Object.keys(relevantData);
 	const toUpdateCapitalised=[]
 	toUpdate.forEach(function (itemName, index) {
-		toUpdateCapitalised[index]=Utils.capitaliseWords(Utils.fromLowerHyphen(itemName));
+		const itemData=relevantData[itemName];
+		toUpdateCapitalised[index]=itemData.name ? itemData.name : Utils.capitaliseWords(Utils.fromLowerHyphen(itemName));
 	});
 	const existingItems=await compendium.getDocuments();
 	const updateRecord=[];
@@ -429,10 +430,11 @@ async function updateCompendiumItems(relevantData,compendium,itemType,oldFileId,
 	for(let oldItem of existingItems) {
 		if(toUpdateCapitalised.includes(oldItem.name)) {
 			const index=toUpdateCapitalised.indexOf(oldItem.name);
-			const itemUpdateData={
-				"source": newFileId,
-				"data": relevantData[toUpdate[index]]
-			}
+			// const itemUpdateData={
+			// 	"source": newFileId,
+			// 	"data": relevantData[toUpdate[index]]
+			// }
+			const itemUpdateData=createHLMItemSystem(itemType,relevantData[toUpdate[index]],newFileId);
 			updateRecord.push({
 				_id: oldItem.id,
 				system: itemUpdateData

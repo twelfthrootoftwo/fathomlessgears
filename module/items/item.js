@@ -151,8 +151,17 @@ export class HLMItem extends Item {
 	 * @param {FileRecord} source The file source of this item
 	 */
 export function createHLMItemData(record, data, source) {
+	const itemData={
+		"name": record.name,
+		"type": record.type,
+		"system": createHLMItemSystem(record.type, data, source),
+	};
+	return itemData;
+}
+
+export function createHLMItemSystem(itemType, data, source) {
 	let system={};
-	switch(record.type) {
+	switch(itemType) {
 		case ITEM_TYPES.tag:
 			console.log("Tags not implemented yet");
 			return null;
@@ -182,12 +191,7 @@ export function createHLMItemData(record, data, source) {
 			break;
 	}
 	system.source=source
-	const itemData={
-		"name": record.name,
-		"type": record.type,
-		"system": system
-	};
-	return itemData;
+	return system
 }
 
 /**
