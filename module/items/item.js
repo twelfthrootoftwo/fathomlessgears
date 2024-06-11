@@ -107,7 +107,7 @@ export class HLMItem extends Item {
 
 	async internalAttack(actor) {
 		let attackKey=""
-		if(this.attack?.attribute) attackKey=this.attack?.attribute;
+		if(this.system.attack?.attribute) attackKey=this.system.attack?.attribute;
 		else attackKey=Utils.identifyAttackKey(this.system.type);
 		actor.startRollDialog(attackKey,this._id);
 	}
