@@ -239,7 +239,8 @@ export class HLMActor extends Actor {
 			total+=val.value;
 		});
 		if(total<ATTRIBUTE_MIN) total=ATTRIBUTE_MIN;
-		if(Utils.isRollableAttribute(key) && total>ATTRIBUTE_MAX_ROLLED) total=ATTRIBUTE_MAX_ROLLED;
+		const applyAttributeMaxRolled=[ATTRIBUTES.close,ATTRIBUTES.far,ATTRIBUTES.power,ATTRIBUTES.speed];
+		if(applyAttributeMaxRolled.includes(key) && total>ATTRIBUTE_MAX_ROLLED) total=ATTRIBUTE_MAX_ROLLED;
 		if(Utils.isDefenceAttribute(key) && total>ATTRIBUTE_MAX_FLAT) total=ATTRIBUTE_MAX_FLAT;
 		attr.values.bonus.forEach((val) => {
 			total+=val.value;
@@ -317,6 +318,7 @@ export class HLMActor extends Actor {
 			ballastMods+=element.value;
 		})
 		ballast.total=ballast.values.standard.base+weightBallast+ballastMods+ballast.values.custom;
+		if(ballast.total<ATTRIBUTE_MIN) ballast.total=ATTRIBUTE_MIN;
 	}
 
 	/**
