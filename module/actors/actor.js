@@ -98,7 +98,8 @@ export class HLMActor extends Actor {
 		if(defenceKey===ATTRIBUTES.power) {
 			message=await this.initiateReel(dieCount, flatModifier);
 		} else if (defenceKey) {
-			message=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier,cover);
+			const output=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier,cover);
+			message=output.text ? output.text : output;
 		} else {
 			message=await this.rollNoTarget(attributeKey, dieCount, flatModifier);
 		}
@@ -477,12 +478,13 @@ export class HLMActor extends Actor {
 	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat, cover) {
 		const internal=this.items.get(uuid);
 		const defenceKey=HLMActor.isTargetedRoll(attackKey);
-		const rollString=await this.rollTargeted(attackKey,defenceKey,totalDieCount,totalFlat, cover);
+		const rollOutput=await this.rollTargeted(attackKey,defenceKey,totalDieCount,totalFlat, cover);
 		const displayString=await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: internal,
-				text: rollString,
+				text: rollOutput.text,
+				showDamage: rollOutput.result!=HIT_TYPE.miss,
 				damageText: game.i18n.localize("INTERNALS.damage"),
 				marbleText: game.i18n.localize("INTERNALS.marbles")
 			}

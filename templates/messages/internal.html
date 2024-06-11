@@ -9,15 +9,17 @@
         tags=internal.system.tags
     }}
     {{/if}}
-    {{#if internal.system.attack}}
-    <div class="internal-text">{{internal.system.action_text}}</div>
-    <hr class="divider primary">
+    {{#if internal.system.action_text}}
+    <div class="internal-text lower-border-primary">{{internal.system.action_text}}</div>
     {{/if}}
+    {{#if text}}
     <div class="message-text">
         {{{text}}}
     </div>
+    {{/if}}
     {{#if internal.system.attack}}
     <div class="message-text">
+    {{#if showDamage}}
     {{#if internal.system.attack.damage}}
     {{>
         "systems/fathomlessgears/templates/partials/labelled-roll-partial.html"
@@ -33,6 +35,7 @@
         total=internal.system.attack.marbles
         outcome=""
     }}
+    {{/if}}
     {{/if}}
     </div>
     {{/if}}

@@ -31,7 +31,8 @@ export class AttackHandler {
 		const attackAttrLabel = game.i18n.localize(
 			Utils.getLocalisedAttributeLabel(attackKey)
 		);
-		return await AttackHandler.createHitRollMessage(
+		const rollOutput={};
+		rollOutput.text= await AttackHandler.createHitRollMessage(
 			attackRoll,
 			attacker,
 			defender,
@@ -39,6 +40,8 @@ export class AttackHandler {
 			hitResult,
 			locationResult
 		);
+		rollOutput.result=hitResult.upgraded ? hitResult.upgraded : hitResult.original;
+		return rollOutput;
 	}
 
 	static determineHitMargin(attackRoll, defenceVal, canCrit, cover) {

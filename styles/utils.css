@@ -52,3 +52,6 @@ justify-content: center;
 .spacer {
 	flex-grow: 10;
 }
+.lower-border-primary {
+	border-bottom: 1px solid var(--color-border-dark-primary);
+}
