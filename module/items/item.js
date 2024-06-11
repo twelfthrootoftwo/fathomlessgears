@@ -268,7 +268,7 @@ function constructInternalNPCData(data) {
 			system.attributes[key]=data[ATTRIBUTE_KEY_MAP[key]];
 		}
 	});
-	system.action_text=system.action_text.concat(data.action_text.extra_rules);
+	if(data.action_text.extra_rules) system.action_text=system.action_text.concat(data.action_text.extra_rules);
 	
 	system.ap_cost=getAPCost(data);
 	system.attack=constructAttack(data);
@@ -287,7 +287,7 @@ function constructInternalNPCData(data) {
  */
 function getAPCost(data) {
 	if(data.type==="passive" || data.action_text === "") return null;
-	if(data.action_text?.ap_cost) return data.action_text.ap_cost;
+	if(data.action_text.ap_cost) return data.action_text.ap_cost;
 	return null;
 }
 
