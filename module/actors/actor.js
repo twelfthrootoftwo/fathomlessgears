@@ -486,7 +486,8 @@ export class HLMActor extends Actor {
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: internal,
-				text: rollOutput.text,
+				minor_text: internal.getInternalDescriptionText(),
+				major_text: rollOutput.text,
 				showDamage: rollOutput.result!=HIT_TYPE.miss,
 				damageText: game.i18n.localize("INTERNALS.damage"),
 				marbleText: game.i18n.localize("INTERNALS.marbles")

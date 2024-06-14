@@ -9,12 +9,16 @@
         tags=internal.system.tags
     }}
     {{/if}}
-    {{#if internal.system.action_text}}
-    <div class="internal-text lower-border-primary">{{internal.system.action_text}}</div>
+    {{log "action_text:"}}
+    {{log description_text}}
+    {{#if minor_text}}
+    <div class="internal-text lower-border-primary">{{minor_text}}</div>
     {{/if}}
-    {{#if text}}
+    {{log "text:"}}
+    {{log text}}
+    {{#if major_text}}
     <div class="message-text">
-        {{{text}}}
+        {{{major_text}}}
     </div>
     {{/if}}
     {{#if internal.system.attack}}

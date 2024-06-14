@@ -117,7 +117,8 @@ export class HLMItem extends Item {
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: this,
-				text: this.getInternalDescriptionText(),
+				major_text: this.getInternalDescriptionText(),
+				minor_text: false
 			}
 		);
 		await ChatMessage.create({
