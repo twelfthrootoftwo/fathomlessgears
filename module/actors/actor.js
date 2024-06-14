@@ -175,7 +175,7 @@ export class HLMActor extends Actor {
 	async initiateReel(dieCount, flatModifier) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
-			return await this.rollNoTarget(attackKey, dieCount, flatModifier);
+			return await this.rollNoTarget(ATTRIBUTES.power, dieCount, flatModifier);
 		} else {
 			const target = targetSet.values().next().value;
 			return await ReelHandler.reel(
