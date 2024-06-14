@@ -136,7 +136,7 @@ export class HLMItem extends Item {
 		if(!this.isInternal()) {return false;}
 		let description_text="";
 		Object.keys(this.system.attributes).forEach((key) => {
-			if(this.system.attributes[key] > 0 && key != ATTRIBUTES.weight) {
+			if(this.system.attributes[key] != 0 && key != ATTRIBUTES.weight) {
 				description_text=description_text.concat(this.system.attributes[key].toString()," ",Utils.getLocalisedAttributeLabel(key),"<br>")
 			}
 		});
