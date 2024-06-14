@@ -542,7 +542,7 @@ export class HLMActor extends Actor {
 			}
 		});
 		this.calculateBallast();
-		this.modifyResourceValue("repair",-1*internal.system.repair_kits);
+		if(this.system.resources) this.modifyResourceValue("repair",-1*internal.system.repair_kits);
 		this.update({"system": this.system});
 		internal.delete();
 	}
