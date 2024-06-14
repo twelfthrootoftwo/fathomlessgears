@@ -191,7 +191,7 @@ export function createHLMItemSystem(itemType, data, source) {
 			system=constructGridData(data);
 			break;
 	}
-	//system.source=source
+	system.source=source
 	return system
 }
 
