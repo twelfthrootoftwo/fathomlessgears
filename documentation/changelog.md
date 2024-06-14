@@ -14,3 +14,10 @@
 * Upload the official .fsh data file to access frames/size categories and internals for both fish and fishers
 * Utility functions for scanning and weight calculations
 * Roll intercept dialog to view applied modifiers, and adjust modifiers/die count before rolling
+
+## Version 0.2.1
+User testing performed on this patch!
+* Updated internal import to accommodate new .fsh format for action text & attacks
+* Tweaks to chat message display of attacks
+* Fix update process for new item import process
+* Attributes properly cap on actor sheet
