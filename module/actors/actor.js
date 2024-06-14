@@ -206,7 +206,7 @@ export class HLMActor extends Actor {
 				tooltip: `${roll.formula}:  ${roll.result}`,
 			}
 		);
-		return hitRollDisplay;
+		return {text: hitRollDisplay, result: null};
 	}
 
 	/**
