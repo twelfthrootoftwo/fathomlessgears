@@ -19,12 +19,16 @@ class InternalTag {
  */
 class Attack {
 	type
+	attribute
 	damage
+	marbles
 	range
 
-	constructor(type, damage, range) {
+	constructor(type, attribute, damage, marbles, range) {
 		this.type=Utils.capitaliseFirstLetter(type);
+		this.attribute=attribute;
 		this.damage=damage;
+		this.marbles=marbles;
 		this.range=range;
 	}
 }
@@ -102,7 +106,9 @@ export class HLMItem extends Item {
 	}
 
 	async internalAttack(actor) {
-		const attackKey=Utils.identifyAttackKey(this.system.type);
+		let attackKey=""
+		if(this.system.attack?.attribute) attackKey=this.system.attack?.attribute;
+		else attackKey=Utils.identifyAttackKey(this.system.type);
 		actor.startRollDialog(attackKey,this._id);
 	}
 
@@ -145,8 +151,17 @@ export class HLMItem extends Item {
 	 * @param {FileRecord} source The file source of this item
 	 */
 export function createHLMItemData(record, data, source) {
+	const itemData={
+		"name": record.name,
+		"type": record.type,
+		"system": createHLMItemSystem(record.type, data, source),
+	};
+	return itemData;
+}
+
+export function createHLMItemSystem(itemType, data, source) {
 	let system={};
-	switch(record.type) {
+	switch(itemType) {
 		case ITEM_TYPES.tag:
 			console.log("Tags not implemented yet");
 			return null;
@@ -176,12 +191,7 @@ export function createHLMItemData(record, data, source) {
 			break;
 	}
 	system.source=source
-	const itemData={
-		"name": record.name,
-		"type": record.type,
-		"system": system
-	};
-	return itemData;
+	return system
 }
 
 /**
@@ -262,8 +272,8 @@ function constructInternalNPCData(data) {
 			system.attributes[key]=data[ATTRIBUTE_KEY_MAP[key]];
 		}
 	});
+	if(data.action_text.extra_rules) system.action_text=system.action_text.concat(data.action_text.extra_rules);
 	
-	system.action_text=system.action_text.concat(data.action_text);
 	system.ap_cost=getAPCost(data);
 	system.attack=constructAttack(data);
 	system.ballast=data.ballast;
@@ -280,10 +290,9 @@ function constructInternalNPCData(data) {
  * @returns the integer AP cost of activating the internal (null if there is no cost)
  */
 function getAPCost(data) {
-	if(data.type==="passive" || data.action_text.length == 0) return null;
-	const apRegex=new RegExp("\(\\d+\\s?ap\)","i"); //looks for something of the form "(Xap)", ignoring case
-	const apText=data.action_text.match(apRegex);
-	return apText ? Utils.extractIntFromString(apText[0]) : null;
+	if(data.type==="passive" || data.action_text === "") return null;
+	if(data.action_text.ap_cost) return data.action_text.ap_cost;
+	return null;
 }
 
 /**
@@ -295,39 +304,28 @@ function constructAttack(data) {
 	const attackTypes=["melee","ranged","mental"];
 	if(!attackTypes.includes(data.type)) return null;
 
-	const rangeRegex=new RegExp("range \\d+","i"); //looks for something of the form "range X(X...)", ignoring case
-	const damageRegex=new RegExp("damage \\[?\\d+\\]?","i") //looks for something of the form "damage [X(X...)]", ignoring case
-
-	const rangeText=data.action_text.match(rangeRegex)[0];
-	const rangeValue=Utils.extractIntFromString(rangeText);
-	const damageText=data.action_text.match(damageRegex)[0];
-	const damageValue=Utils.extractIntFromString(damageText);
-
-	return new Attack(data.type, damageValue, rangeValue);
+	return new Attack(data.type, data.action_text.attribute, data.action_text.damage, data.action_text.marble_damage, data.action_text.range);
 }
 
 /**
  * Extracts a single string of tag data into multiple Tag objects
- * @param {string} tagString The string of tags, separated by comma-spaces ", "
+ * @param {Array[string]} tagList The string of tags, separated by comma-spaces ", "
  * @returns an Array of InternalTag objects
  */
-function separateTags(tagString) {
+function separateTags(tagList) {
 	const tags=[]
-	if(tagString.length>0) {
-		const tagList=tagString.split(", ")
-		tagList.forEach((tagText) => {
-			const tagWords=tagText.split(" ");
-			let name="";
-			let value=null;
-			if(Utils.isNumeric(tagWords[tagWords.length-1])) {
-				name=Utils.capitaliseWords(tagWords.slice(0,-1).join(" "));
-				value=parseInt(tagWords[tagWords.length-1]);
-			} else {
-				name=Utils.capitaliseWords(tagText);
-			}
-			tags.push(new InternalTag(name=name, value=value));
-		});
-	}
+	tagList.forEach((tagText) => {
+		const tagWords=tagText.split(" ");
+		let name="";
+		let value=null;
+		if(Utils.isNumeric(tagWords[tagWords.length-1])) {
+			name=Utils.capitaliseWords(tagWords.slice(0,-1).join(" "));
+			value=parseInt(tagWords[tagWords.length-1]);
+		} else {
+			name=Utils.capitaliseWords(tagText);
+		}
+		tags.push(new InternalTag(name=name, value=value));
+	});
 	return tags;
 }
 

@@ -98,7 +98,8 @@ export class HLMActor extends Actor {
 		if(defenceKey===ATTRIBUTES.power) {
 			message=await this.initiateReel(dieCount, flatModifier);
 		} else if (defenceKey) {
-			message=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier,cover);
+			const output=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier,cover);
+			message=output.text ? output.text : output;
 		} else {
 			message=await this.rollNoTarget(attributeKey, dieCount, flatModifier);
 		}
@@ -238,7 +239,8 @@ export class HLMActor extends Actor {
 			total+=val.value;
 		});
 		if(total<ATTRIBUTE_MIN) total=ATTRIBUTE_MIN;
-		if(Utils.isRollableAttribute(key) && total>ATTRIBUTE_MAX_ROLLED) total=ATTRIBUTE_MAX_ROLLED;
+		const applyAttributeMaxRolled=[ATTRIBUTES.close,ATTRIBUTES.far,ATTRIBUTES.power,ATTRIBUTES.speed];
+		if(applyAttributeMaxRolled.includes(key) && total>ATTRIBUTE_MAX_ROLLED) total=ATTRIBUTE_MAX_ROLLED;
 		if(Utils.isDefenceAttribute(key) && total>ATTRIBUTE_MAX_FLAT) total=ATTRIBUTE_MAX_FLAT;
 		attr.values.bonus.forEach((val) => {
 			total+=val.value;
@@ -316,6 +318,7 @@ export class HLMActor extends Actor {
 			ballastMods+=element.value;
 		})
 		ballast.total=ballast.values.standard.base+weightBallast+ballastMods+ballast.values.custom;
+		if(ballast.total<ATTRIBUTE_MIN) ballast.total=ATTRIBUTE_MIN;
 	}
 
 	/**
@@ -477,13 +480,15 @@ export class HLMActor extends Actor {
 	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat, cover) {
 		const internal=this.items.get(uuid);
 		const defenceKey=HLMActor.isTargetedRoll(attackKey);
-		const rollString=await this.rollTargeted(attackKey,defenceKey,totalDieCount,totalFlat, cover);
+		const rollOutput=await this.rollTargeted(attackKey,defenceKey,totalDieCount,totalFlat, cover);
 		const displayString=await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: internal,
-				text: rollString,
-				damageText: game.i18n.localize("INTERNALS.damage")
+				text: rollOutput.text,
+				showDamage: rollOutput.result!=HIT_TYPE.miss,
+				damageText: game.i18n.localize("INTERNALS.damage"),
+				marbleText: game.i18n.localize("INTERNALS.marbles")
 			}
 		);
 		await ChatMessage.create({

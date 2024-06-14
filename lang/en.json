@@ -28,6 +28,7 @@
 	"INTERNALS.active": "Active Internals",
 	"INTERNALS.passive": "Passive internals",
 	"INTERNALS.damage": "Damage",
+	"INTERNALS.marbles": "Marbles",
 	"INTERNALS.range": "Range",
 
 	"HEADER.setTypes": "Apply types",
