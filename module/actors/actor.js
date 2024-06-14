@@ -460,6 +460,7 @@ export class HLMActor extends Actor {
 		})
 		//Modify resources
 		if(internal.system.repair_kits) {this.modifyResourceValue("repair",internal.system.repair_kits);}
+		this.calculateBallast();
 		
 		await this.update({"system": this.system});
 	}
