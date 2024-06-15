@@ -31,8 +31,6 @@
 	"INTERNALS.marbles": "Marbles",
 	"INTERNALS.range": "Range",
 
-	"HEADER.setTypes": "Apply types",
-
 	"TABS.character": "Fisher",
 	"TABS.gear": "Gear",
 	"TABS.internals": "Internals",
@@ -46,6 +44,8 @@
 	"SHEET.hitlocation": "Hit location",
 	"SHEET.scantrue": "Revoke scan",
 	"SHEET.scanfalse": "Scan",
+
+	"MANAGER.init": "Initialising",
 
 	"FISHSIZE.small": "Small",
 	"FISHSIZE.medium": "Medium",

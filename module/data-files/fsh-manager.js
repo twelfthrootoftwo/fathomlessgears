@@ -179,7 +179,7 @@ class FshManager extends HLMApplication {
 			}
 		}
 		if(!duplicateFound){
-			this.startLoading();
+			this.startLoading(game.i18n.localize("MANAGER.init"));
 			await this.readFile(fileId,newFile,oldFile);
 			this.stopLoading();
 		}
@@ -253,7 +253,7 @@ class FshManager extends HLMApplication {
 	 * @param {Event} ev The callback event
 	 */
 	async removeCallback(ev) {
-		this.startLoading();
+		this.startLoading(game.i18n.localize("MANAGER.init"));
 		const targetRecord=new FileRecord(ev.target.attributes.filename.value,ev.target.attributes.version.value);
 		await deleteFileRecord(targetRecord);
 		this.removeDataSource(targetRecord);
