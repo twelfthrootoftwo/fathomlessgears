@@ -102,5 +102,8 @@
 
 	"MESSAGE.totalweight": "Total Weight",
 	"MESSAGE.reelPC": "Reel 'em in!",
-	"MESSAGE.reelNPC": "Get off the hook!"
+	"MESSAGE.reelNPC": "Get off the hook!",
+
+	"INTRO.title": "No .FSH Detected",
+	"INTRO.main": "A .fsh datafile is required for the module to function. Upload .fsh files from the .FSH manager."
 }

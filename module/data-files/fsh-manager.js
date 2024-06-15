@@ -37,17 +37,17 @@ class DataFileRecorder {
 
 	constructor() {
 		const self=this;
-		if(!game.settings.settings.has("fathomlessgears.datafiles")){
-			game.settings.register("fathomlessgears","datafiles",{
-				name: "Source data files",
-				hint: "Stores the datafile sources for frames, internals, sizes, etc",
-				scope: "world",
-				config: false,
-				type: Array,
-				default: [],
-				requiresReload: false
-			});
-		}
+		// if(!game.settings.settings.has("fathomlessgears.datafiles")){
+		// 	game.settings.register("fathomlessgears","datafiles",{
+		// 		name: "Source data files",
+		// 		hint: "Stores the datafile sources for frames, internals, sizes, etc",
+		// 		scope: "world",
+		// 		config: false,
+		// 		type: Array,
+		// 		default: [],
+		// 		requiresReload: false
+		// 	});
+		// }
 		this.fileDataItem=game.settings.get("fathomlessgears","datafiles");
 	}
 
@@ -90,7 +90,7 @@ class DataFileRecorder {
 /**
  * Core class for the manager window
  */
-class FshManager extends HLMApplication {
+export class FshManager extends HLMApplication {
 	static isOpen
 	dataFiles
 	dataFileRecorder
