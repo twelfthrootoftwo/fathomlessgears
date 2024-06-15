@@ -8,11 +8,11 @@ export class HLMApplication extends Application {
 
     startLoading(message) {
         document.getElementById("overlay").style.display = "block";
-        this.updateLoadingMessage(`${message}...`);
+        this.updateLoadingMessage(`${message}`);
     }
 
     updateLoadingMessage(newMessage) {
-        document.getElementById("loading-text").innerHTML=`<p>${newMessage}</p>`
+        document.getElementById("loading-text").innerHTML=`<p>${newMessage}...</p>`
     }
 
     stopLoading() {

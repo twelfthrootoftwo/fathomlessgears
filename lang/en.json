@@ -46,6 +46,16 @@
 	"SHEET.scanfalse": "Scan",
 
 	"MANAGER.init": "Initialising",
+	"MANAGER.datafile": "Data file",
+	"MANAGER.version": "Version",
+	"MANAGER.update": "Update",
+	"MANAGER.delete": "Delete",
+	"MANAGER.add": "Add new",
+	"MANAGER.load": "Loading",
+	"MANAGER.removesource": "Removing data source",
+	"MANAGER.loading": "Loading",
+	"MANAGER.updating": "Updating",
+	"MANAGER.removing": "Removing",
 
 	"FISHSIZE.small": "Small",
 	"FISHSIZE.medium": "Medium",
