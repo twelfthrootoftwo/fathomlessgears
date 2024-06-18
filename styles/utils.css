@@ -36,6 +36,14 @@ input.sheet-input {
 	background-color: #44444466;
 	cursor: pointer;
 }
+.btn.btn-primary {
+  background: var(--color-bg-header);
+  color: var(--color-text-light-3);
+  border: 2px groove var(--color-border-light-primary)
+}
+.btn.btn-primary:hover {
+  background-color: var(--color-border-dark-secondary);
+}
 .spacer {
 	flex-grow: 10;
 }
