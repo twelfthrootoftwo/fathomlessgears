@@ -1,6 +1,6 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE} from "../constants.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE, ROLL_MODIFIER_TYPE} from "../constants.js";
 import { RollElement, RollDialog } from "../actions/roll-dialog.js";
 import { ReelHandler } from "../actions/reel.js";
 
@@ -56,32 +56,36 @@ export class HLMActor extends Actor {
 	startRollDialog(attributeKey,internalId) {
 		console.log("Building modifiers");
 		const modifiers=[];
-		const baseDice=new RollElement(2,"die","Base");
+		const baseDice=new RollElement(2,ROLL_MODIFIER_TYPE.die,"Base",null);
 		modifiers.push(baseDice);
 		const attribute=this.system.attributes[attributeKey];
 		modifiers.push(new RollElement(
 			attribute.values.standard.base,
-			"flat",
-			"Frame base"
+			ROLL_MODIFIER_TYPE.flat,
+			"Frame base",
+			ROLL_MODIFIER_TYPE.modifier,
 		));
 		attribute.values.standard.additions.forEach((term) => {
 			modifiers.push(new RollElement(
 				term.value,
-				"flat",
-				term.label
+				ROLL_MODIFIER_TYPE.flat,
+				term.label,
+				ROLL_MODIFIER_TYPE.modifier,
 			))
 		});
 		attribute.values.bonus.forEach((term) => {
 			modifiers.push(new RollElement(
 				term.value,
-				"flat",
-				term.label
+				ROLL_MODIFIER_TYPE.flat,
+				term.label+" (bonus)",
+				ROLL_MODIFIER_TYPE.bonus
 			))
 		});
 		modifiers.push(new RollElement(
 			attribute.values.custom,
-			"flat",
-			"Custom modifier"
+			ROLL_MODIFIER_TYPE.flat,
+			"Custom modifier (bonus)",
+			ROLL_MODIFIER_TYPE.bonus
 		));
 		new RollDialog(modifiers,this,attributeKey,internalId);
 	}
