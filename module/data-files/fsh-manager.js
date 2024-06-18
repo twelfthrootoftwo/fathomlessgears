@@ -104,7 +104,8 @@ export class FshManager extends HLMApplication {
 		this.dialogConfirm=false;
 		this.loading=false;
 		FshManager.isOpen=true;
-		this.render(true)
+		ui.sidebar.activateTab('compendium');
+		this.render(true);
 	}
 
 	static get defaultOptions() {
