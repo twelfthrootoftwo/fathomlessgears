@@ -1,7 +1,9 @@
 <div class="message-body">
     <div class="message-subheader flex-row">
         <div>{{internal.name}}</div>
+        {{#ifcond internal.system.ap_cost '!=' null}}
         <div>{{internal.system.ap_cost}} AP</div>
+        {{/ifcond}}
     </div>
     {{#if internal.system.tags}}
     {{>
@@ -9,13 +11,9 @@
         tags=internal.system.tags
     }}
     {{/if}}
-    {{log "action_text:"}}
-    {{log description_text}}
     {{#if minor_text}}
     <div class="internal-text lower-border-primary">{{minor_text}}</div>
     {{/if}}
-    {{log "text:"}}
-    {{log text}}
     {{#if major_text}}
     <div class="message-text">
         {{{major_text}}}

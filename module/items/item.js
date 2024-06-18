@@ -292,7 +292,7 @@ function constructInternalNPCData(data) {
  */
 function getAPCost(data) {
 	if(data.type==="passive" || data.action_text === "") return null;
-	if(data.action_text.ap_cost) return data.action_text.ap_cost;
+	if(data.action_text.ap_cost || data.action_text.ap_cost===0) return data.action_text.ap_cost;
 	return null;
 }
 
