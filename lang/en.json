@@ -104,6 +104,8 @@
 	"MESSAGE.reelPC": "Reel 'em in!",
 	"MESSAGE.reelNPC": "Get off the hook!",
 	"MESSAGE.crit": "On crit, choose hit location",
+	"MESSAGE.scannotarget": "Set a target before scanning",
+	"MESSAGE.scantarget": "_ACTOR_NAME_ scans _TARGET_NAME_",
 
 	"INTRO.title": "No .FSH Detected",
 	"INTRO.main": "A .fsh datafile is required for the module to function. Upload .fsh files from the .FSH manager."

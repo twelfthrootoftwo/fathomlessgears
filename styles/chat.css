@@ -73,6 +73,10 @@
 	margin-bottom: 3px;
 	justify-content: space-between;
 }
+.message-text-only {
+	font-size: 16px;
+	font-style: italic;
+}
 .attack-target {
 	font-size: var(--font-size-12);
 	font-weight: bold;

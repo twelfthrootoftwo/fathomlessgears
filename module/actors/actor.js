@@ -598,4 +598,21 @@ export class HLMActor extends Actor {
 			return game.i18n.localize("SHEET.scanfalse");
 		}
 	}
+
+	async scanTarget() {
+		if(this.type==ACTOR_TYPES.fish) return false;
+		const targetSet = game.user.targets;
+		if (targetSet.size < 1) {
+			//TODO allow choosing target afterwards
+			ui.notifications.info(game.i18n.localize("MESSAGE.scannotarget"));
+			return false;
+		} else {
+			const target = targetSet.values().next().value;
+			const content = `<p class="message-text-only">${game.i18n.localize("MESSAGE.scantarget").replace("_ACTOR_NAME_", this.name).replace("_TARGET_NAME_", target.name)}</p>`;
+			await ChatMessage.create({
+				speaker: {actor: this},
+				content: content,
+			})
+		}
+	}
 }
