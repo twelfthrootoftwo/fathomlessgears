@@ -126,6 +126,10 @@ export class AttackHandler {
 				locationResult
 			);
 			displayString.push(locationDisplay);
+		} else if(hitResult.original===HIT_TYPE.crit || hitResult.upgraded ===HIT_TYPE.crit) {
+			displayString.push(
+				`<p>${game.i18n.localize("MESSAGE.crit")}</p>`
+			)
 		}
 		return displayString.join("");
 	}
