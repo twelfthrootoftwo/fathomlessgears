@@ -65,13 +65,15 @@
 	"FISHSIZE.leviathan-serpent": "SerpentLeviathan",
 
 	"ROLLTEXT.base": "Rolling _ATTRIBUTE_NAME_",
-	"ROLLTEXT.attackHeader": "_ATTACKER_NAME_ attacks _TARGET_NAME_!",
+	"ROLLTEXT.attackHeader": "_ATTACKER_NAME_ attacks _TARGET_NAME__COVER_TEXT_!",
 	"ROLLTEXT.attackIntro": "_ATTRIBUTE_NAME_ attack:",
 	"ROLLTEXT.hitZone": "Hit zone:",
 	"ROLLTEXT.hitColumn": "Hit column:",
 	"ROLLTEXT.flat": "Flat Attributes:",
 	"ROLLTEXT.reel": "Reeling _TARGET_NAME_:",
 	"ROLLTEXT.target": "against _TARGET_NAME_",
+	"ROLLTEXT.softcover": " with soft cover",
+	"ROLLTEXT.hardcover": " with hard cover",
 
 	"HIT.miss": "Miss",
 	"HIT.hit": "Hit",

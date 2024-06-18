@@ -37,6 +37,7 @@ export class AttackHandler {
 			attacker,
 			defender,
 			attackAttrLabel,
+			cover,
 			hitResult,
 			locationResult
 		);
@@ -72,6 +73,7 @@ export class AttackHandler {
 		attacker,
 		defender,
 		attackAttrLabel,
+		cover,
 		hitResult,
 		locationResult
 	) {
@@ -80,7 +82,8 @@ export class AttackHandler {
 		const introductionMessage = game.i18n
 			.localize("ROLLTEXT.attackHeader")
 			.replace("_ATTACKER_NAME_", attacker.name)
-			.replace("_TARGET_NAME_", defender.name);
+			.replace("_TARGET_NAME_", defender.name)
+			.replace("_COVER_TEXT_", getCoverText(cover));
 		const introductionHtml=`<div class="attack-target">${introductionMessage}</div>`
 		displayString.push(introductionHtml);
 
@@ -235,5 +238,18 @@ export class AttackHandler {
 			case COVER_STATES.hard:
 				return defenceVal+4;
 		}
+	}
+}
+
+function getCoverText(cover) {
+	switch(cover) {
+		case COVER_STATES.none:
+			return "";
+		case COVER_STATES.soft:
+			return game.i18n.localize("ROLLTEXT.softcover");
+		case COVER_STATES.hard:
+			return game.i18n.localize("ROLLTEXT.hardcover");
+		default:
+			return "";
 	}
 }
