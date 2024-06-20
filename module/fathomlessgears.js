@@ -7,6 +7,7 @@ import {preloadHandlebarsTemplates} from "./utilities/templates.js";
 import { initialiseHelpers } from "./utilities/handlebars.js";
 import { FshManager, addFshManager } from "./data-files/fsh-manager.js";
 import { HLMItemSheet } from "./sheets/item-sheet.js";
+import {conditions} from "./conditions/conditions.js";
 
 
 /* -------------------------------------------- */
@@ -92,6 +93,8 @@ export const system_ready = new Promise((success) => {
 				default: "confirm",
 			}).render(true)
 		}
+
+		CONFIG.statusEffects = foundry.utils.duplicate(conditions);
 		
 		console.log("Ready!")
 		success();

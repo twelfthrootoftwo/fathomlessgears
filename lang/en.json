@@ -110,5 +110,30 @@
 	"MESSAGE.scantarget": "_ACTOR_NAME_ scans _TARGET_NAME_",
 
 	"INTRO.title": "No .FSH Detected",
-	"INTRO.main": "A .fsh datafile is required for the module to function. Upload .fsh files from the .FSH manager."
+	"INTRO.main": "A .fsh datafile is required for the module to function. Upload .fsh files from the .FSH manager.",
+
+	"CONDITIONS.blind": "Blinded",
+	"CONDITIONS.burdened": "Burdened",
+	"CONDITIONS.concealed": "Concealed",
+	"CONDITIONS.dazed": "Dazed",
+	"CONDITIONS.doomed": "Doomed",
+	"CONDITIONS.drained": "Drained",
+	"CONDITIONS.evasive": "Evasive",
+	"CONDITIONS.fatigued": "Fatigued",
+	"CONDITIONS.focus": "Focused",
+	"CONDITIONS.hover": "Hovering",
+	"CONDITIONS.ironclad": "Ironclad",
+	"CONDITIONS.jammed": "Jammed",
+	"CONDITIONS.quickened": "Quickened",
+	"CONDITIONS.restrained": "Restrained",
+	"CONDITIONS.snared": "Snared",
+	"CONDITIONS.tranq": "Tranq",
+	"CONDITIONS.wired": "Wired",
+	"CONDITIONS.hook1": "Hooked (1)",
+	"CONDITIONS.hook2": "Hooked (2)",
+	"CONDITIONS.hook3": "Hooked (3)",
+	"CONDITIONS.hook4": "Hooked (4)",
+	"CONDITIONS.hook5": "Hooked (5)",
+	"CONDITIONS.hook6": "Hooked (6)",
+	"CONDITIONS.hook7": "Hooked (7)"
 }
