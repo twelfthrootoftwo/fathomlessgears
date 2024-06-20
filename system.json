@@ -1,8 +1,7 @@
 {
 	"id": "fathomlessgears",
-	"version": "0.2.2",
+	"version": "#{VERSION}#",
 	"title": "Fathomless Gears",
-	"url": "https://github.com/twelfthrootoftwo/fathomlessgears",
 	"description": "A Foundry VTT system for Fathomless Gears, the mech fishing game by Ralf Ziegler",
 	"background": "systems/fathomlessgears/assets/fg-logo-simple.png",
 	"authors": [
@@ -41,7 +40,8 @@
 		"verified": "11.315"
 	},
 	"gridDistance": 1,
-	"manifest": "https://github.com/twelfthrootoftwo/fathomlessgears/releases/latest/download/system.json",
-	"download": "",
+	"url": "#{URL}#",
+	"manifest": "#{MANIFEST}#",
+	"download": "#{DOWNLOAD}#",
 	"persistentStorage": true
 }
