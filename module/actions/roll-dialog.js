@@ -101,12 +101,14 @@ export class RollDialog extends HLMApplication {
         this.dieModifiers.push({
             value: this.additionalDie,
             type: "die",
-            description: "Additional"
+            description: "Additional",
+            classification: "bonus"
         });
         this.flatModifiers.push({
             value: this.additionalFlat,
-            type: "die",
-            description: "Additional"
+            type: "flat",
+            description: "Additional",
+            classification: "bonus"
         });
 
         let totalDieCount=0;
