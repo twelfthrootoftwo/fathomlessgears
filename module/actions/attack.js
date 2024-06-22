@@ -18,13 +18,13 @@ export class AttackHandler {
 		await attackRoll.evaluate();
 		const hitResult = AttackHandler.determineHitMargin(
 			attackRoll,
-			defender.system.attributes[defenceKey].total,
-			AttackHandler.canCrit(attacker),
+			defender.system.attributes[defenceKey],
+			AttackHandler.canCrit(attacker,attackKey),
 			cover
 		);
 
 		let locationResult = null;
-		if (AttackHandler.requiresLocationDisplay(hitResult)) {
+		if (AttackHandler.requiresLocationDisplay(attackKey,hitResult)) {
 			locationResult = await AttackHandler.rollHitLocation(defender);
 		}
 
@@ -45,7 +45,8 @@ export class AttackHandler {
 		return rollOutput;
 	}
 
-	static determineHitMargin(attackRoll, defenceVal, canCrit, cover) {
+	static determineHitMargin(attackRoll, defenceAttr, canCrit, cover) {
+		const defenceVal=defenceAttr.total+defenceAttr.values.custom;
 		const modifiedDefence=AttackHandler.applyCover(defenceVal,cover);
 		const hitMargin = attackRoll.total - modifiedDefence;
 		const combinedResult={original: "", upgraded: null};
@@ -124,7 +125,7 @@ export class AttackHandler {
 		);
 		displayString.push(hitRollDisplay);
 
-		if (AttackHandler.requiresLocationDisplay(hitResult)) {
+		if (locationResult != null) {
 			const locationDisplay = await AttackHandler.generateLocationDisplay(
 				locationResult
 			);
@@ -137,8 +138,8 @@ export class AttackHandler {
 		return displayString.join("");
 	}
 
-	static canCrit(actor) {
-		return actor.type === ACTOR_TYPES.fisher;
+	static canCrit(actor, attackKey) {
+		return actor.type === ACTOR_TYPES.fisher && attackKey != ATTRIBUTES.mental;
 	}
 
 	static async rollHitLocation(defender) {
@@ -220,7 +221,8 @@ export class AttackHandler {
 		return counter>1;
 	}
 
-	static requiresLocationDisplay(hitResult) {
+	static requiresLocationDisplay(attackKey,hitResult) {
+		if(attackKey==ATTRIBUTES.mental) return false;
 		if(hitResult.upgraded) {
 			return hitResult.upgraded===HIT_TYPE.hit;
 		} 
