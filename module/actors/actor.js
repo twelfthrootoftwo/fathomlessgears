@@ -105,7 +105,8 @@ export class HLMActor extends Actor {
 			const output=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier,cover);
 			message=output.text ? output.text : output;
 		} else {
-			message=await this.rollNoTarget(attributeKey, dieCount, flatModifier);
+			const result=await this.rollNoTarget(attributeKey, dieCount, flatModifier);
+			message=result.text;
 		}
 		const hitMessage = await ChatMessage.create({
 			speaker: {actor: this},
@@ -161,7 +162,8 @@ export class HLMActor extends Actor {
 	async rollTargeted(attackKey, defenceKey, dieCount, flatModifier,cover) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
-			return await this.rollNoTarget(attackKey, dieCount, flatModifier);
+			const result= await this.rollNoTarget(attackKey, dieCount, flatModifier);
+			return result.text;
 		} else {
 			const target = targetSet.values().next().value;
 			return await AttackHandler.rollToHit(
@@ -179,7 +181,8 @@ export class HLMActor extends Actor {
 	async initiateReel(dieCount, flatModifier) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
-			return await this.rollNoTarget(ATTRIBUTES.power, dieCount, flatModifier);
+			const result= await this.rollNoTarget(ATTRIBUTES.power, dieCount, flatModifier);
+			return result.text;
 		} else {
 			const target = targetSet.values().next().value;
 			return await ReelHandler.reel(
