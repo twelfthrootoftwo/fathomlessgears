@@ -3,6 +3,7 @@ import {AttackHandler} from "../actions/attack.js";
 import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE, ROLL_MODIFIER_TYPE} from "../constants.js";
 import { RollElement, RollDialog } from "../actions/roll-dialog.js";
 import { ReelHandler } from "../actions/reel.js";
+import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
 
 export class AttributeElement {
 	value
@@ -205,14 +206,17 @@ export class HLMActor extends Actor {
 			label=label.replace("_ATTRIBUTE_NAME_", roll.formula);
 		}
 
-		const hitRollDisplay = await renderTemplate(
-			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
-			{
-				label_left: label,
-				total: roll.total,
-				tooltip: `${roll.formula}:  ${roll.result}`,
-			}
-		);
+		const hitRollDisplay=await constructCollapsibleRollMessage(roll);
+		// const hitRollDisplay = await renderTemplate(
+		// 	"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
+		// 	{
+		// 		label_left: label,
+		// 		total: await roll.render(),
+		// 		tooltip: `${roll.formula}:  ${roll.result}`,
+		// 	}
+		// );
+		//const hitRollDisplay = await roll.toAnchor().outerHTML;
+		//const hitRollDisplay = await roll.render();
 		return {text: hitRollDisplay, result: null};
 	}
 
