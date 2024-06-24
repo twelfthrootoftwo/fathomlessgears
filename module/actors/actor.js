@@ -206,15 +206,15 @@ export class HLMActor extends Actor {
 			label=label.replace("_ATTRIBUTE_NAME_", roll.formula);
 		}
 
-		const hitRollDisplay=await constructCollapsibleRollMessage(roll);
-		// const hitRollDisplay = await renderTemplate(
-		// 	"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
-		// 	{
-		// 		label_left: label,
-		// 		total: await roll.render(),
-		// 		tooltip: `${roll.formula}:  ${roll.result}`,
-		// 	}
-		// );
+		//const hitRollDisplay=await constructCollapsibleRollMessage(roll);
+		const hitRollDisplay = await renderTemplate(
+			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
+			{
+				label_left: label,
+				total: await constructCollapsibleRollMessage(roll),
+				preformat: true
+			}
+		);
 		//const hitRollDisplay = await roll.toAnchor().outerHTML;
 		//const hitRollDisplay = await roll.render();
 		return {text: hitRollDisplay, result: null};

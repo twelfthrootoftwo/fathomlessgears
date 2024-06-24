@@ -1,5 +1,6 @@
 import {Utils} from "../utilities/utils.js";
 import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, COVER_STATES} from "../constants.js";
+import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
 
 export class AttackHandler {
 	static async rollToHit(
@@ -118,9 +119,9 @@ export class AttackHandler {
 				label_left: game.i18n
 				.localize("ROLLTEXT.attackIntro")
 				.replace("_ATTRIBUTE_NAME_", attackAttrLabel),
-				total: attackRoll.total,
-				tooltip: `${attackRoll.formula}:  ${attackRoll.result}`,
+				total: await constructCollapsibleRollMessage(attackRoll),
 				outcome: hitResultText,
+				preformat: true,
 			}
 		);
 		displayString.push(hitRollDisplay);
@@ -182,9 +183,9 @@ export class AttackHandler {
 				{
 					label_left: game.i18n.localize("ROLLTEXT.hitZone"),
 					tooltip: `${locationResult.locationRoll.formula}:  ${locationResult.locationRoll.result}`,
-					total: locationResult.locationRoll.total,
-					outcome: Utils.getLocalisedHitZone(
-						locationResult.hitZone.location)
+					total: await constructCollapsibleRollMessage(locationResult.locationRoll),
+					outcome: Utils.getLocalisedHitZone(locationResult.hitZone.location),
+					preformat: true,
 				}
 			);
 			locationDisplayParts.push(hitZone);
@@ -194,7 +195,8 @@ export class AttackHandler {
 			{
 				label_left: game.i18n.localize("ROLLTEXT.hitColumn"),
 				tooltip: locationResult.columnRoll.formula,
-				total: locationResult.columnRoll.total,
+				total: await constructCollapsibleRollMessage(locationResult.columnRoll),
+				preformat: true,
 			}
 		);
 		locationDisplayParts.push(column);
