@@ -241,6 +241,8 @@ export class AttackHandler {
 				return defenceVal+2;
 			case COVER_STATES.hard:
 				return defenceVal+4;
+			default:
+				return defenceVal;
 		}
 	}
 }

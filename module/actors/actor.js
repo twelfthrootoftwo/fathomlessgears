@@ -206,7 +206,6 @@ export class HLMActor extends Actor {
 			label=label.replace("_ATTRIBUTE_NAME_", roll.formula);
 		}
 
-		//const hitRollDisplay=await constructCollapsibleRollMessage(roll);
 		const hitRollDisplay = await renderTemplate(
 			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
 			{
@@ -215,8 +214,6 @@ export class HLMActor extends Actor {
 				preformat: true
 			}
 		);
-		//const hitRollDisplay = await roll.toAnchor().outerHTML;
-		//const hitRollDisplay = await roll.render();
 		return {text: hitRollDisplay, result: null};
 	}
 
@@ -445,7 +442,7 @@ export class HLMActor extends Actor {
 		const item=await Item.create(frame,{parent: this});
 		this.system.frame=item._id;
 		this.calculateBallast();
-		this.update({"system": this.system});
+		await this.update({"system": this.system});
 	}
 
 	/**
