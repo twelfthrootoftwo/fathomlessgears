@@ -97,7 +97,7 @@ export class RollDialog extends HLMApplication {
         let formData=super._getSubmitData(data);
     }
 
-    triggerRoll() {
+    totalAttributes() {
         this.dieModifiers.push({
             value: this.additionalDie,
             type: "die",
@@ -130,10 +130,15 @@ export class RollDialog extends HLMApplication {
         if(this.focused) {
             totalDieCount+=1;
         }
+        return {"dice": totalDieCount, "attribute": totalAttr, "bonus": totalBonus}
+    }
+
+    triggerRoll() {
+        modifierTotals=this.totalAttributes();
         if(this.internal) {
-            this.actor.triggerRolledInternal(this.internal,this.attribute,totalDieCount,totalAttr+totalBonus,this.cover);
+            this.actor.triggerRolledInternal(this.internal,this.attribute,modifierTotals.dice,modifierTotals.attribute+modifierTotals.bonus,this.cover);
         } else {
-            this.actor.rollAttribute(this.attribute,totalDieCount,totalAttr+totalBonus, this.cover);
+            this.actor.rollAttribute(this.attribute,modifierTotals.dice,modifierTotals.attribute+modifierTotals.bonus, this.cover);
         }
         this.close();
     }

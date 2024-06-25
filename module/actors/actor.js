@@ -88,7 +88,7 @@ export class HLMActor extends Actor {
 			"Custom modifier (bonus)",
 			ROLL_MODIFIER_TYPE.bonus
 		));
-		new RollDialog(modifiers,this,attributeKey,internalId);
+		return new RollDialog(modifiers,this,attributeKey,internalId);
 	}
 
 	/**

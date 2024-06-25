@@ -12,6 +12,5 @@ export async function constructCollapsibleRollMessage(roll) {
 
     const location=html.match(collapseRegex);
     html=Utils.insertIntoString(html, result, location["index"]+collapseString.length);
-    console.log(html);
     return html;
 }
