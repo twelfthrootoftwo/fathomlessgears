@@ -133,12 +133,12 @@ export class RollDialog extends HLMApplication {
         return {"dice": totalDieCount, "attribute": totalAttr, "bonus": totalBonus}
     }
 
-    triggerRoll() {
-        modifierTotals=this.totalAttributes();
+    async triggerRoll() {
+        const modifierTotals=this.totalAttributes();
         if(this.internal) {
-            this.actor.triggerRolledInternal(this.internal,this.attribute,modifierTotals.dice,modifierTotals.attribute+modifierTotals.bonus,this.cover);
+            await this.actor.triggerRolledInternal(this.internal,this.attribute,modifierTotals.dice,modifierTotals.attribute+modifierTotals.bonus,this.cover);
         } else {
-            this.actor.rollAttribute(this.attribute,modifierTotals.dice,modifierTotals.attribute+modifierTotals.bonus, this.cover);
+            await this.actor.rollAttribute(this.attribute,modifierTotals.dice,modifierTotals.attribute+modifierTotals.bonus, this.cover);
         }
         this.close();
     }
