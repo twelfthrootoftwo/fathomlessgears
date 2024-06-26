@@ -5,8 +5,9 @@ import {HLMActorSheet} from "./sheets/actor-sheet.js";
 import {HLMToken, HLMTokenDocument} from "./tokens/token.js";
 import {preloadHandlebarsTemplates} from "./utilities/templates.js";
 import { initialiseHelpers } from "./utilities/handlebars.js";
-import { addFshManager } from "./data-files/fsh-manager.js";
+import { FshManager, addFshManager } from "./data-files/fsh-manager.js";
 import { HLMItemSheet } from "./sheets/item-sheet.js";
+import {conditions} from "./conditions/conditions.js";
 
 
 /* -------------------------------------------- */
@@ -57,9 +58,44 @@ Hooks.once("init", async function () {
 
 export const system_ready = new Promise((success) => {
 	Hooks.once("ready", async function () {
+		//Post-init stuff goes here
 		const gridCollection=await game.packs.get("fathomlessgears.grid_type");
 		gridCollection.configure({ownership:{PLAYER:"NONE"}})
-		//Post-init stuff goes here
+
+		game.settings.register("fathomlessgears","datafiles",{
+			name: "Source data files",
+			hint: "Stores the datafile sources for frames, internals, sizes, etc",
+			scope: "world",
+			config: false,
+			type: Array,
+			default: [],
+			requiresReload: false
+		});
+		const dataFiles=game.settings.get("fathomlessgears","datafiles");
+
+		if(dataFiles.length==0) {
+			new Dialog({
+				title: game.i18n.localize("INTRO.title"),
+				content: "<p>"+game.i18n.localize("INTRO.main")+"</p>",
+				buttons: {
+					cancel: {
+						label: "Skip for now",
+					},
+					confirm: {
+						label: "Open .FSH Manager",
+						callback: async () => {
+							if(!FshManager.isOpen) {
+								new FshManager()
+							}
+						}
+					}
+				},
+				default: "confirm",
+			}).render(true)
+		}
+
+		CONFIG.statusEffects = foundry.utils.duplicate(conditions);
+		
 		console.log("Ready!")
 		success();
 	});

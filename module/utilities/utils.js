@@ -52,10 +52,11 @@ export class Utils {
 			"rightArm",
 			"torso",
 			"legs",
+			"section1",
 			"section2",
 			"section3",
 			"section4",
-			"tail"
+			"section5"
 		];
 		if (recognisedZones.includes(hitZoneKey)) {
 			return game.i18n.localize("HITZONE." + hitZoneKey);
@@ -204,6 +205,10 @@ export class Utils {
 		const digitRegex=new RegExp("\\d+");//matches consecutive digits
 		const valueString=string.match(digitRegex)[0];
 		return parseInt(valueString);
+	}
+
+	static insertIntoString(startString, insertString, index) {
+		return startString.slice(0, index) + insertString + startString.slice(index);
 	}
 
 	static getRoller(dieCount, flatModifier) {

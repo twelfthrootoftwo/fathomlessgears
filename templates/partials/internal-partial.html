@@ -3,9 +3,9 @@
         <div class="expander-icon"></div>
         <h3 class="internal-name">{{internal.name}}</h3>
         <div class="spacer"></div>
-        {{#if internal.system.ap_cost}}
+        {{#ifcond internal.system.ap_cost '!=' null}}
         <p class="internal-ap">{{internal.system.ap_cost}} AP</p>
-        {{/if}}
+        {{/ifcond}}
         <div class="btn break-button" data-id="id{{internal._id}}">
             {{#if internal.flags.fathomlessgears.broken}}
             {{localize "SHEET.internalfix"}}
@@ -13,7 +13,7 @@
             {{localize "SHEET.internalbreak"}}
             {{/if}}
         </div>
-        <div class="btn post-button" data-id="id{{internal._id}}">{{localize "SHEET.post"}}</div>
+        <div class="btn btn-primary post-button" data-id="id{{internal._id}}">{{localize "SHEET.post"}}</div>
     </div>
     <div class="internal-body">
         <div class="delete-overlay">
@@ -37,6 +37,6 @@
             tags=internal.system.tags
         }}
         {{/if}}
-        <div class="internal-text">{{internal.description_text}}</div>
+        <div class="internal-text">{{{internal.description_text}}}</div>
     </div>
 </div>

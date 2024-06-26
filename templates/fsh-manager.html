@@ -1,18 +1,23 @@
 <form autocomplete="off">
-    <div id="overlay"> </div>
+    <div id="overlay">
+        <div class="loading-display flex-col">
+            <div id="loading-text" class="loading-text"></div>
+            <div class="loader"></div>
+        </div>
+    </div>
     <ol class="datafile-table">
         <li class="datafile-row datafile-header">
-            <div class="datafile-label" i18n>Data file</div>
-            <div class="datafile-version" i18n>Version</div>
+            <div class="datafile-label" i18n>{{localize "MANAGER.datafile"}}</div>
+            <div class="datafile-version" i18n>{{localize "MANAGER.version"}}</div>
         </li>
         {{#each dataFiles as |file key|}}
             <li class="datafile-row">
                 <div class="datafile-label">{{file.filename}}</div>
                 <div class="datafile-version">{{file.version}}</div>
-                <div class="btn update" filename="{{file.filename}}" version="{{file.version}}" i18n>Update</div>
-                <div class="btn remove" filename="{{file.filename}}" version="{{file.version}}" i18n>Delete</div>
+                <div class="btn update" filename="{{file.filename}}" version="{{file.version}}" i18n>{{localize "MANAGER.update"}}</div>
+                <div class="btn remove" filename="{{file.filename}}" version="{{file.version}}" i18n>{{localize "MANAGER.delete"}}</div>
             </li>
         {{/each}}
     </ol>
-    <div class="btn add-new-fsh">Add new...</div>
+    <div class="btn add-new-fsh">{{localize "MANAGER.add"}}...</div>
 </form>

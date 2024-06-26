@@ -1,5 +1,6 @@
 import { ACTOR_TYPES } from "../constants.js";
 import { Utils } from "../utilities/utils.js";
+import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
 
 export class ReelHandler {
     static async reel(
@@ -19,8 +20,8 @@ export class ReelHandler {
             "systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
             {
                 label_left: game.i18n.localize("ROLLTEXT.reel").replace("_TARGET_NAME_", target.name),
-                tooltip: `${powerRoll.formula}:  ${powerRoll.result}`,
-                total: powerRoll.total,
+                total: await constructCollapsibleRollMessage(powerRoll),
+                preformat: true,
                 outcome: ""
             }
         )

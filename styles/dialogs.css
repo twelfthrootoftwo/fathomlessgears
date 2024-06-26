@@ -50,6 +50,8 @@ input.inline-checkbox {
 }
 .cover-row {
 	align-items: center;
+	justify-content: space-between;
+	padding: 0px 12px 0px 25px;
 }
 .cover-label {
 	font-size: 12px;

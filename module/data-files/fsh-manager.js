@@ -37,17 +37,17 @@ class DataFileRecorder {
 
 	constructor() {
 		const self=this;
-		if(!game.settings.settings.has("fathomlessgears.datafiles")){
-			game.settings.register("fathomlessgears","datafiles",{
-				name: "Source data files",
-				hint: "Stores the datafile sources for frames, internals, sizes, etc",
-				scope: "world",
-				config: false,
-				type: Array,
-				default: [],
-				requiresReload: false
-			});
-		}
+		// if(!game.settings.settings.has("fathomlessgears.datafiles")){
+		// 	game.settings.register("fathomlessgears","datafiles",{
+		// 		name: "Source data files",
+		// 		hint: "Stores the datafile sources for frames, internals, sizes, etc",
+		// 		scope: "world",
+		// 		config: false,
+		// 		type: Array,
+		// 		default: [],
+		// 		requiresReload: false
+		// 	});
+		// }
 		this.fileDataItem=game.settings.get("fathomlessgears","datafiles");
 	}
 
@@ -90,7 +90,7 @@ class DataFileRecorder {
 /**
  * Core class for the manager window
  */
-class FshManager extends HLMApplication {
+export class FshManager extends HLMApplication {
 	static isOpen
 	dataFiles
 	dataFileRecorder
@@ -104,7 +104,8 @@ class FshManager extends HLMApplication {
 		this.dialogConfirm=false;
 		this.loading=false;
 		FshManager.isOpen=true;
-		this.render(true)
+		ui.sidebar.activateTab('compendium');
+		this.render(true);
 	}
 
 	static get defaultOptions() {
@@ -179,7 +180,7 @@ class FshManager extends HLMApplication {
 			}
 		}
 		if(!duplicateFound){
-			this.startLoading();
+			this.startLoading(game.i18n.localize("MANAGER.init"));
 			await this.readFile(fileId,newFile,oldFile);
 			this.stopLoading();
 		}
@@ -193,7 +194,7 @@ class FshManager extends HLMApplication {
 	async confirmOverwriteCallback(proceed,args) {
 		if(proceed) {
 			args.fshManager.startLoading();
-			await deleteFileRecord(args.fileId);
+			await deleteFileRecord(args.fileId, this);
 			let index=0;
 			for(let record of args.fshManager.dataFiles){
 				if(record.filename===args.fileId.filename && record.version===args.fileId.version) {
@@ -216,11 +217,11 @@ class FshManager extends HLMApplication {
 	async readFile(fileId, newFile, oldFile) {
 		switch(getExtension(fileId.filename)) {
 			case "fsh": {
-				await processFsh(newFile, fileId, oldFile);
+				await processFsh(newFile, fileId, oldFile, this);
 				break;
 			}
 			case "json": {
-				await processJson(newFile, fileId, oldFile);
+				await processJson(newFile, fileId, oldFile, this);
 				break;
 			}
 		}
@@ -253,9 +254,10 @@ class FshManager extends HLMApplication {
 	 * @param {Event} ev The callback event
 	 */
 	async removeCallback(ev) {
-		this.startLoading();
+		this.startLoading(game.i18n.localize("MANAGER.init"));
 		const targetRecord=new FileRecord(ev.target.attributes.filename.value,ev.target.attributes.version.value);
-		await deleteFileRecord(targetRecord);
+		await deleteFileRecord(targetRecord, this);
+		this.updateLoadingMessage(game.i18n.localize("MANAGER.removesource"));
 		this.removeDataSource(targetRecord);
 		this.stopLoading();
 	}
@@ -282,11 +284,11 @@ class FshManager extends HLMApplication {
  * @param {FileRecord} fileId The file record
  * @param {FileRecord} oldFile The file record to overwrite, if any (null if this is a new file)
  */
-async function processFsh(rawFsh, fileId, oldFile) {
+async function processFsh(rawFsh, fileId, oldFile, dialog) {
 	//renamed .zip
 	const zip=new JSZip();
 	const loadedZip=await zip.loadAsync(rawFsh);
-	await readZippedFileCollection(fileId,loadedZip.files,oldFile);
+	await readZippedFileCollection(fileId,loadedZip.files,oldFile, dialog);
 }
 
 /**
@@ -295,8 +297,8 @@ async function processFsh(rawFsh, fileId, oldFile) {
  * @param {FileRecord} fileId The file record
  * @param {FileRecord} oldFile The file record to overwrite, if any (null if this is a new file)
  */
-async function processJson(rawJson, fileId, oldFile) {
-	await readDataJson(rawJson, fileId.filename, fileId, oldFile);
+async function processJson(rawJson, fileId, oldFile, dialog) {
+	await readDataJson(rawJson, fileId.filename, fileId, oldFile, dialog);
 }
 
 /**
@@ -306,11 +308,11 @@ async function processJson(rawJson, fileId, oldFile) {
  * @param {Object} fileId Datafile info in the form {filename: "filename", version: "versionString"}
  * @param {Object} oldFile The file record to overwrite, if any (null if this is a new file)
  */
-async function readDataJson(fileData, fileName, fileId, oldFile) {
+async function readDataJson(fileData, fileName, fileId, oldFile, dialog) {
 	const preparedData=JSON.parse(fileData);
 	const dataTypes=identifyDataTypes(fileData,fileName);
 	if(dataTypes!= null) {
-		await saveToCompendium(preparedData,dataTypes, fileId, oldFile);
+		await saveToCompendium(preparedData,dataTypes, fileId, oldFile, dialog);
 	} else {
 		ui.notifications.info(`Can't identify item types for ${fileName}, skipping...`);
 	}
@@ -332,11 +334,11 @@ function extractRelevantData(preparedData,type) {
  * @param {Blob} newFile The new file
  * @param {FileRecord} oldFile The file to update, if any (null if this is not an update)
  */
-async function readZippedFileCollection(fileId, zippedFiles, oldFile) {
+async function readZippedFileCollection(fileId, zippedFiles, oldFile, dialog) {
 	for(let zFileName of Object.keys(zippedFiles)) {
 		if(getExtension(zFileName)=="json") {
 			const fileData=await zippedFiles[zFileName].async('string');
-			await readDataJson(fileData, zFileName, fileId, oldFile);
+			await readDataJson(fileData, zFileName, fileId, oldFile, dialog);
 		}
 	}
 }
@@ -354,15 +356,15 @@ async function readZippedFileCollection(fileId, zippedFiles, oldFile) {
  * @param {FileRecord} fileId Datafile info in the form {filename: "filename", version: "versionString"}
  * @param {FileRecord} oldFile For an update, the id of the file to update (null if this is a new file)
  */
-async function saveToCompendium(preparedData, dataTypes, fileId, oldFile) {
+async function saveToCompendium(preparedData, dataTypes, fileId, oldFile, dialog) {
 	for(let type of dataTypes) {
 		const relevantData = extractRelevantData(preparedData, type);
 		const targetCompendium = await getTargetCompendium(type);
 		await targetCompendium.configure({locked: false});
 		if(oldFile!=null){
-			await updateCompendiumItems(relevantData,targetCompendium,type,oldFile,fileId)
+			await updateCompendiumItems(relevantData,targetCompendium,type,oldFile,fileId, dialog)
 		} else {
-			await writeNewCompendiumItems(relevantData,targetCompendium,type, fileId)
+			await writeNewCompendiumItems(relevantData,targetCompendium,type, fileId, dialog)
 		}
 		await targetCompendium.configure({locked: true});
 	}
@@ -401,7 +403,8 @@ async function createItem(itemName,jsonData,itemType,sourceId, compendium) {
  * @param {CompendiumCollection} compendium The compendium for the intended content type
  * @param {Object} fileId The item's source file in the format {filename: "filename", version: "versionString"}
  */
-async function writeNewCompendiumItems(relevantData, compendium, itemType, fileId) {
+async function writeNewCompendiumItems(relevantData, compendium, itemType, fileId, dialog) {
+	dialog.updateLoadingMessage(`${game.i18n.localize("MANAGER.loading")} ${compendium.metadata.label}`);
 	for(let itemName of Object.keys(relevantData)) {
 		const item = await createItem(itemName,relevantData[itemName],itemType,fileId, compendium);
 		if (item) {await compendium.importDocument(item)};
@@ -416,7 +419,8 @@ async function writeNewCompendiumItems(relevantData, compendium, itemType, fileI
  * @param {FileRecord} oldFileId The file record to update, in the format {filename: "filename", version: "versionString"}
  * @param {FileRecord} newFileId The record for the updated file
  */
-async function updateCompendiumItems(relevantData,compendium,itemType,oldFileId,newFileId) {
+async function updateCompendiumItems(relevantData,compendium,itemType,oldFileId,newFileId, dialog) {
+	dialog.updateLoadingMessage(`${game.i18n.localize("MANAGER.updating")} ${compendium.metadata.label}`);
 	//Update items that already exist
 	const toUpdate=Object.keys(relevantData);
 	const toUpdateCapitalised=[]
@@ -500,8 +504,9 @@ function getJsonVersion(rawJson) {
  * Deletes all compendium items from a given source file
  * @param {FileRecord} fileId The file record to remove
  */
-async function deleteFileRecord(fileId) {
+async function deleteFileRecord(fileId, dialog) {
 	for(const compendium of game.packs) {
+		dialog.updateLoadingMessage(`${game.i18n.localize("MANAGER.removing")} ${compendium.metadata.label}`);
 		await removeItemsFromFileSource(compendium,fileId);
 	}
 }

@@ -1,5 +1,6 @@
 import {Utils} from "../utilities/utils.js";
 import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, COVER_STATES} from "../constants.js";
+import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
 
 export class AttackHandler {
 	static async rollToHit(
@@ -18,13 +19,13 @@ export class AttackHandler {
 		await attackRoll.evaluate();
 		const hitResult = AttackHandler.determineHitMargin(
 			attackRoll,
-			defender.system.attributes[defenceKey].total,
-			AttackHandler.canCrit(attacker),
+			defender.system.attributes[defenceKey],
+			AttackHandler.canCrit(attacker,attackKey),
 			cover
 		);
 
 		let locationResult = null;
-		if (AttackHandler.requiresLocationDisplay(hitResult)) {
+		if (AttackHandler.requiresLocationDisplay(attackKey,hitResult)) {
 			locationResult = await AttackHandler.rollHitLocation(defender);
 		}
 
@@ -37,6 +38,7 @@ export class AttackHandler {
 			attacker,
 			defender,
 			attackAttrLabel,
+			cover,
 			hitResult,
 			locationResult
 		);
@@ -44,7 +46,8 @@ export class AttackHandler {
 		return rollOutput;
 	}
 
-	static determineHitMargin(attackRoll, defenceVal, canCrit, cover) {
+	static determineHitMargin(attackRoll, defenceAttr, canCrit, cover) {
+		const defenceVal=defenceAttr.total+defenceAttr.values.custom;
 		const modifiedDefence=AttackHandler.applyCover(defenceVal,cover);
 		const hitMargin = attackRoll.total - modifiedDefence;
 		const combinedResult={original: "", upgraded: null};
@@ -72,6 +75,7 @@ export class AttackHandler {
 		attacker,
 		defender,
 		attackAttrLabel,
+		cover,
 		hitResult,
 		locationResult
 	) {
@@ -80,7 +84,8 @@ export class AttackHandler {
 		const introductionMessage = game.i18n
 			.localize("ROLLTEXT.attackHeader")
 			.replace("_ATTACKER_NAME_", attacker.name)
-			.replace("_TARGET_NAME_", defender.name);
+			.replace("_TARGET_NAME_", defender.name)
+			.replace("_COVER_TEXT_", getCoverText(cover));
 		const introductionHtml=`<div class="attack-target">${introductionMessage}</div>`
 		displayString.push(introductionHtml);
 
@@ -114,24 +119,28 @@ export class AttackHandler {
 				label_left: game.i18n
 				.localize("ROLLTEXT.attackIntro")
 				.replace("_ATTRIBUTE_NAME_", attackAttrLabel),
-				total: attackRoll.total,
-				tooltip: `${attackRoll.formula}:  ${attackRoll.result}`,
+				total: await constructCollapsibleRollMessage(attackRoll),
 				outcome: hitResultText,
+				preformat: true,
 			}
 		);
 		displayString.push(hitRollDisplay);
 
-		if (AttackHandler.requiresLocationDisplay(hitResult)) {
+		if (locationResult != null) {
 			const locationDisplay = await AttackHandler.generateLocationDisplay(
 				locationResult
 			);
 			displayString.push(locationDisplay);
+		} else if(hitResult.original===HIT_TYPE.crit || hitResult.upgraded ===HIT_TYPE.crit) {
+			displayString.push(
+				`<p>${game.i18n.localize("MESSAGE.crit")}</p>`
+			)
 		}
 		return displayString.join("");
 	}
 
-	static canCrit(actor) {
-		return actor.type === ACTOR_TYPES.fisher;
+	static canCrit(actor, attackKey) {
+		return actor.type === ACTOR_TYPES.fisher && attackKey != ATTRIBUTES.mental;
 	}
 
 	static async rollHitLocation(defender) {
@@ -174,9 +183,9 @@ export class AttackHandler {
 				{
 					label_left: game.i18n.localize("ROLLTEXT.hitZone"),
 					tooltip: `${locationResult.locationRoll.formula}:  ${locationResult.locationRoll.result}`,
-					total: locationResult.locationRoll.total,
-					outcome: Utils.getLocalisedHitZone(
-						locationResult.hitZone.location)
+					total: await constructCollapsibleRollMessage(locationResult.locationRoll),
+					outcome: Utils.getLocalisedHitZone(locationResult.hitZone.location),
+					preformat: true,
 				}
 			);
 			locationDisplayParts.push(hitZone);
@@ -186,7 +195,8 @@ export class AttackHandler {
 			{
 				label_left: game.i18n.localize("ROLLTEXT.hitColumn"),
 				tooltip: locationResult.columnRoll.formula,
-				total: locationResult.columnRoll.total,
+				total: await constructCollapsibleRollMessage(locationResult.columnRoll),
+				preformat: true,
 			}
 		);
 		locationDisplayParts.push(column);
@@ -213,7 +223,8 @@ export class AttackHandler {
 		return counter>1;
 	}
 
-	static requiresLocationDisplay(hitResult) {
+	static requiresLocationDisplay(attackKey,hitResult) {
+		if(attackKey==ATTRIBUTES.mental) return false;
 		if(hitResult.upgraded) {
 			return hitResult.upgraded===HIT_TYPE.hit;
 		} 
@@ -230,6 +241,21 @@ export class AttackHandler {
 				return defenceVal+2;
 			case COVER_STATES.hard:
 				return defenceVal+4;
+			default:
+				return defenceVal;
 		}
+	}
+}
+
+function getCoverText(cover) {
+	switch(cover) {
+		case COVER_STATES.none:
+			return "";
+		case COVER_STATES.soft:
+			return game.i18n.localize("ROLLTEXT.softcover");
+		case COVER_STATES.hard:
+			return game.i18n.localize("ROLLTEXT.hardcover");
+		default:
+			return "";
 	}
 }

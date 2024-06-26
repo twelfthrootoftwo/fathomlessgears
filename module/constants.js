@@ -70,6 +70,13 @@ export const COVER_STATES = {
 	hard: "hard",
 }
 
+export const ROLL_MODIFIER_TYPE = {
+	flat: "flat",
+	die: "die",
+	modifier: "modifier",
+	bonus: "bonus"
+}
+
 export const ATTRIBUTE_MIN=0;
 export const ATTRIBUTE_MAX_ROLLED=9;
 export const ATTRIBUTE_MAX_FLAT=16;

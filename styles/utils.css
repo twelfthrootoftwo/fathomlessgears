@@ -20,26 +20,13 @@ input.sheet-input {
     display: flex;
     flex-direction: column;
 }
-#overlay {
-	position: fixed;
-	display: none;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: rgba(0,0,0,0.5);
-	z-index: 2;
-	cursor: wait;
-}
 .btn {
-background: rgba(0, 0, 0, 0.1);
-border: 2px groove var(--color-border-light-primary);
-border-radius: 2px;
-display: flex;
-align-items: center;
-justify-content: center;
+	background: rgba(0, 0, 0, 0.1);
+	border: 2px groove var(--color-border-light-primary);
+	border-radius: 2px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 .btn.btn-dark {
 	background: rgba(255, 255, 255, 0.1);
@@ -49,9 +36,81 @@ justify-content: center;
 	background-color: #44444466;
 	cursor: pointer;
 }
+.btn.btn-primary {
+  background: var(--color-bg-header);
+  color: var(--color-text-light-3);
+  border: 2px groove var(--color-border-light-primary)
+}
+.btn.btn-primary:hover {
+  background-color: var(--color-border-dark-secondary);
+}
 .spacer {
 	flex-grow: 10;
 }
 .lower-border-primary {
 	border-bottom: 1px solid var(--color-border-dark-primary);
+}
+#overlay {
+	position: fixed;
+	display: none;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0,0,0,0.7);
+	z-index: 2;
+	cursor: wait;
+}
+.loading-display {
+	padding-top: 250px;
+	width: 270px;
+	margin: auto;
+}
+.loading-text {
+	font-size: var(--font-size-24);
+	color: var(--color-text-light-3);
+}
+/* Taken from https://projects.lukehaas.me/css-loaders/ */
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+.loader {
+  margin: 60px auto;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1.1em solid var(--color-border-light-primary);
+  border-right: 1.1em solid var(--color-border-light-primary);
+  border-bottom: 1.1em solid var(--color-border-light-primary);
+  border-left: 1.1em solid #ffffff;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }

@@ -1,8 +1,7 @@
 {
 	"id": "fathomlessgears",
-	"version": "0.2.1",
+	"version": "#{VERSION}#",
 	"title": "Fathomless Gears",
-	"url": "https://github.com/twelfthrootoftwo/fathomlessgears",
 	"description": "A Foundry VTT system for Fathomless Gears, the mech fishing game by Ralf Ziegler",
 	"background": "systems/fathomlessgears/assets/fg-logo-simple.png",
 	"authors": [
@@ -16,7 +15,7 @@
 	"packs": [
 		{
 		  "name": "core_macros",
-		  "label": "HLM Macros",
+		  "label": "FG Macros",
 		  "system": "fathomlessgears",
 		  "path": "./packs/core_macros.db",
 		  "type": "Macro"
@@ -38,10 +37,37 @@
 	],
 	"compatibility": {
 		"minimum": "11",
-		"verified": "11"
+		"verified": "11.315"
+	},
+	"relationships": {
+		"requires": [{
+			"id": "token-action-hud-FG",
+			"type": "module",
+			"manifest": "https://github.com/twelfthrootoftwo/fvtt-token-action-hud-FG/releases/latest/download/module.json",
+			"compatibility": [{
+				"minimum": "0.1.0",
+				"verified": "0.1.0"
+			}]
+		},
+		{
+			"id": "token-action-hud-core",
+			"type": "module",
+			"compatibility": [
+				{
+					"minimum": "1.5.0",
+					"maximum": "1.5",
+					"verified": "1.5.0"
+				}
+			]
+		},
+		{
+			"id": "socketlib"
+		}
+		]
 	},
 	"gridDistance": 1,
-	"manifest": "",
-	"download": "",
+	"url": "#{URL}#",
+	"manifest": "#{MANIFEST}#",
+	"download": "#{DOWNLOAD}#",
 	"persistentStorage": true
 }

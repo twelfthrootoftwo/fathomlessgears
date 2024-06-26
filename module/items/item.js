@@ -117,7 +117,8 @@ export class HLMItem extends Item {
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: this,
-				text: this.getInternalDescriptionText(),
+				major_text: this.getInternalDescriptionText(),
+				minor_text: false
 			}
 		);
 		await ChatMessage.create({
@@ -135,8 +136,8 @@ export class HLMItem extends Item {
 		if(!this.isInternal()) {return false;}
 		let description_text="";
 		Object.keys(this.system.attributes).forEach((key) => {
-			if(this.system.attributes[key] > 0 && key != ATTRIBUTES.weight) {
-				description_text=description_text.concat(this.system.attributes[key].toString()," ",Utils.getLocalisedAttributeLabel(key),"\n")
+			if(this.system.attributes[key] != 0 && key != ATTRIBUTES.weight) {
+				description_text=description_text.concat(this.system.attributes[key].toString()," ",Utils.getLocalisedAttributeLabel(key),"<br>")
 			}
 		});
 		description_text=description_text.concat(this.system.action_text);
@@ -291,7 +292,7 @@ function constructInternalNPCData(data) {
  */
 function getAPCost(data) {
 	if(data.type==="passive" || data.action_text === "") return null;
-	if(data.action_text.ap_cost) return data.action_text.ap_cost;
+	if(data.action_text.ap_cost || data.action_text.ap_cost===0) return data.action_text.ap_cost;
 	return null;
 }
 

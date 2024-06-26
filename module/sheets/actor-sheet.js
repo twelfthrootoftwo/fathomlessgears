@@ -84,6 +84,7 @@ export class HLMActorSheet extends ActorSheet {
 	_getSubmitData(updateData) {
 		let formData = super._getSubmitData(updateData);
 		this.actor.calculateBallast();
+		this.actor.calculateAttributeTotals();
 		return formData;
 	}
 
@@ -91,8 +92,9 @@ export class HLMActorSheet extends ActorSheet {
 	activateListeners(html) {
 		//Add classes to attribute boxes with special properties
 		Object.keys(this.actor.system.attributes).forEach((key) => {
+			let attributeDocument=document.getElementById(key);
 			if(Utils.isRollableAttribute(key)) {
-				document.getElementById(key).querySelector(".name-box").classList.add("attribute-button","rollable", "btn");
+				attributeDocument.querySelector(".name-box").classList.add("attribute-button","rollable", "btn");
 			}
 		});
 
@@ -178,7 +180,7 @@ export class HLMActorSheet extends ActorSheet {
 		if(this.actor.canDropItem(targetItem)) {
 			this.actor.receiveDrop(targetItem);
 		} else {
-			console.log(`Can't drop item type ${targetItem.type} on actor type ${this.actor.type}`);
+			ui.notifications.info(`Can't drop item type ${targetItem.type} on actor type ${this.actor.type}`);
 		}
 	}
 

@@ -20,13 +20,19 @@
         
         <p class="roll-component-header">Flat modifiers</p>
         {{#if ranged}}
-        <div class="flex-row cover-row">
-            <label class="cover-label" for="none">{{localize "COVERSTATE.none"}}</label>
-            <input type="radio" name="cover" value="none" id="none" checked>
-            <label class="cover-label" for="none">{{localize "COVERSTATE.soft"}}</label>
-            <input type="radio" name="cover" value="soft" id="soft">
-            <label class="cover-label" for="none">{{localize "COVERSTATE.hard"}}</label>
-            <input type="radio" name="cover" value="hard" id="hard">
+        <div class="flex-col">
+            <div class="flex-row cover-row">
+                <label class="cover-label" for="none">{{localize "COVERSTATE.none"}}</label>
+                <input type="radio" name="cover" value="none" id="none" checked>
+            </div>
+            <div class="flex-row cover-row">
+                <label class="cover-label" for="none">{{localize "COVERSTATE.soft"}}</label>
+                <input type="radio" name="cover" value="soft" id="soft">
+            </div>
+            <div class="flex-row cover-row">
+                <label class="cover-label" for="none">{{localize "COVERSTATE.hard"}}</label>
+                <input type="radio" name="cover" value="hard" id="hard">
+            </div>
         </div>
         {{/if}}
         <ol class="roll-components">
@@ -37,7 +43,7 @@
             </li>
             {{/each}}
             <li class="roll-component-item">
-                <p class="roll-component-description">Additional</p>
+                <p class="roll-component-description">Additional (bonus)</p>
                 <input class="roll-component-value additional-value" type="number" data-selector="additionalFlat" value="{{additionalFlat}}">
             </li>
         </ol>

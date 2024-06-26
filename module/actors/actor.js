@@ -1,8 +1,9 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE} from "../constants.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE, ROLL_MODIFIER_TYPE} from "../constants.js";
 import { RollElement, RollDialog } from "../actions/roll-dialog.js";
 import { ReelHandler } from "../actions/reel.js";
+import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
 
 export class AttributeElement {
 	value
@@ -56,34 +57,38 @@ export class HLMActor extends Actor {
 	startRollDialog(attributeKey,internalId) {
 		console.log("Building modifiers");
 		const modifiers=[];
-		const baseDice=new RollElement(2,"die","Base");
+		const baseDice=new RollElement(2,ROLL_MODIFIER_TYPE.die,"Base",null);
 		modifiers.push(baseDice);
 		const attribute=this.system.attributes[attributeKey];
 		modifiers.push(new RollElement(
 			attribute.values.standard.base,
-			"flat",
-			"Frame base"
+			ROLL_MODIFIER_TYPE.flat,
+			"Frame base",
+			ROLL_MODIFIER_TYPE.modifier,
 		));
 		attribute.values.standard.additions.forEach((term) => {
 			modifiers.push(new RollElement(
 				term.value,
-				"flat",
-				term.label
+				ROLL_MODIFIER_TYPE.flat,
+				term.label,
+				ROLL_MODIFIER_TYPE.modifier,
 			))
 		});
 		attribute.values.bonus.forEach((term) => {
 			modifiers.push(new RollElement(
 				term.value,
-				"flat",
-				term.label
+				ROLL_MODIFIER_TYPE.flat,
+				term.label+" (bonus)",
+				ROLL_MODIFIER_TYPE.bonus
 			))
 		});
 		modifiers.push(new RollElement(
 			attribute.values.custom,
-			"flat",
-			"Custom modifier"
+			ROLL_MODIFIER_TYPE.flat,
+			"Custom modifier (bonus)",
+			ROLL_MODIFIER_TYPE.bonus
 		));
-		new RollDialog(modifiers,this,attributeKey,internalId);
+		return new RollDialog(modifiers,this,attributeKey,internalId);
 	}
 
 	/**
@@ -101,7 +106,8 @@ export class HLMActor extends Actor {
 			const output=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier,cover);
 			message=output.text ? output.text : output;
 		} else {
-			message=await this.rollNoTarget(attributeKey, dieCount, flatModifier);
+			const result=await this.rollNoTarget(attributeKey, dieCount, flatModifier);
+			message=result.text;
 		}
 		const hitMessage = await ChatMessage.create({
 			speaker: {actor: this},
@@ -157,7 +163,8 @@ export class HLMActor extends Actor {
 	async rollTargeted(attackKey, defenceKey, dieCount, flatModifier,cover) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
-			return await this.rollNoTarget(attackKey, dieCount, flatModifier);
+			const result= await this.rollNoTarget(attackKey, dieCount, flatModifier);
+			return result.text;
 		} else {
 			const target = targetSet.values().next().value;
 			return await AttackHandler.rollToHit(
@@ -175,7 +182,8 @@ export class HLMActor extends Actor {
 	async initiateReel(dieCount, flatModifier) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
-			return await this.rollNoTarget(attackKey, dieCount, flatModifier);
+			const result= await this.rollNoTarget(ATTRIBUTES.power, dieCount, flatModifier);
+			return result.text;
 		} else {
 			const target = targetSet.values().next().value;
 			return await ReelHandler.reel(
@@ -202,11 +210,11 @@ export class HLMActor extends Actor {
 			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
 			{
 				label_left: label,
-				total: roll.total,
-				tooltip: `${roll.formula}:  ${roll.result}`,
+				total: await constructCollapsibleRollMessage(roll),
+				preformat: true
 			}
 		);
-		return hitRollDisplay;
+		return {text: hitRollDisplay, result: null};
 	}
 
 	/**
@@ -434,7 +442,7 @@ export class HLMActor extends Actor {
 		const item=await Item.create(frame,{parent: this});
 		this.system.frame=item._id;
 		this.calculateBallast();
-		this.update({"system": this.system});
+		await this.update({"system": this.system});
 	}
 
 	/**
@@ -460,6 +468,7 @@ export class HLMActor extends Actor {
 		})
 		//Modify resources
 		if(internal.system.repair_kits) {this.modifyResourceValue("repair",internal.system.repair_kits);}
+		this.calculateBallast();
 		
 		await this.update({"system": this.system});
 	}
@@ -485,7 +494,8 @@ export class HLMActor extends Actor {
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: internal,
-				text: rollOutput.text,
+				minor_text: internal.getInternalDescriptionText(),
+				major_text: rollOutput.text,
 				showDamage: rollOutput.result!=HIT_TYPE.miss,
 				damageText: game.i18n.localize("INTERNALS.damage"),
 				marbleText: game.i18n.localize("INTERNALS.marbles")
@@ -542,7 +552,7 @@ export class HLMActor extends Actor {
 			}
 		});
 		this.calculateBallast();
-		this.modifyResourceValue("repair",-1*internal.system.repair_kits);
+		if(this.system.resources) this.modifyResourceValue("repair",-1*internal.system.repair_kits);
 		this.update({"system": this.system});
 		internal.delete();
 	}
@@ -594,6 +604,23 @@ export class HLMActor extends Actor {
 			return game.i18n.localize("SHEET.scantrue");
 		} else {
 			return game.i18n.localize("SHEET.scanfalse");
+		}
+	}
+
+	async scanTarget() {
+		if(this.type==ACTOR_TYPES.fish) return false;
+		const targetSet = game.user.targets;
+		if (targetSet.size < 1) {
+			//TODO allow choosing target afterwards
+			ui.notifications.info(game.i18n.localize("MESSAGE.scannotarget"));
+			return false;
+		} else {
+			const target = targetSet.values().next().value;
+			const content = `<p class="message-text-only">${game.i18n.localize("MESSAGE.scantarget").replace("_ACTOR_NAME_", this.name).replace("_TARGET_NAME_", target.name)}</p>`;
+			await ChatMessage.create({
+				speaker: {actor: this},
+				content: content,
+			})
 		}
 	}
 }

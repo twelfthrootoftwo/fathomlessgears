@@ -21,3 +21,12 @@ User testing performed on this patch!
 * Tweaks to chat message display of attacks
 * Fix update process for new item import process
 * Attributes properly cap on actor sheet
+
+## Version 0.2.2
+* Add pointer & loading feedback for fsh import
+* Bug fixes
+* Improved internal message layout
+
+## Version 0.2.3
+* Fix bugs around custom bonuses in roll dialog & sheet
+* Expandable rolls in chat messages

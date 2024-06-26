@@ -85,8 +85,8 @@ input.piece-value.editable {
     background-color: var(--color-bg-dialog);
     text-align: center;
     font-size: 12pt;
-    width: 15px;
-    min-width: 15px;
+    width: 23px;
+    min-width: 23px;
     height: 17px;
     padding: 0px 2px;
     margin: 0px 5px;
@@ -313,7 +313,8 @@ button.button.post-message {
 .post-button {
     margin: 0px 1px;
     padding: 1px 2px;
-    font-size: var(--font-size-12);
+    font-size: var(--font-size-13);
+    font-weight: 300;
     height: 19px;
 }
 .internal-top-row {

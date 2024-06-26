@@ -4,11 +4,15 @@
 		<div class="roll-label-text">{{{label_left}}}</div>
 	</div>
 	{{/if}}
+	{{#if preformat}}
+	{{{total}}}
+	{{else}}
 	<div class="dice-roll">
 		<div class="row dice-result">
 			<h4 class="dice-total"data-tooltip="{{tooltip}}">{{total}}</h4>
 		</div>
 	</div>
+	{{/if}}
 	<div class="roll-label outcome">
 		<div class="roll-outcome-text">{{{outcome}}}</div>
 	</div>
