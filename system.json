@@ -15,7 +15,7 @@
 	"packs": [
 		{
 		  "name": "core_macros",
-		  "label": "HLM Macros",
+		  "label": "FG Macros",
 		  "system": "fathomlessgears",
 		  "path": "./packs/core_macros.db",
 		  "type": "Macro"
