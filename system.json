@@ -45,8 +45,8 @@
 			"type": "module",
 			"manifest": "https://github.com/twelfthrootoftwo/fvtt-token-action-hud-FG/releases/latest/download/module.json",
 			"compatibility": [{
-				"minimum": "0.2.2",
-				"verified": "0.2.2"
+				"minimum": "0.1.0",
+				"verified": "0.1.0"
 			}]
 		},
 		{
