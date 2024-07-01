@@ -4,6 +4,7 @@ import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN,
 import { RollElement, RollDialog } from "../actions/roll-dialog.js";
 import { ReelHandler } from "../actions/reel.js";
 import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
+import { constructGrid } from "../grid/grid-base.js";
 
 export class AttributeElement {
 	value
@@ -40,8 +41,10 @@ export class HLMActor extends Actor {
 				}
 			} else if(this.type==ACTOR_TYPES.fisher && !this.system.gridType){
 				Utils.getGridFromSize("Fisher").then((grid) => {
-					this.applyGrid(grid);
-				});
+					this.applyGrid(grid).then(() => {
+						constructGrid(this);
+					});
+				})
 			}
 		}
 	}

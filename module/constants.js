@@ -77,6 +77,12 @@ export const ROLL_MODIFIER_TYPE = {
 	bonus: "bonus"
 }
 
+export const GRID_SPACE_STATE = {
+	locked: "locked",
+	intact: "intact",
+	broken: "broken"
+}
+
 export const ATTRIBUTE_MIN=0;
 export const ATTRIBUTE_MAX_ROLLED=9;
 export const ATTRIBUTE_MAX_FLAT=16;
