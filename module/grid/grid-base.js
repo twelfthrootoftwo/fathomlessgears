@@ -21,6 +21,8 @@ export async function constructGrid(actor) {
         let region = new GridRegion(regionData.columns, regionData.rows,regionDisplayPosition,this);
         gridObject.gridRegions.push(region);
     }
+    actor.system.grid=gridObject
+    return gridObject
     console.log("Success!")
 }
 

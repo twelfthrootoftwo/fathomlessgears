@@ -150,6 +150,7 @@
                             <div class="btn hit-location-button" id="hit-location">{{localize "SHEET.hitlocation"}}</div>
                         </div>
                         <div class="flex-col">
+                            <!--
                             <img
                                 class="grid-img"
                                 id="grid-img"
@@ -159,6 +160,11 @@
                                 max-height="350"
                                 width="350"
                             />
+                            -->
+                            {{>
+                                "systems/fathomlessgears/templates/partials/grid-box.html"
+                                grid=grid
+                            }}
                             <div class="flex-row">
                                 <div class="resource-row flex-row">
                                     <label class="marbles">{{localize "RESOURCES.repair"}}</label>

@@ -1,5 +1,6 @@
 import { ATTRIBUTES, ACTOR_TYPES } from "../constants.js";
 import {Utils} from "../utilities/utils.js";
+import { constructGrid } from "../grid/grid-base.js";
 
 /**
  * @extends {ActorSheet}
@@ -77,6 +78,7 @@ export class HLMActorSheet extends ActorSheet {
 					break;
 			}
 		})
+		context.grid=await constructGrid(context.actor);
 		return context;
 	}
 

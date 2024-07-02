@@ -445,3 +445,34 @@ input.background {
 	min-height: 100px;
 	height: 100%;
 }
+
+/*
+---------------------------------
+    GRID
+---------------------------------
+*/
+.grid-base {
+    width: 240px;
+    height: 240px;
+}
+.grid-region-collection {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+.grid-region {
+    width: 72px;
+    max-height: 72px;
+    margin: 4px;
+}
+.grid-space {
+    width: 10px;
+    height: 10px;
+    margin: 1px;
+    border: 1px solid var(--color-border-dark-secondary)
+}
+.grid-space:hover {
+    border: 2px solid var(--color-border-dark-primary);
+}
