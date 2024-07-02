@@ -13,6 +13,9 @@ export async function constructGrid(actor) {
         gridLayout=[[0,1],[1,0],[1,1],[1,2],[2,1]];
     }
     for(let i=0; i<gridType.system.hitRegions.length;i+=1) {
+        if((i==0 || i==4) && gridType.system.type=="fisher") {
+            gridObject.gridRegions.push(null);
+        }
         let regionData=gridType.system.hitRegions[i];
         let regionDisplayPosition=[0,i]
         if(gridLayout) {
@@ -20,6 +23,9 @@ export async function constructGrid(actor) {
         }
         let region = new GridRegion(regionData.columns, regionData.rows,regionDisplayPosition,this);
         gridObject.gridRegions.push(region);
+        if((i==0 || i==4) && gridType.system.type=="fisher") {
+            gridObject.gridRegions.push(null);
+        }
     }
     actor.system.grid=gridObject
     return gridObject

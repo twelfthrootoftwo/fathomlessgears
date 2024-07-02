@@ -452,24 +452,26 @@ input.background {
 ---------------------------------
 */
 .grid-base {
-    width: 240px;
-    height: 240px;
+    width: 348px;
 }
 .grid-region-collection {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
+    align-items: start;
 }
 .grid-region {
-    width: 72px;
-    max-height: 72px;
+    width: 108px;
+    max-height: 108px;
     margin: 4px;
 }
+.grid-space-row {
+    justify-content: center;
+}
 .grid-space {
-    width: 10px;
-    height: 10px;
+    width: 16px;
+    height: 16px;
     margin: 1px;
     border: 1px solid var(--color-border-dark-secondary)
 }
