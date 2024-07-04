@@ -6,11 +6,22 @@ export class GridSpace {
     parentRegion
     highlight
 
-    constructor(parent) {
-        this.state=GRID_SPACE_STATE.locked;
-        this.internal=null;
+    constructor(json,parent) {
+        if(json==null) {
+            this.state=GRID_SPACE_STATE.locked;
+            this.internal=null;
+        } else {
+            this.state=json.state;
+            this.internal=json.internal;
+        }
         this.parentRegion=parent;
         this.highlight=false;
+    }
+
+    prepJson() {
+        const jsonRecord={};
+        jsonRecord.state=this.state;
+        jsonRecord.internal=this.internal;
     }
 
     setState(state) {
