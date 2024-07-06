@@ -92,9 +92,9 @@ export class HLMActorSheet extends ActorSheet {
 	activateListeners(html) {
 		//Add classes to attribute boxes with special properties
 		Object.keys(this.actor.system.attributes).forEach((key) => {
-			let attributeDocument=document.getElementById(key);
 			if(Utils.isRollableAttribute(key)) {
-				attributeDocument.querySelector(".name-box").classList.add("attribute-button","rollable", "btn");
+				let attributeDocument=html.find(`#${key}`).find(".name-box")[0];
+				attributeDocument.classList.add("attribute-button","rollable", "btn");
 			}
 		});
 
