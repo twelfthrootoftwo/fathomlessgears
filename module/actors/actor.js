@@ -42,7 +42,9 @@ export class HLMActor extends Actor {
 			} else if(this.type==ACTOR_TYPES.fisher && !this.system.gridType){
 				Utils.getGridFromSize("Fisher").then((grid) => {
 					this.applyGrid(grid).then(() => {
-						constructGrid(this);
+						constructGrid(this).then((gridObject) => {
+							this.update({"system.grid": gridObject.toJson()});
+						});
 					});
 				})
 			}

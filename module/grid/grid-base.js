@@ -1,4 +1,5 @@
 import { GridSpace } from "./grid-space.js";
+import {Utils} from "../utilities/utils.js";
 
 /**
  * Unpack a grid serial json into a Grid object
@@ -20,8 +21,6 @@ export async function constructGrid(actor) {
             gridObject.gridRegions.push(null);
         }
     }
-    actor.system.grid=gridObject.toJson();
-    console.log(actor.system.grid);
     return gridObject
 }
 
@@ -30,16 +29,20 @@ export class Grid {
     actor
 
     constructor(json) {
-        if(json == null) {
-            this.actor=null;
-            this.gridRegions=[];
-        } else {
+        if(Utils.isJsonString(json)) {
             const baseObj=JSON.parse(json);
             this.actor=game.actors.get(baseObj.actor);
             this.gridRegions=[];
             baseObj.gridRegions.forEach((region) => {
-                this.gridRegions.push(new GridRegion(region,this));
+                if(region==null) {
+                    this.gridRegions.push(null);
+                } else {
+                    this.gridRegions.push(new GridRegion(region,this));
+                }
             })
+        } else {
+            this.actor=null;
+            this.gridRegions=[];
         }
     }
 

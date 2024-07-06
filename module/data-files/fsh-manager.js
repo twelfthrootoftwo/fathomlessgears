@@ -434,10 +434,6 @@ async function updateCompendiumItems(relevantData,compendium,itemType,oldFileId,
 	for(let oldItem of existingItems) {
 		if(toUpdateCapitalised.includes(oldItem.name)) {
 			const index=toUpdateCapitalised.indexOf(oldItem.name);
-			// const itemUpdateData={
-			// 	"source": newFileId,
-			// 	"data": relevantData[toUpdate[index]]
-			// }
 			const itemUpdateData=createHLMItemSystem(itemType,relevantData[toUpdate[index]],newFileId);
 			updateRecord.push({
 				_id: oldItem.id,

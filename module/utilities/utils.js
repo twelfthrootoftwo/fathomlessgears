@@ -219,6 +219,9 @@ export class Utils {
 	static async getGridFromSize(sizeName) {
 		console.log("Finding grid!");
 		const gridCollection=await game.packs.get("fathomlessgears.grid_type");
+		if(!gridCollection.indexed) {
+			await gridCollection.getIndex();
+		}
 		const record = gridCollection.index.filter(p => p.name == sizeName);
 		const grid=await gridCollection.getDocument(record[0]._id);
 		return grid;
@@ -228,5 +231,15 @@ export class Utils {
 		html.find(".btn").each(function() {
 			this.classList.add("btn-active");
 		});
+	}
+
+	static isJsonString(str) {
+		try {
+			JSON.parse(str);
+		} catch (e) {
+			return false;
+		}
+		if(str) return true;
+		return false;
 	}
 }
