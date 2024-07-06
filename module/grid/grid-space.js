@@ -22,6 +22,7 @@ export class GridSpace {
         const jsonRecord={};
         jsonRecord.state=this.state;
         jsonRecord.internal=this.internal;
+        return jsonRecord;
     }
 
     setState(state) {

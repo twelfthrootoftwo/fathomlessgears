@@ -6,7 +6,8 @@ import { GridSpace } from "./grid-space.js";
  * @returns an unpacked Grid
  */
 export async function constructGrid(actor) {
-    const gridObject = new Grid(actor);
+    const gridObject = new Grid(null);
+    gridObject.actor=actor;
     const gridType=await actor.items.get(actor.system.gridType);
     for(let i=0; i<gridType.system.hitRegions.length;i+=1) {
         if((i==0 || i==4) && gridType.system.type=="fisher") {
@@ -19,7 +20,8 @@ export async function constructGrid(actor) {
             gridObject.gridRegions.push(null);
         }
     }
-    actor.system.grid=gridObject
+    actor.system.grid=gridObject.toJson();
+    console.log(actor.system.grid);
     return gridObject
 }
 
@@ -49,7 +51,11 @@ export class Grid {
         const copyGrid=new Grid(null);
         copyGrid.actor=this.actor._id;
         this.gridRegions.forEach((region) => {
-            copyGrid.gridRegions.push(region.prepJson())
+            if(!region) {
+                copyGrid.gridRegions.push(null)
+            } else {
+                copyGrid.gridRegions.push(region?.prepJson())
+            }
         })
         return JSON.stringify(copyGrid);
     }
@@ -69,6 +75,8 @@ class GridRegion {
     parentGrid
 
     constructor(json,parent) {
+        this.width=json.width;
+        this.height=json.height;
         for (let i = 0; i < json.height; i++) {
             this.gridSpaces.push([])
             for (let j = 0; j < json.width; j++) {
@@ -94,6 +102,7 @@ class GridRegion {
             })
             jsonRecord.gridSpaces.push(rowRecord);
         })
+        return jsonRecord;
     }
 
     highlightInternal(uuid,highlight) {
