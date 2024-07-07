@@ -1,6 +1,6 @@
 import { GridSpace } from "./grid-space.js";
 import {Utils} from "../utilities/utils.js";
-import { SECTION_NUMBERING_MAP } from "../constants.js";
+import { GRID_SPACE_STATE, SECTION_NUMBERING_MAP } from "../constants.js";
 
 /**
  * Unpack a grid serial json into a Grid object
@@ -70,28 +70,14 @@ export class Grid {
             internal.toggleBroken();
         }
     }
-    
-    async asHtml() {
-        const html=$($.parseHTML(await renderTemplate(
-			"systems/fathomlessgears/templates/partials/grid-box.html",
-			{
-				grid: this
-			}
-		)));
-        if(this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {
-			html.find(".grid-base").each(function() {
-				this.classList.add("interactable");
-			});
-		}
-        return html.html();
-    }
 
     //Callback for clicking a grid space on the sheet
     clickGridSpace(event) {
         if(this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {
             //Current scope is ActorSheet, so need to get the grid object
-            const space=this.grid.findGridSpace(Utils.extractIntFromString(event.target.id));
+            const space=this.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
             space.triggerClick();
+            this.actor.update({"system.grid": this.grid.toJson()});
         }
     }
 
@@ -131,6 +117,17 @@ class GridRegion {
                 } else {
                     const space=new GridSpace(null, this);
                     space.id=idCounter;
+                    switch(idCounter%3) {
+                        case 0:
+                            space.setState(GRID_SPACE_STATE.locked);
+                            break;
+                        case 1:
+                            space.setState(GRID_SPACE_STATE.intact);
+                            break;
+                        case 2:
+                            space.setState(GRID_SPACE_STATE.broken);
+                            break;
+                    }
                     idCounter+=1;
                     this.gridSpaces[i].push(space);
                 }

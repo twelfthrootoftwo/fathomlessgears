@@ -151,7 +151,10 @@
                         </div>
                         <div class="flex-col">
                             {{#if interactiveGrid}}
-                            {{{gridHtml}}}
+                            {{>
+                                "systems/fathomlessgears/templates/partials/grid-box.html"
+                                grid=grid
+                            }}
                             {{else}}
                             <img
                                 class="grid-img"

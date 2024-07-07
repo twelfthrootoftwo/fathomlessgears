@@ -86,7 +86,7 @@ export class HLMActorSheet extends ActorSheet {
 			this.grid=new Grid(context.actor.system.grid);
 			this.grid.actor=context.actor;
 			context.interactiveGrid=true;
-			context.gridHtml=await this.grid.asHtml();
+			context.grid=this.grid;
 		}
 		return context;
 	}
@@ -109,10 +109,13 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		});
 
-		//Activate buttons for owners only
+		//Activate buttons & grid interactivity for owners only
 		if(this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {
 			Utils.activateButtons(html);
 			html.find(".internal-body").each(function() {
+				this.classList.add("interactable");
+			});
+			html.find(".grid-base").each(function() {
 				this.classList.add("interactable");
 			});
 		}

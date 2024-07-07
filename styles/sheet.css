@@ -473,8 +473,21 @@ input.background {
     width: 16px;
     height: 16px;
     margin: 1px;
-    border: 1px solid var(--color-border-dark-secondary)
+    border: 1px solid var(--color-border-dark-secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.grid-base.interactable .grid-space:hover {
+.grid-base.interactable .grid-space.unlocked:hover {
     border: 2px solid var(--color-border-dark-primary);
+}
+.icon-overlay {
+    width: 12px;
+    height: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.grid-icon {
+    font-size: 12px;
 }
