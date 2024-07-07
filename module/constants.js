@@ -100,3 +100,13 @@ export const ATTRIBUTE_KEY_MAP = {
 	[ATTRIBUTES.baseAP]: "ap",
 	[ATTRIBUTES.ballast]: "ballast",
 }
+
+export const SECTION_NUMBERING_MAP = {
+	fisher: [72,36,0,54,81],
+	small: [0],
+	medium: [0],
+	large: [0],
+	massive: [0],
+	leviathan: [],
+	serpent_leviathan: []
+}

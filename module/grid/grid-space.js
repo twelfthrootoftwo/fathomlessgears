@@ -5,6 +5,7 @@ export class GridSpace {
     internal
     parentRegion
     highlight
+    id
 
     constructor(json,parent) {
         if(json==null) {
@@ -13,6 +14,7 @@ export class GridSpace {
         } else {
             this.state=json.state;
             this.internal=json.internal;
+            this.id=json.id;
         }
         this.parentRegion=parent;
         this.highlight=false;
@@ -22,6 +24,7 @@ export class GridSpace {
         const jsonRecord={};
         jsonRecord.state=this.state;
         jsonRecord.internal=this.internal;
+        jsonRecord.id=this.id;
         return jsonRecord;
     }
 

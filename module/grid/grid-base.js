@@ -1,5 +1,6 @@
 import { GridSpace } from "./grid-space.js";
 import {Utils} from "../utilities/utils.js";
+import { SECTION_NUMBERING_MAP } from "../constants.js";
 
 /**
  * Unpack a grid serial json into a Grid object
@@ -15,7 +16,7 @@ export async function constructGrid(actor) {
             gridObject.gridRegions.push(null);
         }
         let regionData=gridType.system.hitRegions[i];
-        let region = new GridRegion({width: regionData.columns, height: regionData.rows},this);
+        let region = new GridRegion({width: regionData.columns, height: regionData.rows},this, SECTION_NUMBERING_MAP[gridType.system.type][i]);
         gridObject.gridRegions.push(region);
         if((i==0 || i==4) && gridType.system.type=="fisher") {
             gridObject.gridRegions.push(null);
@@ -68,7 +69,22 @@ export class Grid {
         if (internal.isBroken == intact) {
             internal.toggleBroken();
         }
-    }    
+    }
+    
+    async asHtml() {
+        const html=await renderTemplate(
+			"systems/fathomlessgears/templates/partials/grid-box.html",
+			{
+				grid: this
+			}
+		);
+        if(this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {
+			this.activateInteraction();
+			html.find(".grid-base").each(function() {
+				this.classList.add("interactable");
+			});
+		}
+    }
 }
 
 class GridRegion {
@@ -77,16 +93,23 @@ class GridRegion {
     gridSpaces=[]
     parentGrid
 
-    constructor(json,parent) {
+    constructor(json,parent,startId) {
         this.width=json.width;
         this.height=json.height;
+        let idCounter;
+        if(!json.gridSpaces) {
+            idCounter=startId;
+        }
         for (let i = 0; i < json.height; i++) {
             this.gridSpaces.push([])
             for (let j = 0; j < json.width; j++) {
                 if(json.gridSpaces) {
                     this.gridSpaces[i].push(new GridSpace(json.gridSpaces[i][j], this));
                 } else {
-                    this.gridSpaces[i].push(new GridSpace(null, this));
+                    const space=new GridSpace(null, this);
+                    space.id=idCounter;
+                    idCounter+=1;
+                    this.gridSpaces[i].push(space);
                 }
             }
         }
