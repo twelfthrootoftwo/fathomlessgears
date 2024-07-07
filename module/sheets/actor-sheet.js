@@ -6,6 +6,8 @@ import { Grid } from "../grid/grid-base.js";
  * @extends {ActorSheet}
  */
 export class HLMActorSheet extends ActorSheet {
+	grid
+
 	/** @inheritdoc */
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
@@ -78,8 +80,14 @@ export class HLMActorSheet extends ActorSheet {
 					break;
 			}
 		})
-		context.grid=new Grid(context.actor.system.grid);
-		context.grid.actor=context.actor;
+
+		context.interactiveGrid=false;
+		if(this.actor.getFlag("fathomlessgears","interactiveGrid")){
+			this.grid=new Grid(context.actor.system.grid);
+			this.grid.actor=context.actor;
+			context.interactiveGrid=true;
+			context.gridHtml=await this.grid.asHtml();
+		}
 		return context;
 	}
 
@@ -127,6 +135,7 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".delete-internal").click(this.deleteInternal.bind(this));
 		html.find("#hit-location").click(this.locationHitMessage.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
+		html.find(".grid-space").click(this.grid.clickGridSpace.bind(this));
 		if(this.actor.type===ACTOR_TYPES.fisher) {
 			document.getElementById("post-frame-ability").addEventListener("click",this.postFrameAbility.bind(this));
 		}

@@ -72,18 +72,41 @@ export class Grid {
     }
     
     async asHtml() {
-        const html=await renderTemplate(
+        const html=$($.parseHTML(await renderTemplate(
 			"systems/fathomlessgears/templates/partials/grid-box.html",
 			{
 				grid: this
 			}
-		);
+		)));
         if(this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {
-			this.activateInteraction();
 			html.find(".grid-base").each(function() {
 				this.classList.add("interactable");
 			});
 		}
+        return html.html();
+    }
+
+    //Callback for clicking a grid space on the sheet
+    clickGridSpace(event) {
+        if(this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {
+            //Current scope is ActorSheet, so need to get the grid object
+            const space=this.grid.findGridSpace(Utils.extractIntFromString(event.target.id));
+            space.triggerClick();
+        }
+    }
+
+    findGridSpace(id) {
+        let targetSpace=null;
+        this.gridRegions.forEach((region) => {
+            if(region) {
+                region.gridSpaces.forEach((row) => {
+                    row.forEach((space) => {
+                        if(space.id==id) targetSpace=space;
+                    });
+                });
+            }
+        });
+        return targetSpace;
     }
 }
 

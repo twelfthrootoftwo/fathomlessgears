@@ -56,4 +56,9 @@ export class GridSpace {
                 return false
         }
     }
+
+    triggerClick() {
+        this.toggleBroken();
+        console.log(`State of ${this.id} set to ${this.state}`)
+    }
 }

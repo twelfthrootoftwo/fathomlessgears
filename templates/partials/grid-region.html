@@ -2,9 +2,10 @@
     {{#each region.gridSpaces}}
     <div class="grid-space-row flex-row">
         {{#each this}}
-        <div class="grid-space" id="gridspace-{{id}}">
-
-        </div>
+        {{>
+            "systems/fathomlessgears/templates/partials/grid-space.html"
+            space=this
+        }}
         {{/each}}
     </div>
     {{/each}}

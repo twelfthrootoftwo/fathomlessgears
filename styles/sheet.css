@@ -475,6 +475,6 @@ input.background {
     margin: 1px;
     border: 1px solid var(--color-border-dark-secondary)
 }
-.grid-space:hover {
+.grid-base.interactable .grid-space:hover {
     border: 2px solid var(--color-border-dark-primary);
 }

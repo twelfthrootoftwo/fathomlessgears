@@ -44,6 +44,7 @@ export class HLMActor extends Actor {
 					this.applyGrid(grid).then(() => {
 						constructGrid(this).then((gridObject) => {
 							this.update({"system.grid": gridObject.toJson()});
+							this.setFlag("fathomlessgears","interactiveGrid",true);
 						});
 					});
 				})

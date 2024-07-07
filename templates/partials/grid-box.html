@@ -1,10 +1,12 @@
-<div class="grid-base">
-    <div class="grid-region-collection">
-        {{#each grid.gridRegions}}
-        {{>
-            "systems/fathomlessgears/templates/partials/grid-region.html"
-            region=this
-        }}
-        {{/each}}
+<div>
+    <div class="grid-base">
+        <div class="grid-region-collection">
+            {{#each grid.gridRegions}}
+            {{>
+                "systems/fathomlessgears/templates/partials/grid-region.html"
+                region=this
+            }}
+            {{/each}}
+        </div>
     </div>
 </div>
