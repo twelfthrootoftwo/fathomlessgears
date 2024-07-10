@@ -4,7 +4,7 @@ import { GRID_SPACE_STATE, SECTION_NUMBERING_MAP } from "../constants.js";
 
 /**
  * Unpack a grid serial json into a Grid object
- * @param {string} gridJson JSON record prepresenting the grid object
+ * @param {HLMActor} actor The actor to assign to this new grid
  * @returns an unpacked Grid
  */
 export async function constructGrid(actor) {
@@ -29,6 +29,10 @@ export class Grid {
     gridRegions
     actor
 
+    /**
+     * Construct a new Grid, either from a JSON encoding or fresh
+     * @param {string} json A JSON encoding of a grid. Will create a blank Grid object if this is not valid JSON
+     */
     constructor(json) {
         if(Utils.isJsonString(json)) {
             const baseObj=JSON.parse(json);
@@ -64,6 +68,7 @@ export class Grid {
         return JSON.stringify(copyGrid);
     }
 
+    //TODO finish
     checkInternal(uuid, intact) {
         const internal=this.actor.getItem(uuid);
         if (internal.isBroken == intact) {
@@ -81,6 +86,11 @@ export class Grid {
         }
     }
 
+    /**
+     * Finds a grid space on this grid with a given id
+     * @param {int} id The id no. of the grid space to find
+     * @returns the GridSpace with this id
+     */
     findGridSpace(id) {
         let targetSpace=null;
         this.gridRegions.forEach((region) => {
@@ -102,6 +112,12 @@ class GridRegion {
     gridSpaces=[]
     parentGrid
 
+    /**
+     * Construct a GridRegion
+     * @param {Object} json The parsed JSON encoding representing this region, Requires width and height fields
+     * @param {Grid} parent The Grid this GridRegion belongs to
+     * @param {int} startId The id of the top left grid space
+     */
     constructor(json,parent,startId) {
         this.width=json.width;
         this.height=json.height;
@@ -136,6 +152,10 @@ class GridRegion {
         this.parentGrid=parent;
     }
 
+    /**
+     * Prepare an object to be turned into a JSON later
+     * @returns an object encoding this GridRegion (width, height, all grid spaces)
+     */
     prepJson() {
         const jsonRecord={};
         jsonRecord.width=this.width;
@@ -151,20 +171,33 @@ class GridRegion {
         return jsonRecord;
     }
 
+    /**
+     * Toggle highlight for grid spaces belonging to a particular internal
+     * @param {string} uuid The UUID of the internal to find
+     * @param {bool} highlight Whether to turn on or off highlight display
+     */
     highlightInternal(uuid,highlight) {
-        this.gridSpaces.forEach((space) => {
-            if(space.containsInternal(uuid)) {
-                space.highlight=highlight;
-            }
+        this.gridSpaces.forEach((row) => {
+            row.forEach((space) => {
+                if(space.containsInternal(uuid)) {
+                    space.highlight=highlight;
+                }
+            })
         });
     }
 
+    /**
+     * Check whether an internal is broken & pass the result to parent grid
+     * @param {string} uuid The uuid of internal to check
+     */
     checkInternal(uuid) {
         const intact=false;
-        this.gridSpaces.forEach((space) => {
-            if(space.containsInternal(uuid) && space.isIntact()) {
-                intact=true;
-            }
+        this.gridSpaces.forEach((row) => {
+            row.forEach((space) => {
+                if(space.containsInternal(uuid) && space.isIntact()) {
+                    intact=true;
+                }
+            });
         });
         this.parentGrid.checkInternal(uuid,intact);
     }
