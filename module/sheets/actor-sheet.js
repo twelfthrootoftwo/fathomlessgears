@@ -139,6 +139,8 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".delete-internal").click(this.deleteInternal.bind(this));
 		html.find("#hit-location").click(this.locationHitMessage.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
+		html.find("#initialise-import").click(this.selectImport.bind(this))
+		html.find("#initialise-manual").click(this.selectManualSetup.bind(this))
 		if(this.actor.getFlag("fathomlessgears","interactiveGrid")) {
 			html.find(".grid-space").click(this.grid.clickGridSpace.bind(this));
 		}
@@ -244,6 +246,16 @@ export class HLMActorSheet extends ActorSheet {
 	async toggleScan(event) {
 		if(!this.testOwnership()) {return false;}
 		this.actor.toggleScan();
+	}
+
+	selectManualSetup() {
+		if(!this.testOwnership()) {return false;}
+		this.actor.setFlag("fathomlessgears","initialised",true);
+	}
+
+	selectImport() {
+		if(!this.testOwnership()) {return false;}
+		console.log("Import process goes here");
 	}
 }
 function safeIdClean(safeId) {
