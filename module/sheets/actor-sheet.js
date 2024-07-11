@@ -139,7 +139,9 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".delete-internal").click(this.deleteInternal.bind(this));
 		html.find("#hit-location").click(this.locationHitMessage.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
-		html.find(".grid-space").click(this.grid.clickGridSpace.bind(this));
+		if(this.actor.getFlag("fathomlessgears","interactiveGrid")) {
+			html.find(".grid-space").click(this.grid.clickGridSpace.bind(this));
+		}
 		if(this.actor.type===ACTOR_TYPES.fisher) {
 			document.getElementById("post-frame-ability").addEventListener("click",this.postFrameAbility.bind(this));
 		}

@@ -44,7 +44,7 @@
 	"SHEET.hitlocation": "Hit location",
 	"SHEET.scantrue": "Revoke scan",
 	"SHEET.scanfalse": "Scan",
-	"SHEET.initgearwright": "Import Gearwright save data",
+	"SHEET.initgearwright": "Import from Gearwright",
 	"SHEET.initmanual": "Create manually",
 
 	"MANAGER.init": "Initialising",
