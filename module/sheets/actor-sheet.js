@@ -63,8 +63,8 @@ export class HLMActorSheet extends ActorSheet {
 		internals.forEach((internal) => {
 			internal.description_text=internal.getInternalDescriptionText();
 			switch(internal.system.type) {
-				case "melee":
-				case "ranged":
+				case "close":
+				case "far":
 				case "mental":
 					context.weapons.push(internal);
 					break;
