@@ -29,6 +29,7 @@ export class HLMActorSheet extends ActorSheet {
 	/** @inheritdoc */
 	async getData(options) {
 		const context = await super.getData(options);
+		context.showInitialiseCover=!context.actor.getFlag("fathomlessgears","initialised")
 		context.biographyHTML = await TextEditor.enrichHTML(
 			context.actor.system.biography,
 			{

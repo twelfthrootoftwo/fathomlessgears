@@ -34,6 +34,7 @@ export class HLMActor extends Actor {
 	_onCreate(data, options, userId) {
 		super._onCreate(data, options, userId);
 		if(game.user._id==userId) {
+			this.setFlag("fathomlessgears","initialised",false)
 			if(this.type==ACTOR_TYPES.fish) {
 				const flag=this.getFlag("fathomlessgears","scanned");
 				if(flag==null || flag==undefined) {

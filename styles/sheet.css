@@ -29,6 +29,21 @@
     width: 100%;
     height: calc(100% - 50px);
 }
+.initialiser {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
+    background-color:#00000066
+}
+.initialise-button {
+    width: 50px;
+    height: 25px;
+    font-size: var(--font-size-12);
+}
 
 /*
 ---------------------------------
