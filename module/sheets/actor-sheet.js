@@ -1,6 +1,7 @@
 import { ATTRIBUTES, ACTOR_TYPES } from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 import { Grid } from "../grid/grid-base.js";
+import { FileUploader } from "../data-files/uploader.js";
 
 /**
  * @extends {ActorSheet}
@@ -255,7 +256,13 @@ export class HLMActorSheet extends ActorSheet {
 
 	selectImport() {
 		if(!this.testOwnership()) {return false;}
-		console.log("Import process goes here");
+		new FileUploader(this);
+	}
+
+	_onFileLoaded(fileData,fileName,oldFile) {
+		//process gearwright json
+		console.log(fileData);
+		const preparedData=JSON.parse(fileData);
 	}
 }
 function safeIdClean(safeId) {

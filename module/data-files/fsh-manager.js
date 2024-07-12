@@ -1,5 +1,5 @@
 import { identifyDataTypes } from "./file-utils.js";
-import { FshUploader } from "./uploader.js";
+import { FileUploader } from "./uploader.js";
 import { FileRecord, getExtension, getTargetCompendium, isItemFromFileSource } from "./file-utils.js";
 import { Utils } from "../utilities/utils.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
@@ -134,7 +134,7 @@ export class FshManager extends HLMApplication {
 		Utils.activateButtons(html);
 
 		document.getElementsByClassName("add-new-fsh")[0]?.addEventListener("click", () => {
-			new FshUploader(this);
+			new FileUploader(this);
 	  	});
 		
 		if(this.dataFiles.length>0) {
@@ -155,7 +155,7 @@ export class FshManager extends HLMApplication {
 	 * @param {string} fileName Name of the uploaded file
 	 * @param {FileRecord} oldFile The file record to overwrite, if any (null if this is a new file)
 	 */
-	async _onFshLoaded(ev,fileName,oldFile) {
+	async _onFileLoaded(ev,fileName,oldFile) {
 		const fileRecord=await constructFileRecord(ev, fileName);
 		this.checkFileRecordExists(fileRecord,ev,oldFile);
 	}
@@ -268,7 +268,7 @@ export class FshManager extends HLMApplication {
 	 */
 	updateCallback(ev) {
 		const targetRecord=new FileRecord(ev.target.attributes.filename.value,ev.target.attributes.version.value);
-		new FshUploader(this,targetRecord);
+		new FileUploader(this,targetRecord);
 	}
 }
 

@@ -346,7 +346,7 @@ function testFrameStructure(data) {
 			expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
 		}
 	})
-	return testFieldsExist(data, expectedFields);
+	return Utils.testFieldsExist(data, expectedFields);
 
 }
 
@@ -355,7 +355,7 @@ function testInternalStructure(data) {
 	Object.values(ATTRIBUTES).forEach((attribute) => {
 		expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
 	})
-	return testFieldsExist(data, expectedFields);
+	return Utils.testFieldsExist(data, expectedFields);
 
 }
 
@@ -366,19 +366,5 @@ function testSizeStructure(data) {
 			expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
 		}
 	})
-	return testFieldsExist(data, expectedFields);
-}
-
-/**
- * Test the expected fields exist on an object
- * @param {Object} data Object to test
- * @param {Array(str)} fields List of expected fields
- */
-function testFieldsExist(data, fields) {
-	let valid=true;
-	fields.forEach((field) => {
-		const record=data[field];
-		if(record==undefined) valid=false;
-	})
-	return valid;
+	return Utils.testFieldsExist(data, expectedFields);
 }
