@@ -33,3 +33,6 @@ User testing performed on this patch!
 
 ## Version 0.2.4
 * Fix a bug where character sheet buttons would not activate with multiple sheets open
+
+## Version 0.2.5
+* Add support for Gearwright July 12 datafiles
