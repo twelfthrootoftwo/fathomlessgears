@@ -275,9 +275,6 @@ function constructInternalPCData(data) {
  * @returns the system object for creating the new Item
  */
 function constructInternalNPCData(data) {
-	if(data.name=="Bulkhead") {
-		console.log("Found the bulkhead")
-	}
 	const system={
 		attributes: {},
 		action_text: ""
@@ -288,7 +285,10 @@ function constructInternalNPCData(data) {
 		}
 	});
 	if(data.action_data.action_text) system.action_text=system.action_text.concat(data.action_data.action_text);
-	if(data.extra_rules) system.action_text=system.action_text.concat(data.extra_rules);
+	if(data.extra_rules) {
+		if(system.action_text.length > 0) system.action_text=system.action_text.concat(" ")
+		system.action_text=system.action_text.concat(data.extra_rules);
+	}
 	
 	system.ap_cost=getAPCost(data);
 	system.attack=constructAttack(data);
