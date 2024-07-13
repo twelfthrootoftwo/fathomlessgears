@@ -248,12 +248,12 @@ export class Utils {
 	 * @param {Object} data Object to test
 	 * @param {Array(str)} fields List of expected fields
 	 */
-	static testFieldsExist(data, fields) {
-		let valid=true;
-		fields.forEach((field) => {
-			const record=data[field];
-			if(record==undefined) valid=false;
-		})
-		return valid;
-	}
+	// static testFieldsExist(data, fields) {
+	// 	let valid=true;
+	// 	fields.forEach((field) => {
+	// 		const record=data[field];
+	// 		if(record==undefined) valid=false;
+	// 	})
+	// 	return valid;
+	// }
 }

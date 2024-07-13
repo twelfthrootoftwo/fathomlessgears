@@ -1,5 +1,6 @@
 import { ITEM_TYPES, ATTRIBUTES, ATTRIBUTE_KEY_MAP } from "../constants.js";
 import { Utils } from "../utilities/utils.js";
+import { testFieldsExist } from "./import-validator.js";
 
 /**
  * Records data for a tag on a specific internal (including value if it has one)
@@ -179,22 +180,22 @@ export function createHLMItemSystem(itemType, data, source) {
 			return null;
 		case ITEM_TYPES.size:
 			console.log("Constructing size...");
-			if(!testSizeStructure(data)) throw new Error("Invalid item data");
+			if(!testFieldsExist(data,"size")) throw new Error("Invalid item data");
 			system=constructSizeData(data);
 			break;
 		case ITEM_TYPES.frame_pc:
 			console.log("Constructing PC frame...");
-			if(!testFrameStructure(data)) throw new Error("Invalid item data");
+			if(!testFieldsExist(data,"frame")) throw new Error("Invalid item data");
 			system=constructFrameData(data);
 			break;
 		case ITEM_TYPES.internal_pc:
 			console.log("Constructing PC internal...");
-			if(!testInternalStructure(data)) throw new Error("Invalid item data");
+			if(!testFieldsExist(data,"internal")) throw new Error("Invalid item data");
 			system=constructInternalPCData(data);
 			break;
 		case ITEM_TYPES.internal_npc:
 			console.log("Constructing NPC internal...");
-			if(!testInternalStructure(data)) throw new Error("Invalid item data");
+			if(!testFieldsExist(data,"internal")) throw new Error("Invalid item data");
 			system=constructInternalNPCData(data);
 			break;
 		case ITEM_TYPES.grid:
@@ -352,34 +353,4 @@ function unpackGridCoords(gridList) {
 		coords.push(coord);
 	});
 	return coords;
-}
-
-function testFrameStructure(data) {
-	const expectedFields=["core_integrity","gear_ability","gear_ability_name","repair_kits"];
-	Object.values(ATTRIBUTES).forEach((attribute) => {
-		if(![ATTRIBUTES.mental,ATTRIBUTES.willpower].includes(attribute)){
-			expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
-		}
-	})
-	return Utils.testFieldsExist(data, expectedFields);
-
-}
-
-function testInternalStructure(data) {
-	const expectedFields=["action_data","grid","name","tags","type","extra_rules"];
-	Object.values(ATTRIBUTES).forEach((attribute) => {
-		expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
-	})
-	return Utils.testFieldsExist(data, expectedFields);
-
-}
-
-function testSizeStructure(data) {
-	const expectedFields=["size"];
-	Object.values(ATTRIBUTES).forEach((attribute) => {
-		if(attribute!=ATTRIBUTES.ballast){
-			expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
-		}
-	})
-	return Utils.testFieldsExist(data, expectedFields);
 }

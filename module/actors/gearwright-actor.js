@@ -1,7 +1,8 @@
+import { testFieldsExist } from "../items/import-validator.js";
 import {Utils} from "../utilities/utils.js";
 
 export async function populateActorFromGearwright(actor,data) {
-    if(!testActorStructure(data)) throw new Error("Invalid Gearwright save data");
+    if(!testFieldsExist(data,"actor")) throw new Error("Invalid Gearwright save data");
 	console.log("Importing actor from gearwright");
 	actor.resetForImport();
 	if(!actor.getFlag("fathomlessgears","interactiveGrid")) {
@@ -11,11 +12,6 @@ export async function populateActorFromGearwright(actor,data) {
 	await applyFrame(data,actor);
 	await applyInternals(data,actor);
 	actor.setFlag("fathomlessgears","initialised",true);
-}
-
-function testActorStructure(data) {
-	const expectedFields=["callsign","frame","internals","background","custom_background","unlocks","level"];
-	return Utils.testFieldsExist(data, expectedFields);
 }
 
 async function constructSystemData(importData,actor) {
