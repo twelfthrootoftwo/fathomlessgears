@@ -2,6 +2,7 @@ import { ATTRIBUTES, ACTOR_TYPES } from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 import { Grid } from "../grid/grid-base.js";
 import { FileUploader } from "../data-files/uploader.js";
+import {populateActorFromGearwright} from "../actors/gearwright-actor.js"
 
 /**
  * @extends {ActorSheet}
@@ -259,10 +260,10 @@ export class HLMActorSheet extends ActorSheet {
 		new FileUploader(this);
 	}
 
-	_onFileLoaded(fileData,fileName,oldFile) {
+	async _onFileLoaded(fileData,fileName,oldFile) {
 		//process gearwright json
-		console.log(fileData);
 		const preparedData=JSON.parse(fileData);
+		populateActorFromGearwright(this.actor,preparedData);
 	}
 }
 function safeIdClean(safeId) {
