@@ -117,6 +117,13 @@ export class Grid {
         });
         return targetSpace;
     }
+
+    applyUnlocks(unlockList) {
+        unlockList.forEach((id) => {
+            const space=this.findGridSpace(id);
+            space.state=GRID_SPACE_STATE.intact;
+        })
+    }
 }
 
 class GridRegion {
@@ -146,17 +153,7 @@ class GridRegion {
                 } else {
                     const space=new GridSpace(null, this);
                     space.id=idCounter;
-                    switch(idCounter%3) {
-                        case 0:
-                            space.setState(GRID_SPACE_STATE.locked);
-                            break;
-                        case 1:
-                            space.setState(GRID_SPACE_STATE.intact);
-                            break;
-                        case 2:
-                            space.setState(GRID_SPACE_STATE.broken);
-                            break;
-                    }
+                    space.setState(GRID_SPACE_STATE.locked);
                     idCounter+=1;
                     this.gridSpaces[i].push(space);
                 }

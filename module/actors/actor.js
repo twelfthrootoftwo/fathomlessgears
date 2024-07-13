@@ -603,8 +603,8 @@ export class HLMActor extends Actor {
 		this.applyInternal(internal);
 	}
 
-	async initialiseInteractiveGrid() {
-		const gridObject=await constructGrid(this);
+	async assignInteractiveGrid(gridObject) {
+		this.grid=gridObject;
 		await this.update({"system.grid": gridObject.toJson()});
 		this.setFlag("fathomlessgears","interactiveGrid",true);
 	}

@@ -1,16 +1,19 @@
 import { testFieldsExist } from "../items/import-validator.js";
 import {Utils} from "../utilities/utils.js";
+import { constructGrid } from "../grid/grid-base.js";
+import { GRID_SPACE_STATE } from "../constants.js";
 
 export async function populateActorFromGearwright(actor,data) {
     if(!testFieldsExist(data,"actor")) throw new Error("Invalid Gearwright save data");
 	console.log("Importing actor from gearwright");
 	actor.resetForImport();
-	if(!actor.getFlag("fathomlessgears","interactiveGrid")) {
-		actor.initialiseInteractiveGrid();
-	}
+	const gridObject=actor.getFlag("fathomlessgears","interactiveGrid") ? actor.grid : await constructGrid(actor);
 	await constructSystemData(data,actor);
-	await applyFrame(data,actor);
-	await applyInternals(data,actor);
+	await applyFrame(data,actor,gridObject);
+	await applyInternals(data,actor,gridObject);
+	if(actor.getFlag("fathomlessgears","interactiveGrid")) mapGridState(actor.grid,gridObject);
+	actor.assignInteractiveGrid(gridObject);
+	console.log(gridObject);
 	actor.setFlag("fathomlessgears","initialised",true);
 }
 
@@ -23,9 +26,13 @@ async function constructSystemData(importData,actor) {
 	await actor.update({"system": actorData});
 }
 
-async function applyFrame(importData,actor) {
+async function applyFrame(importData,actor,gridObject) {
 	const frame=await findCompendiumItemFromName("frame_pc",importData.frame);
 	await actor.applyFrame(frame);
+	const unlocks=[];
+	unlocks.push(...importData.unlocks);
+	unlocks.push(...frame.system.default_unlocks);
+	gridObject.applyUnlocks(unlocks);
 }
 
 async function applyInternals(importData,actor) {
@@ -49,4 +56,22 @@ async function findCompendiumItemFromName(compendiumName,itemName) {
 	const record = collection.index.filter(p => p.name.toLowerCase() == itemName.toLowerCase());
 	const item=await collection.getDocument(record[0]._id);
 	return item
+}
+
+function mapGridState(source,destination) {
+	source.gridRegions.forEach((region) => {
+		if(region) {
+			region.gridSpaces.forEach((row) => {
+				row.forEach((space) => {
+					if(space.state==GRID_SPACE_STATE.broken) {
+						const newSpace=destination.findGridSpace(space.id);
+						if(newSpace.state==GRID_SPACE_STATE.intact) {
+							newSpace.setState(GRID_SPACE_STATE.broken);
+						}
+					}
+				});
+			});
+		}
+	});
+	console.log(destination);
 }
