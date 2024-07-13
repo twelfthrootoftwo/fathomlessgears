@@ -76,6 +76,19 @@ export class Grid {
         }
     }
 
+    removeInternal(uuid) {
+        this.gridRegions.forEach((region) => {
+            if(region) {
+                region.gridSpaces.forEach((row) => {
+                    row.forEach((space) => {
+                        if(space.internal==uuid) space.internal=null;
+                    });
+                });
+            }
+        });
+        this.actor.update({"system.grid": this.toJson()});
+    }
+
     //Callback for clicking a grid space on the sheet
     clickGridSpace(event) {
         if(this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {

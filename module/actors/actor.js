@@ -5,6 +5,7 @@ import { RollElement, RollDialog } from "../actions/roll-dialog.js";
 import { ReelHandler } from "../actions/reel.js";
 import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
 import { Grid,constructGrid } from "../grid/grid-base.js";
+import { ConfirmDialog } from "../utilities/confirm-dialog.js";
 
 export class AttributeElement {
 	value
@@ -451,6 +452,21 @@ export class HLMActor extends Actor {
 		await this.update({"system": this.system});
 	}
 
+	async onInternalDrop(internal) {
+		if(this.getFlag("fathomlessgears","interactiveGrid")) {
+			new ConfirmDialog(
+				"Override Imported Data",
+				`Manually adding an internal to this actor will disable the interactive grid.<br>
+				To keep the interactive grid, you should update the character by uploading a new Gearwright save file.<br>
+				Manually add internal?`,
+				this.applyInternalDeactivateGrid,
+				{"internal": internal}
+			)
+		} else {
+			this.applyInternal(internal);
+		}
+	}
+
 	/**
 	 * Item drop processing for internals
 	 * @param {Item} internal
@@ -559,6 +575,9 @@ export class HLMActor extends Actor {
 		});
 		this.calculateBallast();
 		if(this.system.resources) this.modifyResourceValue("repair",-1*internal.system.repair_kits);
+		if(this.getFlag("fathomlessgears","interactiveGrid")) {
+			await this.grid.removeInternal(uuid);
+		}
 		this.update({"system": this.system});
 		internal.delete();
 	}
@@ -568,6 +587,20 @@ export class HLMActor extends Actor {
 		internals.forEach((internal) => {
 			this.removeInternal(internal.id);
 		});
+	}
+
+	async removeInteractiveGrid() {
+		this.grid=null;
+		let targetGridString="systems/fathomlessgears/assets/blank-grid-fish.jpg"
+		if(this.type=ACTOR_TYPES.fisher) {
+			targetGridString="systems/fathomlessgears/assets/blank-grid.jpg"
+		}
+		this.update({"system.grid": targetGridString});
+	}
+
+	async applyInternalDeactivateGrid(internal) {
+		await this.removeInteractiveGrid();
+		this.applyInternal(internal);
 	}
 
 	async initialiseInteractiveGrid() {
