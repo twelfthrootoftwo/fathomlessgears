@@ -4,7 +4,7 @@ import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN,
 import { RollElement, RollDialog } from "../actions/roll-dialog.js";
 import { ReelHandler } from "../actions/reel.js";
 import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
-import { constructGrid } from "../grid/grid-base.js";
+import { Grid,constructGrid } from "../grid/grid-base.js";
 
 export class AttributeElement {
 	value
@@ -28,6 +28,10 @@ export class HLMActor extends Actor {
 	/** @inheritdoc */
 	prepareDerivedData() {
 		super.prepareDerivedData();
+		if(this.getFlag("fathomlessgears","interactiveGrid")) {
+			this.grid=new Grid(this.system.grid);	
+			this.grid.actor=this;	
+		}
 	}
 
 	/** @inheritdoc */
@@ -42,12 +46,7 @@ export class HLMActor extends Actor {
 				}
 			} else if(this.type==ACTOR_TYPES.fisher && !this.system.gridType){
 				Utils.getGridFromSize("Fisher").then((grid) => {
-					this.applyGrid(grid).then(() => {
-						constructGrid(this).then((gridObject) => {
-							this.update({"system.grid": gridObject.toJson()});
-							this.setFlag("fathomlessgears","interactiveGrid",true);
-						});
-					});
+					this.applyGrid(grid);
 				})
 			}
 		}
@@ -562,6 +561,19 @@ export class HLMActor extends Actor {
 		if(this.system.resources) this.modifyResourceValue("repair",-1*internal.system.repair_kits);
 		this.update({"system": this.system});
 		internal.delete();
+	}
+
+	async resetForImport() {
+		const internals=this.itemTypes.internal_pc.concat(this.itemTypes.internal_npc);
+		internals.forEach((internal) => {
+			this.removeInternal(internal.id);
+		});
+	}
+
+	async initialiseInteractiveGrid() {
+		const gridObject=await constructGrid(this);
+		await this.update({"system.grid": gridObject.toJson()});
+		this.setFlag("fathomlessgears","interactiveGrid",true);
 	}
 
 	async getObservers() {

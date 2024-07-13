@@ -3,6 +3,10 @@ import {Utils} from "../utilities/utils.js";
 export async function populateActorFromGearwright(actor,data) {
     if(!testActorStructure(data)) throw new Error("Invalid Gearwright save data");
 	console.log("Importing actor from gearwright");
+	actor.resetForImport();
+	if(!actor.getFlag("fathomlessgears","interactiveGrid")) {
+		actor.initialiseInteractiveGrid();
+	}
 	await constructSystemData(data,actor);
 	await applyFrame(data,actor);
 	await applyInternals(data,actor);

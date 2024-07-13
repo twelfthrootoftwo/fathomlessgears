@@ -1,6 +1,5 @@
 import { ATTRIBUTES, ACTOR_TYPES } from "../constants.js";
 import {Utils} from "../utilities/utils.js";
-import { Grid } from "../grid/grid-base.js";
 import { FileUploader } from "../data-files/uploader.js";
 import {populateActorFromGearwright} from "../actors/gearwright-actor.js"
 
@@ -8,7 +7,6 @@ import {populateActorFromGearwright} from "../actors/gearwright-actor.js"
  * @extends {ActorSheet}
  */
 export class HLMActorSheet extends ActorSheet {
-	grid
 
 	/** @inheritdoc */
 	static get defaultOptions() {
@@ -86,10 +84,8 @@ export class HLMActorSheet extends ActorSheet {
 
 		context.interactiveGrid=false;
 		if(this.actor.getFlag("fathomlessgears","interactiveGrid")){
-			this.grid=new Grid(context.actor.system.grid);
-			this.grid.actor=context.actor;
 			context.interactiveGrid=true;
-			context.grid=this.grid;
+			context.grid=this.actor.grid;
 		}
 		return context;
 	}
@@ -144,7 +140,7 @@ export class HLMActorSheet extends ActorSheet {
 		html.find("#initialise-import").click(this.selectImport.bind(this))
 		html.find("#initialise-manual").click(this.selectManualSetup.bind(this))
 		if(this.actor.getFlag("fathomlessgears","interactiveGrid")) {
-			html.find(".grid-space").click(this.grid.clickGridSpace.bind(this));
+			html.find(".grid-space").click(this.actor.grid.clickGridSpace.bind(this));
 		}
 		if(this.actor.type===ACTOR_TYPES.fisher) {
 			document.getElementById("post-frame-ability").addEventListener("click",this.postFrameAbility.bind(this));

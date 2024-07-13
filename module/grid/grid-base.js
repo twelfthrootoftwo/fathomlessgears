@@ -80,9 +80,9 @@ export class Grid {
     clickGridSpace(event) {
         if(this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {
             //Current scope is ActorSheet, so need to get the grid object
-            const space=this.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
+            const space=this.actor.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
             space.triggerClick();
-            this.actor.update({"system.grid": this.grid.toJson()});
+            this.actor.update({"system.grid": this.actor.grid.toJson()});
         }
     }
 
