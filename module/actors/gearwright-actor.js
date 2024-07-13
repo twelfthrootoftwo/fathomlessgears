@@ -2,6 +2,7 @@ import {Utils} from "../utilities/utils.js";
 
 export async function populateActorFromGearwright(actor,data) {
     if(!testActorStructure(data)) throw new Error("Invalid Gearwright save data");
+	console.log("Importing actor from gearwright");
 	await constructSystemData(data,actor);
 	await applyFrame(data,actor);
 	await applyInternals(data,actor);
@@ -14,8 +15,6 @@ function testActorStructure(data) {
 }
 
 async function constructSystemData(importData,actor) {
-	console.log("Importing actor from gearwright");
-	console.log(importData);
 	const actorData=foundry.utils.deepClone(actor.system);
 	actorData.fisher_history.callsign=importData.callsign;
 	actorData.fisher_history.el=parseInt(importData.level);
@@ -30,7 +29,11 @@ async function applyFrame(importData,actor) {
 }
 
 async function applyInternals(importData,actor) {
-	console.log("TODO");
+	const internalsList=importData.internals;
+	for(const [gridSpace,internalName] of Object.entries(internalsList)) {
+		const internal=await findCompendiumItemFromName("internal_pc",Utils.capitaliseWords(Utils.fromLowerHyphen(internalName)));
+		await actor.applyInternal(internal);
+	}
 }
 
 async function findCompendiumItemFromName(compendiumName,itemName) {
