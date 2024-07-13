@@ -31,6 +31,17 @@ class Attack {
 		this.marbles=marbles;
 		this.range=range;
 	}
+
+	convertAttributeToDescriptor(type) {
+		switch(type) {
+			case "close":
+				return "Melee"
+			case "far":
+				return "Ranged"
+			default:
+				return Utils.capitaliseFirstLetter(type)	
+		}
+	}
 }
 
 class GridPoint {
@@ -273,7 +284,11 @@ function constructInternalNPCData(data) {
 			system.attributes[key]=data[ATTRIBUTE_KEY_MAP[key]];
 		}
 	});
-	if(data.action_text.extra_rules) system.action_text=system.action_text.concat(data.action_text.extra_rules);
+	if(data.action_data.action_text) system.action_text=system.action_text.concat(data.action_data.action_text);
+	if(data.extra_rules) {
+		if(system.action_text.length > 0) system.action_text=system.action_text.concat(" ")
+		system.action_text=system.action_text.concat(data.extra_rules);
+	}
 	
 	system.ap_cost=getAPCost(data);
 	system.attack=constructAttack(data);
@@ -291,8 +306,8 @@ function constructInternalNPCData(data) {
  * @returns the integer AP cost of activating the internal (null if there is no cost)
  */
 function getAPCost(data) {
-	if(data.type==="passive" || data.action_text === "") return null;
-	if(data.action_text.ap_cost || data.action_text.ap_cost===0) return data.action_text.ap_cost;
+	if(data.type==="passive" || Object.keys(data.action_data).length) return null;
+	if(data.action_data.ap_cost || data.action_data.ap_cost===0) return data.action_data.ap_cost;
 	return null;
 }
 
@@ -302,10 +317,10 @@ function getAPCost(data) {
  * @returns an Attack object with the relevant data (null if it isn't an attacking internal)
  */
 function constructAttack(data) {
-	const attackTypes=["melee","ranged","mental"];
+	const attackTypes=["close","far","mental"];
 	if(!attackTypes.includes(data.type)) return null;
 
-	return new Attack(data.type, data.action_text.attribute, data.action_text.damage, data.action_text.marble_damage, data.action_text.range);
+	return new Attack(data.type, data.action_data.attribute, data.action_data.damage, data.action_data.marble_damage, data.action_data.range);
 }
 
 /**
@@ -351,7 +366,7 @@ function testFrameStructure(data) {
 }
 
 function testInternalStructure(data) {
-	const expectedFields=["action_text","grid","name","tags","type"];
+	const expectedFields=["action_data","grid","name","tags","type","extra_rules"];
 	Object.values(ATTRIBUTES).forEach((attribute) => {
 		expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
 	})

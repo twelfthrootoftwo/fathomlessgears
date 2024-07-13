@@ -152,9 +152,9 @@ export class Utils {
 
 	static identifyAttackKey(internalType) {
 		switch(internalType) {
-			case "melee":
+			case "close":
 				return ATTRIBUTES.close;
-			case "ranged":
+			case "far":
 				return ATTRIBUTES.far;
 			case "mental":
 				return ATTRIBUTES.mental;
