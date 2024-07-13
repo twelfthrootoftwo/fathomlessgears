@@ -252,6 +252,7 @@ function constructFrameData(data) {
 	system.weight_cap=data.weight_cap;
 	system.gear_ability=data.gear_ability;
 	system.gear_ability_name=data.gear_ability_name;
+	system.default_unlocks=data.default_unlocks;
 	return system
 }
 

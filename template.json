@@ -254,7 +254,8 @@
 				"repair_kits": 0,
 				"weight_cap": 0,
 				"gear_ability": "Placeholder ability text",
-				"gear_ability_name": "Placeholder"
+				"gear_ability_name": "Placeholder",
+				"default_unlocks": []
 			},
 			"internal": {
 				"action_text": "",

@@ -2,7 +2,7 @@ import { ATTRIBUTES, ATTRIBUTE_KEY_MAP } from "../constants.js";
 
 
 const expectedFields={
-    "frame": ["core_integrity","gear_ability","gear_ability_name","repair_kits"],
+    "frame": ["core_integrity","gear_ability","gear_ability_name","repair_kits","default_unlocks"],
     "internal": ["action_data","grid","name","tags","type","extra_rules"],
     "size": ["size"],
     "actor": ["callsign","frame","internals","background","custom_background","unlocks","level"]
