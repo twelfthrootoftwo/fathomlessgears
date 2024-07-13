@@ -493,6 +493,7 @@ export class HLMActor extends Actor {
 		this.calculateBallast();
 		
 		await this.update({"system": this.system});
+		return item._id;
 	}
 
 	/**

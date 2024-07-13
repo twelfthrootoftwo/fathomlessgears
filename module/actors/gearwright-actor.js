@@ -35,11 +35,16 @@ async function applyFrame(importData,actor,gridObject) {
 	gridObject.applyUnlocks(unlocks);
 }
 
-async function applyInternals(importData,actor) {
+async function applyInternals(importData,actor,gridObject) {
 	const internalsList=importData.internals;
 	for(const [gridSpace,internalName] of Object.entries(internalsList)) {
 		const internal=await findCompendiumItemFromName("internal_pc",Utils.capitaliseWords(Utils.fromLowerHyphen(internalName)));
-		await actor.applyInternal(internal);
+		const internalId=await actor.applyInternal(internal);
+		const spaces=identifyInternalSpaces(internal,gridObject,gridSpace);
+		spaces.forEach((id) => {
+			const space=gridObject.findGridSpace(id);
+			space.setInternal(internalId,`${internal.system.type}Internal`);
+		})
 	}
 }
 
@@ -73,5 +78,13 @@ function mapGridState(source,destination) {
 			});
 		}
 	});
-	console.log(destination);
+}
+
+function identifyInternalSpaces(internal,grid,originSpace) {
+	const internalSpaces=[];
+	const region=grid.findGridSpace(originSpace).parentRegion;
+	internal.system.grid_coords.forEach((relativeSpace) => {
+		internalSpaces.push(parseInt(originSpace)+relativeSpace.x+relativeSpace.y*region.width);
+	})
+	return internalSpaces;
 }

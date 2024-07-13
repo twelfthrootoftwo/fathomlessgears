@@ -69,8 +69,8 @@ export class Grid {
     }
 
     //TODO finish
-    checkInternal(uuid, intact) {
-        const internal=this.actor.getItem(uuid);
+    async checkInternal(uuid, intact) {
+        const internal=await this.actor.items.get(uuid);
         if (internal.isBroken == intact) {
             internal.toggleBroken();
         }
@@ -201,7 +201,7 @@ class GridRegion {
      * @param {string} uuid The uuid of internal to check
      */
     checkInternal(uuid) {
-        const intact=false;
+        let intact=false;
         this.gridSpaces.forEach((row) => {
             row.forEach((space) => {
                 if(space.containsInternal(uuid) && space.isIntact()) {

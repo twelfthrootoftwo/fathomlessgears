@@ -6,6 +6,7 @@ export class GridSpace {
     parentRegion
     highlight
     id
+    colour
 
     /**
      * Construct a space from an optional json record object
@@ -15,10 +16,11 @@ export class GridSpace {
     constructor(json,parent) {
         if(json==null) {
             this.state=GRID_SPACE_STATE.locked;
-            this.internal=null;
+            this.setInternal(null,null);
+            this.colour="";
         } else {
             this.state=json.state;
-            this.internal=json.internal;
+            this.setInternal(json.internal,json.colour);
             this.id=json.id;
         }
         this.parentRegion=parent;
@@ -34,6 +36,7 @@ export class GridSpace {
         jsonRecord.state=this.state;
         jsonRecord.internal=this.internal;
         jsonRecord.id=this.id;
+        jsonRecord.colour=this.colour;
         return jsonRecord;
     }
 
@@ -49,8 +52,11 @@ export class GridSpace {
      * Assigns an internal to this space
      * @param {str} uuid The uuid of the internal
      */
-    setInternal(uuid) {
+    async setInternal(uuid,type) {
         this.internal=uuid;
+        if(uuid) {
+            this.colour=type;
+        }
     }
 
     /**
@@ -84,5 +90,13 @@ export class GridSpace {
     triggerClick() {
         this.toggleBroken();
         console.log(`State of ${this.id} set to ${this.state}`)
+    }
+
+    containsInternal(uuid) {
+        return this.internal===uuid;
+    }
+
+    isIntact() {
+        return this.state===GRID_SPACE_STATE.intact;
     }
 }

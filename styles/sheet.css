@@ -522,3 +522,22 @@ input.background {
 .grid-icon {
     font-size: 12px;
 }
+.closeInternal {
+    background-color: purple;
+}
+.farInternal {
+    background-color: blue;
+}
+.mentalInternal {
+    background-color: pink;
+}
+.activeInternal {
+    background-color: green;
+}
+.mitigationInternal {
+    background-color: grey;
+}
+.passiveInternal {
+    background-color: orange;
+}
+
