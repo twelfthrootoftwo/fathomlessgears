@@ -1,9 +1,11 @@
 import {Utils} from "../utilities/utils.js";
 
-export function populateActorFromGearwright(actor,data) {
+export async function populateActorFromGearwright(actor,data) {
     if(!testActorStructure(data)) throw new Error("Invalid Gearwright save data");
-    const systemData=constructSystemData(data);
-    //actor.update({"system": systemData});
+	await constructSystemData(data,actor);
+	await applyFrame(data,actor);
+	await applyInternals(data,actor);
+	actor.setFlag("fathomlessgears","initialised",true);
 }
 
 function testActorStructure(data) {
@@ -11,8 +13,37 @@ function testActorStructure(data) {
 	return Utils.testFieldsExist(data, expectedFields);
 }
 
-function constructSystemData(data) {
+async function constructSystemData(importData,actor) {
 	console.log("Importing actor from gearwright");
-	console.log(data);
-	return null;
+	console.log(importData);
+	const actorData=foundry.utils.deepClone(actor.system);
+	actorData.fisher_history.callsign=importData.callsign;
+	actorData.fisher_history.el=parseInt(importData.level);
+	actorData.fisher_history.background=Utils.capitaliseWords(importData.background);
+	console.log(actorData);
+	await actor.update({"system": actorData});
+}
+
+async function applyFrame(importData,actor) {
+	const frame=await findCompendiumItemFromName("frame_pc",importData.frame);
+	await actor.applyFrame(frame);
+}
+
+async function applyInternals(importData,actor) {
+	console.log("TODO");
+}
+
+async function findCompendiumItemFromName(compendiumName,itemName) {
+	let collection=null;
+	if(["core_macros","grid_type"].includes(compendiumName)) {
+		collection=await game.packs.get(`fathomlessgears.${compendiumName}`);
+	} else {
+		collection=await game.packs.get(`world.${compendiumName}`);
+	}
+	if(!collection.indexed) {
+		await collection.getIndex();
+	}
+	const record = collection.index.filter(p => p.name.toLowerCase() == itemName.toLowerCase());
+	const item=await collection.getDocument(record[0]._id);
+	return item
 }
