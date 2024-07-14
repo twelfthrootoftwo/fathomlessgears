@@ -60,7 +60,6 @@ export class Grid {
     }
 
     _onMouseEnterSpace(event) {
-        console.log("Enter");
         const targetSpace=this.actor.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
         if(targetSpace.containsInternal(null)) {
             this.actor.grid.highlightInternal(event,targetSpace);
@@ -69,7 +68,6 @@ export class Grid {
     }
 
     _onMouseLeaveSpace(event) {
-        console.log("Leave");
         const targetSpace=this.actor.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
         if(targetSpace.containsInternal(null)) {
             this.actor.grid.highlightInternal(event,targetSpace);
@@ -172,13 +170,21 @@ export class Grid {
         this.poppedOutInternal=viewedInternal;
         const internalHtml=await renderTemplate(
             "systems/fathomlessgears/templates/partials/internal-partial.html",
-            {internal: viewedInternal}
+            {
+                internal: viewedInternal,
+                popout: true,
+                changeState: false
+            }
         )
-        document.querySelector("#internal-popout").innerHTML=internalHtml;
+        const popout=document.querySelector("#internal-popout");
+        popout.innerHTML=internalHtml;
+        popout.classList.toggle("visible");
     }
 
     async unpopInternal() {
-        document.querySelector("#internal-popout").innerHTML="";
+        const popout=document.querySelector("#internal-popout");
+        popout.innerHTML="";
+        popout.classList.toggle("visible");
     }
 }
 
