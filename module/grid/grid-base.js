@@ -28,6 +28,7 @@ export async function constructGrid(actor) {
 export class Grid {
     gridRegions
     actor
+    poppedOutInternal
 
     /**
      * Construct a new Grid, either from a JSON encoding or fresh
@@ -53,9 +54,27 @@ export class Grid {
 
     activateListeners(html) {
         html.find(".grid-space").click(this.clickGridSpace.bind(this));
-        html.find(".grid-space").mouseenter(this.highlightInternal.bind(this));
-        html.find(".grid-space").mouseleave(this.highlightInternal.bind(this));
+        html.find(".grid-space").mouseenter(this._onMouseEnterSpace.bind(this));
+        html.find(".grid-space").mouseleave(this._onMouseLeaveSpace.bind(this));
         return html;
+    }
+
+    _onMouseEnterSpace(event) {
+        console.log("Enter");
+        const targetSpace=this.actor.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
+        if(targetSpace.containsInternal(null)) {
+            this.actor.grid.highlightInternal(event,targetSpace);
+            this.actor.grid.popInternal(targetSpace.internal);
+        }
+    }
+
+    _onMouseLeaveSpace(event) {
+        console.log("Leave");
+        const targetSpace=this.actor.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
+        if(targetSpace.containsInternal(null)) {
+            this.actor.grid.highlightInternal(event,targetSpace);
+            this.actor.grid.unpopInternal();
+        }
     }
 
     /**
@@ -138,17 +157,28 @@ export class Grid {
      * @param {string} uuid The UUID of the internal to find
      * @param {bool} highlight Whether to turn on or off highlight display
      */
-    highlightInternal(event) {
-        const originSpace=this.actor.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
-        if(originSpace.containsInternal(null)) {
-            originSpace.parentRegion.gridSpaces.forEach((row) => {
-                row.forEach((space) => {
-                    if(space.containsInternal(originSpace.internal)) {
-                        space.toggleHighlight();
-                    }
-                })
-            });
-        }
+    highlightInternal(event,originSpace) {
+        originSpace.parentRegion.gridSpaces.forEach((row) => {
+            row.forEach((space) => {
+                if(space.containsInternal(originSpace.internal)) {
+                    space.toggleHighlight();
+                }
+            })
+        });
+    }
+
+    async popInternal(uuid) {
+        const viewedInternal=this.actor.items.get(uuid);
+        this.poppedOutInternal=viewedInternal;
+        const internalHtml=await renderTemplate(
+            "systems/fathomlessgears/templates/partials/internal-partial.html",
+            {internal: viewedInternal}
+        )
+        document.querySelector("#internal-popout").innerHTML=internalHtml;
+    }
+
+    async unpopInternal() {
+        document.querySelector("#internal-popout").innerHTML="";
     }
 }
 
