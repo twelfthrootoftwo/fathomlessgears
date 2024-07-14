@@ -93,10 +93,19 @@ export class GridSpace {
     }
 
     containsInternal(uuid) {
+        if(uuid==null) {
+            if(this.internal) return true;
+            return false;
+        }
         return this.internal===uuid;
     }
 
     isIntact() {
         return this.state===GRID_SPACE_STATE.intact;
+    }
+
+    toggleHighlight() {
+        const thisCover=document.querySelector(`#gridspace-${this.id}`).querySelector(".cover");
+        thisCover.classList.toggle("highlight-cover");
     }
 }

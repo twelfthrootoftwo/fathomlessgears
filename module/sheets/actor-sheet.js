@@ -140,7 +140,7 @@ export class HLMActorSheet extends ActorSheet {
 		html.find("#initialise-import").click(this.selectImport.bind(this))
 		html.find("#initialise-manual").click(this.selectManualSetup.bind(this))
 		if(this.actor.getFlag("fathomlessgears","interactiveGrid")) {
-			html.find(".grid-space").click(this.actor.grid.clickGridSpace.bind(this));
+			html=this.actor.grid.activateListeners(html);
 		}
 		if(this.actor.type===ACTOR_TYPES.fisher) {
 			document.getElementById("post-frame-ability").addEventListener("click",this.postFrameAbility.bind(this));

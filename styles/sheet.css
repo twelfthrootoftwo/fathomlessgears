@@ -540,4 +540,11 @@ input.background {
 .passiveInternal {
     background-color: orange;
 }
+.grid-space .cover {
+    height: 100%;
+    width: 100%;
+}
+.grid-space .cover.highlight-cover {
+    background-color:#ffffff66;
+}
 

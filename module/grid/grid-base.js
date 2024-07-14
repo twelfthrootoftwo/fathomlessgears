@@ -51,6 +51,13 @@ export class Grid {
         }
     }
 
+    activateListeners(html) {
+        html.find(".grid-space").click(this.clickGridSpace.bind(this));
+        html.find(".grid-space").mouseenter(this.highlightInternal.bind(this));
+        html.find(".grid-space").mouseleave(this.highlightInternal.bind(this));
+        return html;
+    }
+
     /**
      * Serialise this Grid item
      * @returns this Grid as a representative json (for saving to the actor document)
@@ -125,6 +132,24 @@ export class Grid {
             space.state=GRID_SPACE_STATE.intact;
         })
     }
+
+    /**
+     * Toggle highlight for grid spaces belonging to a particular internal
+     * @param {string} uuid The UUID of the internal to find
+     * @param {bool} highlight Whether to turn on or off highlight display
+     */
+    highlightInternal(event) {
+        const originSpace=this.actor.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
+        if(originSpace.containsInternal(null)) {
+            originSpace.parentRegion.gridSpaces.forEach((row) => {
+                row.forEach((space) => {
+                    if(space.containsInternal(originSpace.internal)) {
+                        space.toggleHighlight();
+                    }
+                })
+            });
+        }
+    }
 }
 
 class GridRegion {
@@ -180,21 +205,6 @@ class GridRegion {
             jsonRecord.gridSpaces.push(rowRecord);
         })
         return jsonRecord;
-    }
-
-    /**
-     * Toggle highlight for grid spaces belonging to a particular internal
-     * @param {string} uuid The UUID of the internal to find
-     * @param {bool} highlight Whether to turn on or off highlight display
-     */
-    highlightInternal(uuid,highlight) {
-        this.gridSpaces.forEach((row) => {
-            row.forEach((space) => {
-                if(space.containsInternal(uuid)) {
-                    space.highlight=highlight;
-                }
-            })
-        });
     }
 
     /**
