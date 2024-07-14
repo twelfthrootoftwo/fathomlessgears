@@ -69,10 +69,11 @@ export class Grid {
     }
 
     //TODO finish
-    async checkInternal(uuid, intact) {
+    async checkInternal(uuid, gridIntact) {
         const internal=await this.actor.items.get(uuid);
-        if (internal.isBroken == intact) {
-            internal.toggleBroken();
+        const recordIntact =!(await internal.isBroken())
+        if (recordIntact != gridIntact) {
+            this.actor.toggleInternalBroken(uuid);
         }
     }
 

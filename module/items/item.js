@@ -78,7 +78,8 @@ export class HLMItem extends Item {
 		if(!this.isInternal()) {
 			return null;
 		}
-		return await this.getFlag("fathomlessgears","broken");
+		const result=await this.getFlag("fathomlessgears","broken");
+		return result
 	}
 
 	isInternal() {
