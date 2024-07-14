@@ -523,28 +523,28 @@ input.background {
     font-size: 12px;
 }
 .closeInternal {
-    background-color: purple;
+    background-color: #7D2477;
 }
 .farInternal {
-    background-color: blue;
+    background-color: #0585c9;
 }
 .mentalInternal {
-    background-color: pink;
+    background-color: #DE1EA8;
 }
 .activeInternal {
-    background-color: green;
+    background-color: #67BC45;
 }
 .mitigationInternal {
-    background-color: grey;
+    background-color: #999999;
 }
 .passiveInternal {
-    background-color: orange;
+    background-color: #C75900;
 }
 .grid-space .cover {
     height: 100%;
     width: 100%;
 }
 .grid-space .cover.highlight-cover {
-    background-color:#ffffff66;
+    background-color:#ffffff44;
 }
 
