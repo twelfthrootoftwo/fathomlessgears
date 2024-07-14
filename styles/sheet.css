@@ -543,6 +543,9 @@ input.background {
 .grid-space .cover {
     height: 100%;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .grid-space .cover.highlight-cover {
     background-color:#ffffff44;
