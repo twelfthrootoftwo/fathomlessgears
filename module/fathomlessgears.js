@@ -2,12 +2,13 @@
 import {HLMActor} from "./actors/actor.js";
 import {HLMItem} from "./items/item.js";
 import {HLMActorSheet} from "./sheets/actor-sheet.js";
-import {HLMToken, HLMTokenDocument, TokenGridHUD} from "./tokens/token.js";
+import {HLMToken, HLMTokenDocument} from "./tokens/token.js";
 import {preloadHandlebarsTemplates} from "./utilities/templates.js";
 import { initialiseHelpers } from "./utilities/handlebars.js";
 import { FshManager, addFshManager } from "./data-files/fsh-manager.js";
 import { HLMItemSheet } from "./sheets/item-sheet.js";
 import {conditions} from "./conditions/conditions.js";
+import { GridHoverHUD } from "./tokens/grid-hover.js";
 
 
 /* -------------------------------------------- */
@@ -51,14 +52,11 @@ Hooks.once("init", async function () {
 	Hooks.on("renderSidebarTab", async (app, html) => {
 		addFshManager(app, html);
 	});
-	Hooks.on("renderHeadsUpDisplay", (app, html, data) => {
-		html[0].style.zIndex = 70;
-		html.append(`<template id="token-grid-hud"></template>`);
-		canvas.hud.tokenGrid = new TokenGridHUD();
-	});
 
 	console.log("Initialising helpers")
 	initialiseHelpers();
+
+	GridHoverHUD.initialiseHooks();
 });
 
 export const system_ready = new Promise((success) => {

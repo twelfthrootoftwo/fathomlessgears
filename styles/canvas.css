@@ -1,7 +1,5 @@
-.token-grid-hud {
-    position: fixed;
-    top: 0;
-    left: 0;
+.rectangle {
     width: 400px;
     height: 400px;
+    background-color: aqua;
 }
