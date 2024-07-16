@@ -1,5 +1,4 @@
-.rectangle {
-    width: 100%;
-    height: 100%;
-    background-color: aqua;
+.grid-hover-hud {
+    padding: 10px;
+    border: 2px solid var(--color-border-dark-secondary);
 }

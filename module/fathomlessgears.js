@@ -51,6 +51,9 @@ Hooks.once("init", async function () {
 	Hooks.on("renderSidebarTab", async (app, html) => {
 		addFshManager(app, html);
 	});
+	Hooks.on("renderHeadsUpDisplay", (app,html) => {
+		GridHoverHUD.addGridHUD(html);
+	})
 
 	game.keybindings.register("fathomlessgears", "pinGrid", {
 		name: "Lock HUD Grid Display",
@@ -61,7 +64,7 @@ Hooks.once("init", async function () {
 			},
 		],
 		onDown: () => {
-			canvas.hud.gridHover.toggleLock();
+			game.gridHover.toggleLock();
 		},
 		onUp: () => {},
 		restricted: false, // Restrict this Keybinding to gamemaster only?
@@ -71,7 +74,6 @@ Hooks.once("init", async function () {
 	console.log("Initialising helpers");
 	initialiseHelpers();
 
-	GridHoverHUD.initialiseHooks();
 });
 
 export const system_ready = new Promise((success) => {

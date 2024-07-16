@@ -19,7 +19,7 @@ export class GridHoverHUD extends BasePlaceableHUD {
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			id: "grid-hover-hud",
-			classes: [...super.defaultOptions.classes, "grid-hover-hud"],
+			classes: [...super.defaultOptions.classes, "grid-hover-hud", "popout"],
 			minimizable: false,
 			resizable: true,
 			template:
@@ -94,7 +94,7 @@ export class GridHoverHUD extends BasePlaceableHUD {
 	 * @param {Boolean} applyToScreen Apply image to screen or just cache image.
 	 */
 	cacheAvailableToken(grid, applyToScreen) {
-		canvas.hud.gridHover.loadSourceDimensions().then(({width, height}) => {
+		game.gridHover.loadSourceDimensions().then(({width, height}) => {
 			cacheImageNames[grid] = {
 				width: width,
 				height: height,
@@ -225,11 +225,11 @@ export class GridHoverHUD extends BasePlaceableHUD {
 					token == canvas.tokens.hover &&
 					token.actor.grid == canvas.tokens.hover.actor.grid
 				) {
-					canvas.hud.gridHover.bind(token);
+					game.gridHover.bind(token);
 				} else {
 					if(!this.lock) {
 						console.log("Clearing in requirements 1")
-						canvas.hud.gridHover.clear();
+						game.gridHover.clear();
 					}
 				}
 			}, delay);
@@ -253,16 +253,17 @@ export class GridHoverHUD extends BasePlaceableHUD {
 		console.log(`Toggling lock to ${this.lock}`);
 	}
 
-	static initialiseHooks() {
-		/**
+	/**
 		 * Add Image Hover display to html on load.
 		 */
-		Hooks.on("renderHeadsUpDisplay", (app, html, data) => {
-			html[0].style.zIndex = 70;
-			html.append(`<template id="grid-hover-hud"></template>`);
-			canvas.hud.gridHover = new GridHoverHUD();
-		});
+	static addGridHUD(html) {
+		html[0].style.zIndex = 70;
+		html.append(`<template id="grid-hover-hud"></template>`);
+		game.gridHover = new GridHoverHUD();
+		game.gridHover.initialiseHooks();
+	};
 
+	initialiseHooks() {
 		/**
 		 * Display image when user hovers mouse over a actor
 		 * Must be used on the token layer and have relevant actor permissions (configurable settings by the game master)
@@ -270,17 +271,17 @@ export class GridHoverHUD extends BasePlaceableHUD {
 		 * @param {Boolean} hovered if token is mouseovered
 		 */
 		Hooks.on("hoverToken", (token, hovered) => {
-			canvas.hud.gridHover.hovering=hovered
-			if(canvas.hud.gridHover.lock) {
+			game.gridHover.hovering=hovered
+			if(game.gridHover.lock) {
 				return;
 			}
 			if (!hovered) {
 				console.log("Clearing in hoverToken")
-				canvas.hud.gridHover.clear();
+				game.gridHover.clear();
 				return;
 			}
 
-			canvas.hud.gridHover.showArtworkRequirements(token, hovered, 0);
+			game.gridHover.showArtworkRequirements(token, hovered, 0);
 		});
 
 		/**
@@ -300,14 +301,14 @@ export class GridHoverHUD extends BasePlaceableHUD {
 		 * When user scrolls/moves the screen position, we want to relocate the image.
 		 */
 		Hooks.on("canvasPan", (...args) => {
-			if (typeof canvas.hud.gridHover !== "undefined") {
+			if (typeof game.gridHover !== "undefined") {
 				if (
-					typeof canvas.hud.gridHover.object === "undefined" ||
-					canvas.hud.gridHover.object === null
+					typeof game.gridHover.object === "undefined" ||
+					game.gridHover.object === null
 				) {
 					return;
 				}
-				canvas.hud.gridHover.updatePosition();
+				game.gridHover.updatePosition();
 			}
 		});
 	}
@@ -317,10 +318,10 @@ export class GridHoverHUD extends BasePlaceableHUD {
  * Clear art unless GM is showing users art.
  */
 function clearArt() {
-	if (canvas.hud.gridHover) {
-		if(!canvas.hud.gridHover.lock) {
+	if (game.gridHover) {
+		if(!game.gridHover.lock) {
 			console.log("Clearing in clearArt")
-			canvas.hud.gridHover.clear();
+			game.gridHover.clear();
 		}
 	}
 }
