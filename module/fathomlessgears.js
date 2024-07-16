@@ -4,12 +4,11 @@ import {HLMItem} from "./items/item.js";
 import {HLMActorSheet} from "./sheets/actor-sheet.js";
 import {HLMToken, HLMTokenDocument} from "./tokens/token.js";
 import {preloadHandlebarsTemplates} from "./utilities/templates.js";
-import { initialiseHelpers } from "./utilities/handlebars.js";
-import { FshManager, addFshManager } from "./data-files/fsh-manager.js";
-import { HLMItemSheet } from "./sheets/item-sheet.js";
+import {initialiseHelpers} from "./utilities/handlebars.js";
+import {FshManager, addFshManager} from "./data-files/fsh-manager.js";
+import {HLMItemSheet} from "./sheets/item-sheet.js";
 import {conditions} from "./conditions/conditions.js";
-import { GridHoverHUD } from "./tokens/grid-hover.js";
-
+import {GridHoverHUD} from "./tokens/grid-hover.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -53,7 +52,23 @@ Hooks.once("init", async function () {
 		addFshManager(app, html);
 	});
 
-	console.log("Initialising helpers")
+	game.keybindings.register("fathomlessgears", "pinGrid", {
+		name: "Lock HUD Grid Display",
+		hint: "Locks or unlocks the grid currently displayed on the HUD",
+		editable: [
+			{
+				key: "G",
+			},
+		],
+		onDown: () => {
+			canvas.hud.gridHover.toggleLock();
+		},
+		onUp: () => {},
+		restricted: false, // Restrict this Keybinding to gamemaster only?
+		precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+	});
+
+	console.log("Initialising helpers");
 	initialiseHelpers();
 
 	GridHoverHUD.initialiseHooks();
@@ -62,24 +77,26 @@ Hooks.once("init", async function () {
 export const system_ready = new Promise((success) => {
 	Hooks.once("ready", async function () {
 		//Post-init stuff goes here
-		const gridCollection=await game.packs.get("fathomlessgears.grid_type");
-		gridCollection.configure({ownership:{PLAYER:"NONE"}})
+		const gridCollection = await game.packs.get(
+			"fathomlessgears.grid_type"
+		);
+		gridCollection.configure({ownership: {PLAYER: "NONE"}});
 
-		game.settings.register("fathomlessgears","datafiles",{
+		game.settings.register("fathomlessgears", "datafiles", {
 			name: "Source data files",
 			hint: "Stores the datafile sources for frames, internals, sizes, etc",
 			scope: "world",
 			config: false,
 			type: Array,
 			default: [],
-			requiresReload: false
+			requiresReload: false,
 		});
-		const dataFiles=game.settings.get("fathomlessgears","datafiles");
+		const dataFiles = game.settings.get("fathomlessgears", "datafiles");
 
-		if(dataFiles.length==0) {
+		if (dataFiles.length == 0) {
 			new Dialog({
 				title: game.i18n.localize("INTRO.title"),
-				content: "<p>"+game.i18n.localize("INTRO.main")+"</p>",
+				content: "<p>" + game.i18n.localize("INTRO.main") + "</p>",
 				buttons: {
 					cancel: {
 						label: "Skip for now",
@@ -87,19 +104,19 @@ export const system_ready = new Promise((success) => {
 					confirm: {
 						label: "Open .FSH Manager",
 						callback: async () => {
-							if(!FshManager.isOpen) {
-								new FshManager()
+							if (!FshManager.isOpen) {
+								new FshManager();
 							}
-						}
-					}
+						},
+					},
 				},
 				default: "confirm",
-			}).render(true)
+			}).render(true);
 		}
 
 		CONFIG.statusEffects = foundry.utils.duplicate(conditions);
-		
-		console.log("Ready!")
+
+		console.log("Ready!");
 		success();
 	});
 });
