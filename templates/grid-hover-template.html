@@ -1,6 +1,8 @@
-<div id="{{id}}" class="{{classes}}">
+<div id="grid-hover-hud" class="grid-hover-hud popout">
+    {{#if grid}}
     {{>
         "systems/fathomlessgears/templates/partials/grid-box.html"
         grid=grid
     }}
+    {{/if}}
 </div>

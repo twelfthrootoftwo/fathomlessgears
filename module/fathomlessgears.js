@@ -51,9 +51,6 @@ Hooks.once("init", async function () {
 	Hooks.on("renderSidebarTab", async (app, html) => {
 		addFshManager(app, html);
 	});
-	Hooks.on("renderHeadsUpDisplay", (app,html) => {
-		GridHoverHUD.addGridHUD(html);
-	})
 
 	game.keybindings.register("fathomlessgears", "pinGrid", {
 		name: "Lock HUD Grid Display",
@@ -73,16 +70,21 @@ Hooks.once("init", async function () {
 
 	console.log("Initialising helpers");
 	initialiseHelpers();
-
 });
 
 export const system_ready = new Promise((success) => {
+	Hooks.on("ready", async function (args) {
+		console.log("Ready args:")
+		console.log(args)
+	});
 	Hooks.once("ready", async function () {
 		//Post-init stuff goes here
 		const gridCollection = await game.packs.get(
 			"fathomlessgears.grid_type"
 		);
 		gridCollection.configure({ownership: {PLAYER: "NONE"}});
+		
+		GridHoverHUD.addGridHUD();
 
 		game.settings.register("fathomlessgears", "datafiles", {
 			name: "Source data files",
