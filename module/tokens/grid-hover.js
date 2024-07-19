@@ -105,7 +105,9 @@ export class GridHoverHUD extends HLMApplication{
 				this.clear();
 			}
 		} else {
-			this.lock=true;
+			if(this.hovering) {
+				this.lock=true;
+			}
 		}
 		console.log(`Toggling lock to ${this.lock}`);
 	}
@@ -152,11 +154,8 @@ export class GridHoverHUD extends HLMApplication{
 		Hooks.on("closeSettingsConfig", (...args) => clearArt());
 		Hooks.on("closeApplication", (...args) => clearArt());
 
-		Hooks.on("gridSpaceClick",(space,actor) => {
-			if(game.gridHover?.rendered && game.gridHover.object.actor==actor) {
-				game.gridHover.render(true);
-			}
-		})
+		Hooks.on("gridSpaceClick",(space,actor) => refreshGrid(actor));
+		Hooks.on("internalDeleted",(actor) => refreshGrid(actor));
 	}
 }
 
@@ -168,5 +167,11 @@ function clearArt() {
 		if(!game.gridHover.lock) {
 			game.gridHover.clear();
 		}
+	}
+}
+
+function refreshGrid(actor) {
+	if(game.gridHover?.rendered && game.gridHover.object.actor==actor) {
+		game.gridHover.render(true);
 	}
 }

@@ -401,6 +401,7 @@ export class HLMActor extends Actor {
 		const item=await Item.create(grid,{parent: this});
 		this.system.gridType=item._id
 		this.update({"system": this.system});
+		Hooks.callAll("gridUpdated",this)
 	}
 
 	/**
@@ -427,6 +428,7 @@ export class HLMActor extends Actor {
 		//Apply grid
 		const newGrid=await Utils.getGridFromSize(size.name);
 		await this.applyGrid(newGrid);
+		Hooks.callAll("sizeUpdated",this)
 	}
 
 	/**
@@ -456,6 +458,7 @@ export class HLMActor extends Actor {
 		this.system.frame=item._id;
 		this.calculateBallast();
 		await this.update({"system": this.system});
+		Hooks.callAll("frameUpdated",this)
 	}
 
 	async onInternalDrop(internal) {
@@ -499,6 +502,7 @@ export class HLMActor extends Actor {
 		this.calculateBallast();
 		
 		await this.update({"system": this.system});
+		Hooks.callAll("internalAdded",this)
 		return item._id;
 	}
 
@@ -567,6 +571,8 @@ export class HLMActor extends Actor {
 			whisper: await this.getObservers(),
 			content: `${this.name}'s ${internal.name} ${isBroken ? "breaks!" : "is repaired"}`
 		})
+		
+		Hooks.callAll("internalBrokenToggled",internal,this)
 	}
 
 	/**
@@ -586,7 +592,9 @@ export class HLMActor extends Actor {
 			await this.grid.removeInternal(uuid);
 		}
 		this.update({"system": this.system});
-		internal.delete();
+		await internal.delete();
+		
+		Hooks.callAll("internalDeleted",this)
 	}
 
 	async resetForImport() {
