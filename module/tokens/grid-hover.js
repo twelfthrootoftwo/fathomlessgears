@@ -151,6 +151,12 @@ export class GridHoverHUD extends HLMApplication{
 		Hooks.on("closeActorSheet", (...args) => clearArt());
 		Hooks.on("closeSettingsConfig", (...args) => clearArt());
 		Hooks.on("closeApplication", (...args) => clearArt());
+
+		Hooks.on("gridSpaceClick",(space,actor) => {
+			if(game.gridHover?.rendered && game.gridHover.object.actor==actor) {
+				game.gridHover.render(true);
+			}
+		})
 	}
 }
 

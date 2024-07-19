@@ -120,7 +120,9 @@ export class Grid {
             //Current scope is ActorSheet, so need to get the grid object
             const space=this.actor.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
             space.triggerClick();
-            this.actor.update({"system.grid": this.actor.grid.toJson()});
+            this.actor.update({"system.grid": this.actor.grid.toJson()}).then(() => {
+                Hooks.callAll("gridSpaceClick",space,this.actor)
+            });
         }
     }
 

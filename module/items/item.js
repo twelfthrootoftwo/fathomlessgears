@@ -71,6 +71,7 @@ export class HLMItem extends Item {
 		}
 		const flag=!await this.getFlag("fathomlessgears","broken");
 		await this.setFlag("fathomlessgears","broken",flag);
+		Hooks.callAll("internalToggleBroken",this,flag);
 		return flag;
 	}
 
