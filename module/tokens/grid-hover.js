@@ -74,6 +74,10 @@ export class GridHoverHUD extends HLMApplication{
 		}
 	}
 
+	activateListeners(html) {
+		this.object.actor.grid.activateListeners(html);
+	}
+
 	/**
 	 * Activates a token grid HUD
 	 * @param {HLMToken} token The token being hovered

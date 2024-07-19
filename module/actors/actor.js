@@ -33,6 +33,12 @@ export class HLMActor extends Actor {
 			this.grid=new Grid(this.system.grid);	
 			this.grid.actor=this;	
 		}
+		const items=this.itemTypes;
+
+		const internals=items.internal_pc.concat(items.internal_npc);
+		internals.forEach((internal) => {
+			internal.description_text=internal.getInternalDescriptionText();
+		});
 	}
 
 	/** @inheritdoc */

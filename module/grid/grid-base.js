@@ -178,6 +178,8 @@ export class Grid {
         )
         const popout=document.querySelector("#internal-popout");
         popout.innerHTML=internalHtml;
+        $(popout).css("z-index", 150)
+        $(popout).css("max-width", 350)
         popout.classList.toggle("visible");
     }
 
