@@ -377,7 +377,7 @@ export class HLMActor extends Actor {
 				break;
 			case ITEM_TYPES.internal_pc:
 			case ITEM_TYPES.internal_npc:
-				this.applyInternal(item);
+				this.onInternalDrop(item);
 				break;
 		}
 	}
@@ -469,7 +469,7 @@ export class HLMActor extends Actor {
 				To keep the interactive grid, you should update the character by uploading a new Gearwright save file.<br>
 				Manually add internal?`,
 				this.applyInternalDeactivateGrid,
-				{"internal": internal}
+				{"actor": this, "internal": internal}
 			)
 		} else {
 			this.applyInternal(internal);
@@ -610,12 +610,14 @@ export class HLMActor extends Actor {
 		if(this.type=ACTOR_TYPES.fisher) {
 			targetGridString="systems/fathomlessgears/assets/blank-grid.jpg"
 		}
-		this.update({"system.grid": targetGridString});
+		await this.update({"system.grid": targetGridString});
 	}
 
-	async applyInternalDeactivateGrid(internal) {
-		await this.removeInteractiveGrid();
-		this.applyInternal(internal);
+	async applyInternalDeactivateGrid(proceed,args) {
+		if(proceed) {
+			await args.actor.removeInteractiveGrid();
+			args.actor.applyInternal(args.internal);
+		}
 	}
 
 	async assignInteractiveGrid(gridObject) {
