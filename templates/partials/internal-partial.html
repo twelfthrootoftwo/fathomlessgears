@@ -7,7 +7,7 @@
         <p class="internal-ap">{{internal.system.ap_cost}} AP</p>
         {{/ifcond}}
         {{#unless popout}}
-        {{#if changeState}}
+        {{#unless fixedState}}
         <div class="btn break-button {{#if internal.flags.fathomlessgears.broken}}btn-dark{{/if}}" data-id="id{{internal._id}}">
             {{#if internal.flags.fathomlessgears.broken}}
             {{localize "SHEET.internalfix"}}
@@ -15,7 +15,7 @@
             {{localize "SHEET.internalbreak"}}
             {{/if}}
         </div>
-        {{/if}}
+        {{/unless}}
         <div class="btn btn-primary post-button {{#if internal.flags.fathomlessgears.broken}}btn-dark{{/if}}" data-id="id{{internal._id}}">{{localize "SHEET.post"}}</div>
         {{/unless}}
     </div>

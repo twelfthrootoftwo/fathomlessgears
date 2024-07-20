@@ -187,7 +187,7 @@ export class Grid {
             {
                 internal: viewedInternal,
                 popout: true,
-                changeState: false,
+                fixedState: true,
             }
         )
         const popout=document.querySelector("#internal-popout");
