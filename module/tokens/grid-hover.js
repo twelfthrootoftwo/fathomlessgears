@@ -30,6 +30,7 @@ export class GridHoverHUD extends HLMApplication{
 		let grid = tokenObject?.actor?.grid; // Character art
 
 		data.grid = grid;
+		data.lockPrompt=this.getLockPrompt();
 		return data;
 	}
 
@@ -129,7 +130,6 @@ export class GridHoverHUD extends HLMApplication{
 		 * @param {Boolean} hovered if token is mouseovered
 		 */
 		Hooks.on("hoverToken", (token, hovered) => {
-			console.log("hoverToken");
 			game.gridHover.hovering=hovered
 			if(game.gridHover.lock) {
 				return;
@@ -157,6 +157,16 @@ export class GridHoverHUD extends HLMApplication{
 
 		Hooks.on("gridSpaceClick",(space,actor) => refreshGrid(actor));
 		Hooks.on("internalDeleted",(actor) => refreshGrid(actor));
+	}
+
+	getLockPrompt() {
+		let keyString=game.keybindings.get("fathomlessgears","pinGrid")[0].key
+		keyString=keyString.replace("Key","");
+		if(!this.lock){
+			return game.i18n.localize("GRIDHUD.lockON").replace("_KEY_",keyString);
+		} else {
+			return game.i18n.localize("GRIDHUD.lockOFF").replace("_KEY_",keyString);
+		}
 	}
 }
 
