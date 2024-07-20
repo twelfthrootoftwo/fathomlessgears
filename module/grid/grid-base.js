@@ -118,23 +118,6 @@ export class Grid {
         }
     }
 
-    /**
-     * Remove an internal from the grid
-     * @param {str} uuid The internal to remove
-     */
-    removeInternal(uuid) {
-        this.gridRegions.forEach((region) => {
-            if(region) {
-                region.gridSpaces.forEach((row) => {
-                    row.forEach((space) => {
-                        if(space.internal==uuid) space.internal=null;
-                    });
-                });
-            }
-        });
-        this.actor.update({"system.grid": this.toJson()});
-    }
-
     //Callback for clicking a grid space on the sheet
     clickGridSpace(event) {
         if(this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {
@@ -204,7 +187,7 @@ export class Grid {
             {
                 internal: viewedInternal,
                 popout: true,
-                changeState: false
+                changeState: false,
             }
         )
         const popout=document.querySelector("#internal-popout");

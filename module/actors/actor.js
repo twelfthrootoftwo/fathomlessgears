@@ -442,6 +442,21 @@ export class HLMActor extends Actor {
 		}
 	}
 
+	async onInternalRemove(uuid) {
+		if(this.getFlag("fathomlessgears","interactiveGrid")) {
+			new ConfirmDialog(
+				"Override Imported Data",
+				`Manually removing an internal from this actor will disable the interactive grid.<br>
+				To keep the interactive grid, you should update the character by uploading a new Gearwright save file.<br>
+				Manually remove internal?`,
+				this.removeInternalDeactivateGrid,
+				{"actor": this, "uuid": uuid}
+			)
+		} else {
+			this.removeInternal(uuid);
+		}
+	}
+
 	/**
 	 * Item drop processing for internals
 	 * @param {Item} internal
@@ -566,9 +581,6 @@ export class HLMActor extends Actor {
 		});
 		this.calculateBallast();
 		if(this.system.resources) this.modifyResourceValue("repair",-1*internal.system.repair_kits);
-		if(this.getFlag("fathomlessgears","interactiveGrid")) {
-			await this.grid.removeInternal(uuid);
-		}
 		this.update({"system": this.system});
 		await internal.delete();
 		
@@ -594,6 +606,7 @@ export class HLMActor extends Actor {
 		if(this.type=ACTOR_TYPES.fisher) {
 			targetGridString="systems/fathomlessgears/assets/blank-grid.jpg"
 		}
+		this.setFlag("fathomlessgears","interactiveGrid",false)
 		await this.update({"system.grid": targetGridString});
 	}
 
@@ -606,6 +619,18 @@ export class HLMActor extends Actor {
 		if(proceed) {
 			await args.actor.removeInteractiveGrid();
 			args.actor.applyInternal(args.internal);
+		}
+	}
+
+	/**
+	 * Remove this actor's interactive grid, then remove an internal
+	 * @param {bool} proceed Take the action or no?
+	 * @param {Object} args {uuid: str, actor: HLMActor}
+	 */
+	async removeInternalDeactivateGrid(proceed,args) {
+		if(proceed) {
+			await args.actor.removeInteractiveGrid();
+			args.actor.removeInternal(args.uuid);
 		}
 	}
 

@@ -125,7 +125,7 @@ export class HLMActorSheet extends ActorSheet {
 		internals.forEach((internal) => {
 			internal.isBroken().then(result => {
 				if(result) {
-					this.toggleInternalBrokenDisplay(internal._id);
+					//this.toggleInternalBrokenDisplay(internal._id);
 				}
 			});
 		});
@@ -216,7 +216,7 @@ export class HLMActorSheet extends ActorSheet {
 	 */
 	async breakInternal(event) {
 		if(!this.testOwnership()) {return false;}
-		this.toggleInternalBrokenDisplay(safeIdClean(event.target.dataset.id));
+		//this.toggleInternalBrokenDisplay(safeIdClean(event.target.dataset.id));
 		this.actor.toggleInternalBroken(safeIdClean(event.target.dataset.id));
 	}
 
@@ -233,7 +233,7 @@ export class HLMActorSheet extends ActorSheet {
 
 	deleteInternal(event) {
 		if(!this.testOwnership()) {return false;}
-		this.actor.removeInternal(safeIdClean(event.target.dataset.id));
+		this.actor.onInternalRemove(safeIdClean(event.target.dataset.id));
 	}
 
 	locationHitMessage(event) {
