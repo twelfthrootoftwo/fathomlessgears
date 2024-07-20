@@ -52,12 +52,17 @@ Hooks.once("init", async function () {
 		addFshManager(app, html);
 	});
 
+	console.log("Initialising helpers");
+	initialiseHelpers();
+});
+
+Hooks.on("init", async function () {
 	game.keybindings.register("fathomlessgears", "pinGrid", {
 		name: "Lock HUD Grid Display",
 		hint: "Locks or unlocks the grid currently displayed on the HUD",
 		editable: [
 			{
-				key: "G",
+				key: "KeyG",
 			},
 		],
 		onDown: () => {
@@ -67,17 +72,11 @@ Hooks.once("init", async function () {
 		restricted: false, // Restrict this Keybinding to gamemaster only?
 		precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
 	});
-
-	console.log("Initialising helpers");
-	initialiseHelpers();
 });
 
 export const system_ready = new Promise((success) => {
-	Hooks.on("ready", async function (args) {
-		console.log("Ready args:")
-		console.log(args)
-	});
 	Hooks.once("ready", async function () {
+		game.keybindings.initialize()
 		//Post-init stuff goes here
 		const gridCollection = await game.packs.get(
 			"fathomlessgears.grid_type"
