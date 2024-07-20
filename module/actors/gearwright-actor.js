@@ -120,7 +120,7 @@ async function findCompendiumItemFromName(compendiumName,itemName) {
 	if(!collection.indexed) {
 		await collection.getIndex();
 	}
-	const record = collection.index.filter(p => p.name.toLowerCase() == itemName.toLowerCase());
+	const record = collection.index.filter(p => Utils.fromLowerHyphen(p.name.toLowerCase()) == Utils.fromLowerHyphen(itemName.toLowerCase()));
 	const item=await collection.getDocument(record[0]._id);
 	return item
 }
