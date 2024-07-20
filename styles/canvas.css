@@ -6,7 +6,7 @@
     left: 0;
     width: 400px;
     height: 400px;
-    background-color: #00000080;
+    background-color: #00000060;
 }
 .lock-prompt-text {
     color: var(--color-text-light);
