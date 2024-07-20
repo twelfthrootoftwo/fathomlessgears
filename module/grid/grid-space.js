@@ -92,6 +92,11 @@ export class GridSpace {
         console.log(`State of ${this.id} set to ${this.state}`)
     }
 
+    /**
+     * Check if this space contains a specific internal
+     * @param {str} uuid 
+     * @returns True if this space contains that internal, otherwise False
+     */
     containsInternal(uuid) {
         if(uuid==null) {
             if(this.internal) return true;
@@ -100,10 +105,17 @@ export class GridSpace {
         return this.internal===uuid;
     }
 
+    /**
+     * Check if this space is intact
+     * @returns True if intact, False if broken/locked
+     */
     isIntact() {
         return this.state===GRID_SPACE_STATE.intact;
     }
 
+    /**
+     * Toggle this space's internal highlight (lightening)
+     */
     toggleHighlight() {
         const thisCover=document.querySelector(`#gridspace-${this.id}`).querySelector(".cover");
         thisCover.classList.toggle("highlight-cover");

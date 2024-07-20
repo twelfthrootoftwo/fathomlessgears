@@ -52,6 +52,11 @@ export class Grid {
         }
     }
 
+    /**
+     * Activate relevant listeners to a grid display HTML object
+     * @param {HTML} html The HTML document to add listeners to
+     * @returns the HTML with listeners(?)
+     */
     activateListeners(html) {
         html.find(".grid-space").click(this.clickGridSpace.bind(this));
         html.find(".grid-space").mouseenter(this._onMouseEnterSpace.bind(this));
@@ -59,6 +64,10 @@ export class Grid {
         return html;
     }
 
+    /**
+     * When hovering a grid space, highlight the entire internal and pop out the internal's details
+     * @param {Event} event The mouse event
+     */
     _onMouseEnterSpace(event) {
         const targetSpace=this.actor.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
         if(targetSpace.containsInternal(null)) {
@@ -67,6 +76,10 @@ export class Grid {
         }
     }
 
+    /**
+     * When end hovering a grid space, turn off internal highlight and unpop the internal's details
+     * @param {Event} event The mouse event
+     */
     _onMouseLeaveSpace(event) {
         const targetSpace=this.actor.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
         if(targetSpace.containsInternal(null)) {
@@ -92,7 +105,11 @@ export class Grid {
         return JSON.stringify(copyGrid);
     }
 
-    //TODO finish
+    /**
+     * If the internal's state on the grid is updated, toggle it broken or not
+     * @param {str} uuid The internal to check
+     * @param {*} gridIntact Whether the internal is intact or not according to the grid
+     */
     async checkInternal(uuid, gridIntact) {
         const internal=await this.actor.items.get(uuid);
         const recordIntact =!(await internal.isBroken())
@@ -101,6 +118,10 @@ export class Grid {
         }
     }
 
+    /**
+     * Remove an internal from the grid
+     * @param {str} uuid The internal to remove
+     */
     removeInternal(uuid) {
         this.gridRegions.forEach((region) => {
             if(region) {
@@ -145,6 +166,10 @@ export class Grid {
         return targetSpace;
     }
 
+    /**
+     * From a default (fully locked) grid, mark selected spaces as unlocked
+     * @param {Array[int]} unlockList The list of spaces to mark unlocked
+     */
     applyUnlocks(unlockList) {
         unlockList.forEach((id) => {
             const space=this.findGridSpace(id);
@@ -167,6 +192,10 @@ export class Grid {
         });
     }
 
+    /**
+     * Create a popout display of an internal's details
+     * @param {str} uuid The ID of the internal to pop
+     */
     async popInternal(uuid) {
         const viewedInternal=this.actor.items.get(uuid);
         this.poppedOutInternal=viewedInternal;
@@ -185,6 +214,9 @@ export class Grid {
         popout.classList.toggle("visible");
     }
 
+    /**
+     * Remove a popped-out internal's details
+     */
     async unpopInternal() {
         const popout=document.querySelector("#internal-popout");
         popout.innerHTML="";

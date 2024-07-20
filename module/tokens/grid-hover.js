@@ -6,9 +6,7 @@ import { HLMApplication } from "../sheets/application.js";
  * Copy Placeable HUD template
  */
 export class GridHoverHUD extends HLMApplication{
-	/**
-	 * Retrieve and override default options for BasePlaceableHUD
-	 */
+
 	static get defaultOptions() {
 		console.log("Getting default options")
 		return foundry.utils.mergeObject(super.defaultOptions, {
@@ -24,9 +22,7 @@ export class GridHoverHUD extends HLMApplication{
 		});
 	}
 
-	/**
-	 * Get image data for html template
-	 */
+
 	getData() {
 		console.log("Getting data");
 		const data = super.getData();
@@ -74,6 +70,10 @@ export class GridHoverHUD extends HLMApplication{
 		}
 	}
 
+	/**
+	 * Activates listeners for the grid object
+	 * @param {HTML} html The HTML document
+	 */
 	activateListeners(html) {
 		this.object.actor.grid.activateListeners(html);
 	}
@@ -113,8 +113,8 @@ export class GridHoverHUD extends HLMApplication{
 	}
 
 	/**
-		 * Add Image Hover display to html on load.
-		 */
+	 * Create a Grid HUD manager and attach it to the game
+	 */
 	static addGridHUD() {
 		game.gridHover = new GridHoverHUD();
 		game.gridHover.initialiseHooks();
@@ -144,15 +144,15 @@ export class GridHoverHUD extends HLMApplication{
 		/**
 		 * Remove character art when deleting/dragging token (Hover hook doesn't trigger while token movement animation is on).
 		 */
-		Hooks.on("preUpdateToken", (...args) => clearArt());
-		Hooks.on("deleteToken", (...args) => clearArt());
+		Hooks.on("preUpdateToken", (...args) => clearGrid());
+		Hooks.on("deleteToken", (...args) => clearGrid());
 
 		/**
 		 * Occasions to remove character art from screen due to weird hover hook interaction.
 		 */
-		Hooks.on("closeActorSheet", (...args) => clearArt());
-		Hooks.on("closeSettingsConfig", (...args) => clearArt());
-		Hooks.on("closeApplication", (...args) => clearArt());
+		Hooks.on("closeActorSheet", (...args) => clearGrid());
+		Hooks.on("closeSettingsConfig", (...args) => clearGrid());
+		Hooks.on("closeApplication", (...args) => clearGrid());
 
 		Hooks.on("gridSpaceClick",(space,actor) => refreshGrid(actor));
 		Hooks.on("internalDeleted",(actor) => refreshGrid(actor));
@@ -162,7 +162,7 @@ export class GridHoverHUD extends HLMApplication{
 /**
  * Clear art unless GM is showing users art.
  */
-function clearArt() {
+function clearGrid() {
 	if (game.gridHover) {
 		if(!game.gridHover.lock) {
 			game.gridHover.clear();
@@ -170,6 +170,10 @@ function clearArt() {
 	}
 }
 
+/**
+ * When an actor is modified, check if the current HUD needs to refresh
+ * @param {HLMActor} actor The actor that has been updated
+ */
 function refreshGrid(actor) {
 	if(game.gridHover?.rendered && game.gridHover.object.actor==actor) {
 		game.gridHover.render(true);

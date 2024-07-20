@@ -128,40 +128,6 @@ export class HLMActor extends Actor {
 		});
 	}
 
-	/**
-	 * Send this actor's flat attributes to the chat log
-	 */
-	async shareFlatAttributes() {
-		const content=await this.getFlatAttributeChatMessage();
-		ChatMessage.create({
-			speaker: {actor: this},
-			content: content,
-		});
-	}
-
-	getFlatAttributeString() {
-		const attrStrings = [];
-		for (const attribute in this.system.attributes) {
-			const attr = this.system.attributes[attribute];
-			attrStrings.push(
-				Utils.getLocalisedAttributeLabel(attribute) +
-					": " +
-					attr.total.toString()
-			);
-		}
-		return attrStrings.join("<br>");
-	}
-
-	async getFlatAttributeChatMessage() {
-		const html= await renderTemplate(
-			"systems/fathomlessgears/templates/messages/flat-attributes.html",
-			{
-				attributes: this.system.attributes.flat
-			}
-		);
-		return html;
-	}
-
 	async locationHitMessage() {
 		const locationResult=await AttackHandler.rollHitLocation(this);
 		if(locationResult) {
@@ -514,11 +480,23 @@ export class HLMActor extends Actor {
 		frame.postToChat(this);
 	}
 
+	/**
+	 * Posts the chat message associated with an internal
+	 * @param {string} uuid The ID of the internal
+	 */
 	async postInternal(uuid) {
 		const internal=this.items.get(uuid);
 		internal.postToChat(this);
 	}
 
+	/**
+	 * Make an attack with an internal, and post the attack result to the chat
+	 * @param {string} uuid The ID of the internal
+	 * @param {ATTRIBUTE} attackKey The attacking attribute
+	 * @param {int} totalDieCount Number of dice to roll
+	 * @param {int} totalFlat Total flat bonus to the roll
+	 * @param {COVER_STATE} cover Whether or not this attack is affected by cover
+	 */
 	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat, cover) {
 		const internal=this.items.get(uuid);
 		const defenceKey=HLMActor.isTargetedRoll(attackKey);
@@ -597,13 +575,19 @@ export class HLMActor extends Actor {
 		Hooks.callAll("internalDeleted",this)
 	}
 
-	async resetForImport() {
+	/**
+	 * Remove all internals on this actor (pre import)
+	 */
+	async removeInternals() {
 		const internals=this.itemTypes.internal_pc.concat(this.itemTypes.internal_npc);
 		internals.forEach((internal) => {
 			this.removeInternal(internal.id);
 		});
 	}
 
+	/**
+	 * Switch this actor from interactive to image grid
+	 */
 	async removeInteractiveGrid() {
 		this.grid=null;
 		let targetGridString="systems/fathomlessgears/assets/blank-grid-fish.jpg"
@@ -613,6 +597,11 @@ export class HLMActor extends Actor {
 		await this.update({"system.grid": targetGridString});
 	}
 
+	/**
+	 * Remove this actor's interactive grid, then add a new internal
+	 * @param {bool} proceed Take the action or no?
+	 * @param {Object} args {internal: HLMInternal, actor: HLMActor}
+	 */
 	async applyInternalDeactivateGrid(proceed,args) {
 		if(proceed) {
 			await args.actor.removeInteractiveGrid();
@@ -620,12 +609,20 @@ export class HLMActor extends Actor {
 		}
 	}
 
+	/**
+	 * Assigns an initialised grid to this actor
+	 * @param {Grid} gridObject The initialised grid for this actor
+	 */
 	async assignInteractiveGrid(gridObject) {
 		this.grid=gridObject;
 		await this.update({"system.grid": gridObject.toJson()});
 		this.setFlag("fathomlessgears","interactiveGrid",true);
 	}
 
+	/**
+	 * Get a list of users that have Observer or Owner permissions on this actor
+	 * @returns a list of users
+	 */
 	async getObservers() {
 		const observers = await game.users.filter((user) => {
 			const isOwner=this.testUserPermission(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER);
@@ -668,6 +665,10 @@ export class HLMActor extends Actor {
 		});
 	}
 
+	/**
+	 * Get a string reflecting whether this actor is scanned or not
+	 * @returns str
+	 */
 	async getScanText() {
 		if(await this.getFlag("fathomlessgears","scanned")) {
 			return game.i18n.localize("SHEET.scantrue");
@@ -676,6 +677,10 @@ export class HLMActor extends Actor {
 		}
 	}
 
+	/**
+	 * Declare a scan action
+	 * @returns False if this action is invalid (this actor is a fish or there are no targeted actors)
+	 */
 	async scanTarget() {
 		if(this.type==ACTOR_TYPES.fish) return false;
 		const targetSet = game.user.targets;
