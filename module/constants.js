@@ -107,6 +107,6 @@ export const SECTION_NUMBERING_MAP = {
 	medium: [0],
 	large: [0],
 	massive: [0],
-	leviathan: [],
-	serpent_leviathan: []
+	leviathan: [0,36,18],
+	serpent_leviathan: [0,18,36,54,9]
 }

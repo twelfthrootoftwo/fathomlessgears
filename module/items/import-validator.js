@@ -5,14 +5,16 @@ const expectedFields={
     "frame": ["core_integrity","gear_ability","gear_ability_name","repair_kits","default_unlocks"],
     "internal": ["action_data","grid","name","tags","type","extra_rules"],
     "size": ["size"],
-    "actor": ["callsign","frame","internals","background","custom_background","unlocks","level"]
+    "fisher": ["callsign","frame","internals","background","custom_background","unlocks","level"],
+    "fish": ["name","size","internals","template","mutations"]
 }
 
 const expectedAttributes={
     "frame": [],
     "internal": [],
     "size": [],
-    "actor": []
+    "fisher": [],
+    "fish": [],
 }
 Object.values(ATTRIBUTES).forEach((attribute) => {
     if(![ATTRIBUTES.mental,ATTRIBUTES.willpower].includes(attribute)){

@@ -11,6 +11,16 @@
         </h1>
 	</header>
     <div class="sheet-contents flex-row">
+        {{#if showInitialiseCover}}
+        <div class="initialiser flex-row">
+            <div class="initialise-button-base">
+                <div id="initialise-import" class="btn initialise-button">{{localize "SHEET.initgearwright"}}</div>
+            </div>
+            <div class="initialise-button-base">
+                <div id="initialise-manual" class="btn initialise-button">{{localize "SHEET.initmanual"}}</div>
+            </div>
+        </div>
+        {{/if}}
         {{>
             "systems/fathomlessgears/templates/partials/attribute-sidebar.html"
             actor=actor
@@ -50,6 +60,7 @@
                             </div>
                             <div class="btn actor-button hit-location-button" id="hit-location">{{localize "SHEET.hitlocation"}}</div>
                             <div class="btn actor-button" id="scan">{{scan_text}}</div>
+                            <div id="initialise-import" class="btn import-button">{{localize "SHEET.initgearwright"}}</div>
                         </div>
                         <div class="flex-col">
                             <img

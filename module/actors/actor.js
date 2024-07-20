@@ -366,7 +366,7 @@ export class HLMActor extends Actor {
 		//Create new size item
 		const item=await Item.create(grid,{parent: this});
 		this.system.gridType=item._id
-		this.update({"system": this.system});
+		await this.update({"system": this.system});
 		Hooks.callAll("gridUpdated",this)
 	}
 

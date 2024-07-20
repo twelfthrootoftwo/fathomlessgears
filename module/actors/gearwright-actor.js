@@ -1,7 +1,7 @@
 import { testFieldsExist } from "../items/import-validator.js";
 import {Utils} from "../utilities/utils.js";
 import { constructGrid } from "../grid/grid-base.js";
-import { GRID_SPACE_STATE } from "../constants.js";
+import { ACTOR_TYPES, GRID_SPACE_STATE } from "../constants.js";
 
 /**
  * Build an actor based on a Gearwright save (including interactive grid)
@@ -9,17 +9,36 @@ import { GRID_SPACE_STATE } from "../constants.js";
  * @param {Object} data JSON import of Gearwright save
  */
 export async function populateActorFromGearwright(actor,data) {
-    if(!testFieldsExist(data,"actor")) throw new Error("Invalid Gearwright save data");
+    if(!testFieldsExist(data,actor.type)) throw new Error("Invalid Gearwright save data");
 	console.log("Importing actor from gearwright");
 	actor.removeInternals();
+	switch(actor.type) {
+		case ACTOR_TYPES.fisher:
+			await buildFisher(actor,data);
+			break;
+		case ACTOR_TYPES.fish:
+			await buildFish(actor,data);
+			break;
+	}
+	actor.setFlag("fathomlessgears","initialised",true);
+}
+
+async function buildFisher(actor,data) {
 	const gridObject=actor.getFlag("fathomlessgears","interactiveGrid") ? actor.grid : await constructGrid(actor);
-	await constructSystemData(data,actor);
+	await constructFisherData(data,actor);
 	await applyFrame(data,actor,gridObject);
 	await applyInternals(data,actor,gridObject);
 	if(actor.getFlag("fathomlessgears","interactiveGrid")) mapGridState(actor.grid,gridObject);
 	actor.assignInteractiveGrid(gridObject);
-	console.log(gridObject);
-	actor.setFlag("fathomlessgears","initialised",true);
+}
+
+async function buildFish(actor,data) {
+	actor.update({"name": data.name});
+	await applySize(data,actor);
+	const gridObject=actor.getFlag("fathomlessgears","interactiveGrid") ? actor.grid : await constructGrid(actor);
+	await applyInternals(data,actor,gridObject);
+	if(actor.getFlag("fathomlessgears","interactiveGrid")) mapGridState(actor.grid,gridObject);
+	actor.assignInteractiveGrid(gridObject);
 }
 
 /**
@@ -27,7 +46,7 @@ export async function populateActorFromGearwright(actor,data) {
  * @param {Object} importData Gearwright save
  * @param {HLMActor} actor The actor to populate
  */
-async function constructSystemData(importData,actor) {
+async function constructFisherData(importData,actor) {
 	const actorData=foundry.utils.deepClone(actor.system);
 	actorData.fisher_history.callsign=importData.callsign;
 	actorData.fisher_history.el=parseInt(importData.level);
@@ -50,6 +69,15 @@ async function applyFrame(importData,actor,gridObject) {
 	gridObject.applyUnlocks(unlocks);
 }
 
+async function applySize(importData,actor) {
+	const size=await findCompendiumItemFromName("size",importData.size);
+	if (size) {
+		await actor.applySize(size);
+	} else {
+		ui.notifications.error(`Can't find size category ${importData.size}`);
+	}
+}
+
 /**
  * Applies internals data to actor, including the actor's interactive grid
  * @param {Object} importData Gearwright save
@@ -58,8 +86,9 @@ async function applyFrame(importData,actor,gridObject) {
  */
 async function applyInternals(importData,actor,gridObject) {
 	const internalsList=importData.internals;
+	const targetCompendium = actor.type==ACTOR_TYPES.fisher ? "internal_pc" : "internal_npc"
 	for(const [gridSpace,internalName] of Object.entries(internalsList)) {
-		const internal=await findCompendiumItemFromName("internal_pc",Utils.capitaliseWords(Utils.fromLowerHyphen(internalName)));
+		const internal=await findCompendiumItemFromName(targetCompendium,Utils.capitaliseWords(Utils.fromLowerHyphen(internalName)));
 		const internalId=await actor.applyInternal(internal);
 		const spaces=identifyInternalSpaces(internal,gridObject,gridSpace);
 		spaces.forEach((id) => {
