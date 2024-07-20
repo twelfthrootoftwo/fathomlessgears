@@ -54,7 +54,8 @@ export class GridHoverHUD extends HLMApplication{
 			setTimeout(function () {
 				if (
 					token == canvas.tokens.hover &&
-					token.actor.grid == canvas.tokens.hover.actor.grid
+					token.actor.grid == canvas.tokens.hover.actor.grid &&
+					token.actor.testUserPermission(game.user,CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)
 				) {
 					game.gridHover.assignToken(token);
 				} else {
