@@ -9,7 +9,7 @@ import { ACTOR_TYPES, GRID_SPACE_STATE } from "../constants.js";
  * @param {Object} data JSON import of Gearwright save
  */
 export async function populateActorFromGearwright(actor,data) {
-    if(!testFieldsExist(data,actor.type)) throw new Error("Invalid Gearwright save data");
+    if(!testFieldsExist(data,actor.type)) ui.notifications.error("Invalid Gearwright save data");
 	console.log("Importing actor from gearwright");
 	actor.removeInternals();
 	switch(actor.type) {
@@ -28,7 +28,9 @@ async function buildFisher(actor,data) {
 	await constructFisherData(data,actor);
 	await applyFrame(data,actor,gridObject);
 	await applyInternals(data,actor,gridObject);
-	if(actor.getFlag("fathomlessgears","interactiveGrid")) mapGridState(actor.grid,gridObject);
+	if(actor.getFlag("fathomlessgears","interactiveGrid")) {
+		mapGridState(actor.grid,gridObject);
+	}
 	actor.assignInteractiveGrid(gridObject);
 }
 
@@ -37,7 +39,11 @@ async function buildFish(actor,data) {
 	await applySize(data,actor);
 	const gridObject=actor.getFlag("fathomlessgears","interactiveGrid") ? actor.grid : await constructGrid(actor);
 	await applyInternals(data,actor,gridObject);
-	if(actor.getFlag("fathomlessgears","interactiveGrid")) mapGridState(actor.grid,gridObject);
+	if(actor.getFlag("fathomlessgears","interactiveGrid")) {
+		mapGridState(actor.grid,gridObject);
+	} else {
+		gridObject.setAllToIntact();
+	}
 	actor.assignInteractiveGrid(gridObject);
 }
 
@@ -129,11 +135,13 @@ function mapGridState(source,destination) {
 		if(region) {
 			region.gridSpaces.forEach((row) => {
 				row.forEach((space) => {
-					if(space.state==GRID_SPACE_STATE.broken) {
-						const newSpace=destination.findGridSpace(space.id);
-						if(newSpace.state==GRID_SPACE_STATE.intact) {
-							newSpace.setState(GRID_SPACE_STATE.broken);
-						}
+					const newSpace=destination.findGridSpace(space.id);
+					if(
+						space.state != GRID_SPACE_STATE.locked &&
+						newSpace.state != GRID_SPACE_STATE.locked &&
+						space.state!=newSpace.state
+					) {
+						newSpace.setState(space.state);
 					}
 				});
 			});

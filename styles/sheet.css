@@ -501,8 +501,9 @@ input.background {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
     align-items: start;
+    width: 100%;
 }
 .grid-region {
     min-width: 31%;
@@ -560,7 +561,7 @@ input.background {
     align-items: center;
 }
 .grid-space .cover.highlight-cover {
-    background-color:#ffffff44;
+    background-color:#ffffff77;
 }
 .grid-display .internal-popout {
     visibility: hidden;

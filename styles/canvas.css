@@ -2,7 +2,7 @@
     padding: 10px;
     border: 2px solid var(--color-border-dark-secondary);
     position: absolute;
-    bottom: 0;
+    bottom: 100px;
     left: 0;
     width: 400px;
     height: 400px;

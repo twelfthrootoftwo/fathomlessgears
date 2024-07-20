@@ -105,6 +105,18 @@ export class Grid {
         return JSON.stringify(copyGrid);
     }
 
+    setAllToIntact() {
+        this.gridRegions.forEach((region) => {
+            if(region) {
+                region.gridSpaces.forEach((row) => {
+                    row.forEach((space) => {
+                        space.setState(GRID_SPACE_STATE.intact);
+                    });
+                });
+            }
+        });
+    }
+
     /**
      * If the internal's state on the grid is updated, toggle it broken or not
      * @param {str} uuid The internal to check
