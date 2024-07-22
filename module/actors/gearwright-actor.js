@@ -67,19 +67,19 @@ async function constructFisherData(importData,actor) {
  */
 async function applyFrame(importData,actor,gridObject) {
 	const frame=await findCompendiumItemFromName("frame_pc",importData.frame);
-	await actor.applyFrame(frame);
-	const unlocks=[];
-	unlocks.push(...importData.unlocks);
-	unlocks.push(...frame.system.default_unlocks);
-	gridObject.applyUnlocks(unlocks);
+	if(frame) {
+		await actor.applyFrame(frame);
+		const unlocks=[];
+		unlocks.push(...importData.unlocks);
+		unlocks.push(...frame.system.default_unlocks);
+		gridObject.applyUnlocks(unlocks);
+	}
 }
 
 async function applySize(importData,actor) {
 	const size=await findCompendiumItemFromName("size",importData.size);
 	if (size) {
 		await actor.applySize(size);
-	} else {
-		ui.notifications.error(`Can't find size category ${importData.size}`);
 	}
 }
 
@@ -94,12 +94,14 @@ async function applyInternals(importData,actor,gridObject) {
 	const targetCompendium = actor.type==ACTOR_TYPES.fisher ? "internal_pc" : "internal_npc"
 	for(const [gridSpace,internalName] of Object.entries(internalsList)) {
 		const internal=await findCompendiumItemFromName(targetCompendium,Utils.capitaliseWords(Utils.fromLowerHyphen(internalName)));
-		const internalId=await actor.applyInternal(internal);
-		const spaces=identifyInternalSpaces(internal,gridObject,gridSpace);
-		spaces.forEach((id) => {
-			const space=gridObject.findGridSpace(id);
-			space.setInternal(internalId,`${internal.system.type}Internal`);
-		})
+		if(internal) {
+			const internalId=await actor.applyInternal(internal);
+			const spaces=identifyInternalSpaces(internal,gridObject,gridSpace);
+			spaces.forEach((id) => {
+				const space=gridObject.findGridSpace(id);
+				space.setInternal(internalId,`${internal.system.type}Internal`);
+			})
+		}
 	}
 }
 
@@ -120,6 +122,10 @@ async function findCompendiumItemFromName(compendiumName,itemName) {
 		await collection.getIndex();
 	}
 	const record = collection.index.filter(p => Utils.fromLowerHyphen(p.name.toLowerCase()) == Utils.fromLowerHyphen(itemName.toLowerCase()));
+	if(record.length<1) {
+		ui.notifications.warn(`Could not identify item ${itemName} in collection ${compendiumName}`);
+		return false;
+	}
 	const item=await collection.getDocument(record[0]._id);
 	return item
 }
