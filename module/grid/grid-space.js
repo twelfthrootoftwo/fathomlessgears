@@ -89,7 +89,6 @@ export class GridSpace {
      */
     triggerClick() {
         this.toggleBroken();
-        console.log(`State of ${this.id} set to ${this.state}`)
     }
 
     /**

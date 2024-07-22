@@ -8,7 +8,6 @@ import { HLMApplication } from "../sheets/application.js";
 export class GridHoverHUD extends HLMApplication{
 
 	static get defaultOptions() {
-		console.log("Getting default options")
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			id: "grid-hover-hud",
 			classes: ["grid-hover-hud", "popout"],
@@ -24,7 +23,6 @@ export class GridHoverHUD extends HLMApplication{
 
 
 	getData() {
-		console.log("Getting data");
 		const data = super.getData();
 		const tokenObject = this.object;
 		let grid = tokenObject?.actor?.grid; // Character art
@@ -111,7 +109,6 @@ export class GridHoverHUD extends HLMApplication{
 				this.lock=true;
 			}
 		}
-		console.log(`Toggling lock to ${this.lock}`);
 	}
 
 	/**
@@ -135,7 +132,6 @@ export class GridHoverHUD extends HLMApplication{
 				return;
 			}
 			if (!hovered) {
-				console.log("Clearing in hoverToken")
 				game.gridHover.clear();
 				return;
 			}

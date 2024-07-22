@@ -217,7 +217,6 @@ export class Utils {
 	}
 
 	static async getGridFromSize(sizeName) {
-		console.log("Finding grid!");
 		const gridCollection=await game.packs.get("fathomlessgears.grid_type");
 		if(!gridCollection.indexed) {
 			await gridCollection.getIndex();
