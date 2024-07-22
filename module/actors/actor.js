@@ -46,15 +46,31 @@ export class HLMActor extends Actor {
 		super._onCreate(data, options, userId);
 		if(game.user._id==userId) {
 			this.setFlag("fathomlessgears","initialised",false)
+
 			if(this.type==ACTOR_TYPES.fish) {
+				//Initialise scanning state
 				const flag=this.getFlag("fathomlessgears","scanned");
 				if(flag==null || flag==undefined) {
 					this.setFlag("fathomlessgears","scanned",false);
 				}
-			} else if(this.type==ACTOR_TYPES.fisher && !this.system.gridType){
-				Utils.getGridFromSize("Fisher").then((grid) => {
-					this.applyGrid(grid);
-				})
+
+				//Default fish to None permissions
+				let ownership = foundry.utils.deepClone(this.ownership);
+				ownership["default"] = 0;
+				this.update({ownership});
+
+
+			} else if(this.type==ACTOR_TYPES.fisher){
+				if(!this.system.gridType){
+					Utils.getGridFromSize("Fisher").then((grid) => {
+						this.applyGrid(grid);
+					});
+				}
+
+				//Default fishers to Observer permission
+				let ownership = foundry.utils.deepClone(this.ownership);
+				ownership["default"] = 2;
+				this.update({ownership});
 			}
 		}
 	}
