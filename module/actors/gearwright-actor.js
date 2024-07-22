@@ -9,7 +9,10 @@ import { ACTOR_TYPES, GRID_SPACE_STATE } from "../constants.js";
  * @param {Object} data JSON import of Gearwright save
  */
 export async function populateActorFromGearwright(actor,data) {
-    if(!testFieldsExist(data,actor.type)) ui.notifications.error("Invalid Gearwright save data");
+    if(!testFieldsExist(data,actor.type)) {
+		ui.notifications.error("Invalid Gearwright save data");
+		return false;
+	}
 	console.log("Importing actor from gearwright");
 	actor.removeInternals();
 	switch(actor.type) {
@@ -35,15 +38,11 @@ async function buildFisher(actor,data) {
 }
 
 async function buildFish(actor,data) {
-	actor.update({"name": data.name});
+	if(data.name) actor.update({"name": data.name});
 	await applySize(data,actor);
-	const gridObject=actor.getFlag("fathomlessgears","interactiveGrid") ? actor.grid : await constructGrid(actor);
+	const gridObject=await constructGrid(actor);
 	await applyInternals(data,actor,gridObject);
-	if(actor.getFlag("fathomlessgears","interactiveGrid")) {
-		mapGridState(actor.grid,gridObject);
-	} else {
-		gridObject.setAllToIntact();
-	}
+	gridObject.setAllToIntact();
 	actor.assignInteractiveGrid(gridObject);
 }
 

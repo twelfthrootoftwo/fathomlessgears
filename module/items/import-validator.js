@@ -6,7 +6,7 @@ const expectedFields={
     "internal": ["action_data","grid","name","tags","type","extra_rules"],
     "size": ["size"],
     "fisher": ["callsign","frame","internals","background","custom_background","unlocks","level"],
-    "fish": ["name","size","internals","template","mutations"]
+    "fish": ["size","internals","template","mutations"]
 }
 
 const expectedAttributes={
