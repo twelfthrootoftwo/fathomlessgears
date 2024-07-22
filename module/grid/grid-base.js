@@ -28,7 +28,6 @@ export async function constructGrid(actor) {
 export class Grid {
     gridRegions
     actor
-    poppedOutInternal
 
     /**
      * Construct a new Grid, either from a JSON encoding or fresh
@@ -193,7 +192,6 @@ export class Grid {
      */
     async popInternal(uuid) {
         const viewedInternal=this.actor.items.get(uuid);
-        this.poppedOutInternal=viewedInternal;
         const internalHtml=await renderTemplate(
             "systems/fathomlessgears/templates/partials/internal-partial.html",
             {
@@ -202,7 +200,7 @@ export class Grid {
                 fixedState: true,
             }
         )
-        const popout=document.querySelector("#internal-popout");
+        const popout=document.querySelector(`#id${this.actor.id}-grid #internal-popout`);
         popout.innerHTML=internalHtml;
         $(popout).css("z-index", 150)
         $(popout).css("max-width", 350)
@@ -213,7 +211,7 @@ export class Grid {
      * Remove a popped-out internal's details
      */
     async unpopInternal() {
-        const popout=document.querySelector("#internal-popout");
+        const popout=document.querySelector(`#id${this.actor.id}-grid #internal-popout`);
         popout.innerHTML="";
         popout.classList.toggle("visible");
     }
