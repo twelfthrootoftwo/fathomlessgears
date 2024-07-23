@@ -125,7 +125,8 @@ export class Grid {
         const internal=await this.actor.items.get(uuid);
         const recordIntact =!(await internal.isBroken())
         if (recordIntact != gridIntact) {
-            this.actor.toggleInternalBroken(uuid);
+            await this.actor.toggleInternalBroken(uuid);
+            this.renderInternal(uuid);
         }
     }
 
@@ -186,11 +187,8 @@ export class Grid {
         });
     }
 
-    /**
-     * Create a popout display of an internal's details
-     * @param {str} uuid The ID of the internal to pop
-     */
-    async popInternal(uuid) {
+    async renderInternal(uuid) {
+        const popout=document.querySelector(`#id${this.actor.id}-grid #internal-popout`);
         const viewedInternal=this.actor.items.get(uuid);
         const internalHtml=await renderTemplate(
             "systems/fathomlessgears/templates/partials/internal-partial.html",
@@ -200,8 +198,16 @@ export class Grid {
                 fixedState: true,
             }
         )
-        const popout=document.querySelector(`#id${this.actor.id}-grid #internal-popout`);
         popout.innerHTML=internalHtml;
+        return popout
+    }
+
+    /**
+     * Create a popout display of an internal's details
+     * @param {str} uuid The ID of the internal to pop
+     */
+    async popInternal(uuid) {
+        const popout=await this.renderInternal(uuid);
         $(popout).css("z-index", 150)
         $(popout).css("max-width", 350)
         popout.classList.toggle("visible");
