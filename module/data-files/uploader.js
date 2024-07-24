@@ -53,7 +53,7 @@ export class FileUploader extends Application {
 		const fr = new FileReader();
 		fr.readAsBinaryString(this.newFile);
 		fr.addEventListener("load", (ev) => {
-			this.manager._onFileLoaded(ev.target.result,this.newFile.name, this.targetFile).then();
+			this.manager.onFileLoaded(ev.target.result,this.newFile.name, this.targetFile).then();
             this.close();
 		  });
 	}
