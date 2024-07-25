@@ -146,7 +146,7 @@ export class FshManager extends HLMApplication {
 	 */
 	async onFileLoaded(ev,fileName,oldFile) {
 		const fileRecord=await constructFileRecord(ev, fileName);
-		this.checkFileRecordExists(fileRecord,ev,oldFile);
+		await this.checkFileRecordExists(fileRecord,ev,oldFile);
 	}
 
 	/**
@@ -408,7 +408,7 @@ async function writeNewCompendiumItems(relevantData, compendium, itemType, fileI
  * @param {string} fileName The name of the file
  * @returns a FileRecord
  */
-async function constructFileRecord(file,fileName){
+export async function constructFileRecord(file,fileName){
 	let versionNumber="";
 	switch(getExtension(fileName)) {
 		case "fsh": {
@@ -441,7 +441,7 @@ function getJsonVersion(rawJson) {
  * Deletes all compendium items from a given source file
  * @param {FileRecord} fileId The file record to remove
  */
-async function deleteFileRecord(fileId, dialog) {
+export async function deleteFileRecord(fileId, dialog) {
 	for(const compendium of game.packs) {
 		dialog.updateLoadingMessage(`${game.i18n.localize("MANAGER.removing")} ${compendium.metadata.label}`);
 		await removeItemsFromFileSource(compendium,fileId);
