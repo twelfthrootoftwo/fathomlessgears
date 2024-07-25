@@ -310,7 +310,7 @@ function constructInternalNPCData(data) {
  * @returns the integer AP cost of activating the internal (null if there is no cost)
  */
 function getAPCost(data) {
-	if(data.type==="passive" || Object.keys(data.action_data).length) return null;
+	if(data.type==="passive" || Object.keys(data.action_data).length==0) return null;
 	if(data.action_data.ap_cost || data.action_data.ap_cost===0) return data.action_data.ap_cost;
 	return null;
 }
