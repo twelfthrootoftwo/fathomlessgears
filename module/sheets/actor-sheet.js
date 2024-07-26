@@ -256,7 +256,7 @@ export class HLMActorSheet extends ActorSheet {
 		new FileUploader(this);
 	}
 
-	async _onFileLoaded(fileData,fileName,oldFile) {
+	async onFileLoaded(fileData,fileName,oldFile) {
 		//process gearwright json
 		const preparedData=JSON.parse(fileData);
 		populateActorFromGearwright(this.actor,preparedData);
