@@ -14,7 +14,7 @@ export async function populateActorFromGearwright(actor,data) {
 		return false;
 	}
 	console.log("Importing actor from gearwright");
-	actor.removeInternals();
+	await actor.removeInternals();
 	switch(actor.type) {
 		case ACTOR_TYPES.fisher:
 			await buildFisher(actor,data);

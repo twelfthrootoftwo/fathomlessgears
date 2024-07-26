@@ -4,7 +4,7 @@ import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN,
 import { RollElement, RollDialog } from "../actions/roll-dialog.js";
 import { ReelHandler } from "../actions/reel.js";
 import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
-import { Grid,constructGrid } from "../grid/grid-base.js";
+import { Grid } from "../grid/grid-base.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
 
 export class AttributeElement {
