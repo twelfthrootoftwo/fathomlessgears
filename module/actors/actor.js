@@ -590,14 +590,16 @@ export class HLMActor extends Actor {
 	 */
 	async removeInternal(uuid) {
 		const internal=this.items.get(uuid);
+		console.log(internal.system.attributes);
 		Object.keys(internal.system.attributes).forEach((key) => {
 			if(internal.system.attributes[key]!=0) {
+				console.log(`Removing attr ${key}`)
 				this.removeAttributeModifier(key,uuid);
 			}
 		});
 		this.calculateBallast();
 		if(this.system.resources) this.modifyResourceValue("repair",-1*internal.system.repair_kits);
-		this.update({"system": this.system});
+		await this.update({"system": this.system});
 		await internal.delete();
 		
 		Hooks.callAll("internalDeleted",this)
