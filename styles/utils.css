@@ -66,6 +66,9 @@ input.sheet-input {
 	z-index: 2;
 	cursor: wait;
 }
+.waiting {
+	cursor: wait !important
+}
 .loading-display {
 	padding-top: 250px;
 	width: 270px;
