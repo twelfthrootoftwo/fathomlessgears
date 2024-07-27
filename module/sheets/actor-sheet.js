@@ -119,17 +119,6 @@ export class HLMActorSheet extends ActorSheet {
 			});
 		}
 
-		//Mark broken internals
-		const items=this.actor.itemTypes;
-		const internals=items.internal_pc.concat(items.internal_npc);
-		internals.forEach((internal) => {
-			internal.isBroken().then(result => {
-				if(result) {
-					//this.toggleInternalBrokenDisplay(internal._id);
-				}
-			});
-		});
-
 		super.activateListeners(html);
 		html.find(".rollable").click(this._onRoll.bind(this));
 		html.find(".break-button").click(this.breakInternal.bind(this));

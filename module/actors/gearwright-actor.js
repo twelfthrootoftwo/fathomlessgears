@@ -14,6 +14,7 @@ export async function populateActorFromGearwright(actor,data) {
 		return false;
 	}
 	console.log("Importing actor from gearwright");
+	document.querySelector(`#HLMActorSheet-Actor-${actor._id}`).classList.add("waiting");
 	await actor.removeInternals();
 	switch(actor.type) {
 		case ACTOR_TYPES.fisher:
@@ -24,6 +25,7 @@ export async function populateActorFromGearwright(actor,data) {
 			break;
 	}
 	actor.setFlag("fathomlessgears","initialised",true);
+	document.querySelector(`#HLMActorSheet-Actor-${actor._id}`).classList.remove("waiting");
 }
 
 async function buildFisher(actor,data) {
