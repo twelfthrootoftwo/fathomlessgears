@@ -159,7 +159,7 @@ export class HLMActor extends Actor {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
 			const result= await this.rollNoTarget(attackKey, dieCount, flatModifier);
-			return result.text;
+			return result;
 		} else {
 			const target = targetSet.values().next().value;
 			return await AttackHandler.rollToHit(
