@@ -590,7 +590,6 @@ export class HLMActor extends Actor {
 	 */
 	async removeInternal(uuid) {
 		const internal=this.items.get(uuid);
-		console.log(internal.system.attributes);
 		Object.keys(internal.system.attributes).forEach((key) => {
 			if(internal.system.attributes[key]!=0) {
 				console.log(`Removing attr ${key}`)
@@ -621,7 +620,7 @@ export class HLMActor extends Actor {
 	async removeInteractiveGrid() {
 		this.grid=null;
 		let targetGridString="systems/fathomlessgears/assets/blank-grid-fish.jpg"
-		if(this.type=ACTOR_TYPES.fisher) {
+		if(this.type==ACTOR_TYPES.fisher) {
 			targetGridString="systems/fathomlessgears/assets/blank-grid.jpg"
 		}
 		this.setFlag("fathomlessgears","interactiveGrid",false)
