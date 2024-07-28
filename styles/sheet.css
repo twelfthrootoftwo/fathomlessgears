@@ -533,6 +533,12 @@ input.background {
     align-items: center;
 }
 .grid-icon {
+    text-shadow: 0 0 3px #ffffff;
+}
+.grid-icon.fa-burst {
+    font-size: 8pt;
+}
+.grid-icon.fa-lock {
     font-size: 10pt;
 }
 .closeInternal {
