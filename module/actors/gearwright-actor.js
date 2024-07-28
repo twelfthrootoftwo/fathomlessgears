@@ -29,7 +29,7 @@ export async function populateActorFromGearwright(actor,data) {
 }
 
 async function buildFisher(actor,data) {
-	const gridObject=actor.getFlag("fathomlessgears","interactiveGrid") ? actor.grid : await constructGrid(actor);
+	const gridObject=await constructGrid(actor);
 	await constructFisherData(data,actor);
 	await applyFrame(data,actor,gridObject);
 	await applyInternals(data,actor,gridObject);
@@ -142,6 +142,9 @@ function mapGridState(source,destination) {
 		if(region) {
 			region.gridSpaces.forEach((row) => {
 				row.forEach((space) => {
+					if(space.id==57){
+						console.log("Found the gun space")
+					}
 					const newSpace=destination.findGridSpace(space.id);
 					if(
 						space.state != GRID_SPACE_STATE.locked &&
