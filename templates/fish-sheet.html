@@ -11,14 +11,16 @@
         </h1>
 	</header>
     <div class="sheet-contents flex-row">
-        {{#if showInitialiseCover}}
+        {{#if showCover}}
         <div class="initialiser flex-row">
+            {{#if showInitialiseButtons}}
             <div class="initialise-button-base">
                 <div id="initialise-import" class="btn initialise-button">{{localize "SHEET.initgearwright"}}</div>
             </div>
             <div class="initialise-button-base">
                 <div id="initialise-manual" class="btn initialise-button">{{localize "SHEET.initmanual"}}</div>
             </div>
+            {{/if}}
         </div>
         {{/if}}
         {{>
