@@ -6,9 +6,10 @@
     left: 0;
     width: 400px;
     height: 400px;
-    background-color: #00000060;
+    background-color: #00000050;
 }
 .lock-prompt-text {
     color: var(--color-text-light);
     font-size: var(--font-size-15);
+    text-align: right;
 }

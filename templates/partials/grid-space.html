@@ -1,5 +1,5 @@
 <div class="grid-space {{space.colour}} {{#ifcond space.state '!=' 'locked'}}unlocked{{/ifcond}}" id="gridspace-{{id}}">
-    <div class="cover {{#if space.highlight}}highlight-cover{{/if}}">
+    <div class="cover {{#if space.highlight}}highlight-cover{{/if}} state-{{space.state}}">
         <div class="icon-overlay">
             {{#ifcond space.state "==" 'locked'}}
                     <i class="grid-icon fa-solid fa-lock"></i>

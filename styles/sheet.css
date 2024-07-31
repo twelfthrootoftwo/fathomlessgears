@@ -516,7 +516,6 @@ input.background {
 .grid-space {
     width: 18px;
     aspect-ratio : 1 / 1;
-    padding: 1px;
     border: 1px solid var(--color-border-dark-secondary);
     display: flex;
     justify-content: center;
@@ -532,32 +531,34 @@ input.background {
     justify-content: center;
     align-items: center;
 }
-.grid-icon {
-    text-shadow: 0 0 3px #ffffff;
+.grid-space .state-locked {
+    background-color: var(--color-bg-header);
+    color: var(--color-text-light-heading);
+    opacity: 0.5;
 }
 .grid-icon.fa-burst {
     font-size: 8pt;
 }
 .grid-icon.fa-lock {
-    font-size: 10pt;
+    font-size: 8pt;
 }
 .closeInternal {
-    background-color: #7D2477;
+    background-color: #84549b;
 }
 .farInternal {
-    background-color: #0585c9;
+    background-color: #51b7ec;
 }
 .mentalInternal {
-    background-color: #DE1EA8;
+    background-color: #ff4a65;
 }
 .activeInternal {
-    background-color: #67BC45;
+    background-color: #60b043;
 }
 .mitigationInternal {
     background-color: #999999;
 }
 .passiveInternal {
-    background-color: #C75900;
+    background-color: #d57e39;
 }
 .grid-space .cover {
     height: 100%;
