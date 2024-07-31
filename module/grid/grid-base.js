@@ -16,7 +16,20 @@ export async function constructGrid(actor) {
             gridObject.gridRegions.push(null);
         }
         let regionData=gridType.system.hitRegions[i];
-        let region = new GridRegion({width: regionData.columns, height: regionData.rows, name: game.i18n.localize("HITZONE."+regionData.location)},this, SECTION_NUMBERING_MAP[gridType.system.type][i]);
+        let nameString="";
+        if(regionData.range.length>1) {
+            nameString=nameString+game.i18n.localize("HITZONE."+regionData.location);
+            nameString=nameString+` (${regionData.range[0]}-${regionData.range[1]})`;
+        }
+        let region = new GridRegion(
+            {
+                width: regionData.columns,
+                height: regionData.rows,
+                name: nameString                
+            },
+            this,
+            SECTION_NUMBERING_MAP[gridType.system.type][i]
+        );
         gridObject.gridRegions.push(region);
         if((i==0 || i==4) && gridType.system.type=="fisher") {
             gridObject.gridRegions.push(null);
