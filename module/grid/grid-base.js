@@ -16,7 +16,7 @@ export async function constructGrid(actor) {
             gridObject.gridRegions.push(null);
         }
         let regionData=gridType.system.hitRegions[i];
-        let region = new GridRegion({width: regionData.columns, height: regionData.rows},this, SECTION_NUMBERING_MAP[gridType.system.type][i]);
+        let region = new GridRegion({width: regionData.columns, height: regionData.rows, name: game.i18n.localize("HITZONE."+regionData.location)},this, SECTION_NUMBERING_MAP[gridType.system.type][i]);
         gridObject.gridRegions.push(region);
         if((i==0 || i==4) && gridType.system.type=="fisher") {
             gridObject.gridRegions.push(null);
@@ -228,6 +228,8 @@ class GridRegion {
     height
     gridSpaces=[]
     parentGrid
+    name
+    numbering=[]
 
     /**
      * Construct a GridRegion
@@ -238,6 +240,7 @@ class GridRegion {
     constructor(json,parent,startId) {
         this.width=json.width;
         this.height=json.height;
+        this.name=json.name;
         let idCounter;
         if(!json.gridSpaces) {
             idCounter=startId;
@@ -256,6 +259,9 @@ class GridRegion {
                 }
             }
         }
+        for (let j = 0; j < json.width; j++) {
+            this.numbering.push((j+1).toString());
+        }
         this.parentGrid=parent;
     }
 
@@ -267,6 +273,7 @@ class GridRegion {
         const jsonRecord={};
         jsonRecord.width=this.width;
         jsonRecord.height=this.height;
+        jsonRecord.name=this.name;
         jsonRecord.gridSpaces=[]
         this.gridSpaces.forEach((row) => {
             let rowRecord=[]

@@ -1,4 +1,11 @@
 <div class="grid-region flex-col">
+    <div class="grid-number-row flex-row">
+        {{#each region.numbering}}
+        <div class="grid-column-number">
+            {{this}}
+        </div>
+        {{/each}}
+    </div>
     {{#each region.gridSpaces}}
     <div class="grid-space-row flex-row">
         {{#each this}}
@@ -9,4 +16,7 @@
         {{/each}}
     </div>
     {{/each}}
+    <div class="grid-region-name">
+        {{region.name}}
+    </div>
 </div>
