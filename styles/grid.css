@@ -32,13 +32,21 @@
 }
 .grid-space {
     width: 18px;
+    padding: 1px;
     aspect-ratio : 1 / 1;
-    border: 1px solid var(--color-border-dark-secondary);
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.grid-base.interactable .grid-space.unlocked:hover {
+.grid-internal-colour {
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--color-border-light-tertiary);
+}
+.grid-hover-hud .grid-internal-colour {
+    border: 1px solid var(--color-border-dark-tertiary);
+}
+.grid-base.interactable .grid-space.unlocked:hover .grid-internal-colour {
     border: 1px solid var(--color-border-dark-primary);
 }
 .icon-overlay {
@@ -47,6 +55,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: 1px;
 }
 .grid-space .state-locked {
     background-color: var(--color-bg-header);
@@ -59,23 +68,29 @@
 .grid-icon.fa-lock {
     font-size: 8pt;
 }
-.closeInternal {
+.grid-space .closeInternal {
     background-color: var(--color-internal-close);
+    border: 1px solid var(--color-border-dark-tertiary);
 }
-.farInternal {
+.grid-space .farInternal {
     background-color: var(--color-internal-far);
+    border: 1px solid var(--color-border-dark-tertiary);
 }
-.mentalInternal {
+.grid-space .mentalInternal {
     background-color: var(--color-internal-mental);
+    border: 1px solid var(--color-border-dark-tertiary);
 }
-.activeInternal {
+.grid-space .activeInternal {
     background-color: var(--color-internal-active);
+    border: 1px solid var(--color-border-dark-tertiary);
 }
-.mitigationInternal {
+.grid-space .mitigationInternal {
     background-color: var(--color-internal-mitigation);
+    border: 1px solid var(--color-border-dark-tertiary);
 }
-.passiveInternal {
+.grid-space .passiveInternal {
     background-color: var(--color-internal-passive);
+    border: 1px solid var(--color-border-dark-tertiary);
 }
 .grid-space .cover {
     height: 100%;
