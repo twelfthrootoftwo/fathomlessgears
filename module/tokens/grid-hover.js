@@ -29,6 +29,7 @@ export class GridHoverHUD extends HLMApplication{
 
 		data.grid = grid;
 		data.lockPrompt=this.getLockPrompt();
+		data.interactive=tokenObject.actor.testUserPermission(game.user,CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)
 		return data;
 	}
 
