@@ -47,8 +47,7 @@ export class GridHoverHUD extends HLMApplication{
 
 		if (
 			hovered &&
-			(canvas.activeLayer.name == "TokenLayer" ||
-				canvas.activeLayer.name == "TokenLayerPF2e")
+			(canvas.activeLayer.name == "TokenLayer")
 		) {
 			// Show token image if hovered, otherwise don't
 			setTimeout(function () {
@@ -86,7 +85,12 @@ export class GridHoverHUD extends HLMApplication{
 	 */
 	assignToken(token) {
 		this.object=token;
-		this.render(true);
+		let delay=0;
+		if(this.closing) {
+			this.awaitingRefresh=true;
+		} else {
+			this.render(true);
+		}
 	}
 
 	/**
@@ -94,7 +98,11 @@ export class GridHoverHUD extends HLMApplication{
 	 */
 	clear() {
 		this.object=null;
-		this.close();
+		this.close().then(() => {
+			if(this.awaitingRefresh) {
+				this.render(true);
+			}
+		});
 	}
 
 	/**
