@@ -202,19 +202,20 @@ export class Grid {
     }
 
     async renderInternal(event,uuid) {
-        //const popout=document.querySelector(`grid-id-${gridElementId} #internal-popout`);
         const display=$(event.target).closest(".grid-display");
         const popout=display.find("#internal-popout")[0];
-        const viewedInternal=this.actor.items.get(uuid);
-        const internalHtml=await renderTemplate(
-            "systems/fathomlessgears/templates/partials/internal-partial.html",
-            {
-                internal: viewedInternal,
-                popout: true,
-                fixedState: true,
-            }
-        )
-        popout.innerHTML=internalHtml;
+        if(popout) {
+            const viewedInternal=this.actor.items.get(uuid);
+            const internalHtml=await renderTemplate(
+                "systems/fathomlessgears/templates/partials/internal-partial.html",
+                {
+                    internal: viewedInternal,
+                    popout: true,
+                    fixedState: true,
+                }
+            )
+            popout.innerHTML=internalHtml;
+        }
         return popout
     }
 
@@ -233,7 +234,6 @@ export class Grid {
      * Remove a popped-out internal's details
      */
     async unpopInternal(event) {
-        //const popout=document.querySelector(`grid-id-${gridElementId} #internal-popout`);
         const display=$(event.target).closest(".grid-display");
         const popout=display.find("#internal-popout")[0];
         popout.innerHTML="";
@@ -307,7 +307,7 @@ class GridRegion {
      * Check whether an internal is broken & pass the result to parent grid
      * @param {string} uuid The uuid of internal to check
      */
-    checkInternal(uuid) {
+    async checkInternal(uuid) {
         let intact=false;
         this.gridSpaces.forEach((row) => {
             row.forEach((space) => {
@@ -316,6 +316,6 @@ class GridRegion {
                 }
             });
         });
-        this.parentGrid.checkInternal(uuid,intact);
+        await this.parentGrid.checkInternal(uuid,intact);
     }
 }

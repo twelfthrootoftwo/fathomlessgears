@@ -24,7 +24,7 @@ export async function populateActorFromGearwright(actor,data) {
 			await buildFish(actor,data);
 			break;
 	}
-	actor.setFlag("fathomlessgears","initialised",true);
+	await actor.setFlag("fathomlessgears","initialised",true);
 	document.querySelector(`#HLMActorSheet-Actor-${actor._id}`)?.classList.remove("waiting");
 }
 
@@ -36,7 +36,7 @@ async function buildFisher(actor,data) {
 	if(actor.getFlag("fathomlessgears","interactiveGrid")) {
 		mapGridState(actor.grid,gridObject);
 	}
-	actor.assignInteractiveGrid(gridObject);
+	await actor.assignInteractiveGrid(gridObject);
 }
 
 async function buildFish(actor,data) {
@@ -45,7 +45,7 @@ async function buildFish(actor,data) {
 	const gridObject=await constructGrid(actor);
 	await applyInternals(data,actor,gridObject);
 	gridObject.setAllToIntact();
-	actor.assignInteractiveGrid(gridObject);
+	await actor.assignInteractiveGrid(gridObject);
 }
 
 /**

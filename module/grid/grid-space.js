@@ -63,20 +63,20 @@ export class GridSpace {
      * Toggle whether this space is intact/broken
      * @returns True if a state was switched, False otherwise (eg if this space is locked)
      */
-    toggleBroken() {
+    async toggleBroken() {
         switch(this.state) {
             case GRID_SPACE_STATE.locked:
                 return false;
             case GRID_SPACE_STATE.intact:
                 this.setState(GRID_SPACE_STATE.broken);
                 if(this.internal) {
-                    this.parentRegion.checkInternal(this.internal);
+                    await this.parentRegion.checkInternal(this.internal);
                 }
                 break;
             case GRID_SPACE_STATE.broken:
                 this.setState(GRID_SPACE_STATE.intact);
                 if(this.internal) {
-                    this.parentRegion.checkInternal(this.internal);
+                    await this.parentRegion.checkInternal(this.internal);
                 }
                 break;
             default:
@@ -87,8 +87,8 @@ export class GridSpace {
     /**
      * Performs any on-click actions
      */
-    triggerClick() {
-        this.toggleBroken();
+    async triggerClick() {
+        await this.toggleBroken();
     }
 
     /**
