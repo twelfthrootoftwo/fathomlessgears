@@ -115,8 +115,8 @@ export class GridSpace {
     /**
      * Toggle this space's internal highlight (lightening)
      */
-    toggleHighlight() {
-        const thisCover=document.querySelector(`#id${this.parentRegion.parentGrid.actor.id}-grid`).querySelector(`#gridspace-${this.id}`).querySelector(".cover");
+    toggleHighlight(gridElement) {
+        const thisCover=gridElement.find(`#gridspace-${this.id}`).find(".cover")[0];
         thisCover.classList.toggle("highlight-cover");
     }
 }

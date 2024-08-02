@@ -84,7 +84,7 @@ export class Grid {
         const targetSpace=this.actor.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
         if(targetSpace.containsInternal(null)) {
             this.actor.grid.highlightInternal(event,targetSpace);
-            this.actor.grid.popInternal(targetSpace.internal);
+            this.actor.grid.popInternal(event,targetSpace.internal);
         }
     }
 
@@ -96,7 +96,7 @@ export class Grid {
         const targetSpace=this.actor.grid.findGridSpace(Utils.extractIntFromString(event.currentTarget.id));
         if(targetSpace.containsInternal(null)) {
             this.actor.grid.highlightInternal(event,targetSpace);
-            this.actor.grid.unpopInternal();
+            this.actor.grid.unpopInternal(event);
         }
     }
 
@@ -191,17 +191,20 @@ export class Grid {
      * @param {bool} highlight Whether to turn on or off highlight display
      */
     highlightInternal(event,originSpace) {
+        const popout=$(event.target).closest(".grid-display");
         originSpace.parentRegion.gridSpaces.forEach((row) => {
             row.forEach((space) => {
                 if(space.containsInternal(originSpace.internal)) {
-                    space.toggleHighlight();
+                    space.toggleHighlight(popout);
                 }
             })
         });
     }
 
-    async renderInternal(uuid) {
-        const popout=document.querySelector(`#id${this.actor.id}-grid #internal-popout`);
+    async renderInternal(event,uuid) {
+        //const popout=document.querySelector(`grid-id-${gridElementId} #internal-popout`);
+        const display=$(event.target).closest(".grid-display");
+        const popout=display.find("#internal-popout")[0];
         const viewedInternal=this.actor.items.get(uuid);
         const internalHtml=await renderTemplate(
             "systems/fathomlessgears/templates/partials/internal-partial.html",
@@ -219,8 +222,8 @@ export class Grid {
      * Create a popout display of an internal's details
      * @param {str} uuid The ID of the internal to pop
      */
-    async popInternal(uuid) {
-        const popout=await this.renderInternal(uuid);
+    async popInternal(event,uuid) {
+        const popout=await this.renderInternal(event,uuid);
         $(popout).css("z-index", 150)
         $(popout).css("max-width", 350)
         popout.classList.toggle("visible");
@@ -229,8 +232,10 @@ export class Grid {
     /**
      * Remove a popped-out internal's details
      */
-    async unpopInternal() {
-        const popout=document.querySelector(`#id${this.actor.id}-grid #internal-popout`);
+    async unpopInternal(event) {
+        //const popout=document.querySelector(`grid-id-${gridElementId} #internal-popout`);
+        const display=$(event.target).closest(".grid-display");
+        const popout=display.find("#internal-popout")[0];
         popout.innerHTML="";
         popout.classList.toggle("visible");
     }
