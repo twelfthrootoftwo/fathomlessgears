@@ -29,7 +29,7 @@ export class GridHoverHUD extends HLMApplication{
 
 		data.grid = grid;
 		data.lockPrompt=this.getLockPrompt();
-		data.interactive=tokenObject.actor.testUserPermission(game.user,CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)
+		data.interactive=tokenObject?.actor?.testUserPermission(game.user,CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)
 		return data;
 	}
 
@@ -99,7 +99,7 @@ export class GridHoverHUD extends HLMApplication{
 	clear() {
 		this.object=null;
 		this.close().then(() => {
-			if(this.awaitingRefresh) {
+			if(this.awaitingRefresh && this.object) {
 				this.render(true);
 			}
 		});
