@@ -29,7 +29,7 @@ export class HLMActorSheet extends ActorSheet {
 	/** @inheritdoc */
 	async getData(options) {
 		const context = await super.getData(options);
-		context.showCover=!context.actor.getFlag("fathomlessgears","initialised") || this.loading
+		context.showCover=(!context.actor.getFlag("fathomlessgears","initialised")) || this.loading
 		context.showInitialiseButtons=!context.actor.getFlag("fathomlessgears","initialised")
 		context.biographyHTML = await TextEditor.enrichHTML(
 			context.actor.system.biography,
@@ -253,7 +253,10 @@ export class HLMActorSheet extends ActorSheet {
 		const preparedData=JSON.parse(fileData);
 		populateActorFromGearwright(this.actor,preparedData).then(()=> {
 			this.loading=false;
-			this.render();
+			//Small delay to allow for the sheet to load post updates
+			setTimeout(() => {
+				this.render(true);
+			},20);
 		});
 	}
 }
