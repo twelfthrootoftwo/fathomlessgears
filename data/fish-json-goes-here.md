@@ -1,1 +1,0 @@
-Put the `fish.json` file in this directory.
