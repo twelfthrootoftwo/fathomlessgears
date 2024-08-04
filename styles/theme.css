@@ -66,6 +66,12 @@
     --color-ownership-observer: #7a7971;
     --color-ownership-owner: #b5b3a4;
     --color-scrollbar:  #272a2a;
+    --color-internal-close: #84549b;
+    --color-internal-far:#51b7ec;
+    --color-internal-mental: #ff4a65;
+    --color-internal-active: #60b043;
+    --color-internal-mitigation: #808080;
+    --color-internal-passive: #d57e39;
     --z-index-canvas: 0;
     --z-index-app: 30;
     --z-index-ui: 60;

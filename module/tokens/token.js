@@ -9,5 +9,4 @@ export class HLMTokenDocument extends TokenDocument {}
  * @extends {Token}
  */
 export class HLMToken extends Token {
-	//Nothing here right now
 }

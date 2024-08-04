@@ -11,7 +11,7 @@
 		}
 	],
 	"esmodules": ["module/fathomlessgears.js","scripts/jszip.js"],
-	"styles": ["styles/theme.css","styles/sheet.css","styles/dialogs.css","styles/utils.css","styles/chat.css"],
+	"styles": ["styles/theme.css","styles/sheet.css","styles/dialogs.css","styles/utils.css","styles/chat.css","styles/canvas.css","styles/grid.css"],
 	"packs": [
 		{
 		  "name": "core_macros",

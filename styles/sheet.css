@@ -28,6 +28,30 @@
 .sheet-contents {
     width: 100%;
     height: calc(100% - 50px);
+    position: relative
+}
+.initialiser {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
+    background-color:#00000088
+}
+.initialise-button-base {
+    width: 150px;
+    height: 75px;
+    background-color: var(--color-bg-dialog);
+    margin: 15px;
+}
+.btn.initialise-button {
+    width: 150px;
+    height: 75px;
+    font-size: var(--font-size-16);
+    padding: 15px;
+    text-align: center;
 }
 
 /*
@@ -219,6 +243,13 @@ input.marbles {
 label.marbles {
     flex: 1 0 40px;
 }
+.import-button {
+    height: 35px;
+    width: 80px;
+    margin: auto;
+    font-size: var(--font-size-12);
+    text-align: center;
+}
 
 /*
 ---------------------------------
@@ -285,6 +316,10 @@ button.button.post-message {
     border: 2px solid var(--color-border-dark-primary);
     margin: 4px;
     flex: 0 0 263px;
+}
+.internal-box.popout {
+    background-color: var(--color-bg-dialog);
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.8);
 }
 .internal-header {
     background-color: var(--color-bg-dialog-high-contrast);

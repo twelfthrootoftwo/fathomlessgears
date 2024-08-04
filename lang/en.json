@@ -44,6 +44,8 @@
 	"SHEET.hitlocation": "Hit location",
 	"SHEET.scantrue": "Revoke scan",
 	"SHEET.scanfalse": "Scan",
+	"SHEET.initgearwright": "Import from Gearwright",
+	"SHEET.initmanual": "Create manually",
 
 	"MANAGER.init": "Initialising",
 	"MANAGER.datafile": "Data file",
@@ -135,5 +137,8 @@
 	"CONDITIONS.hook4": "Hooked (4)",
 	"CONDITIONS.hook5": "Hooked (5)",
 	"CONDITIONS.hook6": "Hooked (6)",
-	"CONDITIONS.hook7": "Hooked (7)"
+	"CONDITIONS.hook7": "Hooked (7)",
+
+	"GRIDHUD.lockON": "_KEY_ - Lock Grid",
+	"GRIDHUD.lockOFF": "_KEY_ - Unlock Grid"
 }

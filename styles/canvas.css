@@ -1,0 +1,15 @@
+.grid-hover-hud {
+    padding: 10px;
+    border: 2px solid var(--color-border-dark-secondary);
+    position: absolute;
+    bottom: 100px;
+    left: 0;
+    width: 400px;
+    height: 400px;
+    background-color: #ffffff90;
+}
+.lock-prompt-text {
+    color: var(--color-text-light);
+    font-size: var(--font-size-15);
+    text-align: right;
+}

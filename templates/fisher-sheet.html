@@ -11,6 +11,18 @@
         </h1>
 	</header>
     <div class="sheet-contents flex-row">
+        {{#if showCover}}
+        <div class="initialiser flex-row">
+            {{#if showInitialiseButtons}}
+            <div class="initialise-button-base">
+                <div id="initialise-import" class="btn initialise-button">{{localize "SHEET.initgearwright"}}</div>
+            </div>
+            <div class="initialise-button-base">
+                <div id="initialise-manual" class="btn initialise-button">{{localize "SHEET.initmanual"}}</div>
+            </div>
+            {{/if}}
+        </div>
+        {{/if}}
         {{>
             "systems/fathomlessgears/templates/partials/attribute-sidebar.html"
             actor=actor
@@ -83,6 +95,9 @@
                                             type="number"
                                         />
                                     </div>
+                                    <div class="flex-row">
+                                        <div id="initialise-import" class="btn import-button">{{localize "SHEET.initgearwright"}}</div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="options-set">
@@ -150,6 +165,12 @@
                             <div class="btn hit-location-button" id="hit-location">{{localize "SHEET.hitlocation"}}</div>
                         </div>
                         <div class="flex-col">
+                            {{#if interactiveGrid}}
+                            {{>
+                                "systems/fathomlessgears/templates/partials/grid-box.html"
+                                grid=grid
+                            }}
+                            {{else}}
                             <img
                                 class="grid-img"
                                 id="grid-img"
@@ -159,6 +180,7 @@
                                 max-height="350"
                                 width="350"
                             />
+                            {{/if}}
                             <div class="flex-row">
                                 <div class="resource-row flex-row">
                                     <label class="marbles">{{localize "RESOURCES.repair"}}</label>
@@ -209,6 +231,8 @@
                             {{>
                                 "systems/fathomlessgears/templates/partials/internal-partial.html"
                                 internal=this
+                                popout=false
+                                fixedState=@root.actor.flags.fathomlessgears.interactiveGrid
                             }}
                             {{/each}}
                         </div>
@@ -218,6 +242,8 @@
                             {{>
                                 "systems/fathomlessgears/templates/partials/internal-partial.html"
                                 internal=this
+                                popout=false
+                                fixedState=@root.actor.flags.fathomlessgears.interactiveGrid
                             }}
                             {{/each}}
                         </div>
@@ -227,6 +253,8 @@
                             {{>
                                 "systems/fathomlessgears/templates/partials/internal-partial.html"
                                 internal=this
+                                popout=false
+                                fixedState=@root.actor.flags.fathomlessgears.interactiveGrid
                             }}
                             {{/each}}
                         </div>

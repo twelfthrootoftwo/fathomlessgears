@@ -4,6 +4,8 @@ import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN,
 import { RollElement, RollDialog } from "../actions/roll-dialog.js";
 import { ReelHandler } from "../actions/reel.js";
 import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
+import { Grid } from "../grid/grid-base.js";
+import { ConfirmDialog } from "../utilities/confirm-dialog.js";
 
 export class AttributeElement {
 	value
@@ -27,21 +29,48 @@ export class HLMActor extends Actor {
 	/** @inheritdoc */
 	prepareDerivedData() {
 		super.prepareDerivedData();
+		if(this.getFlag("fathomlessgears","interactiveGrid")) {
+			this.grid=new Grid(this.system.grid);	
+			this.grid.actor=this;	
+		}
+		const items=this.itemTypes;
+
+		const internals=items.internal_pc.concat(items.internal_npc);
+		internals.forEach((internal) => {
+			internal.description_text=internal.getInternalDescriptionText();
+		});
 	}
 
 	/** @inheritdoc */
 	_onCreate(data, options, userId) {
 		super._onCreate(data, options, userId);
 		if(game.user._id==userId) {
+			this.setFlag("fathomlessgears","initialised",false)
+
 			if(this.type==ACTOR_TYPES.fish) {
+				//Initialise scanning state
 				const flag=this.getFlag("fathomlessgears","scanned");
 				if(flag==null || flag==undefined) {
 					this.setFlag("fathomlessgears","scanned",false);
 				}
-			} else if(this.type==ACTOR_TYPES.fisher && !this.system.gridType){
-				Utils.getGridFromSize("Fisher").then((grid) => {
-					this.applyGrid(grid);
-				});
+
+				//Default fish to None permissions
+				let ownership = foundry.utils.deepClone(this.ownership);
+				ownership["default"] = 0;
+				this.update({ownership});
+
+
+			} else if(this.type==ACTOR_TYPES.fisher){
+				if(!this.system.gridType){
+					Utils.getGridFromSize("Fisher").then((grid) => {
+						this.applyGrid(grid);
+					});
+				}
+
+				//Default fishers to Observer permission
+				let ownership = foundry.utils.deepClone(this.ownership);
+				ownership["default"] = 2;
+				this.update({ownership});
 			}
 		}
 	}
@@ -115,40 +144,6 @@ export class HLMActor extends Actor {
 		});
 	}
 
-	/**
-	 * Send this actor's flat attributes to the chat log
-	 */
-	async shareFlatAttributes() {
-		const content=await this.getFlatAttributeChatMessage();
-		ChatMessage.create({
-			speaker: {actor: this},
-			content: content,
-		});
-	}
-
-	getFlatAttributeString() {
-		const attrStrings = [];
-		for (const attribute in this.system.attributes) {
-			const attr = this.system.attributes[attribute];
-			attrStrings.push(
-				Utils.getLocalisedAttributeLabel(attribute) +
-					": " +
-					attr.total.toString()
-			);
-		}
-		return attrStrings.join("<br>");
-	}
-
-	async getFlatAttributeChatMessage() {
-		const html= await renderTemplate(
-			"systems/fathomlessgears/templates/messages/flat-attributes.html",
-			{
-				attributes: this.system.attributes.flat
-			}
-		);
-		return html;
-	}
-
 	async locationHitMessage() {
 		const locationResult=await AttackHandler.rollHitLocation(this);
 		if(locationResult) {
@@ -164,7 +159,7 @@ export class HLMActor extends Actor {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
 			const result= await this.rollNoTarget(attackKey, dieCount, flatModifier);
-			return result.text;
+			return result;
 		} else {
 			const target = targetSet.values().next().value;
 			return await AttackHandler.rollToHit(
@@ -364,7 +359,7 @@ export class HLMActor extends Actor {
 				break;
 			case ITEM_TYPES.internal_pc:
 			case ITEM_TYPES.internal_npc:
-				this.applyInternal(item);
+				this.onInternalDrop(item);
 				break;
 		}
 	}
@@ -387,7 +382,8 @@ export class HLMActor extends Actor {
 		//Create new size item
 		const item=await Item.create(grid,{parent: this});
 		this.system.gridType=item._id
-		this.update({"system": this.system});
+		await this.update({"system": this.system});
+		Hooks.callAll("gridUpdated",this)
 	}
 
 	/**
@@ -414,6 +410,7 @@ export class HLMActor extends Actor {
 		//Apply grid
 		const newGrid=await Utils.getGridFromSize(size.name);
 		await this.applyGrid(newGrid);
+		Hooks.callAll("sizeUpdated",this)
 	}
 
 	/**
@@ -443,6 +440,37 @@ export class HLMActor extends Actor {
 		this.system.frame=item._id;
 		this.calculateBallast();
 		await this.update({"system": this.system});
+		Hooks.callAll("frameUpdated",this)
+	}
+
+	async onInternalDrop(internal) {
+		if(this.getFlag("fathomlessgears","interactiveGrid")) {
+			new ConfirmDialog(
+				"Override Imported Data",
+				`Manually adding an internal to this actor will disable the interactive grid.<br>
+				To keep the interactive grid, you should update the character by uploading a new Gearwright save file.<br>
+				Manually add internal?`,
+				this.applyInternalDeactivateGrid,
+				{"actor": this, "internal": internal}
+			)
+		} else {
+			this.applyInternal(internal);
+		}
+	}
+
+	async onInternalRemove(uuid) {
+		if(this.getFlag("fathomlessgears","interactiveGrid")) {
+			new ConfirmDialog(
+				"Override Imported Data",
+				`Manually removing an internal from this actor will disable the interactive grid.<br>
+				To keep the interactive grid, you should update the character by uploading a new Gearwright save file.<br>
+				Manually remove internal?`,
+				this.removeInternalDeactivateGrid,
+				{"actor": this, "uuid": uuid}
+			)
+		} else {
+			this.removeInternal(uuid);
+		}
 	}
 
 	/**
@@ -471,6 +499,8 @@ export class HLMActor extends Actor {
 		this.calculateBallast();
 		
 		await this.update({"system": this.system});
+		Hooks.callAll("internalAdded",this)
+		return item._id;
 	}
 
 	/**
@@ -481,11 +511,23 @@ export class HLMActor extends Actor {
 		frame.postToChat(this);
 	}
 
+	/**
+	 * Posts the chat message associated with an internal
+	 * @param {string} uuid The ID of the internal
+	 */
 	async postInternal(uuid) {
 		const internal=this.items.get(uuid);
 		internal.postToChat(this);
 	}
 
+	/**
+	 * Make an attack with an internal, and post the attack result to the chat
+	 * @param {string} uuid The ID of the internal
+	 * @param {ATTRIBUTE} attackKey The attacking attribute
+	 * @param {int} totalDieCount Number of dice to roll
+	 * @param {int} totalFlat Total flat bonus to the roll
+	 * @param {COVER_STATE} cover Whether or not this attack is affected by cover
+	 */
 	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat, cover) {
 		const internal=this.items.get(uuid);
 		const defenceKey=HLMActor.isTargetedRoll(attackKey);
@@ -538,6 +580,8 @@ export class HLMActor extends Actor {
 			whisper: await this.getObservers(),
 			content: `${this.name}'s ${internal.name} ${isBroken ? "breaks!" : "is repaired"}`
 		})
+		
+		Hooks.callAll("internalBrokenToggled",internal,this)
 	}
 
 	/**
@@ -548,15 +592,79 @@ export class HLMActor extends Actor {
 		const internal=this.items.get(uuid);
 		Object.keys(internal.system.attributes).forEach((key) => {
 			if(internal.system.attributes[key]!=0) {
+				console.log(`Removing attr ${key}`)
 				this.removeAttributeModifier(key,uuid);
 			}
 		});
 		this.calculateBallast();
 		if(this.system.resources) this.modifyResourceValue("repair",-1*internal.system.repair_kits);
-		this.update({"system": this.system});
-		internal.delete();
+		await this.update({"system": this.system});
+		await internal.delete();
+		
+		Hooks.callAll("internalDeleted",this)
 	}
 
+	/**
+	 * Remove all internals on this actor (pre import)
+	 */
+	async removeInternals() {
+		const internals=this.itemTypes.internal_pc.concat(this.itemTypes.internal_npc);
+		internals.forEach((internal) => {
+			this.removeInternal(internal.id);
+		});
+	}
+
+	/**
+	 * Switch this actor from interactive to image grid
+	 */
+	async removeInteractiveGrid() {
+		this.grid=null;
+		let targetGridString="systems/fathomlessgears/assets/blank-grid-fish.jpg"
+		if(this.type==ACTOR_TYPES.fisher) {
+			targetGridString="systems/fathomlessgears/assets/blank-grid.jpg"
+		}
+		this.setFlag("fathomlessgears","interactiveGrid",false)
+		await this.update({"system.grid": targetGridString});
+	}
+
+	/**
+	 * Remove this actor's interactive grid, then add a new internal
+	 * @param {bool} proceed Take the action or no?
+	 * @param {Object} args {internal: HLMInternal, actor: HLMActor}
+	 */
+	async applyInternalDeactivateGrid(proceed,args) {
+		if(proceed) {
+			await args.actor.removeInteractiveGrid();
+			args.actor.applyInternal(args.internal);
+		}
+	}
+
+	/**
+	 * Remove this actor's interactive grid, then remove an internal
+	 * @param {bool} proceed Take the action or no?
+	 * @param {Object} args {uuid: str, actor: HLMActor}
+	 */
+	async removeInternalDeactivateGrid(proceed,args) {
+		if(proceed) {
+			await args.actor.removeInteractiveGrid();
+			args.actor.removeInternal(args.uuid);
+		}
+	}
+
+	/**
+	 * Assigns an initialised grid to this actor
+	 * @param {Grid} gridObject The initialised grid for this actor
+	 */
+	async assignInteractiveGrid(gridObject) {
+		this.grid=gridObject;
+		await this.update({"system.grid": gridObject.toJson()});
+		await this.setFlag("fathomlessgears","interactiveGrid",true);
+	}
+
+	/**
+	 * Get a list of users that have Observer or Owner permissions on this actor
+	 * @returns a list of users
+	 */
 	async getObservers() {
 		const observers = await game.users.filter((user) => {
 			const isOwner=this.testUserPermission(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER);
@@ -599,6 +707,10 @@ export class HLMActor extends Actor {
 		});
 	}
 
+	/**
+	 * Get a string reflecting whether this actor is scanned or not
+	 * @returns str
+	 */
 	async getScanText() {
 		if(await this.getFlag("fathomlessgears","scanned")) {
 			return game.i18n.localize("SHEET.scantrue");
@@ -607,6 +719,10 @@ export class HLMActor extends Actor {
 		}
 	}
 
+	/**
+	 * Declare a scan action
+	 * @returns False if this action is invalid (this actor is a fish or there are no targeted actors)
+	 */
 	async scanTarget() {
 		if(this.type==ACTOR_TYPES.fish) return false;
 		const targetSet = game.user.targets;

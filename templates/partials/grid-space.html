@@ -1,0 +1,14 @@
+<div class="grid-space {{#ifcond space.state '!=' 'locked'}}unlocked{{/ifcond}}" id="gridspace-{{id}}">
+    <div class="grid-internal-colour {{space.colour}}">
+        <div class="cover {{#if space.highlight}}highlight-cover{{/if}} state-{{space.state}}">
+            <div class="icon-overlay">
+                {{#ifcond space.state "==" 'locked'}}
+                        <i class="grid-icon fa-solid fa-lock"></i>
+                {{/ifcond}}
+                {{#ifcond space.state "==" 'broken'}}
+                    <i class="grid-icon fa-solid fa-burst"></i>
+                {{/ifcond}}
+            </div>
+        </div>
+    </div>
+</div>

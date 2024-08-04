@@ -217,8 +217,10 @@ export class Utils {
 	}
 
 	static async getGridFromSize(sizeName) {
-		console.log("Finding grid!");
 		const gridCollection=await game.packs.get("fathomlessgears.grid_type");
+		if(!gridCollection.indexed) {
+			await gridCollection.getIndex();
+		}
 		const record = gridCollection.index.filter(p => p.name == sizeName);
 		const grid=await gridCollection.getDocument(record[0]._id);
 		return grid;
@@ -229,4 +231,28 @@ export class Utils {
 			this.classList.add("btn-active");
 		});
 	}
+
+	static isJsonString(str) {
+		try {
+			JSON.parse(str);
+		} catch (e) {
+			return false;
+		}
+		if(str) return true;
+		return false;
+	}
+
+	/**
+	 * Test the expected fields exist on an object
+	 * @param {Object} data Object to test
+	 * @param {Array(str)} fields List of expected fields
+	 */
+	// static testFieldsExist(data, fields) {
+	// 	let valid=true;
+	// 	fields.forEach((field) => {
+	// 		const record=data[field];
+	// 		if(record==undefined) valid=false;
+	// 	})
+	// 	return valid;
+	// }
 }

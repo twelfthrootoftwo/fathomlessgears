@@ -1,6 +1,6 @@
 import { Utils } from "../utilities/utils.js";
 
-export class FshUploader extends Application {
+export class FileUploader extends Application {
     targetFile
     manager
     newFile
@@ -28,7 +28,7 @@ export class FshUploader extends Application {
 		let fileInput = document.getElementById("fsh-file-select");
 		if (fileInput) {
 			fileInput.onchange = (ev) => {
-				this._selectFsh(ev);
+				this._selectFile(ev);
 			};
 		}
 		document.getElementsByClassName("file-upload-button")[0]?.addEventListener("click", () => {
@@ -39,10 +39,10 @@ export class FshUploader extends Application {
     /**
 	 * Detect a selected file
 	 */
-	_selectFsh(ev) {
-		let fsh = ev.target.files[0];
-		if (!fsh) return;
-		this.newFile=fsh;
+	_selectFile(ev) {
+		let file = ev.target.files[0];
+		if (!file) return;
+		this.newFile=file;
 	}
 
 	/**
@@ -53,7 +53,7 @@ export class FshUploader extends Application {
 		const fr = new FileReader();
 		fr.readAsBinaryString(this.newFile);
 		fr.addEventListener("load", (ev) => {
-			this.manager._onFshLoaded(ev.target.result,this.newFile.name, this.targetFile).then();
+			this.manager.onFileLoaded(ev.target.result,this.newFile.name, this.targetFile).then();
             this.close();
 		  });
 	}

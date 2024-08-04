@@ -1,5 +1,5 @@
 import { identifyDataTypes } from "./file-utils.js";
-import { FshUploader } from "./uploader.js";
+import { FileUploader } from "./uploader.js";
 import { FileRecord, getExtension, getTargetCompendium, isItemFromFileSource } from "./file-utils.js";
 import { Utils } from "../utilities/utils.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
@@ -37,17 +37,6 @@ class DataFileRecorder {
 
 	constructor() {
 		const self=this;
-		// if(!game.settings.settings.has("fathomlessgears.datafiles")){
-		// 	game.settings.register("fathomlessgears","datafiles",{
-		// 		name: "Source data files",
-		// 		hint: "Stores the datafile sources for frames, internals, sizes, etc",
-		// 		scope: "world",
-		// 		config: false,
-		// 		type: Array,
-		// 		default: [],
-		// 		requiresReload: false
-		// 	});
-		// }
 		this.fileDataItem=game.settings.get("fathomlessgears","datafiles");
 	}
 
@@ -134,7 +123,7 @@ export class FshManager extends HLMApplication {
 		Utils.activateButtons(html);
 
 		document.getElementsByClassName("add-new-fsh")[0]?.addEventListener("click", () => {
-			new FshUploader(this);
+			new FileUploader(this);
 	  	});
 		
 		if(this.dataFiles.length>0) {
@@ -155,9 +144,9 @@ export class FshManager extends HLMApplication {
 	 * @param {string} fileName Name of the uploaded file
 	 * @param {FileRecord} oldFile The file record to overwrite, if any (null if this is a new file)
 	 */
-	async _onFshLoaded(ev,fileName,oldFile) {
+	async onFileLoaded(ev,fileName,oldFile) {
 		const fileRecord=await constructFileRecord(ev, fileName);
-		this.checkFileRecordExists(fileRecord,ev,oldFile);
+		await this.checkFileRecordExists(fileRecord,ev,oldFile);
 	}
 
 	/**
@@ -194,7 +183,7 @@ export class FshManager extends HLMApplication {
 	async confirmOverwriteCallback(proceed,args) {
 		if(proceed) {
 			args.fshManager.startLoading();
-			await deleteFileRecord(args.fileId, this);
+			await deleteFileRecord(args.fileId, args.fshManager);
 			let index=0;
 			for(let record of args.fshManager.dataFiles){
 				if(record.filename===args.fileId.filename && record.version===args.fileId.version) {
@@ -225,8 +214,8 @@ export class FshManager extends HLMApplication {
 				break;
 			}
 		}
-		this.addDataSource(fileId);
 		if(oldFile) this.removeDataSource(oldFile);
+		this.addDataSource(fileId);
 	}
 
 	/**
@@ -268,7 +257,7 @@ export class FshManager extends HLMApplication {
 	 */
 	updateCallback(ev) {
 		const targetRecord=new FileRecord(ev.target.attributes.filename.value,ev.target.attributes.version.value);
-		new FshUploader(this,targetRecord);
+		new FileUploader(this,targetRecord);
 	}
 }
 
@@ -361,11 +350,7 @@ async function saveToCompendium(preparedData, dataTypes, fileId, oldFile, dialog
 		const relevantData = extractRelevantData(preparedData, type);
 		const targetCompendium = await getTargetCompendium(type);
 		await targetCompendium.configure({locked: false});
-		if(oldFile!=null){
-			await updateCompendiumItems(relevantData,targetCompendium,type,oldFile,fileId, dialog)
-		} else {
-			await writeNewCompendiumItems(relevantData,targetCompendium,type, fileId, dialog)
-		}
+		await writeNewCompendiumItems(relevantData,targetCompendium,type, fileId, dialog)
 		await targetCompendium.configure({locked: true});
 	}
 }
@@ -411,54 +396,6 @@ async function writeNewCompendiumItems(relevantData, compendium, itemType, fileI
 	}
 }
 
-/**
- * Update items in a compendium that come from a specific source
- * @param {Object} relevantData JSON extract containing data for a specific content type
- * @param {CompendiumCollection} compendium The compendium for the intended content type
- * @param {CONTENT_TYPES} itemType The item type to update
- * @param {FileRecord} oldFileId The file record to update, in the format {filename: "filename", version: "versionString"}
- * @param {FileRecord} newFileId The record for the updated file
- */
-async function updateCompendiumItems(relevantData,compendium,itemType,oldFileId,newFileId, dialog) {
-	dialog.updateLoadingMessage(`${game.i18n.localize("MANAGER.updating")} ${compendium.metadata.label}`);
-	//Update items that already exist
-	const toUpdate=Object.keys(relevantData);
-	const toUpdateCapitalised=[]
-	toUpdate.forEach(function (itemName, index) {
-		const itemData=relevantData[itemName];
-		toUpdateCapitalised[index]=itemData.name ? itemData.name : Utils.capitaliseWords(Utils.fromLowerHyphen(itemName));
-	});
-	const existingItems=await compendium.getDocuments();
-	const updateRecord=[];
-
-	for(let oldItem of existingItems) {
-		if(toUpdateCapitalised.includes(oldItem.name)) {
-			const index=toUpdateCapitalised.indexOf(oldItem.name);
-			// const itemUpdateData={
-			// 	"source": newFileId,
-			// 	"data": relevantData[toUpdate[index]]
-			// }
-			const itemUpdateData=createHLMItemSystem(itemType,relevantData[toUpdate[index]],newFileId);
-			updateRecord.push({
-				_id: oldItem.id,
-				system: itemUpdateData
-			})
-			toUpdate.splice(index,1);
-			toUpdateCapitalised.splice(index,1);
-		}
-	}
-	await compendium.documentClass.updateDocuments(updateRecord,{pack:compendium.collection});
-
-	//If there's any new items, their names will be left in toUpdate
-	for(let itemName of toUpdate) {
-		const item = await createItem(itemName,relevantData[itemName],itemType,newFileId, compendium);
-		if (item) {await compendium.importDocument(item)};
-	}
-
-	//Delete old items
-	await removeItemsFromFileSource(compendium, oldFileId);
-}
-
 	/**
 	 * -----------------------------------------------------
 	 * Create file records
@@ -471,7 +408,7 @@ async function updateCompendiumItems(relevantData,compendium,itemType,oldFileId,
  * @param {string} fileName The name of the file
  * @returns a FileRecord
  */
-async function constructFileRecord(file,fileName){
+export async function constructFileRecord(file,fileName){
 	let versionNumber="";
 	switch(getExtension(fileName)) {
 		case "fsh": {
@@ -504,7 +441,7 @@ function getJsonVersion(rawJson) {
  * Deletes all compendium items from a given source file
  * @param {FileRecord} fileId The file record to remove
  */
-async function deleteFileRecord(fileId, dialog) {
+export async function deleteFileRecord(fileId, dialog) {
 	for(const compendium of game.packs) {
 		dialog.updateLoadingMessage(`${game.i18n.localize("MANAGER.removing")} ${compendium.metadata.label}`);
 		await removeItemsFromFileSource(compendium,fileId);

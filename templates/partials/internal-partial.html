@@ -1,4 +1,4 @@
-<div class="internal-box flex-col" data-id="id{{internal._id}}">
+<div class="internal-box flex-col {{#if popout}}popout{{/if}} {{#if internal.flags.fathomlessgears.broken}}broken{{/if}}" data-id="id{{internal._id}}">
     <div class="internal-header flex-row">
         <div class="expander-icon"></div>
         <h3 class="internal-name">{{internal.name}}</h3>
@@ -6,14 +6,18 @@
         {{#ifcond internal.system.ap_cost '!=' null}}
         <p class="internal-ap">{{internal.system.ap_cost}} AP</p>
         {{/ifcond}}
-        <div class="btn break-button" data-id="id{{internal._id}}">
+        {{#unless popout}}
+        {{#unless fixedState}}
+        <div class="btn break-button {{#if internal.flags.fathomlessgears.broken}}btn-dark{{/if}}" data-id="id{{internal._id}}">
             {{#if internal.flags.fathomlessgears.broken}}
             {{localize "SHEET.internalfix"}}
             {{else}}
             {{localize "SHEET.internalbreak"}}
             {{/if}}
         </div>
-        <div class="btn btn-primary post-button" data-id="id{{internal._id}}">{{localize "SHEET.post"}}</div>
+        {{/unless}}
+        <div class="btn btn-primary post-button {{#if internal.flags.fathomlessgears.broken}}btn-dark{{/if}}" data-id="id{{internal._id}}">{{localize "SHEET.post"}}</div>
+        {{/unless}}
     </div>
     <div class="internal-body">
         <div class="delete-overlay">

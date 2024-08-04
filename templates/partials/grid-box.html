@@ -1,0 +1,16 @@
+<div class="grid-display flex-row">
+    <div class="grid-base {{#if interactive}}interactable{{/if}}">
+        <div class="grid-region-collection">
+            {{#each grid.gridRegions}}
+            {{>
+                "systems/fathomlessgears/templates/partials/grid-region.html"
+                region=this
+            }}
+            {{/each}}
+        </div>
+    </div>
+    <div>
+        <div class="internal-popout" id="internal-popout">
+        </div>
+    </div>
+</div>

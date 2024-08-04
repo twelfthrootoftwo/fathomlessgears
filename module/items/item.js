@@ -1,5 +1,6 @@
 import { ITEM_TYPES, ATTRIBUTES, ATTRIBUTE_KEY_MAP } from "../constants.js";
 import { Utils } from "../utilities/utils.js";
+import { testFieldsExist } from "./import-validator.js";
 
 /**
  * Records data for a tag on a specific internal (including value if it has one)
@@ -70,6 +71,7 @@ export class HLMItem extends Item {
 		}
 		const flag=!await this.getFlag("fathomlessgears","broken");
 		await this.setFlag("fathomlessgears","broken",flag);
+		Hooks.callAll("internalToggleBroken",this,flag);
 		return flag;
 	}
 
@@ -77,7 +79,8 @@ export class HLMItem extends Item {
 		if(!this.isInternal()) {
 			return null;
 		}
-		return await this.getFlag("fathomlessgears","broken");
+		const result=await this.getFlag("fathomlessgears","broken");
+		return result
 	}
 
 	isInternal() {
@@ -179,22 +182,22 @@ export function createHLMItemSystem(itemType, data, source) {
 			return null;
 		case ITEM_TYPES.size:
 			console.log("Constructing size...");
-			if(!testSizeStructure(data)) throw new Error("Invalid item data");
+			if(!testFieldsExist(data,"size")) throw new Error("Invalid item data");
 			system=constructSizeData(data);
 			break;
 		case ITEM_TYPES.frame_pc:
 			console.log("Constructing PC frame...");
-			if(!testFrameStructure(data)) throw new Error("Invalid item data");
+			if(!testFieldsExist(data,"frame")) throw new Error("Invalid item data");
 			system=constructFrameData(data);
 			break;
 		case ITEM_TYPES.internal_pc:
 			console.log("Constructing PC internal...");
-			if(!testInternalStructure(data)) throw new Error("Invalid item data");
+			if(!testFieldsExist(data,"internal")) throw new Error("Invalid item data");
 			system=constructInternalPCData(data);
 			break;
 		case ITEM_TYPES.internal_npc:
 			console.log("Constructing NPC internal...");
-			if(!testInternalStructure(data)) throw new Error("Invalid item data");
+			if(!testFieldsExist(data,"internal")) throw new Error("Invalid item data");
 			system=constructInternalNPCData(data);
 			break;
 		case ITEM_TYPES.grid:
@@ -251,6 +254,7 @@ function constructFrameData(data) {
 	system.weight_cap=data.weight_cap;
 	system.gear_ability=data.gear_ability;
 	system.gear_ability_name=data.gear_ability_name;
+	system.default_unlocks=data.default_unlocks;
 	return system
 }
 
@@ -306,7 +310,7 @@ function constructInternalNPCData(data) {
  * @returns the integer AP cost of activating the internal (null if there is no cost)
  */
 function getAPCost(data) {
-	if(data.type==="passive" || Object.keys(data.action_data).length) return null;
+	if(data.type==="passive" || Object.keys(data.action_data).length==0) return null;
 	if(data.action_data.ap_cost || data.action_data.ap_cost===0) return data.action_data.ap_cost;
 	return null;
 }
@@ -352,48 +356,4 @@ function unpackGridCoords(gridList) {
 		coords.push(coord);
 	});
 	return coords;
-}
-
-function testFrameStructure(data) {
-	const expectedFields=["core_integrity","gear_ability","gear_ability_name","repair_kits"];
-	Object.values(ATTRIBUTES).forEach((attribute) => {
-		if(![ATTRIBUTES.mental,ATTRIBUTES.willpower].includes(attribute)){
-			expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
-		}
-	})
-	return testFieldsExist(data, expectedFields);
-
-}
-
-function testInternalStructure(data) {
-	const expectedFields=["action_data","grid","name","tags","type","extra_rules"];
-	Object.values(ATTRIBUTES).forEach((attribute) => {
-		expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
-	})
-	return testFieldsExist(data, expectedFields);
-
-}
-
-function testSizeStructure(data) {
-	const expectedFields=["size"];
-	Object.values(ATTRIBUTES).forEach((attribute) => {
-		if(attribute!=ATTRIBUTES.ballast){
-			expectedFields.push(ATTRIBUTE_KEY_MAP[attribute]);
-		}
-	})
-	return testFieldsExist(data, expectedFields);
-}
-
-/**
- * Test the expected fields exist on an object
- * @param {Object} data Object to test
- * @param {Array(str)} fields List of expected fields
- */
-function testFieldsExist(data, fields) {
-	let valid=true;
-	fields.forEach((field) => {
-		const record=data[field];
-		if(record==undefined) valid=false;
-	})
-	return valid;
 }

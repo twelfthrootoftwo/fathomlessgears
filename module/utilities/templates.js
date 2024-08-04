@@ -10,6 +10,9 @@ export const preloadHandlebarsTemplates = async function () {
 		"systems/fathomlessgears/templates/partials/internal-partial.html",
 		"systems/fathomlessgears/templates/partials/attack-info.html",
 		"systems/fathomlessgears/templates/partials/tag-row.html",
+		"systems/fathomlessgears/templates/partials/grid-box.html",
+		"systems/fathomlessgears/templates/partials/grid-region.html",
+		"systems/fathomlessgears/templates/partials/grid-space.html",
 	];
 
 	// Load the template parts

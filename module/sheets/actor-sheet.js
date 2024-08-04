@@ -1,10 +1,13 @@
 import { ATTRIBUTES, ACTOR_TYPES } from "../constants.js";
 import {Utils} from "../utilities/utils.js";
+import { FileUploader } from "../data-files/uploader.js";
+import {populateActorFromGearwright} from "../actors/gearwright-actor.js"
 
 /**
  * @extends {ActorSheet}
  */
 export class HLMActorSheet extends ActorSheet {
+
 	/** @inheritdoc */
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
@@ -26,6 +29,8 @@ export class HLMActorSheet extends ActorSheet {
 	/** @inheritdoc */
 	async getData(options) {
 		const context = await super.getData(options);
+		context.showCover=(!context.actor.getFlag("fathomlessgears","initialised")) || this.loading
+		context.showInitialiseButtons=!context.actor.getFlag("fathomlessgears","initialised")
 		context.biographyHTML = await TextEditor.enrichHTML(
 			context.actor.system.biography,
 			{
@@ -77,6 +82,12 @@ export class HLMActorSheet extends ActorSheet {
 					break;
 			}
 		})
+
+		context.interactiveGrid=false;
+		if(this.actor.getFlag("fathomlessgears","interactiveGrid")){
+			context.interactiveGrid=true;
+			context.grid=this.actor.grid;
+		}
 		return context;
 	}
 
@@ -98,24 +109,16 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		});
 
-		//Activate buttons for owners only
+		//Activate buttons & grid interactivity for owners only
 		if(this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {
 			Utils.activateButtons(html);
 			html.find(".internal-body").each(function() {
 				this.classList.add("interactable");
 			});
-		}
-
-		//Mark broken internals
-		const items=this.actor.itemTypes;
-		const internals=items.internal_pc.concat(items.internal_npc);
-		internals.forEach((internal) => {
-			internal.isBroken().then(result => {
-				if(result) {
-					this.toggleInternalBrokenDisplay(internal._id);
-				}
+			html.find(".grid-base").each(function() {
+				this.classList.add("interactable");
 			});
-		});
+		}
 
 		super.activateListeners(html);
 		html.find(".rollable").click(this._onRoll.bind(this));
@@ -124,6 +127,11 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".delete-internal").click(this.deleteInternal.bind(this));
 		html.find("#hit-location").click(this.locationHitMessage.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
+		html.find("#initialise-import").click(this.selectImport.bind(this))
+		html.find("#initialise-manual").click(this.selectManualSetup.bind(this))
+		if(this.actor.getFlag("fathomlessgears","interactiveGrid")) {
+			html=this.actor.grid.activateListeners(html);
+		}
 		if(this.actor.type===ACTOR_TYPES.fisher) {
 			document.getElementById("post-frame-ability").addEventListener("click",this.postFrameAbility.bind(this));
 		}
@@ -198,7 +206,7 @@ export class HLMActorSheet extends ActorSheet {
 	 */
 	async breakInternal(event) {
 		if(!this.testOwnership()) {return false;}
-		this.toggleInternalBrokenDisplay(safeIdClean(event.target.dataset.id));
+		//this.toggleInternalBrokenDisplay(safeIdClean(event.target.dataset.id));
 		this.actor.toggleInternalBroken(safeIdClean(event.target.dataset.id));
 	}
 
@@ -215,7 +223,7 @@ export class HLMActorSheet extends ActorSheet {
 
 	deleteInternal(event) {
 		if(!this.testOwnership()) {return false;}
-		this.actor.removeInternal(safeIdClean(event.target.dataset.id));
+		this.actor.onInternalRemove(safeIdClean(event.target.dataset.id));
 	}
 
 	locationHitMessage(event) {
@@ -226,6 +234,30 @@ export class HLMActorSheet extends ActorSheet {
 	async toggleScan(event) {
 		if(!this.testOwnership()) {return false;}
 		this.actor.toggleScan();
+	}
+
+	selectManualSetup() {
+		if(!this.testOwnership()) {return false;}
+		this.actor.setFlag("fathomlessgears","initialised",true);
+	}
+
+	selectImport() {
+		if(!this.testOwnership()) {return false;}
+		new FileUploader(this);
+	}
+
+	async onFileLoaded(fileData,fileName,oldFile) {
+		//process gearwright json
+		this.loading=true;
+		this.render();
+		const preparedData=JSON.parse(fileData);
+		populateActorFromGearwright(this.actor,preparedData).then(()=> {
+			this.loading=false;
+			//Small delay to allow for the sheet to load post updates
+			setTimeout(() => {
+				this.render(true);
+			},20);
+		});
 	}
 }
 function safeIdClean(safeId) {

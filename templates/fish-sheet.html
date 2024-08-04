@@ -11,6 +11,18 @@
         </h1>
 	</header>
     <div class="sheet-contents flex-row">
+        {{#if showCover}}
+        <div class="initialiser flex-row">
+            {{#if showInitialiseButtons}}
+            <div class="initialise-button-base">
+                <div id="initialise-import" class="btn initialise-button">{{localize "SHEET.initgearwright"}}</div>
+            </div>
+            <div class="initialise-button-base">
+                <div id="initialise-manual" class="btn initialise-button">{{localize "SHEET.initmanual"}}</div>
+            </div>
+            {{/if}}
+        </div>
+        {{/if}}
         {{>
             "systems/fathomlessgears/templates/partials/attribute-sidebar.html"
             actor=actor
@@ -50,8 +62,15 @@
                             </div>
                             <div class="btn actor-button hit-location-button" id="hit-location">{{localize "SHEET.hitlocation"}}</div>
                             <div class="btn actor-button" id="scan">{{scan_text}}</div>
+                            <div id="initialise-import" class="btn actor-button import-button">{{localize "SHEET.initgearwright"}}</div>
                         </div>
                         <div class="flex-col">
+                            {{#if interactiveGrid}}
+                            {{>
+                                "systems/fathomlessgears/templates/partials/grid-box.html"
+                                grid=grid
+                            }}
+                            {{else}}
                             <img
                                 class="grid-img"
                                 id="grid-img"
@@ -61,6 +80,7 @@
                                 max-height="350"
                                 width="350"
                             />
+                            {{/if}}
                         </div>
                     </div>
                 </div>
@@ -77,6 +97,8 @@
                             {{>
                                 "systems/fathomlessgears/templates/partials/internal-partial.html"
                                 internal=this
+                                popout=false
+                                fixedState=@root.actor.flags.fathomlessgears.interactiveGrid
                             }}
                             {{/each}}
                         </div>
@@ -86,6 +108,8 @@
                             {{>
                                 "systems/fathomlessgears/templates/partials/internal-partial.html"
                                 internal=this
+                                popout=false
+                                fixedState=@root.actor.flags.fathomlessgears.interactiveGrid
                             }}
                             {{/each}}
                         </div>
@@ -95,6 +119,8 @@
                             {{>
                                 "systems/fathomlessgears/templates/partials/internal-partial.html"
                                 internal=this
+                                popout=false
+                                fixedState=@root.actor.flags.fathomlessgears.interactiveGrid
                             }}
                             {{/each}}
                         </div>

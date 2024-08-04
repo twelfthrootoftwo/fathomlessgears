@@ -77,6 +77,12 @@ export const ROLL_MODIFIER_TYPE = {
 	bonus: "bonus"
 }
 
+export const GRID_SPACE_STATE = {
+	locked: "locked",
+	intact: "intact",
+	broken: "broken"
+}
+
 export const ATTRIBUTE_MIN=0;
 export const ATTRIBUTE_MAX_ROLLED=9;
 export const ATTRIBUTE_MAX_FLAT=16;
@@ -93,4 +99,15 @@ export const ATTRIBUTE_KEY_MAP = {
 	[ATTRIBUTES.weight]: "weight",
 	[ATTRIBUTES.baseAP]: "ap",
 	[ATTRIBUTES.ballast]: "ballast",
+}
+
+export const SECTION_NUMBERING_MAP = {
+	fisher: [72,36,0,54,81],
+	small: [0],
+	medium: [0],
+	large: [0],
+	massive: [0],
+	leviathan: [0,36,18],
+	serpent_leviathan: [0,18,36,54,9],
+	siltstalker: [0,24,12,48,60]
 }
