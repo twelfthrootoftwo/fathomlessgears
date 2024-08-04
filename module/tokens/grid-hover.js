@@ -161,8 +161,7 @@ export class GridHoverHUD extends HLMApplication{
 		Hooks.on("closeSettingsConfig", (...args) => clearGrid());
 		Hooks.on("closeApplication", (...args) => clearGrid());
 
-		Hooks.on("gridSpaceClick",(space,actor) => refreshGrid(actor));
-		Hooks.on("internalDeleted",(actor) => refreshGrid(actor));
+		Hooks.on("updateActor",(...args) => refreshGrid(...args));
 	}
 
 	getLockPrompt() {
@@ -191,8 +190,13 @@ function clearGrid() {
  * When an actor is modified, check if the current HUD needs to refresh
  * @param {HLMActor} actor The actor that has been updated
  */
-function refreshGrid(actor) {
-	if(game.gridHover?.rendered && game.gridHover.object.actor==actor) {
+function refreshGrid(actor,updates,_,__) {
+	console.log("Refresh grid triggered");
+	if(
+		game.gridHover?.rendered &&
+		game.gridHover.object.actor._id==actor.id &&
+		updates.system.grid
+	) {
 		game.gridHover.render(true);
 	}
 }
