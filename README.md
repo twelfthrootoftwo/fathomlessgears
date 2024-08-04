@@ -1,31 +1,13 @@
 # Fathomless Gears
 
 An in-development Foundry system for Fathomless Gears.
-There is an optional companion HUD module: https://github.com/twelfthrootoftwo/fvtt-token-action-hud-FG
 
 Meant for use with Gearwright for character building.
 
 ## Installation Instructions
 
-### Local/Self-Hosted/Webserver
-Download the repository (Code -> Download Zip)
-In your `FoundryVTT/Data/Systems` folder, create a `fathomlessgears` folder and put the contents of this repository inside.
+From Foundry's Systems page, choose Install System and paste the following manifest URL into the box at the bottom:
+https://github.com/twelfthrootoftwo/fathomlessgears/releases/latest/download/system.json
 
-The folder structure should look like:
-
-```
-FoundryVTT
-└── Data
-    └── systems
-        └── fathomlessgears
-            ├── assets
-            ├── data
-            ├──lang
-            ├──module
-            ...
-```
-
-### Forge
-Download the repository (Code -> Download Zip)
-On your Forge setup page, click "Summon import wizard".
-Upload the .zip and analyse. It should recognise the system.
+You can then get updates via the Check for Updates button on the Fathomless Gears listing on the Systems page.
+(Keep an eye on Discord for announcements when new versions go live!)

@@ -36,3 +36,9 @@ User testing performed on this patch!
 
 ## Version 0.2.5
 * Add support for Gearwright July 12 datafiles
+
+## Version 0.3.5
+* Add interactive grid tools to actor sheets and HUD
+* Add import functionality for actor saves from Gearwright
+* Improvements to datafile update process
+* Bugfix: AP costs not importing correctly
