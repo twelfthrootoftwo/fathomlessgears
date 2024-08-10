@@ -2,14 +2,39 @@
     padding: 10px;
     border: 2px solid var(--color-border-dark-secondary);
     position: absolute;
-    bottom: 100px;
-    left: 0;
     width: 400px;
     height: 400px;
     background-color: #ffffff90;
 }
+.grid-hover-hud.bottom-left {
+    bottom: 100px;
+    left: 0;
+}
+.grid-hover-hud.bottom-right {
+    bottom: 100px;
+    right: var(--sidebar-width);
+}
+.grid-hover-hud.top-left {
+    top: 0;
+    left: 0;
+}
+.grid-hover-hud.top-right {
+    top: 0;
+    right: var(--sidebar-width);
+}
 .lock-prompt-text {
     color: var(--color-text-light);
     font-size: var(--font-size-15);
+}
+.bottom-left .lock-prompt-text {
     text-align: right;
+}
+.top-left .lock-prompt-text {
+    text-align: right;
+}
+.bottom-right .lock-prompt-text {
+    text-align: left;
+}
+.top-right .lock-prompt-text {
+    text-align: left;
 }

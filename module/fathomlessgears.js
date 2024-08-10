@@ -9,6 +9,7 @@ import {FshManager, addFshManager} from "./data-files/fsh-manager.js";
 import {HLMItemSheet} from "./sheets/item-sheet.js";
 import {conditions} from "./conditions/conditions.js";
 import {GridHoverHUD} from "./tokens/grid-hover.js";
+import { GRID_HUD_LOCATION } from "./constants.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -83,6 +84,23 @@ export const system_ready = new Promise((success) => {
 		);
 		gridCollection.configure({ownership: {PLAYER: "NONE"}});
 		
+		game.settings.register("fathomlessgears","gridHUDPosition",{
+			name: "Grid HUD Position",
+			hint: "The position of the grid HUD display",
+			scope: "client",
+			config: true,
+			type: String,
+			choices: {
+				[GRID_HUD_LOCATION.bottomLeft]: "Bottom Left",
+				[GRID_HUD_LOCATION.bottomRight]: "Bottom Right",
+				[GRID_HUD_LOCATION.topLeft]: "Top Left",
+				[GRID_HUD_LOCATION.topRight]: "Top Right",
+			},
+			default: GRID_HUD_LOCATION.bottomLeft,
+			onChange: value => {
+				game.gridHover.refresh();
+			}
+		})
 		GridHoverHUD.addGridHUD();
 
 		game.settings.register("fathomlessgears", "datafiles", {

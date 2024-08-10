@@ -30,6 +30,7 @@ export class GridHoverHUD extends HLMApplication{
 		data.grid = grid;
 		data.lockPrompt=this.getLockPrompt();
 		data.interactive=tokenObject?.actor?.testUserPermission(game.user,CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)
+		data.position=game.settings.get("fathomlessgears","gridHUDPosition")
 		return data;
 	}
 
@@ -171,6 +172,12 @@ export class GridHoverHUD extends HLMApplication{
 			return game.i18n.localize("GRIDHUD.lockON").replace("_KEY_",keyString);
 		} else {
 			return game.i18n.localize("GRIDHUD.lockOFF").replace("_KEY_",keyString);
+		}
+	}
+
+	refresh() {
+		if(this.rendered) {
+			refreshGrid(this.object.actor,this.object.actor);
 		}
 	}
 }

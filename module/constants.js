@@ -111,3 +111,10 @@ export const SECTION_NUMBERING_MAP = {
 	serpent_leviathan: [0,18,36,54,9],
 	siltstalker: [0,24,12,48,60]
 }
+
+export const GRID_HUD_LOCATION = {
+	bottomLeft: "bottom-left",
+	bottomRight: "bottom-right",
+	topLeft: "top-left",
+	topRight: "top-right",
+}
