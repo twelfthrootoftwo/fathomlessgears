@@ -94,8 +94,18 @@ export class HLMActorSheet extends ActorSheet {
 	/**@inheritdoc */
 	_getSubmitData(updateData) {
 		let formData = super._getSubmitData(updateData);
+		let rerender=false;
+		Object.values(ATTRIBUTES).forEach((attribute) => {
+			const reference=`system.attributes.${attribute}.values.custom`
+			const formVal=formData[reference];
+			if(!Number.isInteger(formVal)) {
+				formData[reference] = 0;
+				rerender=true;
+			}
+		});
 		this.actor.calculateBallast();
 		this.actor.calculateAttributeTotals();
+		if(rerender) {this.render()};
 		return formData;
 	}
 
