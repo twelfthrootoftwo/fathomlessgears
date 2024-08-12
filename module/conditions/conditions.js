@@ -1,3 +1,6 @@
+import { AttributeElement } from "../actors/actor.js";
+import { ATTRIBUTES } from "../constants.js";
+
 export const conditions=[
     {
         id: "blind",
@@ -70,8 +73,8 @@ export const conditions=[
         icon: "systems/fathomlessgears/assets/icons/Restrained.png",
     },
     {
-        id: "snared",
-        name: "CONDITIONS.snared",
+        id: "slowed",
+        name: "CONDITIONS.slowed",
         icon: "systems/fathomlessgears/assets/icons/Snared.png",
     },
     {
@@ -120,3 +123,106 @@ export const conditions=[
         icon: "systems/fathomlessgears/assets/icons/Yellow Hook.png",
     },
 ]
+
+export const COUNTED_CONDITIONS={
+    burdened: "burdened",
+    dazed: "dazed",
+    doomed: "doomed",
+    drained: "drained",
+    evasive: "evasive",
+    fatigued: "fatigued",
+    ironclad: "ironclad",
+    quickened: "quickened",
+    restrained: "restrained",
+    tranq: "tranq",
+    wired: "wired",
+    hook1: "hook1",
+    hook2: "hook2",
+    hook3: "hook3",
+    hook4: "hook4",
+    hook5: "hook5",
+    hook6: "hook6",
+    hook7: "hook7",
+}
+
+export const IMPLEMENTED_CONDITIONS={
+    dazed: "dazed"
+}
+
+export function initialiseEffectHooks() {
+    Hooks.on("createActiveEffect",(activeEffect,diffData,userId) => {
+        applyEffect(activeEffect.parent, activeEffect);
+    });
+
+    Hooks.on("deleteActiveEffect",(activeEffect,diffData,userId) => {
+        deleteEffect(activeEffect.parent, activeEffect);
+    });
+    
+    Hooks.on("updateActiveEffect", function(activeEffect, counterData, diffData, options, userId) {
+        let effectCounter = foundry.utils.getProperty(counterData, "flags.statuscounter.counter");
+        if (effectCounter) {
+            updateEffect(activeEffect.parent, activeEffect)
+        }
+    });
+}
+
+export function applyEffect(actor,effect) {
+    const statusName=effect.statuses.values().next().value;
+    if(Object.values(IMPLEMENTED_CONDITIONS).includes(statusName)) {
+        switch(statusName){
+            case IMPLEMENTED_CONDITIONS.dazed:
+                let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
+                applyDazed(actor,effectCounter.value);
+                break;
+        }
+    }
+}
+
+export function updateEffect(actor,effect) {
+    const statusName=effect.statuses.values().next().value;
+    if(Object.values(IMPLEMENTED_CONDITIONS).includes(statusName)) {
+        switch(statusName){
+            case IMPLEMENTED_CONDITIONS.dazed:
+                let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
+                applyDazed(actor,effectCounter.value);
+                break;
+        }
+    }
+}
+
+export function deleteEffect(actor,effect) {
+    const statusName=effect.statuses.values().next().value;
+    if(Object.values(IMPLEMENTED_CONDITIONS).includes(statusName)) {
+        switch(statusName){
+            case IMPLEMENTED_CONDITIONS.dazed:
+                applyDazed(actor,0);
+                break;
+        }
+    }    
+}
+
+function applyDazed(actor,value) {
+    const targetAttributes=[ATTRIBUTES.close,ATTRIBUTES.far,ATTRIBUTES.mental,ATTRIBUTES.power];
+    targetAttributes.forEach((attr) => {
+        const targetModifierList=actor.system.attributes[attr].values.standard.additions;
+        let existingModifier=findModifier(targetModifierList,COUNTED_CONDITIONS.dazed)
+        if(existingModifier) {
+            if(value==0) {
+                actor.removeAttributeModifier(attr,COUNTED_CONDITIONS.dazed);
+            } else {
+                existingModifier.value=-value;
+            }
+        } else if(value!=0) {
+            const newModifier=new AttributeElement(-value,COUNTED_CONDITIONS.dazed,"condition",game.i18n.localize("CONDITIONS.dazed"));
+            targetModifierList.push(newModifier);
+        }
+    })
+    actor.calculateAttributeTotals();
+}
+
+function findModifier(modifierList,modifierId) {
+    modifierList.forEach((modifier) => {
+        if(modifier.source=modifierId) return modifier;
+    });
+    return false;
+}

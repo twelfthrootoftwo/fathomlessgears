@@ -292,7 +292,12 @@ export class HLMActor extends Actor {
 			}
 			index+=1;
 		})
-		if(delIndex>=0) {targetAttribute.values.standard.additions.splice(delIndex,1);}
+		if(delIndex>=0) {
+			console.log(`Deleted modifier ${source}`)
+			targetAttribute.values.standard.additions.splice(delIndex,1);
+		} else {
+			console.log(`Could not find modifier ${source}`)			
+		}
 		this.calculateSingleAttribute(key);
 	}
 
