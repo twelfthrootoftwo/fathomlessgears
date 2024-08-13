@@ -278,7 +278,7 @@ function applyConditionModifier(actor,condition,value) {
         if(existingModifier) {
             if(value==0) {
                 actor.removeAttributeModifier(attr,condition.id);
-            } else {
+            } else if(value<=3) {
                 existingModifier.value=value;
             }
         } else if(value!=0) {
@@ -292,7 +292,7 @@ function applyConditionModifier(actor,condition,value) {
         if(existingModifier) {
             if(value==0) {
                 actor.removeAttributeModifier(attr,condition.id);
-            } else {
+            } else if(value<=3) {
                 existingModifier.value=-value;
             }
         } else if(value!=0) {
