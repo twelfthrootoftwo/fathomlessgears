@@ -1,89 +1,114 @@
 import { AttributeElement } from "../actors/actor.js";
 import { ATTRIBUTES } from "../constants.js";
 
+export const CONDITIONS={
+    blind: "blind",
+    burdened: "burdened",
+    concealed: "concealed",
+    dazed: "dazed",
+    doomed: "doomed",
+    drained: "drained",
+    evasive: "evasive",
+    fatigued: "fatigued",
+    focused: "focused",
+    hover: "hover",
+    ironclad: "ironclad",
+    jammed: "jammed",
+    quickened: "quickened",
+    restrained: "restrained",
+    slowed: "slowed",
+    tranq: "tranq",
+    wired: "wired"
+}
+
 export const conditions=[
     {
-        id: "blind",
+        id: CONDITIONS.blind,
         name: "CONDITIONS.blind",
         icon: "systems/fathomlessgears/assets/icons/Blind.png",
     },
     {
-        id: "burdened",
+        id: CONDITIONS.burdened,
         name: "CONDITIONS.burdened",
         icon: "systems/fathomlessgears/assets/icons/Burdened.png",
     },
     {
-        id: "concealed",
+        id: CONDITIONS.concealed,
         name: "CONDITIONS.concealed",
         icon: "systems/fathomlessgears/assets/icons/Concealed.png",
     },
     {
-        id: "dazed",
+        id: CONDITIONS.dazed,
         name: "CONDITIONS.dazed",
         icon: "systems/fathomlessgears/assets/icons/Dazed.png",
     },
     {
-        id: "doomed",
+        id: CONDITIONS.doomed,
         name: "CONDITIONS.doomed",
         icon: "systems/fathomlessgears/assets/icons/Doomed.png",
     },
     {
-        id: "drained",
+        id: CONDITIONS.drained,
         name: "CONDITIONS.drained",
         icon: "systems/fathomlessgears/assets/icons/Drained.png",
     },
     {
-        id: "evasive",
+        id: CONDITIONS.evasive,
         name: "CONDITIONS.evasive",
         icon: "systems/fathomlessgears/assets/icons/Evasive.png",
     },
     {
-        id: "fatigued",
+        id: CONDITIONS.fatigued,
         name: "CONDITIONS.fatigued",
         icon: "systems/fathomlessgears/assets/icons/Fatigued.png",
     },
     {
-        id: "focus",
-        name: "CONDITIONS.focus",
+        id: CONDITIONS.focused,
+        name: "CONDITIONS.focused",
         icon: "systems/fathomlessgears/assets/icons/Focused.png",
     },
     {
-        id: "hover",
+        id: CONDITIONS.hover,
         name: "CONDITIONS.hover",
         icon: "systems/fathomlessgears/assets/icons/Hover.png",
     },
     {
-        id: "ironclad",
+        id: CONDITIONS.ironclad,
         name: "CONDITIONS.ironclad",
         icon: "systems/fathomlessgears/assets/icons/Ironclad.png",
     },
     {
-        id: "jammed",
+        id: CONDITIONS.jammed,
         name: "CONDITIONS.jammed",
         icon: "systems/fathomlessgears/assets/icons/Jammed.png",
     },
     {
-        id: "quickened",
+        id: CONDITIONS.quickened,
         name: "CONDITIONS.quickened",
         icon: "systems/fathomlessgears/assets/icons/Quickened.png",
     },
     {
-        id: "restrained",
+        id: CONDITIONS.restrained,
         name: "CONDITIONS.restrained",
         icon: "systems/fathomlessgears/assets/icons/Restrained.png",
     },
     {
-        id: "slowed",
+        id: CONDITIONS.slowed,
         name: "CONDITIONS.slowed",
         icon: "systems/fathomlessgears/assets/icons/Snared.png",
     },
     {
-        id: "tranq",
+        id: CONDITIONS.stalwart,
+        name: "CONDITIONS.stalwart",
+        icon: "systems/fathomlessgears/assets/icons/Stalwart.png",
+    },
+    {
+        id: CONDITIONS.tranq,
         name: "CONDITIONS.tranq",
         icon: "systems/fathomlessgears/assets/icons/Tranq.png",
     },
     {
-        id: "wired",
+        id: CONDITIONS.wired,
         name: "CONDITIONS.wired",
         icon: "systems/fathomlessgears/assets/icons/Wired.png",
     },
@@ -124,32 +149,51 @@ export const conditions=[
     },
 ]
 
-export const COUNTED_CONDITIONS={
-    burdened: "burdened",
-    dazed: "dazed",
-    doomed: "doomed",
-    drained: "drained",
-    evasive: "evasive",
-    fatigued: "fatigued",
-    ironclad: "ironclad",
-    quickened: "quickened",
-    restrained: "restrained",
-    tranq: "tranq",
-    wired: "wired",
-    hook1: "hook1",
-    hook2: "hook2",
-    hook3: "hook3",
-    hook4: "hook4",
-    hook5: "hook5",
-    hook6: "hook6",
-    hook7: "hook7",
-}
+export const ATTRIBUTE_ONLY_CONDITIONS=[
+    CONDITIONS.burdened,
+    CONDITIONS.dazed,
+    CONDITIONS.evasive,
+    CONDITIONS.fatigued,
+    CONDITIONS.quickened,
+    CONDITIONS.restrained,
+    CONDITIONS.slowed
+]
 
 export const IMPLEMENTED_CONDITIONS={
+    burdened: {
+        id: CONDITIONS.burdened,
+        positive: [ATTRIBUTES.ballast],
+        negative: [],
+    },
     dazed: {
-        id: "dazed",
+        id: CONDITIONS.dazed,
         positive: [],
         negative: [ATTRIBUTES.close,ATTRIBUTES.far,ATTRIBUTES.mental,ATTRIBUTES.power],
+    },
+    evasive: {
+        id: CONDITIONS.evasive,
+        positive: [ATTRIBUTES.evasion],
+        negative: [],
+    },
+    fatigued: {
+        id: CONDITIONS.fatigued,
+        positive: [],
+        negative: [ATTRIBUTES.willpower],
+    },
+    quickened: {
+        id: CONDITIONS.quickened,
+        positive: [],
+        negative: [ATTRIBUTES.ballast],
+    },
+    restrained: {
+        id: CONDITIONS.restrained,
+        positive: [],
+        negative: [ATTRIBUTES.evasion],
+    },
+    slowed: {
+        id: CONDITIONS.slowed,
+        positive: [],
+        negative: [ATTRIBUTES.speed],
     }
 }
 
@@ -173,58 +217,42 @@ export function initialiseEffectHooks() {
 export function applyEffect(actor,effect) {
     const statusName=effect.statuses.values().next().value;
     const thisEffect=findImplementedCondition(statusName);
-    switch(thisEffect){
-        case IMPLEMENTED_CONDITIONS.dazed:
-            let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
-            applyConditionModifier(actor,thisEffect,effectCounter.value);
-            break;
-        default:
-            break;
+    if(ATTRIBUTE_ONLY_CONDITIONS.includes(statusName)) {
+        let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
+        applyConditionModifier(actor,thisEffect,effectCounter.value);
+    } else {
+        switch(thisEffect){
+            default:
+                break;
+        }
     }
 }
 
 export function updateEffect(actor,effect) {
     const statusName=effect.statuses.values().next().value;
     const thisEffect=findImplementedCondition(statusName);
-    switch(thisEffect){
-        case IMPLEMENTED_CONDITIONS.dazed:
-            let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
-            applyConditionModifier(actor,thisEffect,effectCounter.value);
-            break;
-        default:
-            break;
+    if(ATTRIBUTE_ONLY_CONDITIONS.includes(statusName)) {
+        let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
+        applyConditionModifier(actor,thisEffect,effectCounter.value);
+    } else {
+        switch(thisEffect){
+            default:
+                break;
+        }
     }
 }
 
 export function deleteEffect(actor,effect) {
     const statusName=effect.statuses.values().next().value;
     const thisEffect=findImplementedCondition(statusName);
-    switch(thisEffect){
-        case IMPLEMENTED_CONDITIONS.dazed:
-            applyConditionModifier(actor,thisEffect,0);
-            break;
-        default:
-            break;
-    }
-}
-
-function applyDazed(actor,value) {
-    const targetAttributes=[ATTRIBUTES.close,ATTRIBUTES.far,ATTRIBUTES.mental,ATTRIBUTES.power];
-    targetAttributes.forEach((attr) => {
-        const targetModifierList=actor.system.attributes[attr].values.standard.additions;
-        let existingModifier=findModifier(targetModifierList,COUNTED_CONDITIONS.dazed)
-        if(existingModifier) {
-            if(value==0) {
-                actor.removeAttributeModifier(attr,COUNTED_CONDITIONS.dazed);
-            } else {
-                existingModifier.value=-value;
-            }
-        } else if(value!=0) {
-            const newModifier=new AttributeElement(-value,COUNTED_CONDITIONS.dazed,"condition",game.i18n.localize("CONDITIONS.dazed"));
-            targetModifierList.push(newModifier);
+    if(ATTRIBUTE_ONLY_CONDITIONS.includes(statusName)) {
+        applyConditionModifier(actor,thisEffect,0);
+    } else {
+        switch(thisEffect){
+            default:
+                break;
         }
-    })
-    actor.calculateAttributeTotals();
+    }
 }
 
 function findModifier(modifierList,modifierId) {
@@ -246,7 +274,7 @@ function findImplementedCondition(statusName) {
 function applyConditionModifier(actor,condition,value) {
     condition.positive.forEach((attr) => {
         const targetModifierList=actor.system.attributes[attr].values.standard.additions;
-        let existingModifier=findModifier(targetModifierList,COUNTED_CONDITIONS.dazed)
+        let existingModifier=findModifier(targetModifierList,condition.id)
         if(existingModifier) {
             if(value==0) {
                 actor.removeAttributeModifier(attr,condition.id);
@@ -260,7 +288,7 @@ function applyConditionModifier(actor,condition,value) {
     })
     condition.negative.forEach((attr) => {
         const targetModifierList=actor.system.attributes[attr].values.standard.additions;
-        let existingModifier=findModifier(targetModifierList,COUNTED_CONDITIONS.dazed)
+        let existingModifier=findModifier(targetModifierList,condition.id)
         if(existingModifier) {
             if(value==0) {
                 actor.removeAttributeModifier(attr,condition.id);
