@@ -146,7 +146,11 @@ export const COUNTED_CONDITIONS={
 }
 
 export const IMPLEMENTED_CONDITIONS={
-    dazed: "dazed"
+    dazed: {
+        id: "dazed",
+        positive: [],
+        negative: [ATTRIBUTES.close,ATTRIBUTES.far,ATTRIBUTES.mental,ATTRIBUTES.power],
+    }
 }
 
 export function initialiseEffectHooks() {
@@ -168,37 +172,40 @@ export function initialiseEffectHooks() {
 
 export function applyEffect(actor,effect) {
     const statusName=effect.statuses.values().next().value;
-    if(Object.values(IMPLEMENTED_CONDITIONS).includes(statusName)) {
-        switch(statusName){
-            case IMPLEMENTED_CONDITIONS.dazed:
-                let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
-                applyDazed(actor,effectCounter.value);
-                break;
-        }
+    const thisEffect=findImplementedCondition(statusName);
+    switch(thisEffect){
+        case IMPLEMENTED_CONDITIONS.dazed:
+            let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
+            applyConditionModifier(actor,thisEffect,effectCounter.value);
+            break;
+        default:
+            break;
     }
 }
 
 export function updateEffect(actor,effect) {
     const statusName=effect.statuses.values().next().value;
-    if(Object.values(IMPLEMENTED_CONDITIONS).includes(statusName)) {
-        switch(statusName){
-            case IMPLEMENTED_CONDITIONS.dazed:
-                let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
-                applyDazed(actor,effectCounter.value);
-                break;
-        }
+    const thisEffect=findImplementedCondition(statusName);
+    switch(thisEffect){
+        case IMPLEMENTED_CONDITIONS.dazed:
+            let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
+            applyConditionModifier(actor,thisEffect,effectCounter.value);
+            break;
+        default:
+            break;
     }
 }
 
 export function deleteEffect(actor,effect) {
     const statusName=effect.statuses.values().next().value;
-    if(Object.values(IMPLEMENTED_CONDITIONS).includes(statusName)) {
-        switch(statusName){
-            case IMPLEMENTED_CONDITIONS.dazed:
-                applyDazed(actor,0);
-                break;
-        }
-    }    
+    const thisEffect=findImplementedCondition(statusName);
+    switch(thisEffect){
+        case IMPLEMENTED_CONDITIONS.dazed:
+            applyConditionModifier(actor,thisEffect,0);
+            break;
+        default:
+            break;
+    }
 }
 
 function applyDazed(actor,value) {
@@ -221,8 +228,49 @@ function applyDazed(actor,value) {
 }
 
 function findModifier(modifierList,modifierId) {
+    let targetModifier=false;
     modifierList.forEach((modifier) => {
-        if(modifier.source=modifierId) return modifier;
+        if(modifier.source==modifierId) targetModifier=modifier;
     });
-    return false;
+    return targetModifier;
+}
+
+function findImplementedCondition(statusName) {
+    let targetCondition=null;
+    Object.values(IMPLEMENTED_CONDITIONS).forEach((condition) => {
+        if(condition.id==statusName) targetCondition=condition;
+    })
+    return targetCondition;
+}
+
+function applyConditionModifier(actor,condition,value) {
+    condition.positive.forEach((attr) => {
+        const targetModifierList=actor.system.attributes[attr].values.standard.additions;
+        let existingModifier=findModifier(targetModifierList,COUNTED_CONDITIONS.dazed)
+        if(existingModifier) {
+            if(value==0) {
+                actor.removeAttributeModifier(attr,condition.id);
+            } else {
+                existingModifier.value=value;
+            }
+        } else if(value!=0) {
+            const newModifier=new AttributeElement(value,condition.id,"condition",game.i18n.localize(`CONDITIONS.${condition.id}`));
+            targetModifierList.push(newModifier);
+        }
+    })
+    condition.negative.forEach((attr) => {
+        const targetModifierList=actor.system.attributes[attr].values.standard.additions;
+        let existingModifier=findModifier(targetModifierList,COUNTED_CONDITIONS.dazed)
+        if(existingModifier) {
+            if(value==0) {
+                actor.removeAttributeModifier(attr,condition.id);
+            } else {
+                existingModifier.value=-value;
+            }
+        } else if(value!=0) {
+            const newModifier=new AttributeElement(-value,condition.id,"condition",game.i18n.localize(`CONDITIONS.${condition.id}`));
+            targetModifierList.push(newModifier);
+        }
+    })
+    actor.calculateAttributeTotals();
 }

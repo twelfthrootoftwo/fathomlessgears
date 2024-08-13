@@ -88,6 +88,8 @@ export class HLMActorSheet extends ActorSheet {
 			context.interactiveGrid=true;
 			context.grid=this.actor.grid;
 		}
+		console.log("Getting sheet data");
+		console.log(context.actor.system.attributes);
 		return context;
 	}
 

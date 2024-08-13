@@ -84,7 +84,6 @@ export class HLMActor extends Actor {
 	}
 
 	startRollDialog(attributeKey,internalId) {
-		console.log("Building modifiers");
 		const modifiers=[];
 		const baseDice=new RollElement(2,ROLL_MODIFIER_TYPE.die,"Base",null);
 		modifiers.push(baseDice);
@@ -249,7 +248,7 @@ export class HLMActor extends Actor {
 			total+=val.value;
 		});
 		attr.total=total;
-		return;
+		return attr;
 	}
 
 	/**
@@ -564,7 +563,7 @@ export class HLMActor extends Actor {
 
 		//Apply attribute changes
 		const isBroken=await internal.isBroken();
-		console.log("Toggling internal to "+isBroken)
+		console.log("Toggling internal to broken state "+isBroken)
 		Object.keys(internal.system.attributes).forEach((key) => {
 			if(key!=ATTRIBUTES.weight && internal.system.attributes[key]!=0) {
 				if(isBroken) {
