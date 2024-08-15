@@ -152,11 +152,13 @@ export const conditions=[
 export const ATTRIBUTE_ONLY_CONDITIONS=[
     CONDITIONS.burdened,
     CONDITIONS.dazed,
+    CONDITIONS.drained,
     CONDITIONS.evasive,
     CONDITIONS.fatigued,
     CONDITIONS.quickened,
     CONDITIONS.restrained,
-    CONDITIONS.slowed
+    CONDITIONS.slowed,
+    CONDITIONS.wired
 ]
 
 export const IMPLEMENTED_CONDITIONS={
@@ -169,6 +171,11 @@ export const IMPLEMENTED_CONDITIONS={
         id: CONDITIONS.dazed,
         positive: [],
         negative: [ATTRIBUTES.close,ATTRIBUTES.far,ATTRIBUTES.mental,ATTRIBUTES.power],
+    },
+    drained: {
+        id: CONDITIONS.drained,
+        positive: [],
+        negative: [ATTRIBUTES.baseAP],
     },
     evasive: {
         id: CONDITIONS.evasive,
@@ -194,6 +201,11 @@ export const IMPLEMENTED_CONDITIONS={
         id: CONDITIONS.slowed,
         positive: [],
         negative: [ATTRIBUTES.speed],
+    },
+    wired: {
+        id: CONDITIONS.wired,
+        positive: [ATTRIBUTES.baseAP],
+        negative: [],
     }
 }
 
