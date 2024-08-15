@@ -42,3 +42,13 @@ User testing performed on this patch!
 * Add import functionality for actor saves from Gearwright
 * Improvements to datafile update process
 * Bugfix: AP costs not importing correctly
+
+## Version 0.3.6
+* Add a setting to configure the location of the grid HUD (Game Settings -> Configure Settings -> Fathomless Gears)
+* Fix a bug where removing the value in the custom attribute modifier box would cause an error when rolling the attribute
+* Fix a bug where custom weight additions were ignored by the weight calculator
+
+## Version 0.3.7
+* Add Status Icon Counters as a dependency
+* Add Stalwart icon
+* Attribute-only conditions modify attributes (up to cap of 3)
