@@ -20,6 +20,8 @@ export class RollElement {
         this.type=type;
         this.description=description;
         this.classification=classification;
+        this.active=true;
+        this.id="id"+foundry.utils.randomID();
     }
 }
 
@@ -37,12 +39,16 @@ export class RollDialog extends HLMApplication {
     constructor(modifiers, actor, attribute,internal) {
         super();
         this.flatModifiers=[];
+        this.flatBonuses=[];
         this.dieModifiers=[];
         modifiers.forEach((modifier) => {
+            modifier.active=this.activateModifier(modifier,actor);
             if(modifier.type=="die"){
                 this.dieModifiers.push(modifier);
-            } else if(modifier.type=="flat") {
+            } else if(modifier.type=="flat" && modifier.classification==ROLL_MODIFIER_TYPE.modifier) {
                 this.flatModifiers.push(modifier);
+            } else if(modifier.type=="flat" && modifier.classification==ROLL_MODIFIER_TYPE.modifier) {
+                this.flatBonuses.push(modifier);
             }
         });
         this.actor=actor;
@@ -66,7 +72,8 @@ export class RollDialog extends HLMApplication {
 
     async getData(options) {
         const context=await super.getData(options);
-        context.flat=this.flatModifiers;
+        context.flatModifiers=this.flatModifiers;
+        context.flatBonuses=this.flatBonuses;
         context.die=this.dieModifiers;
         context.additionalDie=this.additionalDie;
         context.additionalFlat=this.additionalFlat;
@@ -90,11 +97,15 @@ export class RollDialog extends HLMApplication {
         html.find('[name="cover"]').change(async (_evt) => {
             this.cover=_evt.target.value;
         })
+        html.find('.element-checkbox').change(async (_evt) => {
+            this.toggleModifier(_evt);
+        })
     }
     
 
     _getSubmitData(data) {
         let formData=super._getSubmitData(data);
+        console.log(formData);
     }
 
     totalAttributes() {
@@ -141,5 +152,27 @@ export class RollDialog extends HLMApplication {
             await this.actor.rollAttribute(this.attribute,modifierTotals.dice,modifierTotals.attribute+modifierTotals.bonus, this.cover);
         }
         this.close();
+    }
+
+    activateModifier(modifier, actor) {
+        return true;
+    }
+
+    findMatchingModifier(id) {
+        let foundModifier=none;
+        this.dieModifiers.forEach((modifier) => {
+            if(modifier.id==id) foundModifier=modifier;
+        });
+        this.flatModifiers.forEach((modifier) => {
+            if(modifier.id==id) foundModifier=modifier;
+        });
+        this.flatBonuses.forEach((modifier) => {
+            if(modifier.id==id) foundModifier=modifier;
+        });
+        return foundModifier
+    }
+
+    toggleModifier(evt) {
+        console.log(evt)
     }
 }

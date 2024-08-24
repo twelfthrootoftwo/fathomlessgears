@@ -18,7 +18,24 @@
             </li>
         </ol>
         
-        <p class="roll-component-header">Flat modifiers</p>
+        <p class="roll-component-header">Attribute modifiers</p>
+        <ol class="roll-components">
+            {{#each flatModifiers as |modifier key|}}
+                {{>
+                    "systems/fathomlessgears/templates/partials/roll-element-toggle.html"
+                    modifier=modifier
+                }}
+            {{/each}}
+        </ol>
+        <p class="roll-component-header">Roll modifiers</p>
+        <ol class="roll-components">
+            {{#each flatBonuses as |modifier key|}}
+                {{>
+                    "systems/fathomlessgears/templates/partials/roll-element-toggle.html"
+                    modifier=modifier
+                }}
+            {{/each}}
+        </ol>
         {{#if ranged}}
         <div class="flex-col">
             <div class="flex-row cover-row">
@@ -35,7 +52,7 @@
             </div>
         </div>
         {{/if}}
-        <ol class="roll-components">
+        <!-- <ol class="roll-components">
             {{#each flat as |modifier key|}}
             <li class="roll-component-item">
                 <p class="roll-component-description">{{modifier.description}}</p>
@@ -46,7 +63,7 @@
                 <p class="roll-component-description">Additional (bonus)</p>
                 <input class="roll-component-value additional-value" type="number" data-selector="additionalFlat" value="{{additionalFlat}}">
             </li>
-        </ol>
+        </ol> -->
     </div>
     <div class="btn">Roll it!</div>
 </form>

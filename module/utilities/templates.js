@@ -13,6 +13,7 @@ export const preloadHandlebarsTemplates = async function () {
 		"systems/fathomlessgears/templates/partials/grid-box.html",
 		"systems/fathomlessgears/templates/partials/grid-region.html",
 		"systems/fathomlessgears/templates/partials/grid-space.html",
+		"systems/fathomlessgears/templates/partials/roll-element-toggle.html",
 	];
 
 	// Load the template parts
