@@ -23,6 +23,18 @@ input.sheet-input {
 	display: flex;
 	flex-direction: column;
 }
+.justify-center {
+	justify-content: center;
+}
+.justify-space-around {
+	justify-content: space-around;
+}
+.justify-space-between {
+	justify-content: space-between;
+}
+.align-center {
+	align-items: center;
+}
 .btn {
 	background: rgba(0, 0, 0, 0.1);
 	border: 2px groove var(--color-border-light-primary);
