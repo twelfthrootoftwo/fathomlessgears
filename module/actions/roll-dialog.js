@@ -22,6 +22,7 @@ export class RollElement {
         this.classification=classification;
         this.active=true;
         this.id="id"+foundry.utils.randomID();
+        this.comment="";
     }
 }
 
@@ -40,12 +41,9 @@ export class RollDialog extends HLMApplication {
         super();
         this.flatModifiers=[];
         this.flatBonuses=[];
-        this.dieModifiers=[];
         modifiers.forEach((modifier) => {
             modifier.active=this.activateModifier(modifier,actor);
-            if(modifier.type=="die"){
-                this.dieModifiers.push(modifier);
-            } else if(modifier.type=="flat" && modifier.classification==ROLL_MODIFIER_TYPE.modifier) {
+            if(modifier.type=="flat" && modifier.classification==ROLL_MODIFIER_TYPE.modifier) {
                 this.flatModifiers.push(modifier);
             } else if(modifier.type=="flat" && modifier.classification==ROLL_MODIFIER_TYPE.modifier) {
                 this.flatBonuses.push(modifier);
@@ -66,7 +64,7 @@ export class RollDialog extends HLMApplication {
 			classes: ["fathomlessgears"],
 			template: "systems/fathomlessgears/templates/roll-dialog.html",
 			title: "Roll Inputs",
-			width: 250,
+			width: 300,
 		});
 	}
 
@@ -78,6 +76,7 @@ export class RollDialog extends HLMApplication {
         context.additionalDie=this.additionalDie;
         context.additionalFlat=this.additionalFlat;
         context.ranged=this.attribute==ATTRIBUTES.far;
+        context.totalString=this.calculateDieTotal().toString()+"d6 + "+this.calculateFlatTotal().toString()
         return context;
     }
 
@@ -108,27 +107,15 @@ export class RollDialog extends HLMApplication {
         console.log(formData);
     }
 
-    totalAttributes() {
-        this.dieModifiers.push({
-            value: this.additionalDie,
-            type: "die",
-            description: "Additional",
-            classification: "bonus"
-        });
-        this.flatModifiers.push({
-            value: this.additionalFlat,
-            type: "flat",
-            description: "Additional",
-            classification: "bonus"
-        });
+    calculateDieTotal() {
+        if(this.focused) return 3;
+        return 2;
+    }
 
-        let totalDieCount=0;
+    calculateFlatTotal() {
         let totalAttr=0;
         let totalBonus=0;
 
-        this.dieModifiers.forEach((modifier) => {
-            totalDieCount+=parseInt(modifier.value);
-        });
         this.flatModifiers.forEach((modifier) => {
             if(modifier.classification == ROLL_MODIFIER_TYPE.modifier) {
                 totalAttr+=parseInt(modifier.value);
@@ -138,18 +125,14 @@ export class RollDialog extends HLMApplication {
         });
         if(totalAttr<ATTRIBUTE_MIN) totalAttr=ATTRIBUTE_MIN;
         if(totalAttr>ATTRIBUTE_MAX_ROLLED) totalAttr=ATTRIBUTE_MAX_ROLLED;
-        if(this.focused) {
-            totalDieCount+=1;
-        }
-        return {"dice": totalDieCount, "attribute": totalAttr, "bonus": totalBonus}
+        return totalAttr+totalBonus+this.additionalFlat;
     }
 
     async triggerRoll() {
-        const modifierTotals=this.totalAttributes();
         if(this.internal) {
-            await this.actor.triggerRolledInternal(this.internal,this.attribute,modifierTotals.dice,modifierTotals.attribute+modifierTotals.bonus,this.cover);
+            await this.actor.triggerRolledInternal(this.internal,this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(),this.cover);
         } else {
-            await this.actor.rollAttribute(this.attribute,modifierTotals.dice,modifierTotals.attribute+modifierTotals.bonus, this.cover);
+            await this.actor.rollAttribute(this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(), this.cover);
         }
         this.close();
     }
@@ -174,5 +157,8 @@ export class RollDialog extends HLMApplication {
 
     toggleModifier(evt) {
         console.log(evt)
+        const modifier=this.findMatchingModifier(evt.currentTarget.evt.dataset.id);
+        modifier.active=!modifier.active;
+        this.render(true);
     }
 }

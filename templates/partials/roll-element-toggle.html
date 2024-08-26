@@ -1,7 +1,9 @@
-<div class="flex-row justify-space-between align-center">
-    <p class="roll-element-descriptor">{{modifier.description}}</p>
+<li class="flex-row justify-space-between align-center">
+    <p class="roll-component-description">{{modifier.description}}</p>
+    <p class="roll-component-comment">{{modifier.comment}}</p>
+    <p class="roll-component-value">{{modifier.value}}</p>
     <label class="element-switch">
-        <input class="element-checkbox" type="checkbox" data-id="{{modifier.id}}">
+        <input class="element-checkbox" type="checkbox" data-id="{{modifier.id}}" checked="{{modifier.active}}">
         <span class="slider"></span>
     </label>
-</div>
+</li>

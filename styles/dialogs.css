@@ -13,7 +13,7 @@
 	border: none;
 	border-radius: 0;
     border-bottom: 1px solid var(--color-border-light-primary);
-    font-size: 12px;
+    font-size: 14px;
     margin-left: 10px;
 	margin-top: 2px;
 	padding-right: 10px;
@@ -25,14 +25,18 @@ li.roll-component-item {
 }
 .roll-component-description {
     flex: 1 0 100px;
-    padding: 2px 5px;
+    padding: 4px 5px;
     margin: 0;
 }
 .roll-component-value {
     flex: 0 0 15px;
     width: 30px;
-    padding: 2px 5px;
+    padding: 4px 10px;
     margin: 0;
+}
+.roll-component-comment {
+	flex: 0 0 40px;
+	font-size: 12px;
 }
 input.roll-component-value {
     text-align: end;
@@ -112,6 +116,10 @@ input.inline-checkbox {
 	-webkit-transform: translateX(17px);
 	-ms-transform: translateX(17px);
 	transform: translateX(17px);
+  }
+
+  .total-row {
+	width: 200px;
   }
 
 /*

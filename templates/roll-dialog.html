@@ -1,23 +1,5 @@
 <form autocomplete="off">
-    <div class="col">
-        <p class="roll-component-header">Dice pool</p>
-        <ol class="roll-components">
-            {{#each die as |modifier key|}}
-            <li class="roll-component-item">
-                <p class="roll-component-description">{{modifier.description}}</p>
-                <p class="roll-component-value">{{modifier.value}}d6</p>
-            </li>
-            {{/each}}
-            <li class="roll-component-item">
-                <p class="roll-component-description">Focused</p>
-                <input type="checkbox" name="focused" data-selector="focused" class="inline-checkbox">
-            </li>
-            <li class="roll-component-item">
-                <p class="roll-component-description">Additional</p>
-                <input class="roll-component-value additional-value" type="number" data-selector="additionalDie" value="{{additionalDie}}"><p class="roll-component-value">d6</p>
-            </li>
-        </ol>
-        
+    <div class="col">     
         <p class="roll-component-header">Attribute modifiers</p>
         <ol class="roll-components">
             {{#each flatModifiers as |modifier key|}}
@@ -35,23 +17,37 @@
                     modifier=modifier
                 }}
             {{/each}}
+            <li class="roll-component-item">
+                <p class="roll-component-description">Additional (bonus)</p>
+                <input class="roll-component-value additional-value" type="number" data-selector="additionalFlat" value="{{additionalFlat}}">
+            </li>
         </ol>
-        {{#if ranged}}
-        <div class="flex-col">
-            <div class="flex-row cover-row">
-                <label class="cover-label" for="none">{{localize "COVERSTATE.none"}}</label>
-                <input type="radio" name="cover" value="none" id="none" checked>
+        <div class="flex-row">
+            {{#if ranged}}
+            <div class="flex-col">
+                <div class="flex-row cover-row">
+                    <label class="cover-label" for="none">{{localize "COVERSTATE.none"}}</label>
+                    <input type="radio" name="cover" value="none" id="none" checked>
+                </div>
+                <div class="flex-row cover-row">
+                    <label class="cover-label" for="none">{{localize "COVERSTATE.soft"}}</label>
+                    <input type="radio" name="cover" value="soft" id="soft">
+                </div>
+                <div class="flex-row cover-row">
+                    <label class="cover-label" for="none">{{localize "COVERSTATE.hard"}}</label>
+                    <input type="radio" name="cover" value="hard" id="hard">
+                </div>
             </div>
-            <div class="flex-row cover-row">
-                <label class="cover-label" for="none">{{localize "COVERSTATE.soft"}}</label>
-                <input type="radio" name="cover" value="soft" id="soft">
-            </div>
-            <div class="flex-row cover-row">
-                <label class="cover-label" for="none">{{localize "COVERSTATE.hard"}}</label>
-                <input type="radio" name="cover" value="hard" id="hard">
+            {{/if}}
+            <div class="roll-component-item">
+                <p class="roll-component-description">Focused</p>
+                <input type="checkbox" name="focused" data-selector="focused" class="inline-checkbox">
             </div>
         </div>
-        {{/if}}
+        <div class="flex-row justify-space-between total-row">
+            <p>Total</p>
+            <p>{{totalString}}</p>
+        </div>
         <!-- <ol class="roll-components">
             {{#each flat as |modifier key|}}
             <li class="roll-component-item">
