@@ -117,9 +117,9 @@ export class RollDialog extends HLMApplication {
         let totalBonus=0;
 
         this.flatModifiers.forEach((modifier) => {
-            if(modifier.classification == ROLL_MODIFIER_TYPE.modifier) {
+            if(modifier.classification == ROLL_MODIFIER_TYPE.modifier && modifier.active) {
                 totalAttr+=parseInt(modifier.value);
-            } else if(modifier.classification == ROLL_MODIFIER_TYPE.bonus) {
+            } else if(modifier.classification == ROLL_MODIFIER_TYPE.bonus && modifier.active) {
                 totalBonus+=parseInt(modifier.value);
             }
         });
@@ -143,9 +143,6 @@ export class RollDialog extends HLMApplication {
 
     findMatchingModifier(id) {
         let foundModifier=none;
-        this.dieModifiers.forEach((modifier) => {
-            if(modifier.id==id) foundModifier=modifier;
-        });
         this.flatModifiers.forEach((modifier) => {
             if(modifier.id==id) foundModifier=modifier;
         });
@@ -156,9 +153,10 @@ export class RollDialog extends HLMApplication {
     }
 
     toggleModifier(evt) {
-        console.log(evt)
-        const modifier=this.findMatchingModifier(evt.currentTarget.evt.dataset.id);
-        modifier.active=!modifier.active;
-        this.render(true);
+        const modifier=this.findMatchingModifier(evt.currentTarget.dataset.id);
+        modifier.active=evt.currentTarget.checked;
+        const totalString=this.calculateDieTotal().toString()+"d6 + "+this.calculateFlatTotal().toString();
+        const totalElement = document.getElementById("total-string");
+        totalElement.innerHTML = totalString;
     }
 }
