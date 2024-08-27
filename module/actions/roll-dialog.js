@@ -84,14 +84,13 @@ export class RollDialog extends HLMApplication {
         super.activateListeners(html);
         Utils.activateButtons(html);
 		html.find(".btn").click(this.triggerRoll.bind(this));
-        html.find('[data-selector="additionalDie"]').change(async (_evt) => {
-            this.additionalDie=_evt.target.value;
-        })
         html.find('[data-selector="additionalFlat"]').change(async (_evt) => {
             this.additionalFlat=_evt.target.value;
+            this.updateTotalString();
         })
         html.find('[data-selector="focused"]').change(async (_evt) => {
             this.focused=_evt.target.checked;
+            this.updateTotalString();
         })
         html.find('[name="cover"]').change(async (_evt) => {
             this.cover=_evt.target.value;
@@ -125,7 +124,7 @@ export class RollDialog extends HLMApplication {
         });
         if(totalAttr<ATTRIBUTE_MIN) totalAttr=ATTRIBUTE_MIN;
         if(totalAttr>ATTRIBUTE_MAX_ROLLED) totalAttr=ATTRIBUTE_MAX_ROLLED;
-        return totalAttr+totalBonus+this.additionalFlat;
+        return totalAttr+totalBonus+parseInt(this.additionalFlat);
     }
 
     async triggerRoll() {
@@ -152,11 +151,15 @@ export class RollDialog extends HLMApplication {
         return foundModifier
     }
 
-    toggleModifier(evt) {
-        const modifier=this.findMatchingModifier(evt.currentTarget.dataset.id);
-        modifier.active=evt.currentTarget.checked;
+    updateTotalString() {
         const totalString=this.calculateDieTotal().toString()+"d6 + "+this.calculateFlatTotal().toString();
         const totalElement = document.getElementById("total-string");
         totalElement.innerHTML = totalString;
+    }
+
+    toggleModifier(evt) {
+        const modifier=this.findMatchingModifier(evt.currentTarget.dataset.id);
+        modifier.active=evt.currentTarget.checked;
+        this.updateTotalString();
     }
 }

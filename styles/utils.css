@@ -35,6 +35,12 @@ input.sheet-input {
 .align-center {
 	align-items: center;
 }
+.flex-1 {
+	flex-grow: 1;
+}
+.flex-2 {
+	flex-grow: 2;
+}
 .btn {
 	background: rgba(0, 0, 0, 0.1);
 	border: 2px groove var(--color-border-light-primary);
