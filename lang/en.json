@@ -141,5 +141,11 @@
 	"CONDITIONS.hook7": "Hooked (7)",
 
 	"GRIDHUD.lockON": "_KEY_ - Lock Grid",
-	"GRIDHUD.lockOFF": "_KEY_ - Unlock Grid"
+	"GRIDHUD.lockOFF": "_KEY_ - Unlock Grid",
+
+	"ROLLDIALOG.attribute": "Attribute modifiers",
+	"ROLLDIALOG.bonus": "Roll modifiers",
+	"ROLLDIALOG.additional": "Additional",
+	"ROLLDIALOG.total": "Total",
+	"ROLLDIALOG.trigger": "Roll it!"
 }

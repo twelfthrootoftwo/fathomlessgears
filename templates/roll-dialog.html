@@ -1,7 +1,7 @@
 <form autocomplete="off">
     <div class="col">
         <div class="roll-component-box">
-            <p class="roll-component-header">Attribute modifiers</p>
+            <p class="roll-component-header">{{localize "ROLLDIALOG.attribute"}}</p>
             <ol class="roll-components">
                 {{#each flatModifiers as |modifier key|}}
                     {{>
@@ -12,7 +12,7 @@
             </ol>
         </div>
         <div class="roll-component-box">
-            <p class="roll-component-header">Roll modifiers</p>
+            <p class="roll-component-header">{{localize "ROLLDIALOG.bonus"}}</p>
             <ol class="roll-components">
                 {{#each flatBonuses as |modifier key|}}
                     {{>
@@ -27,7 +27,7 @@
             </ol>
         </div>
         <div class="roll-component-box">
-            <p class="roll-component-header">Additional</p>
+            <p class="roll-component-header">{{localize "ROLLDIALOG.additional"}}</p>
             <div class="flex-row">
                 {{#if ranged}}
                 <div class="flex-col flex-1">
@@ -46,15 +46,15 @@
                 </div>
                 {{/if}}
                 <div class="flex-col flex-2 align-center">
-                    <p>Focused</p>
+                    <p>{{localize "CONDITIONS.focused"}}</p>
                     <input type="checkbox" name="focused" data-selector="focused" class="inline-checkbox">
                 </div>
             </div>
         </div>
         <div class="flex-row justify-space-between total-row">
-            <p>Total</p>
+            <p>{{localize "ROLLDIALOG.total"}}</p>
             <p id="total-string">{{totalString}}</p>
         </div>
     </div>
-    <div class="btn">Roll it!</div>
+    <div class="btn">{{localize "ROLLDIALOG.trigger"}}</div>
 </form>
