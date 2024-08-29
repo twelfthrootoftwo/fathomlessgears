@@ -87,6 +87,17 @@ export class HLMItem extends Item {
 		return [ITEM_TYPES.internal_npc, ITEM_TYPES.internal_pc].includes(this.type);
 	}
 
+	isOptics() {
+		let result=false;
+		if(this.isInternal()) {
+			this.system.tags.forEach((tag) => {
+				if(tag.name.toLowerCase()=="optics") {result=true;}
+			})
+		}
+
+		return result;
+	}
+
 	postToChat(actor) {
 		switch(this.type) {
 			case ITEM_TYPES.frame_pc:

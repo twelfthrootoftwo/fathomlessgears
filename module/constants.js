@@ -74,7 +74,9 @@ export const ROLL_MODIFIER_TYPE = {
 	flat: "flat",
 	die: "die",
 	modifier: "modifier",
-	bonus: "bonus"
+	bonus: "bonus",
+	condition: "condition",
+	optics: "optics"
 }
 
 export const GRID_SPACE_STATE = {

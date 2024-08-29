@@ -85,8 +85,6 @@ export class HLMActor extends Actor {
 
 	startRollDialog(attributeKey,internalId) {
 		const modifiers=[];
-		const baseDice=new RollElement(2,ROLL_MODIFIER_TYPE.die,"Base",null);
-		modifiers.push(baseDice);
 		const attribute=this.system.attributes[attributeKey];
 		modifiers.push(new RollElement(
 			attribute.values.standard.base,
@@ -95,20 +93,10 @@ export class HLMActor extends Actor {
 			ROLL_MODIFIER_TYPE.modifier,
 		));
 		attribute.values.standard.additions.forEach((term) => {
-			modifiers.push(new RollElement(
-				term.value,
-				ROLL_MODIFIER_TYPE.flat,
-				term.label,
-				ROLL_MODIFIER_TYPE.modifier,
-			))
+			modifiers.push(RollElement.attributeElementToRollElement(term,this,ROLL_MODIFIER_TYPE.modifier))
 		});
 		attribute.values.bonus.forEach((term) => {
-			modifiers.push(new RollElement(
-				term.value,
-				ROLL_MODIFIER_TYPE.flat,
-				term.label+" (bonus)",
-				ROLL_MODIFIER_TYPE.bonus
-			))
+			modifiers.push(RollElement.attributeElementToRollElement(term,this,ROLL_MODIFIER_TYPE.bonus))
 		});
 		modifiers.push(new RollElement(
 			attribute.values.custom,

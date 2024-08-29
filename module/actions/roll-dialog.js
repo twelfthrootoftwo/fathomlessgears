@@ -1,6 +1,7 @@
 import { HLMApplication } from "../sheets/application.js";
 import { ATTRIBUTES, COVER_STATES, ROLL_MODIFIER_TYPE, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED } from "../constants.js";
 import { Utils } from "../utilities/utils.js";
+import { CONDITIONS } from "../conditions/conditions.js"
 
 export class RollElement {
     value
@@ -24,6 +25,29 @@ export class RollElement {
         this.id="id"+foundry.utils.randomID();
         this.comment="";
     }
+
+    static attributeElementToRollElement(term, actor, modifierType) {
+        let elementType=ROLL_MODIFIER_TYPE.flat;
+        switch(term.type) {
+            case "internal":
+                const internal=actor.items.get(term.source);
+                if(internal.isOptics()) {
+                    elementType=ROLL_MODIFIER_TYPE.optics;
+                } else {
+                    elementType=ROLL_MODIFIER_TYPE.flat;
+                }
+                break;
+            case "condition":
+                elementType=ROLL_MODIFIER_TYPE.condition;
+                break;
+        }
+        return new RollElement(
+            term.value,
+            elementType,
+            term.label,
+            modifierType,
+        )
+    }
 }
 
 export class RollDialog extends HLMApplication {
@@ -43,9 +67,9 @@ export class RollDialog extends HLMApplication {
         this.flatBonuses=[];
         modifiers.forEach((modifier) => {
             modifier.active=this.activateModifier(modifier,actor);
-            if(modifier.type=="flat" && modifier.classification==ROLL_MODIFIER_TYPE.modifier) {
+            if(modifier.classification==ROLL_MODIFIER_TYPE.modifier) {
                 this.flatModifiers.push(modifier);
-            } else if(modifier.type=="flat" && modifier.classification==ROLL_MODIFIER_TYPE.modifier) {
+            } else if(modifier.classification==ROLL_MODIFIER_TYPE.modifier) {
                 this.flatBonuses.push(modifier);
             }
         });
@@ -54,7 +78,7 @@ export class RollDialog extends HLMApplication {
         this.internal=internal;
         this.additionalFlat=0;
         this.additionalDie=0;
-        this.focused=false;
+        this.focused=actor.statuses.has(CONDITIONS.focused);
         this.cover=COVER_STATES.none;
         this.render(true);
     }
@@ -98,13 +122,13 @@ export class RollDialog extends HLMApplication {
         html.find('.element-checkbox').change(async (_evt) => {
             this.toggleModifier(_evt);
         })
+        this.flatModifiers.forEach((modifier) => {
+            if(modifier.active) {
+                html.find(`[data-id=${modifier.id}]`).click()
+            }
+        })
     }
     
-
-    _getSubmitData(data) {
-        let formData=super._getSubmitData(data);
-        console.log(formData);
-    }
 
     calculateDieTotal() {
         if(this.focused) return 3;
@@ -137,6 +161,10 @@ export class RollDialog extends HLMApplication {
     }
 
     activateModifier(modifier, actor) {
+        if(actor.statuses.has(CONDITIONS.blind) && modifier.type==ROLL_MODIFIER_TYPE.optics){
+            modifier.comment="Blinded"
+            return false;
+        }
         return true;
     }
 
