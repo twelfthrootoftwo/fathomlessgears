@@ -141,7 +141,7 @@ export class RollDialog extends HLMApplication {
     }
 
     findMatchingModifier(id) {
-        let foundModifier=none;
+        let foundModifier=null;
         this.flatModifiers.forEach((modifier) => {
             if(modifier.id==id) foundModifier=modifier;
         });
@@ -159,7 +159,7 @@ export class RollDialog extends HLMApplication {
 
     toggleModifier(evt) {
         const modifier=this.findMatchingModifier(evt.currentTarget.dataset.id);
-        modifier.active=evt.currentTarget.checked;
+        if(modifier) { modifier.active=evt.currentTarget.checked;} 
         this.updateTotalString();
     }
 }

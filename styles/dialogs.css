@@ -130,6 +130,13 @@ input.inline-checkbox {
 	font-style: bold;
   }
 
+  .single-row-focus {
+	flex-grow: 1;
+	padding-left: 36px;
+	padding-right: 4px;
+	justify-content: space-between;
+  }
+
 /*
 ---------------------------------
     Importer

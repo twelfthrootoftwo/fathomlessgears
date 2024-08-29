@@ -44,15 +44,17 @@
                         <input type="radio" name="cover" value="hard" id="hard">
                     </div>
                 </div>
-                {{/if}}
                 <div class="flex-col flex-2 align-center">
+                {{else}}
+                <div class="flex-row single-row-focus">
+                {{/if}}
                     <p>{{localize "CONDITIONS.focused"}}</p>
                     <input type="checkbox" name="focused" data-selector="focused" class="inline-checkbox">
                 </div>
             </div>
         </div>
-        <div class="flex-row justify-space-between total-row">
-            <p>{{localize "ROLLDIALOG.total"}}</p>
+        <div class="flex-row justify-center total-row">
+            <p>{{localize "ROLLDIALOG.total"}}:&nbsp;</p>
             <p id="total-string">{{totalString}}</p>
         </div>
     </div>
