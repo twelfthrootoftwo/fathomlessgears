@@ -127,6 +127,14 @@ export class RollDialog extends HLMApplication {
                 html.find(`[data-id=${modifier.id}]`).click()
             }
         })
+        this.flatBonuses.forEach((modifier) => {
+            if(modifier.active) {
+                html.find(`[data-id=${modifier.id}]`).click()
+            }
+        })
+        if(this.focused) {
+            html.find(`[data-selector="focused"]`).click();
+        }
     }
     
 
