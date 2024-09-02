@@ -10,7 +10,8 @@ export class AttackHandler {
 		defenceKey,
 		dieCount,
 		flatModifier,
-		cover
+		cover,
+		modifierStack
 	) {
 		const attackRoll = Utils.getRoller(
 			dieCount,
@@ -40,7 +41,8 @@ export class AttackHandler {
 			attackAttrLabel,
 			cover,
 			hitResult,
-			locationResult
+			locationResult,
+			modifierStack
 		);
 		rollOutput.result=hitResult.upgraded ? hitResult.upgraded : hitResult.original;
 		return rollOutput;
@@ -77,7 +79,8 @@ export class AttackHandler {
 		attackAttrLabel,
 		cover,
 		hitResult,
-		locationResult
+		locationResult,
+		modifierStack
 	) {
 		const displayString = [];
 		//Intro
@@ -93,7 +96,8 @@ export class AttackHandler {
 			attackRoll,
 			attackAttrLabel,
 			hitResult,
-			locationResult
+			locationResult,
+			modifierStack
 		);
 		displayString.push(hitRollMessage);
 		return displayString.join("");
@@ -103,7 +107,8 @@ export class AttackHandler {
 		attackRoll,
 		attackAttrLabel,
 		hitResult,
-		locationResult
+		locationResult,
+		modifierStack
 	) {
 		const displayString=[];
 		//To hit
@@ -113,6 +118,7 @@ export class AttackHandler {
 		} else {
 			hitResultText=game.i18n.localize("HIT."+hitResult.original);
 		}
+		
 		const hitRollDisplay = await renderTemplate(
 			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
 			{
@@ -122,6 +128,7 @@ export class AttackHandler {
 				total: await constructCollapsibleRollMessage(attackRoll),
 				outcome: hitResultText,
 				preformat: true,
+				modifiers: modifierStack
 			}
 		);
 		displayString.push(hitRollDisplay);

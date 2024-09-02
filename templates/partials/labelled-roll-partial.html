@@ -1,3 +1,13 @@
+{{#if modifiers}}
+<div class="modifier-info flex-row">
+	{{#each modifiers}}
+	{{>
+		"systems/fathomlessgears/templates/partials/roll-modifier-list-partial.html"
+		modifier=this
+	}}
+	{{/each}}
+</div>
+{{/if}}
 <div class="hit-result">
 	{{#if label_left}}
 	<div class="roll-label descriptor">

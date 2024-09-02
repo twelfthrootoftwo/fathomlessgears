@@ -7,7 +7,8 @@ export class ReelHandler {
         initiator,
         target,
         dieCount,
-        flatModifier
+        flatModifier,
+        modifierStack
     ) {
         const powerRoll = Utils.getRoller(
 			dieCount,
@@ -22,7 +23,8 @@ export class ReelHandler {
                 label_left: game.i18n.localize("ROLLTEXT.reel").replace("_TARGET_NAME_", target.name),
                 total: await constructCollapsibleRollMessage(powerRoll),
                 preformat: true,
-                outcome: ""
+                outcome: "",
+                modifiers: modifierStack
             }
         )
         const displayString=

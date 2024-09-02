@@ -113,16 +113,16 @@ export class HLMActor extends Actor {
 	 * @param {int} dieCount: The total number of dice to roll
 	 * @param {int} flatModifier : The total modifier to add to the roll
 	 */
-	async rollAttribute(attributeKey, dieCount, flatModifier,cover) {
+	async rollAttribute(attributeKey, dieCount, flatModifier,cover,modifierStack) {
 		const defenceKey = HLMActor.isTargetedRoll(attributeKey);
 		let message="";
 		if(defenceKey===ATTRIBUTES.power) {
-			message=await this.initiateReel(dieCount, flatModifier);
+			message=await this.initiateReel(dieCount, flatModifier,modifierStack);
 		} else if (defenceKey) {
-			const output=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier,cover);
+			const output=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier,cover,modifierStack);
 			message=output.text ? output.text : output;
 		} else {
-			const result=await this.rollNoTarget(attributeKey, dieCount, flatModifier);
+			const result=await this.rollNoTarget(attributeKey, dieCount, flatModifier,modifierStack);
 			message=result.text;
 		}
 		const hitMessage = await ChatMessage.create({
@@ -142,10 +142,10 @@ export class HLMActor extends Actor {
 		}
 	}
 
-	async rollTargeted(attackKey, defenceKey, dieCount, flatModifier,cover) {
+	async rollTargeted(attackKey, defenceKey, dieCount, flatModifier,cover,modifierStack) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
-			const result= await this.rollNoTarget(attackKey, dieCount, flatModifier);
+			const result= await this.rollNoTarget(attackKey, dieCount, flatModifier,modifierStack);
 			return result;
 		} else {
 			const target = targetSet.values().next().value;
@@ -156,15 +156,16 @@ export class HLMActor extends Actor {
 				defenceKey,
 				dieCount,
 				flatModifier,
-				cover
+				cover,
+				modifierStack
 			);
 		}
 	}
 
-	async initiateReel(dieCount, flatModifier) {
+	async initiateReel(dieCount, flatModifier,modifierStack) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
-			const result= await this.rollNoTarget(ATTRIBUTES.power, dieCount, flatModifier);
+			const result= await this.rollNoTarget(ATTRIBUTES.power, dieCount, flatModifier,modifierStack);
 			return result.text;
 		} else {
 			const target = targetSet.values().next().value;
@@ -172,12 +173,13 @@ export class HLMActor extends Actor {
 				this,
 				target.actor,
 				dieCount,
-				flatModifier
+				flatModifier,
+				modifierStack
 			);
 		}
 	}
 
-	async rollNoTarget(attributeKey, dieCount, flatModifier) {
+	async rollNoTarget(attributeKey, dieCount, flatModifier,modifierStack) {
 		let roll = Utils.getRoller(dieCount, flatModifier);
 		await roll.evaluate();
 
@@ -193,7 +195,8 @@ export class HLMActor extends Actor {
 			{
 				label_left: label,
 				total: await constructCollapsibleRollMessage(roll),
-				preformat: true
+				preformat: true,
+				modifiers: modifierStack
 			}
 		);
 		return {text: hitRollDisplay, result: null};
@@ -520,10 +523,10 @@ export class HLMActor extends Actor {
 	 * @param {int} totalFlat Total flat bonus to the roll
 	 * @param {COVER_STATE} cover Whether or not this attack is affected by cover
 	 */
-	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat, cover) {
+	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat, cover,modifierStack) {
 		const internal=this.items.get(uuid);
 		const defenceKey=HLMActor.isTargetedRoll(attackKey);
-		const rollOutput=await this.rollTargeted(attackKey,defenceKey,totalDieCount,totalFlat, cover);
+		const rollOutput=await this.rollTargeted(attackKey,defenceKey,totalDieCount,totalFlat, cover,modifierStack);
 		const displayString=await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
