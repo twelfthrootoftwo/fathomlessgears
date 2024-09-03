@@ -100,7 +100,7 @@ export class RollDialog extends HLMApplication {
         context.additionalDie=this.additionalDie;
         context.additionalFlat=this.additionalFlat;
         context.ranged=this.attribute==ATTRIBUTES.far;
-        context.totalString=this.calculateDieTotal().toString()+"d6 + "+this.calculateFlatTotal().toString()
+        context.totalString=this.calculateDieTotal().toString()+"d6 + "+(this.calculateFlatTotal()+parseInt(this.additionalFlat)).toString()
         return context;
     }
 
@@ -156,10 +156,18 @@ export class RollDialog extends HLMApplication {
         });
         if(totalAttr<ATTRIBUTE_MIN) totalAttr=ATTRIBUTE_MIN;
         if(totalAttr>ATTRIBUTE_MAX_ROLLED) totalAttr=ATTRIBUTE_MAX_ROLLED;
-        return totalAttr+totalBonus+parseInt(this.additionalFlat);
+        return totalAttr+totalBonus
     }
 
     async triggerRoll() {
+        if(parseInt(this.additionalFlat)) {
+            this.flatBonuses.push(new RollElement(
+                parseInt(this.additionalFlat),
+                ROLL_MODIFIER_TYPE.flat,
+                game.i18n.localize("ROLLDIALOG.other"),
+                ROLL_MODIFIER_TYPE.bonus
+            ))
+        }
         if(this.internal) {
             await this.actor.triggerRolledInternal(this.internal,this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(),this.cover,[...this.flatModifiers,...this.flatBonuses,this.focused]);
         } else {

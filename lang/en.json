@@ -145,6 +145,7 @@
 
 	"ROLLDIALOG.attribute": "Attribute modifiers",
 	"ROLLDIALOG.bonus": "Roll modifiers",
+	"ROLLDIALOG.other": "Other",
 	"ROLLDIALOG.additional": "Additional",
 	"ROLLDIALOG.total": "Total",
 	"ROLLDIALOG.trigger": "Roll it!"
