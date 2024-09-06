@@ -52,3 +52,8 @@ User testing performed on this patch!
 * Add Status Icon Counters as a dependency
 * Add Stalwart icon
 * Attribute-only conditions modify attributes (up to cap of 3)
+
+## Version 0.4.0
+* Redesigned roll dialog with toggles for all attribute/roll modifiers
+* Blind and Focused are detected by the roll dialog
+* Chat messages with attribute rolls show the modifiers applied
