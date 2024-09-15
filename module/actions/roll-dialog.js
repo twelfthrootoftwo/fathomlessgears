@@ -170,10 +170,14 @@ export class RollDialog extends HLMApplication {
                 ROLL_MODIFIER_TYPE.bonus
             ))
         }
+        const modifierStack = [...this.flatModifiers,...this.flatBonuses]
+        if(this.focused) {
+            modifierStack.push(this.focused);
+        }
         if(this.internal) {
             await this.actor.triggerRolledInternal(this.internal,this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(),this.cover,[...this.flatModifiers,...this.flatBonuses,this.focused]);
         } else {
-            await this.actor.rollAttribute(this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(), this.cover,[...this.flatModifiers,...this.flatBonuses,this.focused]);
+            await this.actor.rollAttribute(this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(), this.cover,modifierStack);
         }
         this.close();
     }

@@ -98,12 +98,14 @@ export class HLMActor extends Actor {
 		attribute.values.bonus.forEach((term) => {
 			modifiers.push(RollElement.attributeElementToRollElement(term,this,ROLL_MODIFIER_TYPE.bonus))
 		});
-		modifiers.push(new RollElement(
-			attribute.values.custom,
-			ROLL_MODIFIER_TYPE.flat,
-			"Custom modifier (bonus)",
-			ROLL_MODIFIER_TYPE.bonus
-		));
+		if(attribute.values.custom!=0) {
+			modifiers.push(new RollElement(
+				attribute.values.custom,
+				ROLL_MODIFIER_TYPE.flat,
+				"Custom modifier (bonus)",
+				ROLL_MODIFIER_TYPE.bonus
+			));
+		}
 		return new RollDialog(modifiers,this,attributeKey,internalId);
 	}
 
