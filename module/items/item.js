@@ -1,3 +1,4 @@
+import { RollHandler } from "../actions/roll-handler.js";
 import { ITEM_TYPES, ATTRIBUTES, ATTRIBUTE_KEY_MAP } from "../constants.js";
 import { Utils } from "../utilities/utils.js";
 import { testFieldsExist } from "./import-validator.js";
@@ -134,7 +135,7 @@ export class HLMItem extends Item {
 		let attackKey=""
 		if(this.system.attack?.attribute) attackKey=this.system.attack?.attribute;
 		else attackKey=Utils.identifyAttackKey(this.system.type);
-		actor.startRollDialog(attackKey,this._id);
+		game.rollHandler.startRollDialog(actor, attackKey,this._id);
 	}
 
 	async postFlatInternal(actor) {

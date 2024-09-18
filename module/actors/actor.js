@@ -1,9 +1,7 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE, ROLL_MODIFIER_TYPE} from "../constants.js";
-import { RollElement, RollDialog } from "../actions/roll-dialog.js";
-import { ReelHandler } from "../actions/reel.js";
-import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE} from "../constants.js";
+
 import { Grid } from "../grid/grid-base.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
 
@@ -75,64 +73,6 @@ export class HLMActor extends Actor {
 		}
 	}
 
-	static isTargetedRoll(attributeKey) {
-		if ([ATTRIBUTES.close, ATTRIBUTES.far].includes(attributeKey))
-			return ATTRIBUTES.evasion;
-		if (attributeKey === ATTRIBUTES.mental) return ATTRIBUTES.willpower;
-		if (attributeKey===ATTRIBUTES.power) return ATTRIBUTES.power;
-		return false;
-	}
-
-	startRollDialog(attributeKey,internalId) {
-		const modifiers=[];
-		const attribute=this.system.attributes[attributeKey];
-		modifiers.push(new RollElement(
-			attribute.values.standard.base,
-			ROLL_MODIFIER_TYPE.flat,
-			"Frame base",
-			ROLL_MODIFIER_TYPE.modifier,
-		));
-		attribute.values.standard.additions.forEach((term) => {
-			modifiers.push(RollElement.attributeElementToRollElement(term,this,ROLL_MODIFIER_TYPE.modifier))
-		});
-		attribute.values.bonus.forEach((term) => {
-			modifiers.push(RollElement.attributeElementToRollElement(term,this,ROLL_MODIFIER_TYPE.bonus))
-		});
-		if(attribute.values.custom!=0) {
-			modifiers.push(new RollElement(
-				attribute.values.custom,
-				ROLL_MODIFIER_TYPE.flat,
-				"Custom modifier (bonus)",
-				ROLL_MODIFIER_TYPE.bonus
-			));
-		}
-		return new RollDialog(modifiers,this,attributeKey,internalId);
-	}
-
-	/**
-	 *	Roll an attribute (or a flat roll)
-	 * @param {ATTRIBUTES} attributeKey: The string key of the attribute
-	 * @param {int} dieCount: The total number of dice to roll
-	 * @param {int} flatModifier : The total modifier to add to the roll
-	 */
-	async rollAttribute(attributeKey, dieCount, flatModifier,cover,modifierStack) {
-		const defenceKey = HLMActor.isTargetedRoll(attributeKey);
-		let message="";
-		if(defenceKey===ATTRIBUTES.power) {
-			message=await this.initiateReel(dieCount, flatModifier,modifierStack);
-		} else if (defenceKey) {
-			const output=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier,cover,modifierStack);
-			message=output.text ? output.text : output;
-		} else {
-			const result=await this.rollNoTarget(attributeKey, dieCount, flatModifier,modifierStack);
-			message=result.text;
-		}
-		const hitMessage = await ChatMessage.create({
-			speaker: {actor: this},
-			content: message,
-		});
-	}
-
 	async locationHitMessage() {
 		const locationResult=await AttackHandler.rollHitLocation(this);
 		if(locationResult) {
@@ -142,66 +82,6 @@ export class HLMActor extends Actor {
 				content: displayString,
 			});
 		}
-	}
-
-	async rollTargeted(attackKey, defenceKey, dieCount, flatModifier,cover,modifierStack) {
-		const targetSet = game.user.targets;
-		if (targetSet.size < 1) {
-			const result= await this.rollNoTarget(attackKey, dieCount, flatModifier,modifierStack);
-			return result;
-		} else {
-			const target = targetSet.values().next().value;
-			return await AttackHandler.rollToHit(
-				this,
-				attackKey,
-				target.actor,
-				defenceKey,
-				dieCount,
-				flatModifier,
-				cover,
-				modifierStack
-			);
-		}
-	}
-
-	async initiateReel(dieCount, flatModifier,modifierStack) {
-		const targetSet = game.user.targets;
-		if (targetSet.size < 1) {
-			const result= await this.rollNoTarget(ATTRIBUTES.power, dieCount, flatModifier,modifierStack);
-			return result.text;
-		} else {
-			const target = targetSet.values().next().value;
-			return await ReelHandler.reel(
-				this,
-				target.actor,
-				dieCount,
-				flatModifier,
-				modifierStack
-			);
-		}
-	}
-
-	async rollNoTarget(attributeKey, dieCount, flatModifier,modifierStack) {
-		let roll = Utils.getRoller(dieCount, flatModifier);
-		await roll.evaluate();
-
-		var label = game.i18n.localize("ROLLTEXT.base");
-		if (attributeKey) {
-			label=label.replace("_ATTRIBUTE_NAME_", Utils.getLocalisedAttributeLabel(attributeKey));
-		} else {
-			label=label.replace("_ATTRIBUTE_NAME_", roll.formula);
-		}
-
-		const hitRollDisplay = await renderTemplate(
-			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
-			{
-				label_left: label,
-				total: await constructCollapsibleRollMessage(roll),
-				preformat: true,
-				modifiers: modifierStack
-			}
-		);
-		return {text: hitRollDisplay, result: null};
 	}
 
 	/**
@@ -527,8 +407,8 @@ export class HLMActor extends Actor {
 	 */
 	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat, cover,modifierStack) {
 		const internal=this.items.get(uuid);
-		const defenceKey=HLMActor.isTargetedRoll(attackKey);
-		const rollOutput=await this.rollTargeted(attackKey,defenceKey,totalDieCount,totalFlat, cover,modifierStack);
+		const defenceKey=game.rollHandler.isTargetedRoll(attackKey);
+		const rollOutput=await game.rollHandler.rollTargeted(this, attackKey,defenceKey,totalDieCount,totalFlat, cover,modifierStack);
 		const displayString=await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
