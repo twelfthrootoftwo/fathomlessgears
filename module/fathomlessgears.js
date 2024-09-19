@@ -97,7 +97,7 @@ export const system_ready = new Promise((success) => {
 				[GRID_HUD_LOCATION.topLeft]: "Top Left",
 				[GRID_HUD_LOCATION.topRight]: "Top Right",
 			},
-			default: GRID_HUD_LOCATION.bottomLeft,
+			default: GRID_HUD_LOCATION.topRight,
 			onChange: value => {
 				game.gridHover.refresh();
 			}
