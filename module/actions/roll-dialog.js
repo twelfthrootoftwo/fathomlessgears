@@ -177,7 +177,7 @@ export class RollDialog extends HLMApplication {
         if(this.internal) {
             await this.actor.triggerRolledInternal(this.internal,this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(),this.cover,[...this.flatModifiers,...this.flatBonuses,this.focused]);
         } else {
-            await game.rollHandler.rollAttribute(this.actor, this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(), this.cover,modifierStack);
+            await this.actor.rollAttribute(this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(), this.cover,modifierStack);
         }
         this.close();
     }

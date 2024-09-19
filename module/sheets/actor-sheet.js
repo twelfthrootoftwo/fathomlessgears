@@ -2,7 +2,6 @@ import { ATTRIBUTES, ACTOR_TYPES } from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 import { FileUploader } from "../data-files/uploader.js";
 import {populateActorFromGearwright} from "../actors/gearwright-actor.js"
-import { RollHandler } from "../actions/roll-handler.js";
 
 /**
  * @extends {ActorSheet}
@@ -182,7 +181,7 @@ export class HLMActorSheet extends ActorSheet {
 		event.preventDefault();
 		if(!this.testOwnership()) {return false;}
 		const attribute = event.target.attributes.attribute?.value;
-		game.rollHandler.startRollDialog(this.actor, attribute);
+		this.actor.startRollDialog(attribute);
 	}
 
 	/** @override */
