@@ -239,6 +239,20 @@ export class Grid {
         popout.innerHTML="";
         popout.classList.toggle("visible");
     }
+
+    calculateHP() {
+        let hp=0;
+        this.gridRegions.forEach((region) => {
+            if(region) {
+                region.gridSpaces.forEach((row) => {
+                    row.forEach((space) => {
+                        if(space.state==GRID_SPACE_STATE.intact) hp=hp+1;
+                    });
+                });
+            }
+        });
+        return hp
+    }
 }
 
 class GridRegion {

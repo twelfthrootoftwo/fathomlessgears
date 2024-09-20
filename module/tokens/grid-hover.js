@@ -1,4 +1,5 @@
 //This code draws on from Eriku33's Image Hover: https://github.com/Eriku33/Foundry-VTT-Image-Hover
+import { ACTOR_TYPES } from "../constants.js";
 import { HLMApplication } from "../sheets/application.js";
 
 
@@ -31,6 +32,11 @@ export class GridHoverHUD extends HLMApplication{
 		data.lockPrompt=this.getLockPrompt();
 		data.interactive=tokenObject?.actor?.testUserPermission(game.user,CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)
 		data.position=game.settings.get("fathomlessgears","gridHUDPosition")
+
+		if(tokenObject?.actor?.type==ACTOR_TYPES.fish) {
+			data.hp=grid.calculateHP()
+		}
+
 		return data;
 	}
 

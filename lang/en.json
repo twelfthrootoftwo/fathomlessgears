@@ -142,6 +142,7 @@
 
 	"GRIDHUD.lockON": "_KEY_ - Lock Grid",
 	"GRIDHUD.lockOFF": "_KEY_ - Unlock Grid",
+	"GRID.remainingHP": "HP remaining",
 
 	"ROLLDIALOG.attribute": "Attribute modifiers",
 	"ROLLDIALOG.bonus": "Roll modifiers",

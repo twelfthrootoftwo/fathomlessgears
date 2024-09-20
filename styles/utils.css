@@ -41,6 +41,12 @@ input.sheet-input {
 .flex-2 {
 	flex-grow: 2;
 }
+.margin-auto {
+	margin: auto;
+}
+.text-center {
+	text-align: center;
+}
 .btn {
 	background: rgba(0, 0, 0, 0.1);
 	border: 2px groove var(--color-border-light-primary);
