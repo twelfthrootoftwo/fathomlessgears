@@ -142,9 +142,6 @@ function mapGridState(source,destination) {
 		if(region) {
 			region.gridSpaces.forEach((row) => {
 				row.forEach((space) => {
-					if(space.id==57){
-						console.log("Found the gun space")
-					}
 					const newSpace=destination.findGridSpace(space.id);
 					if(
 						space.state != GRID_SPACE_STATE.locked &&

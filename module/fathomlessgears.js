@@ -53,7 +53,6 @@ Hooks.once("init", async function () {
 		addFshManager(app, html);
 	});
 
-	console.log("Initialising helpers");
 	initialiseHelpers();
 });
 
@@ -100,6 +99,14 @@ export const system_ready = new Promise((success) => {
 			onChange: value => {
 				game.gridHover.refresh();
 			}
+		})
+		game.settings.register("fathomlessgears","gridHUDOnHover",{
+			name: "Show grid HUD on hover",
+			hint: "If disabled, the grid HUD will only be visible via the lock hotkey",
+			scope: "client",
+			config: true,
+			type: Boolean,
+			default: true
 		})
 		GridHoverHUD.addGridHUD();
 

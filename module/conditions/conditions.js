@@ -236,9 +236,7 @@ export const IMPLEMENTED_CONDITIONS={
 
 export function initialiseEffectHooks() {
     Hooks.on("createActiveEffect",(activeEffect,diffData,userId) => {
-        console.log("Creating effect!")
         applyEffect(activeEffect.parent, activeEffect);
-        console.log(activeEffect.parent);
     });
 
     Hooks.on("deleteActiveEffect",(activeEffect,diffData,userId) => {
@@ -254,13 +252,9 @@ export function initialiseEffectHooks() {
 }
 
 export function applyEffect(actor,effect) {
-    console.log("Applying effect!")
-    console.log(effect);
     const statusName=effect.statuses.values().next().value;
     const thisEffect=findImplementedCondition(statusName);
-    console.log(statusName)
     if(ATTRIBUTE_ONLY_CONDITIONS.includes(statusName)) {
-        console.log("Is attribute only");
         let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
         if(!effectCounter) {
             effectCounter = new ActiveEffectCounter(1,effect.icon,effect);

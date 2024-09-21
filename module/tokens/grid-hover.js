@@ -42,20 +42,15 @@ export class GridHoverHUD extends HLMApplication{
 
 	/**
 	 * check requirements then show character art
-	 * @param {*} token token passed in
-	 * @param {Boolean} hovered if token is mouseovered
-	 * @param {Number} delay hover time requirement (milliseconds) to show art.
 	 */
-	showGridRequirements(token, hovered, delay) {
+	checkShowGridRequirements() {
 		/**
 		 * Hide art when dragging a token.
 		 */
 		if (event && event.buttons > 0) return;
 
-		if (
-			hovered &&
-			(canvas.activeLayer.name == "TokenLayer")
-		) {
+		if (canvas.activeLayer.name == "TokenLayer") {
+			const token=game.gridHover.hoveredToken
 			// Show token image if hovered, otherwise don't
 			setTimeout(function () {
 				if (
@@ -70,7 +65,7 @@ export class GridHoverHUD extends HLMApplication{
 						game.gridHover.clear();
 					}
 				}
-			}, delay);
+			}, 0);
 		} else {
 			if(!this.lock) {
 				this.clear();
@@ -92,7 +87,6 @@ export class GridHoverHUD extends HLMApplication{
 	 */
 	assignToken(token) {
 		this.object=token;
-		let delay=0;
 		if(this.closing) {
 			this.awaitingRefresh=true;
 		} else {
@@ -116,14 +110,18 @@ export class GridHoverHUD extends HLMApplication{
 	 * toggles on/off grid lock
 	 */
 	toggleLock() {
+		const showOnHover=game.settings.get("fathomlessgears","gridHUDOnHover");
 		if(this.lock) {
 			this.lock=false;
-			if(!this.hovering) {
+			if(!this.hovering || !showOnHover) {
 				this.clear();
 			}
 		} else {
 			if(this.hovering) {
 				this.lock=true;
+				if(!showOnHover) {
+					game.gridHover.assignToken(game.gridHover.hoveredToken);
+				}
 			}
 		}
 	}
@@ -144,15 +142,19 @@ export class GridHoverHUD extends HLMApplication{
 		 * @param {Boolean} hovered if token is mouseovered
 		 */
 		Hooks.on("hoverToken", (token, hovered) => {
+			game.gridHover.hoveredToken=token;
 			game.gridHover.hovering=hovered
-			if(game.gridHover.lock) {
-				return;
+			const showOnHover=game.settings.get("fathomlessgears","gridHUDOnHover");
+			if(showOnHover) {
+				if(game.gridHover.lock) {
+					return;
+				}
+				if (!hovered) {
+					game.gridHover.clear();
+					return;
+				}
+				game.gridHover.checkShowGridRequirements();
 			}
-			if (!hovered) {
-				game.gridHover.clear();
-				return;
-			}
-			game.gridHover.showGridRequirements(token, hovered, 0);
 		});
 
 		/**
