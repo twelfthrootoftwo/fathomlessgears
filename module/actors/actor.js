@@ -240,70 +240,6 @@ export class HLMActor extends Actor {
 		});
 	}
 
-	/**
-	 * Mark an internal as broken
-	 * @param {string} uuid The UUID of the internal to break
-	 */
-	async toggleInternalBroken(uuid) {
-		const internal=this.items.get(uuid);
-		await internal.toggleBroken();
-
-		//Apply attribute changes
-		const isBroken=await internal.isBroken();
-		console.log("Toggling internal to broken state "+isBroken)
-		Object.keys(internal.system.attributes).forEach((key) => {
-			if(key!=ATTRIBUTES.weight && internal.system.attributes[key]!=0) {
-				if(isBroken) {
-					this.removeAttributeModifier(key,uuid);
-				} else {
-					const modifier=new AttributeElement(
-						internal.system.attributes[key],
-						internal._id,
-						"internal",
-						internal.name
-					);
-					this.addAttributeModifier(key,modifier);
-				}
-			}
-		})
-		this.update({"system": this.system});
-		ChatMessage.create({
-			whisper: await this.getObservers(),
-			content: `${this.name}'s ${internal.name} ${isBroken ? "breaks!" : "is repaired"}`
-		})
-		
-		Hooks.callAll("internalBrokenToggled",internal,this)
-	}
-
-	/**
-	 * Deletes an internal from this actor
-	 * @param {string} uuid The UUID of the internal to delete
-	 */
-	async removeInternal(uuid) {
-		const internal=this.items.get(uuid);
-		Object.keys(internal.system.attributes).forEach((key) => {
-			if(internal.system.attributes[key]!=0) {
-				console.log(`Removing attr ${key}`)
-				this.removeAttributeModifier(key,uuid);
-			}
-		});
-		this.calculateBallast();
-		if(this.system.resources) this.modifyResourceValue("repair",-1*internal.system.repair_kits);
-		await this.update({"system": this.system});
-		await internal.delete();
-		
-		Hooks.callAll("internalDeleted",this)
-	}
-
-	/**
-	 * Remove all internals on this actor (pre import)
-	 */
-	async removeInternals() {
-		const internals=this.itemTypes.internal_pc.concat(this.itemTypes.internal_npc);
-		internals.forEach((internal) => {
-			this.removeInternal(internal.id);
-		});
-	}
 
 	/**
 	 * Switch this actor from interactive to image grid
@@ -338,7 +274,7 @@ export class HLMActor extends Actor {
 	async removeInternalDeactivateGrid(proceed,args) {
 		if(proceed) {
 			await args.actor.removeInteractiveGrid();
-			args.actor.removeInternal(args.uuid);
+			args.actor.itemsManager.removeInternal(args.uuid);
 		}
 	}
 
@@ -363,6 +299,13 @@ export class HLMActor extends Actor {
 			return isOwner || isObserver
 		});
 		return observers;
+	}
+
+	async breakInternalMessage(internal) {
+		ChatMessage.create({
+			whisper: await this.getObservers(),
+			content: `${this.name}'s ${internal.name} ${internal.isBroken() ? "breaks!" : "is repaired"}`
+		})
 	}
 
 	/**

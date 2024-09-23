@@ -165,7 +165,7 @@ export class ItemsManager {
 				{"actor": this.actor, "uuid": uuid}
 			)
 		} else {
-			this.actor.removeInternal(uuid);
+			this.removeInternal(uuid);
 		}
 	}
 
@@ -197,5 +197,66 @@ export class ItemsManager {
 		await this.actor.update({"system": this.actor.system});
 		Hooks.callAll("internalAdded",this.actor)
 		return item._id;
+	}
+
+	/**
+	 * Mark an internal as broken
+	 * @param {string} uuid The UUID of the internal to break
+	 */
+	async toggleInternalBroken(uuid) {
+		const internal=this.actor.items.get(uuid);
+		await internal.toggleBroken();
+
+		//Apply attribute changes
+		const isBroken=await internal.isBroken();
+		console.log("Toggling internal to broken state "+isBroken)
+		Object.keys(internal.system.attributes).forEach((key) => {
+			if(key!=ATTRIBUTES.weight && internal.system.attributes[key]!=0) {
+				if(isBroken) {
+					this.actor.removeAttributeModifier(key,uuid);
+				} else {
+					const modifier=new AttributeElement(
+						internal.system.attributes[key],
+						internal._id,
+						"internal",
+						internal.name
+					);
+					this.actor.addAttributeModifier(key,modifier);
+				}
+			}
+		})
+		this.actor.update({"system": this.actor.system});
+		this.actor.breakInternalMessage(internal);
+		
+		Hooks.callAll("internalBrokenToggled",internal,this.actor)
+	}
+
+	/**
+	 * Deletes an internal from this actor
+	 * @param {string} uuid The UUID of the internal to delete
+	 */
+	async removeInternal(uuid) {
+		const internal=this.actor.items.get(uuid);
+		Object.keys(internal.system.attributes).forEach((key) => {
+			if(internal.system.attributes[key]!=0) {
+				this.actor.removeAttributeModifier(key,uuid);
+			}
+		});
+		this.actor.calculateBallast();
+		if(this.actor.system.resources) this.actor.modifyResourceValue("repair",-1*internal.system.repair_kits);
+		await this.actor.update({"system": this.actor.system});
+		await internal.delete();
+		
+		Hooks.callAll("internalDeleted",this)
+	}
+
+	/**
+	 * Remove all internals on this actor (pre import)
+	 */
+	async removeInternals() {
+		const internals=this.actor.itemTypes.internal_pc.concat(this.actor.itemTypes.internal_npc);
+		internals.forEach((internal) => {
+			this.removeInternal(internal.id);
+		});
 	}
 }

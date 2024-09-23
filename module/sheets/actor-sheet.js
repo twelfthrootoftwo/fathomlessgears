@@ -219,8 +219,7 @@ export class HLMActorSheet extends ActorSheet {
 	 */
 	async breakInternal(event) {
 		if(!this.testOwnership()) {return false;}
-		//this.toggleInternalBrokenDisplay(safeIdClean(event.target.dataset.id));
-		this.actor.toggleInternalBroken(safeIdClean(event.target.dataset.id));
+		this.actor.itemsManager.toggleInternalBroken(safeIdClean(event.target.dataset.id));
 	}
 
 	toggleInternalBrokenDisplay(uuid) {
