@@ -198,8 +198,8 @@ export class HLMActorSheet extends ActorSheet {
 	async _onDropItem(event, data) {
 		if(!this.testOwnership()) {return false;}
 		const targetItem=await fromUuid(data.uuid);
-		if(this.actor.canDropItem(targetItem)) {
-			this.actor.receiveDrop(targetItem);
+		if(this.actor.itemsManager.canDropItem(targetItem)) {
+			this.actor.itemsManager.receiveDrop(targetItem);
 		} else {
 			ui.notifications.info(`Can't drop item type ${targetItem.type} on actor type ${this.actor.type}`);
 		}
@@ -236,7 +236,7 @@ export class HLMActorSheet extends ActorSheet {
 
 	deleteInternal(event) {
 		if(!this.testOwnership()) {return false;}
-		this.actor.onInternalRemove(safeIdClean(event.target.dataset.id));
+		this.actor.itemsManager.onInternalRemove(safeIdClean(event.target.dataset.id));
 	}
 
 	locationHitMessage(event) {

@@ -4,6 +4,7 @@ import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN,
 
 import { Grid } from "../grid/grid-base.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
+import { ItemsManager } from "./internals-manager.js";
 
 export class AttributeElement {
 	value
@@ -37,6 +38,8 @@ export class HLMActor extends Actor {
 		internals.forEach((internal) => {
 			internal.description_text=internal.getInternalDescriptionText();
 		});
+
+		this.itemsManager=new ItemsManager(this);
 	}
 
 	/** @inheritdoc */
@@ -60,8 +63,9 @@ export class HLMActor extends Actor {
 
 			} else if(this.type==ACTOR_TYPES.fisher){
 				if(!this.system.gridType){
+					this.itemsManager=new ItemsManager(this);
 					Utils.getGridFromSize("Fisher").then((grid) => {
-						this.applyGrid(grid);
+						this.itemsManager.applyGrid(grid);
 					});
 				}
 
@@ -201,184 +205,7 @@ export class HLMActor extends Actor {
 		if(ballast.total<ATTRIBUTE_MIN) ballast.total=ATTRIBUTE_MIN;
 	}
 
-	/**
-	 * Checks whether an item can be dropped onto this actor
-	 * @param {Item} item The item being dropped
-	 * @returns True if this object can be dropped, False otherwise
-	 */
-	canDropItem(item) {
-		let acceptedTypes=[]
-		switch(this.type) {
-			case "fisher":
-				acceptedTypes=[ITEM_TYPES.frame_pc, ITEM_TYPES.internal_pc];
-				break;
-			case "fish":
-				acceptedTypes=[ITEM_TYPES.internal_npc,ITEM_TYPES.size];
-				break;
-		}
-		if(acceptedTypes.includes(item.type)) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Directs a new item to the correct process on adding the item to the actor
-	 * @param {Item} item The item to apply
-	 */
-	receiveDrop(item) {
-		switch(item.type) {
-			case ITEM_TYPES.size:
-				this.applySize(item)
-				break;
-			case ITEM_TYPES.frame_pc:
-				this.applyFrame(item);
-				break;
-			case ITEM_TYPES.internal_pc:
-			case ITEM_TYPES.internal_npc:
-				this.onInternalDrop(item);
-				break;
-		}
-	}
-
-	/**
-	 * Item drop processing for grid
-	 * @param {Item} grid
-	 */
-	async applyGrid(grid) {
-		if(this.type==ACTOR_TYPES.fisher && grid.system.type!=GRID_TYPE.fisher) {
-			return false;
-		} else if(this.type!=ACTOR_TYPES.fisher && grid.system.type==GRID_TYPE.fisher) {
-			return false;
-		}
-		//Remove existing size item
-		if(this.system.gridType) {
-			const oldGrid=this.items.get(this.system.gridType);
-			oldGrid?.delete();
-		}
-		//Create new size item
-		const item=await Item.create(grid,{parent: this});
-		this.system.gridType=item._id
-		await this.update({"system": this.system});
-		Hooks.callAll("gridUpdated",this)
-	}
-
-	/**
-	 * Item drop processing for size
-	 * @param {Item} size 
-	 */
-	async applySize(size) {
-		if(this.type==ACTOR_TYPES.fisher) return false;
-		//Apply attribute changes
-		Object.keys(size.system.attributes).forEach((key) => {
-			this.setBaseAttributeValue(key,size.system.attributes[key]);
-		})
-		//Remove existing size item
-		if(this.system.size) {
-			const oldSize=this.items.get(this.system.size);
-			oldSize?.delete();
-		}
-		this.update({"system": this.system});
-		//Create new size item
-		const item=await Item.create(size,{parent: this});
-		this.system.size=item._id
-		this.update({"system": this.system});
-
-		//Apply grid
-		const newGrid=await Utils.getGridFromSize(size.name);
-		await this.applyGrid(newGrid);
-		Hooks.callAll("sizeUpdated",this)
-	}
-
-	/**
-	 * Item drop processing for frames
-	 * @param {Item} frame
-	 */
-	async applyFrame(frame) {
-		console.log("Applying frame");
-		if(this.type != ACTOR_TYPES.fisher) return false;
-		//Apply attribute changes
-		Object.keys(frame.system.attributes).forEach((key) => {
-			this.setBaseAttributeValue(key,frame.system.attributes[key]);
-		})
-		//Remove existing size item
-		if(this.system.frame) {
-			const oldFrame=this.items.get(this.system.frame);
-			this.modifyResourceValue("repair",-oldFrame.system.repair_kits);
-			this.modifyResourceValue("core",-oldFrame.system.core_integrity);
-			oldFrame?.delete();
-		}
-		this.modifyResourceValue("repair",frame.system.repair_kits);
-		this.modifyResourceValue("core",frame.system.core_integrity);
-		await this.update({"system": this.system});
-
-		//Create new size item
-		const item=await Item.create(frame,{parent: this});
-		this.system.frame=item._id;
-		this.calculateBallast();
-		await this.update({"system": this.system});
-		Hooks.callAll("frameUpdated",this)
-	}
-
-	async onInternalDrop(internal) {
-		if(this.getFlag("fathomlessgears","interactiveGrid")) {
-			new ConfirmDialog(
-				"Override Imported Data",
-				`Manually adding an internal to this actor will disable the interactive grid.<br>
-				To keep the interactive grid, you should update the character by uploading a new Gearwright save file.<br>
-				Manually add internal?`,
-				this.applyInternalDeactivateGrid,
-				{"actor": this, "internal": internal}
-			)
-		} else {
-			this.applyInternal(internal);
-		}
-	}
-
-	async onInternalRemove(uuid) {
-		if(this.getFlag("fathomlessgears","interactiveGrid")) {
-			new ConfirmDialog(
-				"Override Imported Data",
-				`Manually removing an internal from this actor will disable the interactive grid.<br>
-				To keep the interactive grid, you should update the character by uploading a new Gearwright save file.<br>
-				Manually remove internal?`,
-				this.removeInternalDeactivateGrid,
-				{"actor": this, "uuid": uuid}
-			)
-		} else {
-			this.removeInternal(uuid);
-		}
-	}
-
-	/**
-	 * Item drop processing for internals
-	 * @param {Item} internal
-	 */
-	async applyInternal(internal) {
-		console.log("Applying internal");
-		const item=await Item.create(internal,{parent: this});
-		item.setFlag("fathomlessgears","broken",false);
-		this.system.internals.push(item._id);
-		//Apply attributes
-		Object.keys(internal.system.attributes).forEach((key) => {
-			if(Utils.isAttribute(key) && internal.system.attributes[key]!=0) {
-				const modifier=new AttributeElement(
-					internal.system.attributes[key],
-					item._id,
-					"internal",
-					internal.name
-				);
-				this.addAttributeModifier(key,modifier);
-			}
-		})
-		//Modify resources
-		if(internal.system.repair_kits) {this.modifyResourceValue("repair",internal.system.repair_kits);}
-		this.calculateBallast();
-		
-		await this.update({"system": this.system});
-		Hooks.callAll("internalAdded",this)
-		return item._id;
-	}
+	
 
 	/**
 	 * Send this actor's flat attributes to the chat log
@@ -512,7 +339,7 @@ export class HLMActor extends Actor {
 	async applyInternalDeactivateGrid(proceed,args) {
 		if(proceed) {
 			await args.actor.removeInteractiveGrid();
-			args.actor.applyInternal(args.internal);
+			args.actor.itemsManager.applyInternal(args.internal);
 		}
 	}
 
