@@ -1,8 +1,20 @@
 import {Utils} from "../utilities/utils.js";
 import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE} from "../constants.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
-import { AttributeElement } from "./actor.js";
 
+export class AttributeElement {
+	value
+	source
+	type
+	label
+
+	constructor(value,source,type,label) {
+		this.value=value;
+		this.source=source;
+		this.type=type;
+		this.label=label;
+	}
+}
 
 export class ItemsManager {
     constructor(actor) {

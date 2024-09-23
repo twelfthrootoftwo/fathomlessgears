@@ -1,4 +1,4 @@
-import { AttributeElement } from "../actors/actor.js";
+import { AttributeElement } from "../actors/items-manager.js";
 import { ATTRIBUTES } from "../constants.js";
 
 export const CONDITIONS={

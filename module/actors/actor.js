@@ -4,21 +4,8 @@ import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN,
 
 import { Grid } from "../grid/grid-base.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
-import { ItemsManager } from "./internals-manager.js";
+import { AttributeElement, ItemsManager } from "./items-manager.js";
 
-export class AttributeElement {
-	value
-	source
-	type
-	label
-
-	constructor(value,source,type,label) {
-		this.value=value;
-		this.source=source;
-		this.type=type;
-		this.label=label;
-	}
-}
 
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
