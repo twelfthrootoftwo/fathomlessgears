@@ -13,6 +13,7 @@ export class AttackHandler {
 		cover,
 		modifierStack
 	) {
+		console.log(dieCount, flatModifier)
 		const attackRoll = Utils.getRoller(
 			dieCount,
 			flatModifier
