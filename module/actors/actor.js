@@ -1,25 +1,12 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE, ROLL_MODIFIER_TYPE} from "../constants.js";
-import { RollElement, RollDialog } from "../actions/roll-dialog.js";
-import { ReelHandler } from "../actions/reel.js";
-import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE} from "../constants.js";
+
 import { Grid } from "../grid/grid-base.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
+import { AttributeElement, ItemsManager } from "./items-manager.js";
+import { ATTRIBUTE_ONLY_CONDITIONS, applyAttributeModifyingEffect } from "../conditions/conditions.js";
 
-export class AttributeElement {
-	value
-	source
-	type
-	label
-
-	constructor(value,source,type,label) {
-		this.value=value;
-		this.source=source;
-		this.type=type;
-		this.label=label;
-	}
-}
 
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
@@ -39,6 +26,8 @@ export class HLMActor extends Actor {
 		internals.forEach((internal) => {
 			internal.description_text=internal.getInternalDescriptionText();
 		});
+
+		this.itemsManager=new ItemsManager(this);
 	}
 
 	/** @inheritdoc */
@@ -62,8 +51,9 @@ export class HLMActor extends Actor {
 
 			} else if(this.type==ACTOR_TYPES.fisher){
 				if(!this.system.gridType){
+					this.itemsManager=new ItemsManager(this);
 					Utils.getGridFromSize("Fisher").then((grid) => {
-						this.applyGrid(grid);
+						this.itemsManager.applyGrid(grid);
 					});
 				}
 
@@ -75,62 +65,13 @@ export class HLMActor extends Actor {
 		}
 	}
 
-	static isTargetedRoll(attributeKey) {
-		if ([ATTRIBUTES.close, ATTRIBUTES.far].includes(attributeKey))
-			return ATTRIBUTES.evasion;
-		if (attributeKey === ATTRIBUTES.mental) return ATTRIBUTES.willpower;
-		if (attributeKey===ATTRIBUTES.power) return ATTRIBUTES.power;
-		return false;
-	}
-
-	startRollDialog(attributeKey,internalId) {
-		const modifiers=[];
-		const attribute=this.system.attributes[attributeKey];
-		modifiers.push(new RollElement(
-			attribute.values.standard.base,
-			ROLL_MODIFIER_TYPE.flat,
-			"Frame base",
-			ROLL_MODIFIER_TYPE.modifier,
-		));
-		attribute.values.standard.additions.forEach((term) => {
-			modifiers.push(RollElement.attributeElementToRollElement(term,this,ROLL_MODIFIER_TYPE.modifier))
-		});
-		attribute.values.bonus.forEach((term) => {
-			modifiers.push(RollElement.attributeElementToRollElement(term,this,ROLL_MODIFIER_TYPE.bonus))
-		});
-		if(attribute.values.custom!=0) {
-			modifiers.push(new RollElement(
-				attribute.values.custom,
-				ROLL_MODIFIER_TYPE.flat,
-				"Custom modifier (bonus)",
-				ROLL_MODIFIER_TYPE.bonus
-			));
-		}
-		return new RollDialog(modifiers,this,attributeKey,internalId);
-	}
-
-	/**
-	 *	Roll an attribute (or a flat roll)
-	 * @param {ATTRIBUTES} attributeKey: The string key of the attribute
-	 * @param {int} dieCount: The total number of dice to roll
-	 * @param {int} flatModifier : The total modifier to add to the roll
-	 */
-	async rollAttribute(attributeKey, dieCount, flatModifier,cover,modifierStack) {
-		const defenceKey = HLMActor.isTargetedRoll(attributeKey);
-		let message="";
-		if(defenceKey===ATTRIBUTES.power) {
-			message=await this.initiateReel(dieCount, flatModifier,modifierStack);
-		} else if (defenceKey) {
-			const output=await this.rollTargeted(attributeKey, defenceKey, dieCount, flatModifier,cover,modifierStack);
-			message=output.text ? output.text : output;
-		} else {
-			const result=await this.rollNoTarget(attributeKey, dieCount, flatModifier,modifierStack);
-			message=result.text;
-		}
-		const hitMessage = await ChatMessage.create({
-			speaker: {actor: this},
-			content: message,
-		});
+	applyActiveEffects() {
+		super.applyActiveEffects()
+		this.effects.forEach((activeEffect) => {
+			if(ATTRIBUTE_ONLY_CONDITIONS.includes(activeEffect.statuses.values().next().value)) {
+				applyAttributeModifyingEffect(this,activeEffect)
+			}
+		})
 	}
 
 	async locationHitMessage() {
@@ -144,75 +85,15 @@ export class HLMActor extends Actor {
 		}
 	}
 
-	async rollTargeted(attackKey, defenceKey, dieCount, flatModifier,cover,modifierStack) {
-		const targetSet = game.user.targets;
-		if (targetSet.size < 1) {
-			const result= await this.rollNoTarget(attackKey, dieCount, flatModifier,modifierStack);
-			return result;
-		} else {
-			const target = targetSet.values().next().value;
-			return await AttackHandler.rollToHit(
-				this,
-				attackKey,
-				target.actor,
-				defenceKey,
-				dieCount,
-				flatModifier,
-				cover,
-				modifierStack
-			);
-		}
-	}
-
-	async initiateReel(dieCount, flatModifier,modifierStack) {
-		const targetSet = game.user.targets;
-		if (targetSet.size < 1) {
-			const result= await this.rollNoTarget(ATTRIBUTES.power, dieCount, flatModifier,modifierStack);
-			return result.text;
-		} else {
-			const target = targetSet.values().next().value;
-			return await ReelHandler.reel(
-				this,
-				target.actor,
-				dieCount,
-				flatModifier,
-				modifierStack
-			);
-		}
-	}
-
-	async rollNoTarget(attributeKey, dieCount, flatModifier,modifierStack) {
-		let roll = Utils.getRoller(dieCount, flatModifier);
-		await roll.evaluate();
-
-		var label = game.i18n.localize("ROLLTEXT.base");
-		if (attributeKey) {
-			label=label.replace("_ATTRIBUTE_NAME_", Utils.getLocalisedAttributeLabel(attributeKey));
-		} else {
-			label=label.replace("_ATTRIBUTE_NAME_", roll.formula);
-		}
-
-		const hitRollDisplay = await renderTemplate(
-			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
-			{
-				label_left: label,
-				total: await constructCollapsibleRollMessage(roll),
-				preformat: true,
-				modifiers: modifierStack
-			}
-		);
-		return {text: hitRollDisplay, result: null};
-	}
-
 	/**
 	 * Evaluate totals for all attributes & save results
 	 */
-	calculateAttributeTotals() {
+	calculateAttributeTotals(updateSource = true) {
 		const updateData={};
 		Object.keys(this.system.attributes).forEach((key) => {
 			updateData[key]=this.calculateSingleAttribute(key);
 		});
-		if(this._id) {
+		if(this._id && updateSource) {
 			this.update({"system.attributes": updateData});
 		}
 	}
@@ -321,184 +202,7 @@ export class HLMActor extends Actor {
 		if(ballast.total<ATTRIBUTE_MIN) ballast.total=ATTRIBUTE_MIN;
 	}
 
-	/**
-	 * Checks whether an item can be dropped onto this actor
-	 * @param {Item} item The item being dropped
-	 * @returns True if this object can be dropped, False otherwise
-	 */
-	canDropItem(item) {
-		let acceptedTypes=[]
-		switch(this.type) {
-			case "fisher":
-				acceptedTypes=[ITEM_TYPES.frame_pc, ITEM_TYPES.internal_pc];
-				break;
-			case "fish":
-				acceptedTypes=[ITEM_TYPES.internal_npc,ITEM_TYPES.size];
-				break;
-		}
-		if(acceptedTypes.includes(item.type)) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Directs a new item to the correct process on adding the item to the actor
-	 * @param {Item} item The item to apply
-	 */
-	receiveDrop(item) {
-		switch(item.type) {
-			case ITEM_TYPES.size:
-				this.applySize(item)
-				break;
-			case ITEM_TYPES.frame_pc:
-				this.applyFrame(item);
-				break;
-			case ITEM_TYPES.internal_pc:
-			case ITEM_TYPES.internal_npc:
-				this.onInternalDrop(item);
-				break;
-		}
-	}
-
-	/**
-	 * Item drop processing for grid
-	 * @param {Item} grid
-	 */
-	async applyGrid(grid) {
-		if(this.type==ACTOR_TYPES.fisher && grid.system.type!=GRID_TYPE.fisher) {
-			return false;
-		} else if(this.type!=ACTOR_TYPES.fisher && grid.system.type==GRID_TYPE.fisher) {
-			return false;
-		}
-		//Remove existing size item
-		if(this.system.gridType) {
-			const oldGrid=this.items.get(this.system.gridType);
-			oldGrid?.delete();
-		}
-		//Create new size item
-		const item=await Item.create(grid,{parent: this});
-		this.system.gridType=item._id
-		await this.update({"system": this.system});
-		Hooks.callAll("gridUpdated",this)
-	}
-
-	/**
-	 * Item drop processing for size
-	 * @param {Item} size 
-	 */
-	async applySize(size) {
-		if(this.type==ACTOR_TYPES.fisher) return false;
-		//Apply attribute changes
-		Object.keys(size.system.attributes).forEach((key) => {
-			this.setBaseAttributeValue(key,size.system.attributes[key]);
-		})
-		//Remove existing size item
-		if(this.system.size) {
-			const oldSize=this.items.get(this.system.size);
-			oldSize?.delete();
-		}
-		this.update({"system": this.system});
-		//Create new size item
-		const item=await Item.create(size,{parent: this});
-		this.system.size=item._id
-		this.update({"system": this.system});
-
-		//Apply grid
-		const newGrid=await Utils.getGridFromSize(size.name);
-		await this.applyGrid(newGrid);
-		Hooks.callAll("sizeUpdated",this)
-	}
-
-	/**
-	 * Item drop processing for frames
-	 * @param {Item} frame
-	 */
-	async applyFrame(frame) {
-		console.log("Applying frame");
-		if(this.type != ACTOR_TYPES.fisher) return false;
-		//Apply attribute changes
-		Object.keys(frame.system.attributes).forEach((key) => {
-			this.setBaseAttributeValue(key,frame.system.attributes[key]);
-		})
-		//Remove existing size item
-		if(this.system.frame) {
-			const oldFrame=this.items.get(this.system.frame);
-			this.modifyResourceValue("repair",-oldFrame.system.repair_kits);
-			this.modifyResourceValue("core",-oldFrame.system.core_integrity);
-			oldFrame?.delete();
-		}
-		this.modifyResourceValue("repair",frame.system.repair_kits);
-		this.modifyResourceValue("core",frame.system.core_integrity);
-		await this.update({"system": this.system});
-
-		//Create new size item
-		const item=await Item.create(frame,{parent: this});
-		this.system.frame=item._id;
-		this.calculateBallast();
-		await this.update({"system": this.system});
-		Hooks.callAll("frameUpdated",this)
-	}
-
-	async onInternalDrop(internal) {
-		if(this.getFlag("fathomlessgears","interactiveGrid")) {
-			new ConfirmDialog(
-				"Override Imported Data",
-				`Manually adding an internal to this actor will disable the interactive grid.<br>
-				To keep the interactive grid, you should update the character by uploading a new Gearwright save file.<br>
-				Manually add internal?`,
-				this.applyInternalDeactivateGrid,
-				{"actor": this, "internal": internal}
-			)
-		} else {
-			this.applyInternal(internal);
-		}
-	}
-
-	async onInternalRemove(uuid) {
-		if(this.getFlag("fathomlessgears","interactiveGrid")) {
-			new ConfirmDialog(
-				"Override Imported Data",
-				`Manually removing an internal from this actor will disable the interactive grid.<br>
-				To keep the interactive grid, you should update the character by uploading a new Gearwright save file.<br>
-				Manually remove internal?`,
-				this.removeInternalDeactivateGrid,
-				{"actor": this, "uuid": uuid}
-			)
-		} else {
-			this.removeInternal(uuid);
-		}
-	}
-
-	/**
-	 * Item drop processing for internals
-	 * @param {Item} internal
-	 */
-	async applyInternal(internal) {
-		console.log("Applying internal");
-		const item=await Item.create(internal,{parent: this});
-		item.setFlag("fathomlessgears","broken",false);
-		this.system.internals.push(item._id);
-		//Apply attributes
-		Object.keys(internal.system.attributes).forEach((key) => {
-			if(Utils.isAttribute(key) && internal.system.attributes[key]!=0) {
-				const modifier=new AttributeElement(
-					internal.system.attributes[key],
-					item._id,
-					"internal",
-					internal.name
-				);
-				this.addAttributeModifier(key,modifier);
-			}
-		})
-		//Modify resources
-		if(internal.system.repair_kits) {this.modifyResourceValue("repair",internal.system.repair_kits);}
-		this.calculateBallast();
-		
-		await this.update({"system": this.system});
-		Hooks.callAll("internalAdded",this)
-		return item._id;
-	}
+	
 
 	/**
 	 * Send this actor's flat attributes to the chat log
@@ -527,8 +231,8 @@ export class HLMActor extends Actor {
 	 */
 	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat, cover,modifierStack) {
 		const internal=this.items.get(uuid);
-		const defenceKey=HLMActor.isTargetedRoll(attackKey);
-		const rollOutput=await this.rollTargeted(attackKey,defenceKey,totalDieCount,totalFlat, cover,modifierStack);
+		const defenceKey=game.rollHandler.isTargetedRoll(attackKey);
+		const rollOutput=await game.rollHandler.rollTargeted(this, attackKey,defenceKey,totalDieCount,totalFlat, cover,modifierStack);
 		const displayString=await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
@@ -546,70 +250,6 @@ export class HLMActor extends Actor {
 		});
 	}
 
-	/**
-	 * Mark an internal as broken
-	 * @param {string} uuid The UUID of the internal to break
-	 */
-	async toggleInternalBroken(uuid) {
-		const internal=this.items.get(uuid);
-		await internal.toggleBroken();
-
-		//Apply attribute changes
-		const isBroken=await internal.isBroken();
-		console.log("Toggling internal to broken state "+isBroken)
-		Object.keys(internal.system.attributes).forEach((key) => {
-			if(key!=ATTRIBUTES.weight && internal.system.attributes[key]!=0) {
-				if(isBroken) {
-					this.removeAttributeModifier(key,uuid);
-				} else {
-					const modifier=new AttributeElement(
-						internal.system.attributes[key],
-						internal._id,
-						"internal",
-						internal.name
-					);
-					this.addAttributeModifier(key,modifier);
-				}
-			}
-		})
-		this.update({"system": this.system});
-		ChatMessage.create({
-			whisper: await this.getObservers(),
-			content: `${this.name}'s ${internal.name} ${isBroken ? "breaks!" : "is repaired"}`
-		})
-		
-		Hooks.callAll("internalBrokenToggled",internal,this)
-	}
-
-	/**
-	 * Deletes an internal from this actor
-	 * @param {string} uuid The UUID of the internal to delete
-	 */
-	async removeInternal(uuid) {
-		const internal=this.items.get(uuid);
-		Object.keys(internal.system.attributes).forEach((key) => {
-			if(internal.system.attributes[key]!=0) {
-				console.log(`Removing attr ${key}`)
-				this.removeAttributeModifier(key,uuid);
-			}
-		});
-		this.calculateBallast();
-		if(this.system.resources) this.modifyResourceValue("repair",-1*internal.system.repair_kits);
-		await this.update({"system": this.system});
-		await internal.delete();
-		
-		Hooks.callAll("internalDeleted",this)
-	}
-
-	/**
-	 * Remove all internals on this actor (pre import)
-	 */
-	async removeInternals() {
-		const internals=this.itemTypes.internal_pc.concat(this.itemTypes.internal_npc);
-		internals.forEach((internal) => {
-			this.removeInternal(internal.id);
-		});
-	}
 
 	/**
 	 * Switch this actor from interactive to image grid
@@ -632,7 +272,7 @@ export class HLMActor extends Actor {
 	async applyInternalDeactivateGrid(proceed,args) {
 		if(proceed) {
 			await args.actor.removeInteractiveGrid();
-			args.actor.applyInternal(args.internal);
+			args.actor.itemsManager.applyInternal(args.internal);
 		}
 	}
 
@@ -644,7 +284,7 @@ export class HLMActor extends Actor {
 	async removeInternalDeactivateGrid(proceed,args) {
 		if(proceed) {
 			await args.actor.removeInteractiveGrid();
-			args.actor.removeInternal(args.uuid);
+			args.actor.itemsManager.removeInternal(args.uuid);
 		}
 	}
 
@@ -669,6 +309,13 @@ export class HLMActor extends Actor {
 			return isOwner || isObserver
 		});
 		return observers;
+	}
+
+	async breakInternalMessage(internal) {
+		ChatMessage.create({
+			whisper: await this.getObservers(),
+			content: `${this.name}'s ${internal.name} ${internal.isBroken() ? "breaks!" : "is repaired"}`
+		})
 	}
 
 	/**

@@ -2,6 +2,7 @@ import { ATTRIBUTES, ACTOR_TYPES } from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 import { FileUploader } from "../data-files/uploader.js";
 import {populateActorFromGearwright} from "../actors/gearwright-actor.js"
+import { RollHandler } from "../actions/roll-handler.js";
 
 /**
  * @extends {ActorSheet}
@@ -179,7 +180,7 @@ export class HLMActorSheet extends ActorSheet {
 		event.preventDefault();
 		if(!this.testOwnership()) {return false;}
 		const attribute = event.target.attributes.attribute?.value;
-		this.actor.startRollDialog(attribute);
+		game.rollHandler.startRollDialog(this.actor, attribute);
 	}
 
 	/** @override */
@@ -195,8 +196,8 @@ export class HLMActorSheet extends ActorSheet {
 	async _onDropItem(event, data) {
 		if(!this.testOwnership()) {return false;}
 		const targetItem=await fromUuid(data.uuid);
-		if(this.actor.canDropItem(targetItem)) {
-			this.actor.receiveDrop(targetItem);
+		if(this.actor.itemsManager.canDropItem(targetItem)) {
+			this.actor.itemsManager.receiveDrop(targetItem);
 		} else {
 			ui.notifications.info(`Can't drop item type ${targetItem.type} on actor type ${this.actor.type}`);
 		}
@@ -216,8 +217,7 @@ export class HLMActorSheet extends ActorSheet {
 	 */
 	async breakInternal(event) {
 		if(!this.testOwnership()) {return false;}
-		//this.toggleInternalBrokenDisplay(safeIdClean(event.target.dataset.id));
-		this.actor.toggleInternalBroken(safeIdClean(event.target.dataset.id));
+		this.actor.itemsManager.toggleInternalBroken(safeIdClean(event.target.dataset.id));
 	}
 
 	toggleInternalBrokenDisplay(uuid) {
@@ -233,7 +233,7 @@ export class HLMActorSheet extends ActorSheet {
 
 	deleteInternal(event) {
 		if(!this.testOwnership()) {return false;}
-		this.actor.onInternalRemove(safeIdClean(event.target.dataset.id));
+		this.actor.itemsManager.onInternalRemove(safeIdClean(event.target.dataset.id));
 	}
 
 	locationHitMessage(event) {

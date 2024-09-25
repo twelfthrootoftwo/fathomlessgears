@@ -138,7 +138,7 @@ export class Grid {
         const internal=await this.actor.items.get(uuid);
         const recordIntact =!(await internal.isBroken())
         if (recordIntact != gridIntact) {
-            await this.actor.toggleInternalBroken(uuid);
+            await this.actor.itemsManager.toggleInternalBroken(uuid);
             this.renderInternal(uuid);
         }
     }

@@ -7,9 +7,10 @@ import {preloadHandlebarsTemplates} from "./utilities/templates.js";
 import {initialiseHelpers} from "./utilities/handlebars.js";
 import {FshManager, addFshManager} from "./data-files/fsh-manager.js";
 import {HLMItemSheet} from "./sheets/item-sheet.js";
-import {conditions,initialiseEffectHooks} from "./conditions/conditions.js";
+import {conditions} from "./conditions/conditions.js";
 import {GridHoverHUD} from "./tokens/grid-hover.js";
 import { GRID_HUD_LOCATION } from "./constants.js";
+import { RollHandler } from "./actions/roll-handler.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -109,6 +110,7 @@ export const system_ready = new Promise((success) => {
 			default: true
 		})
 		GridHoverHUD.addGridHUD();
+		RollHandler.addRollHandler();
 
 		game.settings.register("fathomlessgears", "datafiles", {
 			name: "Source data files",
@@ -143,8 +145,6 @@ export const system_ready = new Promise((success) => {
 		}
 
 		CONFIG.statusEffects = foundry.utils.duplicate(conditions);
-
-		initialiseEffectHooks();	
 
 		console.log("Ready!");
 		success();

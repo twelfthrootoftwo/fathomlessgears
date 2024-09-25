@@ -15,7 +15,7 @@ export async function populateActorFromGearwright(actor,data) {
 	}
 	console.log("Importing actor from gearwright");
 	document.querySelector(`#HLMActorSheet-Actor-${actor._id}`)?.classList.add("waiting");
-	await actor.removeInternals();
+	await actor.itemsManager.removeInternals();
 	switch(actor.type) {
 		case ACTOR_TYPES.fisher:
 			await buildFisher(actor,data);
@@ -70,7 +70,7 @@ async function constructFisherData(importData,actor) {
 async function applyFrame(importData,actor,gridObject) {
 	const frame=await findCompendiumItemFromName("frame_pc",importData.frame);
 	if(frame) {
-		await actor.applyFrame(frame);
+		await actor.itemsManager.applyFrame(frame);
 		const unlocks=[];
 		unlocks.push(...importData.unlocks);
 		unlocks.push(...frame.system.default_unlocks);
@@ -81,7 +81,7 @@ async function applyFrame(importData,actor,gridObject) {
 async function applySize(importData,actor) {
 	const size=await findCompendiumItemFromName("size",importData.size);
 	if (size) {
-		await actor.applySize(size);
+		await actor.itemsManager.applySize(size);
 	}
 }
 
@@ -97,7 +97,7 @@ async function applyInternals(importData,actor,gridObject) {
 	for(const [gridSpace,internalName] of Object.entries(internalsList)) {
 		const internal=await findCompendiumItemFromName(targetCompendium,Utils.capitaliseWords(Utils.fromLowerHyphen(internalName)));
 		if(internal) {
-			const internalId=await actor.applyInternal(internal);
+			const internalId=await actor.itemsManager.applyInternal(internal);
 			const spaces=identifyInternalSpaces(internal,gridObject,gridSpace);
 			spaces.forEach((id) => {
 				const space=gridObject.findGridSpace(id);
