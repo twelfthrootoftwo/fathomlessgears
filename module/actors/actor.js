@@ -5,6 +5,7 @@ import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN,
 import { Grid } from "../grid/grid-base.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
 import { AttributeElement, ItemsManager } from "./items-manager.js";
+import { ATTRIBUTE_ONLY_CONDITIONS, applyAttributeModifyingEffect } from "../conditions/conditions.js";
 
 
 /**
@@ -64,6 +65,15 @@ export class HLMActor extends Actor {
 		}
 	}
 
+	applyActiveEffects() {
+		super.applyActiveEffects()
+		this.effects.forEach((activeEffect) => {
+			if(ATTRIBUTE_ONLY_CONDITIONS.includes(activeEffect.statuses.values().next().value)) {
+				applyAttributeModifyingEffect(this,activeEffect)
+			}
+		})
+	}
+
 	async locationHitMessage() {
 		const locationResult=await AttackHandler.rollHitLocation(this);
 		if(locationResult) {
@@ -78,12 +88,12 @@ export class HLMActor extends Actor {
 	/**
 	 * Evaluate totals for all attributes & save results
 	 */
-	calculateAttributeTotals() {
+	calculateAttributeTotals(updateSource = true) {
 		const updateData={};
 		Object.keys(this.system.attributes).forEach((key) => {
 			updateData[key]=this.calculateSingleAttribute(key);
 		});
-		if(this._id) {
+		if(this._id && updateSource) {
 			this.update({"system.attributes": updateData});
 		}
 	}

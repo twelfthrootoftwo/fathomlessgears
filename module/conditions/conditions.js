@@ -234,70 +234,15 @@ export const IMPLEMENTED_CONDITIONS={
     }
 }
 
-export function initialiseEffectHooks() {
-    Hooks.on("createActiveEffect",(activeEffect,diffData,userId) => {
-        console.log("Creating effect!")
-        applyEffect(activeEffect.parent, activeEffect);
-        console.log(activeEffect.parent);
-    });
-
-    Hooks.on("deleteActiveEffect",(activeEffect,diffData,userId) => {
-        deleteEffect(activeEffect.parent, activeEffect);
-    });
-    
-    Hooks.on("updateActiveEffect", function(activeEffect, counterData, diffData, options, userId) {
-        let effectCounter = foundry.utils.getProperty(counterData, "flags.statuscounter.counter");
-        if (effectCounter) {
-            updateEffect(activeEffect.parent, activeEffect)
-        }
-    });
-}
-
-export function applyEffect(actor,effect) {
-    console.log("Applying effect!")
-    console.log(effect);
+export function applyAttributeModifyingEffect(actor,effect) {
     const statusName=effect.statuses.values().next().value;
-    const thisEffect=findImplementedCondition(statusName);
-    console.log(statusName)
     if(ATTRIBUTE_ONLY_CONDITIONS.includes(statusName)) {
-        console.log("Is attribute only");
+        const thisEffect=findImplementedCondition(statusName);
         let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
         if(!effectCounter) {
             effectCounter = new ActiveEffectCounter(1,effect.icon,effect);
         }
-        applyConditionModifier(actor,thisEffect,effectCounter.value);
-    } else {
-        switch(thisEffect){
-            default:
-                break;
-        }
-    }
-}
-
-export function updateEffect(actor,effect) {
-    const statusName=effect.statuses.values().next().value;
-    const thisEffect=findImplementedCondition(statusName);
-    if(ATTRIBUTE_ONLY_CONDITIONS.includes(statusName)) {
-        let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
-        applyConditionModifier(actor,thisEffect,effectCounter.value);
-    } else {
-        switch(thisEffect){
-            default:
-                break;
-        }
-    }
-}
-
-export function deleteEffect(actor,effect) {
-    const statusName=effect.statuses.values().next().value;
-    const thisEffect=findImplementedCondition(statusName);
-    if(ATTRIBUTE_ONLY_CONDITIONS.includes(statusName)) {
-        applyConditionModifier(actor,thisEffect,0);
-    } else {
-        switch(thisEffect){
-            default:
-                break;
-        }
+        applyConditionModifier(actor,thisEffect,Math.max(Math.min(effectCounter.value,3),-3));
     }
 }
 
@@ -346,5 +291,5 @@ function applyConditionModifier(actor,condition,value) {
             targetModifierList.push(newModifier);
         }
     })
-    actor.calculateAttributeTotals();
+    actor.calculateAttributeTotals(false);
 }
