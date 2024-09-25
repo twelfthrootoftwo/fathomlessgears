@@ -80,7 +80,6 @@ export class RollDialog extends HLMApplication {
         this.additionalDie=0;
         this.focused=actor.statuses.has(CONDITIONS.focused);
         this.cover=COVER_STATES.none;
-        console.log(this.flatBonuses);
         this.render(true);
     }
 
@@ -149,7 +148,6 @@ export class RollDialog extends HLMApplication {
         let totalBonus=0;
 
         [...this.flatModifiers,...this.flatBonuses].forEach((modifier) => {
-            console.log(modifier);
             if(modifier.classification == ROLL_MODIFIER_TYPE.modifier && modifier.active) {
                 totalAttr+=parseInt(modifier.value);
             } else if(modifier.classification == ROLL_MODIFIER_TYPE.bonus && modifier.active) {
@@ -177,7 +175,7 @@ export class RollDialog extends HLMApplication {
         if(this.internal) {
             await this.actor.triggerRolledInternal(this.internal,this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(),this.cover,[...this.flatModifiers,...this.flatBonuses,this.focused]);
         } else {
-            await game.rollHandler.rollAttribute(this.actor, this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(), this.cover,modifierStack);
+            await this.actor.rollAttribute(this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(), this.cover,modifierStack);
         }
         this.close();
     }

@@ -10,7 +10,6 @@ import {HLMItemSheet} from "./sheets/item-sheet.js";
 import {conditions} from "./conditions/conditions.js";
 import {GridHoverHUD} from "./tokens/grid-hover.js";
 import { GRID_HUD_LOCATION } from "./constants.js";
-import { RollHandler } from "./actions/roll-handler.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -54,7 +53,6 @@ Hooks.once("init", async function () {
 		addFshManager(app, html);
 	});
 
-	console.log("Initialising helpers");
 	initialiseHelpers();
 });
 
@@ -97,13 +95,20 @@ export const system_ready = new Promise((success) => {
 				[GRID_HUD_LOCATION.topLeft]: "Top Left",
 				[GRID_HUD_LOCATION.topRight]: "Top Right",
 			},
-			default: GRID_HUD_LOCATION.bottomLeft,
+			default: GRID_HUD_LOCATION.topRight,
 			onChange: value => {
 				game.gridHover.refresh();
 			}
 		})
+		game.settings.register("fathomlessgears","gridHUDOnHover",{
+			name: "Show grid HUD on hover",
+			hint: "If disabled, the grid HUD will only be visible via the lock hotkey",
+			scope: "client",
+			config: true,
+			type: Boolean,
+			default: true
+		})
 		GridHoverHUD.addGridHUD();
-		RollHandler.addRollHandler();
 
 		game.settings.register("fathomlessgears", "datafiles", {
 			name: "Source data files",

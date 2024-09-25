@@ -25,6 +25,7 @@
 .lock-prompt-text {
     color: var(--color-text-light);
     font-size: var(--font-size-15);
+    margin-bottom: -24px;
 }
 .bottom-left .lock-prompt-text {
     text-align: right;

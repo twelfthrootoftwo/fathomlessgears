@@ -57,3 +57,9 @@ User testing performed on this patch!
 * Redesigned roll dialog with toggles for all attribute/roll modifiers
 * Blind and Focused are detected by the roll dialog
 * Chat messages with attribute rolls show the modifiers applied
+
+## Version 0.4.1
+* Fixed Focus and Custom Mod showing up as roll tags when they weren't active
+* Grid HUD for fish shows remaining HP
+* Grid HUD location defaults to top right
+* Added a setting to turn off the grid HUD appearing on hover

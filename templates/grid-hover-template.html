@@ -1,9 +1,14 @@
 <div id="grid-hover-hud" class="grid-hover-hud flex-col {{position}}">
     <div class="lock-prompt-text">{{ lockPrompt }}</div>
-    {{#if grid}}
-    {{>
-        "systems/fathomlessgears/templates/partials/grid-box.html"
-        grid=grid
-    }}
+    <div class="margin-auto">
+        {{#if grid}}
+        {{>
+            "systems/fathomlessgears/templates/partials/grid-box.html"
+            grid=grid
+        }}
+        {{/if}}
+    </div>
+    {{#if hp}}
+        <div class="text-center">{{hp}} {{localize "GRID.remainingHP"}}</div>
     {{/if}}
 </div>
