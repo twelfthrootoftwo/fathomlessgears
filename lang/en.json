@@ -99,6 +99,9 @@
 	"ITEMTYPE.internal_npc": "Fish Internal",
 	"ITEMTYPE.tag": "Internal Tag",
 	"ITEMTYPE.template": "Template",
+	"ITEMTYPE.development": "Development",
+	"ITEMTYPE.maneuver": "Maneuver",
+
 
 	"COVERSTATE.none": "No cover",
 	"COVERSTATE.soft": "Soft cover",

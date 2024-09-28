@@ -6,7 +6,9 @@ const expectedFields={
     "internal": ["action_data","grid","name","tags","type","extra_rules"],
     "size": ["size"],
     "fisher": ["callsign","frame","internals","background","custom_background","unlocks","level"],
-    "fish": ["size","internals","template","mutations"]
+    "fish": ["size","internals","template","mutations"],
+    "development": ["name","description"],
+    "maneuver": ["name","ap_cost","action_text"]
 }
 
 const expectedAttributes={
@@ -15,6 +17,8 @@ const expectedAttributes={
     "size": [],
     "fisher": [],
     "fish": [],
+    "development": [],
+    "maneuver": []
 }
 Object.values(ATTRIBUTES).forEach((attribute) => {
     if(![ATTRIBUTES.mental,ATTRIBUTES.willpower].includes(attribute)){

@@ -146,6 +146,8 @@ export class Utils {
 			"frame_pc",
 			"internal_pc",
 			"internal_npc",
+			"development",
+			"maneuver"
 		];
 		return recognisedItems.includes(itemType);
 	}

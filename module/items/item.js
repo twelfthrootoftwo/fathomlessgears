@@ -216,6 +216,14 @@ export function createHLMItemSystem(itemType, data, source) {
 			console.log("Constructing grid...");
 			system=constructGridData(data);
 			break;
+		case ITEM_TYPES.development:
+			console.log("Constructing development...");
+			system=constructDevelopmentData(data);
+			break;
+		case ITEM_TYPES.maneuver:
+			console.log("Constructing maneuver...");
+			system=constructManeuverData(data);
+			break;
 	}
 	system.source=source
 	return system
@@ -313,6 +321,39 @@ function constructInternalNPCData(data) {
 	system.type=data.type;
 	system.grid_coords=unpackGridCoords(data.grid);
 	
+	return system
+}
+
+function constructDevelopmentData(data) {
+	const system={
+		attributes: {},
+		description: ""
+	};
+	Object.values(ATTRIBUTES).forEach((key) => {
+		if (Utils.isAttribute(key)){
+			system.attributes[key]=data[ATTRIBUTE_KEY_MAP[key]];
+		}
+	});
+	if(data.lightweight_construction) {
+		system.attributes.weight=-data.lightweight_construction
+	}
+	if(data.repair_kits) {
+		system.repair_kits=data.repair_kits
+	}
+	system.description=data.description;
+
+	return system
+}
+
+function constructManeuverData(data) {
+	const system={
+		action_text: data.action_text,
+		ap_cost: data.ap_cost
+	}
+	if(data.range) {
+		system.range=data.range;
+	}
+
 	return system
 }
 

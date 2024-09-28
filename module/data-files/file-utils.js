@@ -47,6 +47,10 @@ export function getTargetCompendium(dataType) {
             return retrieveOrCreateCompendium("size");
         case ITEM_TYPES.grid:
             return retrieveOrCreateCompendium("grid_type");
+        case ITEM_TYPES.development:
+            return retrieveOrCreateCompendium("development");
+        case ITEM_TYPES.maneuver:
+            return retrieveOrCreateCompendium("maneuver");
     };
     return null;
 }
@@ -71,6 +75,8 @@ const fileNameMapping = {
     "grids":[ITEM_TYPES.grid],
     "npc_item_data": [ITEM_TYPES.internal_npc],
     "fish_size_data": [ITEM_TYPES.size],
+    "fisher_developments": [ITEM_TYPES.development],
+    "fisher_maneuvers": [ITEM_TYPES.maneuver]
 }
 
 /**

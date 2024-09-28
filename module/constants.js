@@ -62,6 +62,8 @@ export const ITEM_TYPES = {
 	frame_pc: "frame_pc",
 	size: "size",
 	grid: "grid",
+	development: "development",
+	maneuver: "maneuver"
 }
 
 export const COVER_STATES = {
