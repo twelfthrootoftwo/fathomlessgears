@@ -338,8 +338,8 @@ function constructDevelopmentData(data) {
 			system.attributes[key]=data[ATTRIBUTE_KEY_MAP[key]];
 		}
 	});
-	if(data.lightweight_construction) {
-		system.attributes.weight=-data.lightweight_construction
+	if(data.lightweight_modifier) {
+		system.attributes.weight=-data.lightweight_modifier
 	}
 	if(data.repair_kits) {
 		system.repair_kits=data.repair_kits

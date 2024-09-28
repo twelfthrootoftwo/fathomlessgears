@@ -30,7 +30,7 @@ export class ItemsManager {
 		let acceptedTypes=[]
 		switch(this.actor.type) {
 			case "fisher":
-				acceptedTypes=[ITEM_TYPES.frame_pc, ITEM_TYPES.internal_pc];
+				acceptedTypes=[ITEM_TYPES.frame_pc, ITEM_TYPES.internal_pc, ITEM_TYPES.development, ITEM_TYPES.maneuver, ITEM_TYPES.deep_word];
 				break;
 			case "fish":
 				acceptedTypes=[ITEM_TYPES.internal_npc,ITEM_TYPES.size];
@@ -57,6 +57,15 @@ export class ItemsManager {
 			case ITEM_TYPES.internal_pc:
 			case ITEM_TYPES.internal_npc:
 				this.onInternalDrop(item);
+				break;
+			case ITEM_TYPES.development:
+				this.applyDevelopment(item);
+				break;
+			case ITEM_TYPES.maneuver:
+				this.applyManeuver(item);
+				break;
+			case ITEM_TYPES.deep_word:
+				this.applyDeepWord(item);
 				break;
 		}
 	}
@@ -258,5 +267,53 @@ export class ItemsManager {
 		internals.forEach((internal) => {
 			this.removeInternal(internal.id);
 		});
+	}
+
+	async applyDevelopment(development) {
+		console.log("Applying development");
+		const item=await Item.create(development,{parent: this.actor});
+
+		//Special logic for Encore, since it's an activated development
+		if(item.name=="Encore") {
+			item.setFlag("fathomlessgears","activated",false);
+		}
+		//Apply attributes
+		Object.keys(item.system.attributes).forEach((key) => {
+			if(Utils.isAttribute(key) && item.system.attributes[key]!=0) {
+				const modifier=new AttributeElement(
+					item.system.attributes[key],
+					item._id,
+					"development",
+					item.name
+				);
+				this.actor.addAttributeModifier(key,modifier);
+			}
+		})
+		//Modify resources
+		if(item.system.repair_kits) {this.actor.modifyResourceValue("repair",item.system.repair_kits);}
+		this.actor.calculateBallast();
+		
+		await this.actor.update({"system": this.actor.system});
+		return item._id;
+	}
+
+	async applyManeuver(maneuver) {
+		console.log("Applying maneuver");
+		const item=await Item.create(maneuver,{parent: this.actor});
+
+		item.setFlag("fathomlessgears","activated",false);
+		
+		await this.actor.update({"system": this.actor.system});
+		return item._id;
+	}
+
+	async applyDeepWord(word) {
+		console.log("Applying deep word");
+		const item=await Item.create(word,{parent: this.actor});
+
+		item.setFlag("fathomlessgears","activated",false);
+		
+		await this.actor.update({"system": this.actor.system});
+		return item._id;
 	}
 }
