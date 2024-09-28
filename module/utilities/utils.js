@@ -147,7 +147,8 @@ export class Utils {
 			"internal_pc",
 			"internal_npc",
 			"development",
-			"maneuver"
+			"maneuver",
+			"deep_word"
 		];
 		return recognisedItems.includes(itemType);
 	}

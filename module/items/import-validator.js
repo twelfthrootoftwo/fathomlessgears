@@ -8,7 +8,8 @@ const expectedFields={
     "fisher": ["callsign","frame","internals","background","custom_background","unlocks","level"],
     "fish": ["size","internals","template","mutations"],
     "development": ["name","description"],
-    "maneuver": ["name","ap_cost","action_text"]
+    "maneuver": ["name","ap_cost","action_text"],
+    "deep_word": ["short_name","fathomless","ap_cost"]
 }
 
 const expectedAttributes={
@@ -18,7 +19,8 @@ const expectedAttributes={
     "fisher": [],
     "fish": [],
     "development": [],
-    "maneuver": []
+    "maneuver": [],
+    "deep_word": []
 }
 Object.values(ATTRIBUTES).forEach((attribute) => {
     if(![ATTRIBUTES.mental,ATTRIBUTES.willpower].includes(attribute)){

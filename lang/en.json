@@ -101,6 +101,7 @@
 	"ITEMTYPE.template": "Template",
 	"ITEMTYPE.development": "Development",
 	"ITEMTYPE.maneuver": "Maneuver",
+	"ITEMTYPE.deep_word": "Deep Word",
 
 
 	"COVERSTATE.none": "No cover",

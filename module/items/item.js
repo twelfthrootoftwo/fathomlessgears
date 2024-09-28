@@ -224,6 +224,10 @@ export function createHLMItemSystem(itemType, data, source) {
 			console.log("Constructing maneuver...");
 			system=constructManeuverData(data);
 			break;
+		case ITEM_TYPES.deep_word:
+			console.log("Constructing deep word...");
+			system=constructDeepWordData(data);
+			break;
 	}
 	system.source=source
 	return system
@@ -351,9 +355,29 @@ function constructManeuverData(data) {
 		ap_cost: data.ap_cost
 	}
 	if(data.range) {
-		system.range=data.range;
+		system.attack = new Attack("mental",ATTRIBUTES.mental,0,0,data.range);
 	}
 
+	return system
+}
+
+function constructDeepWordData(data) {
+	const system={
+		ap_cost: data.ap_cost,
+		action_text: data.action_text || data.extra_rules
+	}
+	if(data.range) {
+		system.attack = new Attack("mental",ATTRIBUTES.mental,0,0,data.range);
+	}
+	if(data.damage) {
+		if(data.damage=="Your Current Backlash") {
+			system.attack.damage = "Your current backlash (_BACKLASH_VALUE_)"
+		}
+	}
+	system.tags=[
+		new InternalTag("fathomless",data.fathomless)
+	]
+	
 	return system
 }
 

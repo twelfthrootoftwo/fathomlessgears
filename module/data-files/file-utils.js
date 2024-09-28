@@ -51,6 +51,8 @@ export function getTargetCompendium(dataType) {
             return retrieveOrCreateCompendium("development");
         case ITEM_TYPES.maneuver:
             return retrieveOrCreateCompendium("maneuver");
+        case ITEM_TYPES.deep_word:
+            return retrieveOrCreateCompendium("deep_word");
     };
     return null;
 }
@@ -76,7 +78,8 @@ const fileNameMapping = {
     "npc_item_data": [ITEM_TYPES.internal_npc],
     "fish_size_data": [ITEM_TYPES.size],
     "fisher_developments": [ITEM_TYPES.development],
-    "fisher_maneuvers": [ITEM_TYPES.maneuver]
+    "fisher_maneuvers": [ITEM_TYPES.maneuver],
+    "deep_words": [ITEM_TYPES.deep_word]
 }
 
 /**

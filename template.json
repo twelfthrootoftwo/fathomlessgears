@@ -217,7 +217,7 @@
 		}
 	},
 	"Item": {
-		"types": ["tag","internal_pc","internal_npc","frame_pc","size","grid","development","maneuver"],
+		"types": ["tag","internal_pc","internal_npc","frame_pc","size","grid","development","maneuver","deep_word"],
 		"htmlFields": ["description"],
 		"templates": {
 			"source":{
