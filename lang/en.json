@@ -46,6 +46,7 @@
 	"SHEET.scanfalse": "Scan",
 	"SHEET.initgearwright": "Import from Gearwright",
 	"SHEET.initmanual": "Create manually",
+	"SHEET.activated": "Activated this scene",
 
 	"MANAGER.init": "Initialising",
 	"MANAGER.datafile": "Data file",

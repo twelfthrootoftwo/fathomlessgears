@@ -84,6 +84,11 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		})
 
+		//Other items
+		context.developments=items.development;
+		context.maneuvers=items.maneuver;
+		context.deep_words=items.deep_word;
+
 		context.interactiveGrid=false;
 		if(this.actor.getFlag("fathomlessgears","interactiveGrid")){
 			context.interactiveGrid=true;

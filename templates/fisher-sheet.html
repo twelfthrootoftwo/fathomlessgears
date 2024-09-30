@@ -113,18 +113,39 @@
                                 Touch of the Deep coming soon<sup>TM</sup>
                             </div>
                         </div>
-                        <div class="col half-col">
+                        <div class="col half-col flex-col">
                             <div class="options-set">
                                 <h2 class="options-header">
                                     Developments
                                 </h2>
-                                Developments coming soon<sup>TM</sup>
+                                {{#each developments}}
+                                {{>
+                                    "systems/fathomlessgears/templates/partials/development-partial.html"
+                                    item=this
+                                }}
+                                {{/each}}
                             </div>
                             <div class="options-set">
                                 <h2 class="options-header">
                                     Maneuvers
                                 </h2>
-                                Maneuvers coming soon<sup>TM</sup>
+                                {{#each maneuvers}}
+                                {{>
+                                    "systems/fathomlessgears/templates/partials/maneuver-partial.html"
+                                    item=this
+                                }}
+                                {{/each}}
+                            </div>
+                            <div class="options-set">
+                                <h2 class="options-header">
+                                    Deep Words
+                                </h2>
+                                {{#each deep_words}}
+                                {{>
+                                    "systems/fathomlessgears/templates/partials/maneuver-partial.html"
+                                    item=this
+                                }}
+                                {{/each}}
                             </div>
                         </div>
                     </div>

@@ -1,0 +1,18 @@
+<div class="internal-box flex-col " data-id="id{{item._id}}">
+    <div class="internal-header flex-row">
+        <div class="expander-icon"></div>
+        <h3 class="internal-name">{{item.name}}</h3>
+        <div class="spacer"></div>
+        <div class="btn btn-primary post-button" data-id="id{{internal._id}}">{{localize "SHEET.post"}}</div>
+    </div>
+    <div class="internal-body">
+        <div class="delete-overlay">
+            <div class="delete-box">
+                <div class="delete-internal btn" data-id="id{{item._id}}">
+                    {{localize "SHEET.delete"}}
+                </div>
+            </div>
+        </div>
+        <div class="internal-text">{{{item.system.description}}}</div>
+    </div>
+</div>
