@@ -250,6 +250,10 @@ label.marbles {
     font-size: var(--font-size-12);
     text-align: center;
 }
+.activated-text {
+    font-size: var(--font-size-12);
+    margin: 1px 4px;
+}
 
 /*
 ---------------------------------
