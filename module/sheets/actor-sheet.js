@@ -91,6 +91,16 @@ export class HLMActorSheet extends ActorSheet {
 		context.maneuvers.forEach((maneuver) => {
 			maneuver.activated=maneuver.getFlag("fathomlessgears","activated")
 		})
+		const encore=context.developments.find((development) => development.isEncore())
+		console.log(encore)
+		if(encore) {
+			encore.activated=encore.getFlag("fathomlessgears","activated")
+			context.encore={
+				name: encore.name,
+				id: encore.id,
+				activated: encore.getFlag("fathomlessgears","activated")
+			}
+		}
 
 		context.interactiveGrid=false;
 		if(this.actor.getFlag("fathomlessgears","interactiveGrid")){

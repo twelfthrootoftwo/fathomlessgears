@@ -39,14 +39,15 @@
 
 	"SHEET.internalbreak": "Break",
 	"SHEET.internalfix": "Repair",
-	"SHEET.post": "Use",
+	"SHEET.post": "Post",
 	"SHEET.delete": "Remove",
 	"SHEET.hitlocation": "Hit location",
 	"SHEET.scantrue": "Revoke scan",
 	"SHEET.scanfalse": "Scan",
 	"SHEET.initgearwright": "Import from Gearwright",
 	"SHEET.initmanual": "Create manually",
-	"SHEET.activated": "Activated this scene",
+	"SHEET.activated": "Activated",
+	"SHEET.reset": "Reset",
 
 	"MANAGER.init": "Initialising",
 	"MANAGER.datafile": "Data file",

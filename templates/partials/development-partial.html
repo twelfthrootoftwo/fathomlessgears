@@ -3,6 +3,10 @@
         <div class="expander-icon"></div>
         <h3 class="internal-name">{{item.name}}</h3>
         <div class="spacer"></div>
+        {{#if item.isEncore}}
+            <p class="activated-text">{{localize "SHEET.activated" }}</p>
+            <input class="inline-checkbox maneuver-checkbox" type="checkbox" data-selector="activated" data-id="id{{item._id}}" {{checked item.activated}}>
+        {{/if}}
         <div class="btn btn-primary post-button" data-id="id{{internal._id}}">{{localize "SHEET.post"}}</div>
     </div>
     <div class="internal-body">

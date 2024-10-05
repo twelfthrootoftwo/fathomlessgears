@@ -126,9 +126,17 @@
                                 {{/each}}
                             </div>
                             <div class="options-set">
-                                <h2 class="options-header">
-                                    Maneuvers
-                                </h2>
+                                <div class="options-header flex-row">
+                                    <div>
+                                        Maneuvers
+                                    </div>
+                                    <div class="spacer"></div>
+                                    {{#if encore}}
+                                        <p class="activated-text">{{ encore.name }}</p>
+                                        <input class="inline-checkbox maneuver-checkbox" type="checkbox" data-selector="activated" data-id="id{{encore.id}}" {{checked encore.activated}}>
+                                    {{/if}}
+                                    <button class="btn btn-primary post-button reset-button">{{localize "SHEET.reset"}}</button>
+                                </div>
                                 {{#each maneuvers}}
                                 {{>
                                     "systems/fathomlessgears/templates/partials/maneuver-partial.html"

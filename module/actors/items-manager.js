@@ -288,7 +288,7 @@ export class ItemsManager {
 		const item=await Item.create(development,{parent: this.actor});
 
 		//Special logic for Encore, since it's an activated development
-		if(item.name=="Encore") {
+		if(item.isEncore()) {
 			item.setFlag("fathomlessgears","activated",false);
 		}
 		//Apply attributes

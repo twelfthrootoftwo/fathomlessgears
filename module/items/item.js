@@ -92,6 +92,10 @@ export class HLMItem extends Item {
 		return this.type==ITEM_TYPES.maneuver
 	}
 
+	isEncore() {
+		return this.name=="Encore"
+	}
+
 	isOptics() {
 		let result=false;
 		if(this.isInternal()) {
