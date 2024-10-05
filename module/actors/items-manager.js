@@ -70,6 +70,15 @@ export class ItemsManager {
 		}
 	}
 
+	async removeItemCallback(uuid) {
+		const item=this.actor.items.get(uuid);
+		if(item.type == ITEM_TYPES.internal_npc || item.type ==ITEM_TYPES.internal_pc) {
+			this.onInternalRemove(uuid);
+		} else {
+			this._removeItem(uuid);
+		}
+	}
+
 	/**
 	 * Item drop processing for grid
 	 * @param {Item} grid
@@ -174,7 +183,7 @@ export class ItemsManager {
 				{"actor": this.actor, "uuid": uuid}
 			)
 		} else {
-			this.removeInternal(uuid);
+			this.removeItem(uuid);
 		}
 	}
 
@@ -244,19 +253,24 @@ export class ItemsManager {
 	 * Deletes an internal from this actor
 	 * @param {string} uuid The UUID of the internal to delete
 	 */
-	async removeInternal(uuid) {
-		const internal=this.actor.items.get(uuid);
-		Object.keys(internal.system.attributes).forEach((key) => {
-			if(internal.system.attributes[key]!=0) {
-				this.actor.removeAttributeModifier(key,uuid);
-			}
-		});
+	async _removeItem(uuid) {
+		const item=this.actor.items.get(uuid);
+		const isInternal = item.type==ITEM_TYPES.internal_npc || item.type==ITEM_TYPES.internal_pc
+		if(item.system.attributes) {
+			Object.keys(item.system.attributes).forEach((key) => {
+				if(item.system.attributes[key]!=0) {
+					this.actor.removeAttributeModifier(key,uuid);
+				}
+			});
+		}
 		this.actor.calculateBallast();
-		if(this.actor.system.resources) this.actor.modifyResourceValue("repair",-1*internal.system.repair_kits);
+		if(this.actor.system.resources) this.actor.modifyResourceValue("repair",-1*item.system.repair_kits);
 		await this.actor.update({"system": this.actor.system});
-		await internal.delete();
+		await item.delete();
 		
-		Hooks.callAll("internalDeleted",this)
+		if(isInternal) {
+			Hooks.callAll("internalDeleted",this)
+		}
 	}
 
 	/**
@@ -315,5 +329,11 @@ export class ItemsManager {
 		
 		await this.actor.update({"system": this.actor.system});
 		return item._id;
+	}
+
+	async toggleManeuver(uuid) {
+		const item=this.actor.items.get(uuid);
+		const currentState=item.getFlag("fathomlessgears","activated");
+		item.setFlag("fathomlessgears","activated",!currentState)
 	}
 }

@@ -88,6 +88,10 @@ export class HLMItem extends Item {
 		return [ITEM_TYPES.internal_npc, ITEM_TYPES.internal_pc].includes(this.type);
 	}
 
+	isManeuver() {
+		return this.type==ITEM_TYPES.maneuver
+	}
+
 	isOptics() {
 		let result=false;
 		if(this.isInternal()) {
@@ -106,6 +110,15 @@ export class HLMItem extends Item {
 				break;
 			case ITEM_TYPES.internal_npc:
 			case ITEM_TYPES.internal_pc:
+				if(this.system.attack) {
+					this.internalAttack(actor);
+				} else {
+					this.postFlatInternal(actor);
+				}
+				break;
+			case ITEM_TYPES.development:
+			case ITEM_TYPES.maneuver:
+			case ITEM_TYPES.deep_word:
 				if(this.system.attack) {
 					this.internalAttack(actor);
 				} else {
@@ -151,6 +164,12 @@ export class HLMItem extends Item {
 			speaker: {actor: actor},
 			content: displayMessage,
 		});
+	}
+
+	getItemDescriptionText() {
+		if(this.isInternal()) {return this.getInternalDescriptionText;}
+		if(this.system.action_text) return this.system.action_text;
+		if(this.system.description_text) return this.system.description_text;
 	}
 
 	
@@ -344,7 +363,7 @@ function constructDevelopmentData(data) {
 	if(data.repair_kits) {
 		system.repair_kits=data.repair_kits
 	}
-	system.description=data.description;
+	system.description_text=data.description;
 
 	return system
 }

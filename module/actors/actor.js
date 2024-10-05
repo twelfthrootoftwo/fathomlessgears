@@ -216,9 +216,9 @@ export class HLMActor extends Actor {
 	 * Posts the chat message associated with an internal
 	 * @param {string} uuid The ID of the internal
 	 */
-	async postInternal(uuid) {
-		const internal=this.items.get(uuid);
-		internal.postToChat(this);
+	async postItem(uuid) {
+		const item=this.items.get(uuid);
+		item.postToChat(this);
 	}
 
 	/**

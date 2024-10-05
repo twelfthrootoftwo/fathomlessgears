@@ -88,6 +88,9 @@ export class HLMActorSheet extends ActorSheet {
 		context.developments=items.development;
 		context.maneuvers=items.maneuver;
 		context.deep_words=items.deep_word;
+		context.maneuvers.forEach((maneuver) => {
+			maneuver.activated=maneuver.getFlag("fathomlessgears","activated")
+		})
 
 		context.interactiveGrid=false;
 		if(this.actor.getFlag("fathomlessgears","interactiveGrid")){
@@ -139,12 +142,13 @@ export class HLMActorSheet extends ActorSheet {
 		super.activateListeners(html);
 		html.find(".rollable").click(this._onRoll.bind(this));
 		html.find(".break-button").click(this.breakInternal.bind(this));
-		html.find(".post-button").click(this.postInternal.bind(this));
-		html.find(".delete-internal").click(this.deleteInternal.bind(this));
+		html.find(".post-button").click(this.postItem.bind(this));
+		html.find(".delete-item").click(this.deleteItem.bind(this));
 		html.find("#hit-location").click(this.locationHitMessage.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
 		html.find("#initialise-import").click(this.selectImport.bind(this))
 		html.find("#initialise-manual").click(this.selectManualSetup.bind(this))
+		html.find(".maneuver-checkbox").click(this.toggleManeuver.bind(this));
 		if(this.actor.getFlag("fathomlessgears","interactiveGrid")) {
 			html=this.actor.grid.activateListeners(html);
 		}
@@ -231,14 +235,19 @@ export class HLMActorSheet extends ActorSheet {
 		document.querySelector(`[data-id=id${uuid}]`,".post-button").classList.toggle("btn-dark");
 	}
 
-	postInternal(event) {
+	toggleManeuver(event) {
 		if(!this.testOwnership()) {return false;}
-		this.actor.postInternal(safeIdClean(event.target.dataset.id));
+		this.actor.itemsManager.toggleManeuver(safeIdClean(event.target.dataset.id))
 	}
 
-	deleteInternal(event) {
+	postItem(event) {
 		if(!this.testOwnership()) {return false;}
-		this.actor.itemsManager.onInternalRemove(safeIdClean(event.target.dataset.id));
+		this.actor.postItem(safeIdClean(event.target.dataset.id));
+	}
+
+	deleteItem(event) {
+		if(!this.testOwnership()) {return false;}
+		this.actor.itemsManager.removeItemCallback(safeIdClean(event.target.dataset.id));
 	}
 
 	locationHitMessage(event) {
