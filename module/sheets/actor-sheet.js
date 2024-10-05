@@ -92,7 +92,6 @@ export class HLMActorSheet extends ActorSheet {
 			maneuver.activated=maneuver.getFlag("fathomlessgears","activated")
 		})
 		const encore=context.developments.find((development) => development.isEncore())
-		console.log(encore)
 		if(encore) {
 			encore.activated=encore.getFlag("fathomlessgears","activated")
 			context.encore={

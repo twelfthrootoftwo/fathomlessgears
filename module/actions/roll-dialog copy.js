@@ -80,7 +80,6 @@ export class RollDialog extends HLMApplication {
         this.additionalDie=0;
         this.focused=actor.statuses.has(CONDITIONS.focused);
         this.cover=COVER_STATES.none;
-        console.log(this.flatBonuses);
         this.render(true);
     }
 
@@ -149,7 +148,6 @@ export class RollDialog extends HLMApplication {
         let totalBonus=0;
 
         [...this.flatModifiers,...this.flatBonuses].forEach((modifier) => {
-            console.log(modifier);
             if(modifier.classification == ROLL_MODIFIER_TYPE.modifier && modifier.active) {
                 totalAttr+=parseInt(modifier.value);
             } else if(modifier.classification == ROLL_MODIFIER_TYPE.bonus && modifier.active) {
