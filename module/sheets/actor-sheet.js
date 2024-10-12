@@ -153,6 +153,7 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".break-button").click(this.breakInternal.bind(this));
 		html.find(".post-button").click(this.postItem.bind(this));
 		html.find(".delete-item").click(this.deleteItem.bind(this));
+		html.find(".reset-button").click(this.resetManeuvers.bind(this));
 		html.find("#hit-location").click(this.locationHitMessage.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
 		html.find("#initialise-import").click(this.selectImport.bind(this))
@@ -247,6 +248,20 @@ export class HLMActorSheet extends ActorSheet {
 	toggleManeuver(event) {
 		if(!this.testOwnership()) {return false;}
 		this.actor.itemsManager.toggleManeuver(safeIdClean(event.target.dataset.id))
+	}
+
+	resetManeuvers(event) {
+		if(!this.testOwnership()) {return false;}
+		const maneuvers=this.actor.itemTypes.maneuver;
+		maneuvers.forEach((maneuver) => {
+			maneuver.setFlag("fathomlessgears","activated",false);
+		})
+		const developments=this.actor.itemTypes.development;
+		developments.forEach((development) => {
+			if(development.isEncore()) {
+				development.setFlag("fathomlessgears","activated",false);
+			}
+		})
 	}
 
 	postItem(event) {

@@ -354,7 +354,7 @@ button.button.post-message {
     height: 19px;
     width: 40px;
 }
-.post-button {
+.sheet-row-button {
     margin: 0px 1px;
     padding: 1px 2px;
     font-size: var(--font-size-13);
