@@ -229,7 +229,7 @@ export class HLMActor extends Actor {
 	 * @param {int} totalFlat Total flat bonus to the roll
 	 * @param {COVER_STATE} cover Whether or not this attack is affected by cover
 	 */
-	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat, cover,modifierStack) {
+	async triggerRolledItem(uuid,attackKey,totalDieCount,totalFlat, cover,modifierStack) {
 		const internal=this.items.get(uuid);
 		const defenceKey=game.rollHandler.isTargetedRoll(attackKey);
 		const rollOutput=await game.rollHandler.rollTargeted(this, attackKey,defenceKey,totalDieCount,totalFlat, cover,modifierStack);
@@ -237,7 +237,7 @@ export class HLMActor extends Actor {
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: internal,
-				minor_text: internal.getInternalDescriptionText(),
+				minor_text: internal.getItemDescriptionText(),
 				major_text: rollOutput.text,
 				showDamage: rollOutput.result!=HIT_TYPE.miss,
 				damageText: game.i18n.localize("INTERNALS.damage"),
