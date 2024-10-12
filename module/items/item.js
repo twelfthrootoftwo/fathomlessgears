@@ -354,7 +354,7 @@ function constructInternalNPCData(data) {
 function constructDevelopmentData(data) {
 	const system={
 		attributes: {},
-		description: ""
+		description_text: ""
 	};
 	Object.values(ATTRIBUTES).forEach((key) => {
 		if (Utils.isAttribute(key)){

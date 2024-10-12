@@ -3,7 +3,7 @@
         <div class="expander-icon"></div>
         <h3 class="internal-name">{{item.name}}</h3>
         <div class="spacer"></div>
-        <div class="btn btn-primary post-button" data-id="id{{internal._id}}">{{localize "SHEET.post"}}</div>
+        <div class="btn btn-primary post-button" data-id="id{{item._id}}">{{localize "SHEET.post"}}</div>
     </div>
     <div class="internal-body">
         <div class="delete-overlay">
@@ -13,6 +13,6 @@
                 </div>
             </div>
         </div>
-        <div class="internal-text">{{{item.system.description}}}</div>
+        <div class="internal-text">{{{item.system.description_text}}}</div>
     </div>
 </div>
