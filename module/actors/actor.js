@@ -284,7 +284,7 @@ export class HLMActor extends Actor {
 	async removeInternalDeactivateGrid(proceed,args) {
 		if(proceed) {
 			await args.actor.removeInteractiveGrid();
-			args.actor.itemsManager.removeInternal(args.uuid);
+			args.actor.itemsManager._removeItem(args.uuid);
 		}
 	}
 

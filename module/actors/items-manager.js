@@ -279,7 +279,7 @@ export class ItemsManager {
 	async removeInternals() {
 		const internals=this.actor.itemTypes.internal_pc.concat(this.actor.itemTypes.internal_npc);
 		internals.forEach((internal) => {
-			this.removeInternal(internal.id);
+			this._removeItem(internal.id);
 		});
 	}
 

@@ -117,7 +117,7 @@ export class HLMItem extends Item {
 				if(this.system.attack) {
 					this.internalAttack(actor);
 				} else {
-					this.postFlatInternal(actor);
+					this.postFlatItem(actor);
 				}
 				break;
 			case ITEM_TYPES.development:
@@ -126,7 +126,7 @@ export class HLMItem extends Item {
 				if(this.system.attack) {
 					this.internalAttack(actor);
 				} else {
-					this.postFlatInternal(actor);
+					this.postFlatItem(actor);
 				}
 				break;
 			default:
@@ -155,12 +155,12 @@ export class HLMItem extends Item {
 		game.rollHandler.startRollDialog(actor, attackKey,this._id);
 	}
 
-	async postFlatInternal(actor) {
+	async postFlatItem(actor) {
 		const displayMessage = await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: this,
-				major_text: this.getInternalDescriptionText(),
+				major_text: this.getItemDescriptionText(),
 				minor_text: false
 			}
 		);
@@ -171,7 +171,7 @@ export class HLMItem extends Item {
 	}
 
 	getItemDescriptionText() {
-		if(this.isInternal()) {return this.getInternalDescriptionText;}
+		if(this.isInternal()) {return this.getInternalDescriptionText();}
 		if(this.system.action_text) return this.system.action_text;
 		if(this.system.description_text) return this.system.description_text;
 	}
