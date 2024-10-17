@@ -1,4 +1,4 @@
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE} from "../constants.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES} from "../constants.js";
 
 export class Utils {
 	static getLocalisedAttributeLabel(attrKey) {
@@ -139,18 +139,7 @@ export class Utils {
 	}
 
 	static isItem(itemType) {
-		const recognisedItems = [
-			"tag",
-			"size",
-			"grid",
-			"frame_pc",
-			"internal_pc",
-			"internal_npc",
-			"development",
-			"maneuver",
-			"deep_word"
-		];
-		return recognisedItems.includes(itemType);
+		return Object.keys(ITEM_TYPES).includes(itemType)
 	}
 
 	static identifyAttackKey(internalType) {

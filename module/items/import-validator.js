@@ -9,7 +9,8 @@ const expectedFields={
     "fish": ["size","internals","template","mutations"],
     "development": ["name","description"],
     "maneuver": ["name","ap_cost","action_text"],
-    "deep_word": ["short_name","fathomless","ap_cost"]
+    "deep_word": ["short_name","fathomless","ap_cost"],
+    "background": ["marbles"]
 }
 
 const expectedAttributes={
@@ -20,11 +21,14 @@ const expectedAttributes={
     "fish": [],
     "development": [],
     "maneuver": [],
-    "deep_word": []
+    "deep_word": [],
+    "background": []
 }
 Object.values(ATTRIBUTES).forEach((attribute) => {
     if(![ATTRIBUTES.mental,ATTRIBUTES.willpower].includes(attribute)){
         expectedFields.frame.push(ATTRIBUTE_KEY_MAP[attribute]);
+    } else {
+        expectedFields.background.push(ATTRIBUTE_KEY_MAP[attribute]);
     }
     expectedFields.internal.push(ATTRIBUTE_KEY_MAP[attribute]);
     if(attribute!=ATTRIBUTES.ballast){

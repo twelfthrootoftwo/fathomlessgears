@@ -64,7 +64,8 @@ export const ITEM_TYPES = {
 	grid: "grid",
 	development: "development",
 	maneuver: "maneuver",
-	deep_word: "deep_word"
+	deep_word: "deep_word",
+	background: "background"
 }
 
 export const COVER_STATES = {

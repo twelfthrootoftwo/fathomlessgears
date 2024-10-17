@@ -366,7 +366,8 @@ async function saveToCompendium(preparedData, dataTypes, fileId, oldFile, dialog
  */
 async function createItem(itemName,jsonData,itemType,sourceId, compendium) {
 	const name=jsonData.name ? jsonData.name : 
-		jsonData.short_name ? jsonData.short_name : 
+		jsonData.short_name ? jsonData.short_name :
+		jsonData.background ? jsonData.background :
 		Utils.capitaliseWords(Utils.fromLowerHyphen(itemName));
 	const record={
 		"name": name,

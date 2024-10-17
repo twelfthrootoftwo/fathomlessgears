@@ -331,6 +331,11 @@ export class ItemsManager {
 		return item._id;
 	}
 
+	async applyBackground(background) {
+		console.log("Applying background");
+		const item=await Item.create(background,{parent: this.actor});
+	}
+
 	async toggleManeuver(uuid) {
 		const item=this.actor.items.get(uuid);
 		const currentState=item.getFlag("fathomlessgears","activated");

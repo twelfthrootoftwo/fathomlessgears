@@ -104,6 +104,7 @@
 	"ITEMTYPE.development": "Development",
 	"ITEMTYPE.maneuver": "Maneuver",
 	"ITEMTYPE.deep_word": "Deep Word",
+	"ITEMTYPE.background": "Background",
 
 
 	"COVERSTATE.none": "No cover",

@@ -251,6 +251,10 @@ export function createHLMItemSystem(itemType, data, source) {
 			console.log("Constructing deep word...");
 			system=constructDeepWordData(data);
 			break;
+		case ITEM_TYPES.background:
+			console.log("Constructing background...");
+			system=constructBackgroundData(data);
+			break;
 	}
 	system.source=source
 	return system
@@ -401,6 +405,21 @@ function constructDeepWordData(data) {
 		new InternalTag("fathomless",data.fathomless)
 	]
 	
+	return system
+}
+
+function constructBackgroundData(data) {
+	const system={
+		attributes: {},
+		marbles: 0
+	}
+	Object.values(ATTRIBUTES).forEach((key) => {
+		if (Utils.isAttribute(key)){
+			system.attributes[key]=data[ATTRIBUTE_KEY_MAP[key]];
+		}
+	});
+	system.marbles=data.marbles;
+
 	return system
 }
 
