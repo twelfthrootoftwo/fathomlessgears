@@ -32,6 +32,7 @@ async function buildFisher(actor,data) {
 	const gridObject=await constructGrid(actor);
 	await constructFisherData(data,actor);
 	await applyFrame(data,actor,gridObject);
+	await applyAdditionalFisher(data,actor);
 	await applyInternals(data,actor,gridObject);
 	if(actor.getFlag("fathomlessgears","interactiveGrid")) {
 		mapGridState(actor.grid,gridObject);
@@ -104,6 +105,30 @@ async function applyInternals(importData,actor,gridObject) {
 				space.setInternal(internalId,`${internal.system.type}Internal`);
 			})
 		}
+	}
+}
+
+async function applyAdditionalFisher(importData,actor) {
+	console.log(importData);
+	const developments=importData.developments;
+	let targetCompendium = "development";
+	for(const developmentName of developments) {
+		const development=await findCompendiumItemFromName(targetCompendium,Utils.capitaliseWords(Utils.fromLowerHyphen(developmentName)));
+		await actor.itemsManager.applyDevelopment(development);
+	}
+
+	const maneuvers=importData.maneuvers;
+	targetCompendium = "maneuver";
+	for(const maneuverName of maneuvers) {
+		const maneuver=await findCompendiumItemFromName(targetCompendium,Utils.capitaliseWords(Utils.fromLowerHyphen(maneuverName)));
+		await actor.itemsManager.applyManeuver(maneuver);
+	}
+
+	const words=importData.deep_words;
+	targetCompendium = "deep_word";
+	for(const wordName of words) {
+		const word=await findCompendiumItemFromName(targetCompendium,Utils.capitaliseWords(Utils.fromLowerHyphen(wordName)));
+		await actor.itemsManager.applyDeepWord(word);
 	}
 }
 
