@@ -184,6 +184,8 @@ export class HLMActor extends Actor {
 		if(!Utils.isResource(resourceKey)) return false;
 		this.system.resources[resourceKey].value+=value;
 		this.system.resources[resourceKey].max+=value;
+		if(this.system.resources[resourceKey].value < 0) this.system.resources[resourceKey].value=0;
+		if(this.system.resources[resourceKey].max < 0) this.system.resources[resourceKey].max=0;
 		return true;
 	}
 

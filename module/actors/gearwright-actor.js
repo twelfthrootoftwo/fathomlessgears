@@ -1,7 +1,7 @@
 import { testFieldsExist } from "../items/import-validator.js";
 import {Utils} from "../utilities/utils.js";
 import { constructGrid } from "../grid/grid-base.js";
-import { ACTOR_TYPES, GRID_SPACE_STATE } from "../constants.js";
+import { ACTOR_TYPES, CUSTOM_BACKGROUND_PART, GRID_SPACE_STATE } from "../constants.js";
 
 /**
  * Build an actor based on a Gearwright save (including interactive grid)
@@ -32,6 +32,7 @@ async function buildFisher(actor,data) {
 	const gridObject=await constructGrid(actor);
 	await constructFisherData(data,actor);
 	await applyFrame(data,actor,gridObject);
+	await applyBackground(data,actor);
 	await applyAdditionalFisher(data,actor);
 	await applyInternals(data,actor,gridObject);
 	if(actor.getFlag("fathomlessgears","interactiveGrid")) {
@@ -108,8 +109,33 @@ async function applyInternals(importData,actor,gridObject) {
 	}
 }
 
+async function applyBackground(importData,actor) {
+	const backgroundName=importData.background;
+	const backgroundTemp=await findCompendiumItemFromName("background",Utils.capitaliseWords(Utils.fromLowerHyphen(backgroundName)));
+	const background=await Item.create(backgroundTemp);
+		
+	if(backgroundName=="custom"){
+		importData.custom_background.forEach((item) => {
+			switch(item) {
+				case CUSTOM_BACKGROUND_PART.willpower:
+					background.system.attributes.willpower=background.system.attributes.willpower+1;
+					break;
+				case CUSTOM_BACKGROUND_PART.mental:
+					background.system.attributes.mental=background.system.attributes.mental+1;
+					break;
+				case CUSTOM_BACKGROUND_PART.marbles:
+					background.system.marbles=background.system.marbles+1;
+					break;
+				default:
+					break;
+			}
+		})
+		await background.update({"system": background.system});
+	} 
+	await actor.itemsManager.applyBackground(background);
+}
+
 async function applyAdditionalFisher(importData,actor) {
-	console.log(importData);
 	const developments=importData.developments;
 	let targetCompendium = "development";
 	for(const developmentName of developments) {

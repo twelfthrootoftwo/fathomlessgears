@@ -267,7 +267,10 @@ export class ItemsManager {
 			});
 		}
 		this.actor.calculateBallast();
-		if(this.actor.system.resources) this.actor.modifyResourceValue("repair",-1*item.system.repair_kits);
+		if(this.actor.system.resources) {
+			if(item.system.repair_kits) this.actor.modifyResourceValue("repair",-1*item.system.repair_kits);
+			if(item.system.marbles) this.actor.modifyResourceValue("marbles",-1*item.system.marbles);
+		}
 		await this.actor.update({"system": this.actor.system});
 		await item.delete();
 		

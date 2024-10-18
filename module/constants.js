@@ -89,6 +89,14 @@ export const GRID_SPACE_STATE = {
 	broken: "broken"
 }
 
+export const CUSTOM_BACKGROUND_PART = {
+	unlocks: "unlocks",
+	weight_cap: "weight_cap",
+	willpower: "willpower",
+	marbles: "marbles",
+	mental: "mental"
+}
+
 export const ATTRIBUTE_MIN=0;
 export const ATTRIBUTE_MAX_ROLLED=9;
 export const ATTRIBUTE_MAX_FLAT=16;
