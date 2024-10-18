@@ -30,7 +30,7 @@ export class ItemsManager {
 		let acceptedTypes=[]
 		switch(this.actor.type) {
 			case "fisher":
-				acceptedTypes=[ITEM_TYPES.frame_pc, ITEM_TYPES.internal_pc, ITEM_TYPES.development, ITEM_TYPES.maneuver, ITEM_TYPES.deep_word];
+				acceptedTypes=[ITEM_TYPES.frame_pc, ITEM_TYPES.internal_pc, ITEM_TYPES.development, ITEM_TYPES.maneuver, ITEM_TYPES.deep_word, ITEM_TYPES.background];
 				break;
 			case "fish":
 				acceptedTypes=[ITEM_TYPES.internal_npc,ITEM_TYPES.size];
@@ -66,6 +66,9 @@ export class ItemsManager {
 				break;
 			case ITEM_TYPES.deep_word:
 				this.applyDeepWord(item);
+				break;
+			case ITEM_TYPES.background:
+				this.applyBackground(item);
 				break;
 		}
 	}
@@ -333,7 +336,24 @@ export class ItemsManager {
 
 	async applyBackground(background) {
 		console.log("Applying background");
+
+		if(this.actor.type != ACTOR_TYPES.fisher) return false;
+		//Apply attribute changes
+		Object.keys(background.system.attributes).forEach((key) => {
+			this.actor.setBaseAttributeValue(key,background.system.attributes[key]);
+		})
+		//Remove existing size item
+		if(this.actor.itemTypes.background[0]) {
+			const oldBackground=this.actor.itemTypes.background[0];
+			this.actor.modifyResourceValue("marbles",-oldBackground.system.marbles);
+			oldBackground?.delete();
+		}
+		this.actor.modifyResourceValue("marbles",background.system.marbles);
+		await this.actor.update({"system": this.actor.system});
+
+		//Create new size item
 		const item=await Item.create(background,{parent: this.actor});
+		Hooks.callAll("backgroundUpdated",this.actor)
 	}
 
 	async toggleManeuver(uuid) {
