@@ -173,7 +173,7 @@ export class RollDialog extends HLMApplication {
             modifierStack.push(this.focused);
         }
         if(this.item_id) {
-            await this.actor.triggerRolledItem(this.item_id,this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(),this.cover,[...this.flatModifiers,...this.flatBonuses,this.focused]);
+            await this.actor.triggerRolledItem(this.item_id,this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(),this.cover,modifierStack);
         } else {
             await game.rollHandler.rollAttribute(this.actor, this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(), this.cover,modifierStack);
         }
