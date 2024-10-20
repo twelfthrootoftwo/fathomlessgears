@@ -280,13 +280,18 @@ export class ItemsManager {
 	}
 
 	/**
-	 * Remove all internals on this actor (pre import)
+	 * Remove all items on this actor, other than frame/size (pre import)
 	 */
-	async removeInternals() {
-		const internals=this.actor.itemTypes.internal_pc.concat(this.actor.itemTypes.internal_npc);
-		internals.forEach((internal) => {
-			this._removeItem(internal.id);
+	async removeItems() {
+		const items=this.actor.itemTypes.internal_pc
+			.concat(this.actor.itemTypes.internal_npc)
+			.concat(this.actor.itemTypes.development)
+			.concat(this.actor.itemTypes.deep_word)
+			.concat(this.actor.itemTypes.maneuver);
+		items.forEach((item) => {
+			this._removeItem(item._id);
 		});
+		
 	}
 
 	async applyDevelopment(development) {

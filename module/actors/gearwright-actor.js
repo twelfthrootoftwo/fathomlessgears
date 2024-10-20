@@ -15,7 +15,7 @@ export async function populateActorFromGearwright(actor,data) {
 	}
 	console.log("Importing actor from gearwright");
 	document.querySelector(`#HLMActorSheet-Actor-${actor._id}`)?.classList.add("waiting");
-	await actor.itemsManager.removeInternals();
+	await actor.itemsManager.removeItems();
 	switch(actor.type) {
 		case ACTOR_TYPES.fisher:
 			await buildFisher(actor,data);
