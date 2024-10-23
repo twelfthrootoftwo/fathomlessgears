@@ -8,6 +8,7 @@
 	background: var(--color-bg-header);
 	color: var(--color-text-light-heading);
     height: 50px;
+    align-items: baseline;
 }
 .sheet-header h1.charname {
 	height: 40px;
@@ -204,16 +205,17 @@ input.piece-value.editable {
     align-items: baseline;
 }
 .actor-name {
-    flex: 1 0 50px;
+    flex: 0 0 200px;
     font-size: var(--font-size-18);
-    margin: 1px 3px 5px;
 }
 input.actor-name {
     margin: 1px 3px 5px;
 }
 .actor-el {
-    flex: 0 0 20px;
-    margin: 0;
+    flex: 0 0 40px;
+    margin: 0px 4px;
+    text-align: right;
+    padding-top: 3px;
 }
 .options-set {
     border-top: 1px solid var(--color-border-highlight);
@@ -230,9 +232,6 @@ input.actor-name {
     height: 20px;
     padding-left: 4px;
 }
-input.background {
-    margin: 15px 5px;
-}
 .resource-row {
     align-items: baseline;
     padding-left: 5px;
@@ -246,12 +245,16 @@ input.marbles {
 label.marbles {
     flex: 1 0 40px;
 }
-.import-button {
-    height: 35px;
-    width: 80px;
-    margin: auto;
-    font-size: var(--font-size-12);
+.btn.import-button {
+    height: 40px;
+    width: 120px;
+    margin: 0px 4px;
+    font-size: var(--font-size-14);
     text-align: center;
+    background-color: #44444466;
+}
+.btn.btn-active.import-button:hover {
+    background-color: #44444499;
 }
 .activated-text {
     font-size: var(--font-size-12);
@@ -444,9 +447,9 @@ button.button.post-message {
 
 input.pilot-name {
     margin: 5px 0px;
-    font-size: var(--font-size-18);
+    font-size: var(--font-size-16);
     height: 26px;
-    width: 170px;
+    flex: 1 0 170px;
 }
 .downtime-attribute {
     height: 20px;
@@ -464,7 +467,9 @@ input.downtime-value {
 }
 input.background {
     margin: 5px 3px;
-    width: 170px;
+    width: 120px;
+    font-size: var(--font-size-12);
+    font-style: italic;
 }
 .novok {
     margin: 3px;
@@ -473,7 +478,7 @@ input.background {
 .description-header {
   font-size: var(--font-size-14);
   border-bottom: 1px solid var(--color-border-light-primary);
-  width: 300px;
+  min-width: 300px;
 }
 .shoreleave-col {
     width: 200px;
@@ -491,4 +496,8 @@ input.background {
 .editor-content {
 	min-height: 100px;
 	height: 100%;
+}
+.sheet-col {
+    margin-left: 2px;
+    margin-right: 2px;
 }
