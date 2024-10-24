@@ -1,6 +1,7 @@
 <div class="attribute-box flex-row" id="{{key}}">
     <div class="attribute-top-row flex-row">
         <div class="name-box" attribute="{{key}}">{{attribute.label}}</div>
+        <div class="spacer"></div>
         <div class="value-box">
             {{attribute.total}}
             <div class="tooltip">
@@ -18,7 +19,7 @@
         </div>
         <span> + </span>
         <input
-            class="piece-value editable sheet-input"
+            class="piece-value editable sheet-input attribute-bar-val"
             type="number"
             name="system.attributes.{{key}}.values.custom"
             value="{{attribute.values.custom}}"

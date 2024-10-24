@@ -90,6 +90,15 @@
                                     Shore Leave
                                 </h2>
                                 Shore leave coming soon<sup>TM</sup>
+                                <div class="flex-row">
+                                    <p class="novok">Novok</p>
+                                    <input
+                                        class="downtime-value sheet-input"
+                                        value="{{actor.system.downtime.novok}}"
+                                        type="number"
+                                        name="system.downtime.novok"
+                                    />
+                                </div>
                             </div>
                             <div class="options-set">
                                 <h2 class="options-header">
@@ -247,57 +256,6 @@
                         </div>
                     </div>
                 </div>
-
-                
-                <!---------------------------------------------------
-                        DOWNTIME TAB
-                ---------------------------------------------------->
-                <!-- <div class="tab" data-tab="downtime">
-                    <div class="tab-content flex-row">
-                        <div class="flex-col shoreleave-col">
-                            <div class="holder">
-                                <img
-                                    class="profile-img"
-                                    src="{{actor.system.pilot-portrait}}"
-                                    data-edit="system.pilot-portrait"
-                                    title="{{actor.system.pilot-name}}"
-                                    max-height="200"
-                                    width="170"
-                                />
-                            </div>
-                            <div class="holder">
-                                <input
-                                    class="background sheet-input"
-                                    value="{{actor.system.fisher_history.background}}"
-                                    name="system.fisher_history.background"
-                                    type="text"
-                                    placeholder="Background"
-                                />
-                                {{#each actor.system.downtime.rollable as |attrib key|}}
-                                <div class="resource-row flex-row">
-                                    <div class="downtime-attribute btn" attribute="{{key}}">{{attrib.label}}</div>
-                                    <input
-                                        class="downtime-value sheet-input"
-                                        value="{{attrib.value}}"
-                                        type="number"
-                                        name="system.downtime.rollable.{{key}}.value"
-                                    />
-                                </div>
-                                {{/each}}
-                                <div class="resource-row flex-row">
-                                    <p class="novok">Novok</p>
-                                    <input
-                                        class="downtime-value sheet-input"
-                                        value="{{actor.system.downtime.novok}}"
-                                        type="number"
-                                        name="system.downtime.novok"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div> -->
             </section>
         </div>
     </div>

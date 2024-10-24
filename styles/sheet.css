@@ -67,6 +67,7 @@
     flex-direction: column;
     border-right: 1px solid var(--color-border-highlight);
     border-top: 1px solid var(--color-border-highlight);
+    font-size: 11pt;
 }
 .attribute-box {
     justify-content: space-between;
@@ -82,14 +83,12 @@
     justify-content: space-between;
 }
 .name-box {
-    font-size: 12pt;
     text-align: center;
     width: 75px;
     padding: 2px 0px;
     flex-grow: 0;
 }
 .value-box {
-    font-size: 12pt;
     text-align: center;
     padding: 0px 5px;
     flex-grow: 1;
@@ -106,13 +105,14 @@
 .value-box:hover .tooltip {
     visibility: visible;
 }
-input.piece-value.editable {
+input.attribute-bar-val {
     background-color: var(--color-bg-dialog);
     text-align: center;
-    font-size: 12pt;
-    width: 23px;
-    min-width: 23px;
-    height: 17px;
+}
+input.piece-value.editable {
+    width: 18px;
+    min-width: 18px;
+    height: 18px;
     padding: 0px 2px;
     margin: 0px 5px;
 }
@@ -234,13 +234,14 @@ input.actor-name {
 }
 .resource-row {
     align-items: baseline;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 2px 5px 0px;
 }
 input.marbles {
     flex: 0 0 0px;
-    height: 20px;
-    margin: 3px;
+    height: 17px;
+    width: 16px;
+    min-width: 16px;
+    margin: 2px;
 }
 label.marbles {
     flex: 1 0 40px;
@@ -473,7 +474,7 @@ input.background {
 }
 .novok {
     margin: 3px;
-    margin-right: auto;
+    margin-right: 10px;
 }
 .description-header {
   font-size: var(--font-size-14);

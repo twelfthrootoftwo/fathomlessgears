@@ -14,8 +14,8 @@ export class HLMActorSheet extends ActorSheet {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["fathomlessgears", "sheet", "actor"],
 			template: "systems/fathomlessgears/templates/fisher-sheet.html",
-			width: 700,
-			height: 550,
+			width: 730,
+			height: 650,
 			tabs: [
 				{
 					navSelector: ".sheet-tabs",
