@@ -58,10 +58,10 @@ export class RollDialog extends HLMApplication {
     additionalFlat
     additionalDie
     focused
-    internal
+    item_id
     cover
 
-    constructor(modifiers, actor, attribute,internal) {
+    constructor(modifiers, actor, attribute,item_id) {
         super();
         this.flatModifiers=[];
         this.flatBonuses=[];
@@ -75,7 +75,7 @@ export class RollDialog extends HLMApplication {
         });
         this.actor=actor;
         this.attribute=attribute;
-        this.internal=internal;
+        this.item_id=item_id;
         this.additionalFlat=0;
         this.additionalDie=0;
         this.focused=actor.statuses.has(CONDITIONS.focused);
@@ -172,8 +172,8 @@ export class RollDialog extends HLMApplication {
         if(this.focused) {
             modifierStack.push(this.focused);
         }
-        if(this.internal) {
-            await this.actor.triggerRolledInternal(this.internal,this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(),this.cover,[...this.flatModifiers,...this.flatBonuses,this.focused]);
+        if(this.item_id) {
+            await this.actor.triggerRolledItem(this.item_id,this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(),this.cover,modifierStack);
         } else {
             await game.rollHandler.rollAttribute(this.actor, this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(), this.cover,modifierStack);
         }

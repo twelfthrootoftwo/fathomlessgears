@@ -16,13 +16,13 @@
             {{/if}}
         </div>
         {{/unless}}
-        <div class="btn btn-primary post-button {{#if internal.flags.fathomlessgears.broken}}btn-dark{{/if}}" data-id="id{{internal._id}}">{{localize "SHEET.post"}}</div>
+        <div class="btn btn-primary post-button sheet-row-button {{#if internal.flags.fathomlessgears.broken}}btn-dark{{/if}}" data-id="id{{internal._id}}">{{localize "SHEET.post"}}</div>
         {{/unless}}
     </div>
     <div class="internal-body">
         <div class="delete-overlay">
             <div class="delete-box">
-                <div class="delete-internal btn" data-id="id{{internal._id}}">
+                <div class="delete-item btn" data-id="id{{internal._id}}">
                     {{localize "SHEET.delete"}}
                 </div>
             </div>

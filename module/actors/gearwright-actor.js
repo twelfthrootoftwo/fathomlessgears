@@ -1,7 +1,7 @@
 import { testFieldsExist } from "../items/import-validator.js";
 import {Utils} from "../utilities/utils.js";
 import { constructGrid } from "../grid/grid-base.js";
-import { ACTOR_TYPES, GRID_SPACE_STATE } from "../constants.js";
+import { ACTOR_TYPES, CUSTOM_BACKGROUND_PART, GRID_SPACE_STATE } from "../constants.js";
 
 /**
  * Build an actor based on a Gearwright save (including interactive grid)
@@ -15,7 +15,7 @@ export async function populateActorFromGearwright(actor,data) {
 	}
 	console.log("Importing actor from gearwright");
 	document.querySelector(`#HLMActorSheet-Actor-${actor._id}`)?.classList.add("waiting");
-	await actor.itemsManager.removeInternals();
+	await actor.itemsManager.removeItems();
 	switch(actor.type) {
 		case ACTOR_TYPES.fisher:
 			await buildFisher(actor,data);
@@ -32,6 +32,8 @@ async function buildFisher(actor,data) {
 	const gridObject=await constructGrid(actor);
 	await constructFisherData(data,actor);
 	await applyFrame(data,actor,gridObject);
+	await applyBackground(data,actor);
+	await applyAdditionalFisher(data,actor);
 	await applyInternals(data,actor,gridObject);
 	if(actor.getFlag("fathomlessgears","interactiveGrid")) {
 		mapGridState(actor.grid,gridObject);
@@ -104,6 +106,55 @@ async function applyInternals(importData,actor,gridObject) {
 				space.setInternal(internalId,`${internal.system.type}Internal`);
 			})
 		}
+	}
+}
+
+async function applyBackground(importData,actor) {
+	const backgroundName=importData.background;
+	const backgroundTemp=await findCompendiumItemFromName("background",Utils.capitaliseWords(Utils.fromLowerHyphen(backgroundName)));
+	const background=await Item.create(backgroundTemp);
+		
+	if(backgroundName=="custom"){
+		importData.custom_background.forEach((item) => {
+			switch(item) {
+				case CUSTOM_BACKGROUND_PART.willpower:
+					background.system.attributes.willpower=background.system.attributes.willpower+1;
+					break;
+				case CUSTOM_BACKGROUND_PART.mental:
+					background.system.attributes.mental=background.system.attributes.mental+1;
+					break;
+				case CUSTOM_BACKGROUND_PART.marbles:
+					background.system.marbles=background.system.marbles+1;
+					break;
+				default:
+					break;
+			}
+		})
+		await background.update({"system": background.system});
+	} 
+	await actor.itemsManager.applyBackground(background);
+}
+
+async function applyAdditionalFisher(importData,actor) {
+	const developments=importData.developments;
+	let targetCompendium = "development";
+	for(const developmentName of developments) {
+		const development=await findCompendiumItemFromName(targetCompendium,Utils.capitaliseWords(Utils.fromLowerHyphen(developmentName)));
+		await actor.itemsManager.applyDevelopment(development);
+	}
+
+	const maneuvers=importData.maneuvers;
+	targetCompendium = "maneuver";
+	for(const maneuverName of maneuvers) {
+		const maneuver=await findCompendiumItemFromName(targetCompendium,Utils.capitaliseWords(Utils.fromLowerHyphen(maneuverName)));
+		await actor.itemsManager.applyManeuver(maneuver);
+	}
+
+	const words=importData.deep_words;
+	targetCompendium = "deep_word";
+	for(const wordName of words) {
+		const word=await findCompendiumItemFromName(targetCompendium,Utils.capitaliseWords(Utils.fromLowerHyphen(wordName)));
+		await actor.itemsManager.applyDeepWord(word);
 	}
 }
 

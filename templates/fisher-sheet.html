@@ -1,13 +1,21 @@
 <form class="flexcol {{cssClass}}" autocomplete="off">
 	{{!-- Sheet Header --}}
 	<header class="sheet-header">
-		<h1 class="charname">
+		<h1 class="charname flex-row">
             <input
                 name="name"
                 type="text"
                 value="{{actor.name}}"
                 placeholder="Name"
             />
+            <p class="actor-el">EL </p>
+            <input
+                class="actor-el"
+                value="{{actor.system.fisher_history.el}}"
+                type="number"
+                name="system.fisher_history.el"
+            />
+            <div id="initialise-import" class="btn import-button">{{localize "SHEET.initgearwright"}}</div>
         </h1>
 	</header>
     <div class="sheet-contents flex-row">
@@ -33,8 +41,6 @@
             <nav class="sheet-tabs flex-row">
                 <a data-tab="character">{{localize "TABS.character"}}</a>
                 <a data-tab="gear">{{localize "TABS.gear"}}</a>
-                <a data-tab="internals">{{localize "TABS.internals"}}</a>
-                <a data-tab="downtime">{{localize "TABS.downtime"}}</a>
             </nav>
 
             <section class="sheet-body">
@@ -43,61 +49,68 @@
                 ---------------------------------------------------->
                 <div class="tab" data-tab="character">
                     <div class="tab-content flex-row">
-                        <div class="col half-col">
-                            <div class="fisher-info flex-row">
-                                <input
-                                    class="actor-name sheet-input"
-                                    value="{{actor.system.fisher_history.callsign}}"
-                                    name="system.fisher_history.callsign"
-                                    type="text"
-                                    placeholder="Callsign"
-                                />
-                                <p class="actor-el">EL </p>
-                                <input
-                                    class="actor-el sheet-input"
-                                    value="{{actor.system.fisher_history.el}}"
-                                    type="number"
-                                    name="system.fisher_history.el"
-                                />
-                            </div>
+                        <div class="col">
                             <div class="flex-row">
-                                <img
-                                    class="profile-img"
-                                    src="{{actor.img}}"
-                                    data-edit="img"
-                                    title="{{actor.name}}"
-                                    max-height="200"
-                                    width="130"
-                                />
-                                <div class="col">
-                                    <div class="resource-row flex-row">
-                                        <label class="marbles">{{localize "RESOURCES.marbles"}}</label>
+                                <div class="sheet-col">
+                                    <img
+                                        class="profile-img"
+                                        src="{{actor.system.pilot-portrait}}"
+                                        data-edit="system.pilot-portrait"
+                                        title="{{actor.system.pilot-name}}"
+                                        max-height="200"
+                                        width="180"
+                                    />
+                                </div>
+                                <div class="sheet-col flex-col flex-1">
+                                    <div class="flex-row full-width">
                                         <input
-                                            class="marbles sheet-input"
-                                            value="{{actor.system.resources.marbles.value}}"
-                                            name="system.resources.marbles.value"
-                                            type="number"
+                                            class="pilot-name sheet-input"
+                                            value="{{actor.system.fisher_history.character-name}}"
+                                            name="system.fisher_history.character-name"
+                                            type="text"
+                                            placeholder="Pilot name"
                                         />
-                                        <div class="marbles">/</div>
                                         <input
-                                            class="marbles sheet-input"
-                                            value="{{actor.system.resources.marbles.max}}"
-                                            name="system.resources.marbles.max"
-                                            type="number"
-                                        />
-                                    </div>
-                                    <div class="resource-row flex-row">
-                                        <label class="marbles">{{localize "RESOURCES.backlash"}}</label>
-                                        <input
-                                            class="marbles sheet-input"
-                                            value="{{actor.system.resources.backlash.value}}"
-                                            name="system.resources.backlash.value"
-                                            type="number"
+                                            class="background sheet-input"
+                                            value="{{actor.system.fisher_history.background}}"
+                                            name="system.fisher_history.background"
+                                            type="text"
+                                            placeholder="Background"
                                         />
                                     </div>
-                                    <div class="flex-row">
-                                        <div id="initialise-import" class="btn import-button">{{localize "SHEET.initgearwright"}}</div>
+                                    <div class="holder">
+                                        <h3 class="description-header full-width">Description</h3>
+                                        {{editor actor.system.biography target="system.biography"
+                                        button=true owner=owner editable=editable}}
                                     </div>
+                                </div>
+                            </div>
+                            <div class="options-set">
+                                <h2 class="options-header">
+                                    Shore Leave
+                                </h2>
+                                Shore leave coming soon<sup>TM</sup>
+                                <div class="flex-row">
+                                    <p class="novok">Novok</p>
+                                    <input
+                                        class="downtime-value sheet-input"
+                                        value="{{actor.system.downtime.novok}}"
+                                        type="number"
+                                        name="system.downtime.novok"
+                                    />
+                                </div>
+                            </div>
+                            <div class="options-set">
+                                <h2 class="options-header">
+                                    Developments
+                                </h2>
+                                <div class="internal-category flex-row">
+                                    {{#each developments}}
+                                    {{>
+                                        "systems/fathomlessgears/templates/partials/development-partial.html"
+                                        item=this
+                                    }}
+                                    {{/each}}
                                 </div>
                             </div>
                             <div class="options-set">
@@ -113,20 +126,10 @@
                                 Touch of the Deep coming soon<sup>TM</sup>
                             </div>
                         </div>
-                        <div class="col half-col">
-                            <div class="options-set">
-                                <h2 class="options-header">
-                                    Developments
-                                </h2>
-                                Developments coming soon<sup>TM</sup>
-                            </div>
-                            <div class="options-set">
-                                <h2 class="options-header">
-                                    Maneuvers
-                                </h2>
-                                Maneuvers coming soon<sup>TM</sup>
-                            </div>
-                        </div>
+                        <!-- <div class="col half-col flex-col">
+                            
+                            
+                        </div> -->
                     </div>
                 </div>
 
@@ -135,96 +138,55 @@
                         GEAR TAB
                 ---------------------------------------------------->
                 <div class="tab" data-tab="gear">
-                    <div class="tab-content flex-row">
-                        <div class="flex-col gear-col">
-                            <input
-                                class="gear-name sheet-input"
-                                value="{{actor.system.gear_name}}"
-                                name="system.gear_name"
-                                type="text"
-                                placeholder="Gear name"
-                            />
-                            <img
-                                class="profile-img"
-                                src="{{actor.img}}"
-                                data-edit="img"
-                                title="{{actor.name}}"
-                                max-height="200"
-                                width="130"
-                            />
-                            <div class="holder">
-                                <h2 class="frame-name">{{frame.name}}</h2>
-                                <div class="frame-ability">
-                                    <div class="flex-row frame-ability-row">
-                                        <h3 class="frame-ability-name">{{frame.system.gear_ability_name}}</h3>
-                                        <div class="btn post-message" id="post-frame-ability">{{localize "SHEET.post"}}</div>
-                                    </div>
-                                    <p class="frame-ability-text">{{frame.system.gear_ability}}</p>
-                                </div>
-                            </div>
-                            <div class="btn hit-location-button" id="hit-location">{{localize "SHEET.hitlocation"}}</div>
-                        </div>
-                        <div class="flex-col">
-                            {{#if interactiveGrid}}
-                            {{>
-                                "systems/fathomlessgears/templates/partials/grid-box.html"
-                                grid=grid
-                            }}
-                            {{else}}
-                            <img
-                                class="grid-img"
-                                id="grid-img"
-                                src="{{actor.system.grid}}"
-                                data-edit="system.grid"
-                                title="{{actor.name}}"
-                                max-height="350"
-                                width="350"
-                            />
-                            {{/if}}
-                            <div class="flex-row">
-                                <div class="resource-row flex-row">
-                                    <label class="marbles">{{localize "RESOURCES.repair"}}</label>
-                                    <input
-                                        class="marbles sheet-input"
-                                        value="{{actor.system.resources.repair.value}}"
-                                        name="system.resources.repair.value"
-                                        type="number"
-                                    />
-                                    <div class="marbles">/</div>
-                                    <input
-                                        class="marbles sheet-input"
-                                        value="{{actor.system.resources.repair.max}}"
-                                        name="system.resources.repair.max"
-                                        type="number"
-                                    />
-                                </div>
-                                <div class="resource-row flex-row">
-                                    <label class="marbles">{{localize "RESOURCES.core"}}</label>
-                                    <input
-                                        class="marbles sheet-input"
-                                        value="{{actor.system.resources.core.value}}"
-                                        name="system.resources.core.value"
-                                        type="number"
-                                    />
-                                    <div class="marbles">/</div>
-                                    <input
-                                        class="marbles sheet-input"
-                                        value="{{actor.system.resources.core.max}}"
-                                        name="system.resources.core.max"
-                                        type="number"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                
-                <!---------------------------------------------------
-                        INTERNALS TAB
-                ---------------------------------------------------->
-                <div class="tab" data-tab="internals">
                     <div class="tab-content">
+                        <div class="flex-row">
+                            <div class="flex-col gear-col">
+                                <input
+                                    class="gear-name sheet-input"
+                                    value="{{actor.system.gear_name}}"
+                                    name="system.gear_name"
+                                    type="text"
+                                    placeholder="Gear name"
+                                />
+                                <img
+                                    class="profile-img"
+                                    src="{{actor.img}}"
+                                    data-edit="img"
+                                    title="{{actor.name}}"
+                                    max-height="200"
+                                    width="130"
+                                />
+                                <div class="holder">
+                                    <h2 class="frame-name">{{frame.name}}</h2>
+                                    <div class="frame-ability">
+                                        <div class="flex-row frame-ability-row">
+                                            <h3 class="frame-ability-name">{{frame.system.gear_ability_name}}</h3>
+                                            <div class="btn post-message" id="post-frame-ability">{{localize "SHEET.post"}}</div>
+                                        </div>
+                                        <p class="frame-ability-text">{{frame.system.gear_ability}}</p>
+                                    </div>
+                                </div>
+                                <div class="btn hit-location-button" id="hit-location">{{localize "SHEET.hitlocation"}}</div>
+                            </div>
+                            <div class="flex-col">
+                                {{#if interactiveGrid}}
+                                {{>
+                                    "systems/fathomlessgears/templates/partials/grid-box.html"
+                                    grid=grid
+                                }}
+                                {{else}}
+                                <img
+                                    class="grid-img"
+                                    id="grid-img"
+                                    src="{{actor.system.grid}}"
+                                    data-edit="system.grid"
+                                    title="{{actor.name}}"
+                                    max-height="350"
+                                    width="350"
+                                />
+                                {{/if}}
+                            </div>
+                        </div>
                         <div class="internal-category flex-row">
                             <h3 class="internal-category-header">{{localize "INTERNALS.weapons"}}</h3>
                             {{#each weapons}}
@@ -258,68 +220,38 @@
                             }}
                             {{/each}}
                         </div>
-                    </div>
-                </div>
-
-                
-                <!---------------------------------------------------
-                        DOWNTIME TAB
-                ---------------------------------------------------->
-                <div class="tab" data-tab="downtime">
-                    <div class="tab-content flex-row">
-                        <div class="flex-col shoreleave-col">
-                            <div class="holder">
-                                <img
-                                    class="profile-img"
-                                    src="{{actor.system.pilot-portrait}}"
-                                    data-edit="system.pilot-portrait"
-                                    title="{{actor.system.pilot-name}}"
-                                    max-height="200"
-                                    width="170"
-                                />
+                        <div class="options-set">
+                            <div class="options-header flex-row">
+                                <div>
+                                    Maneuvers
+                                </div>
+                                <div class="spacer"></div>
+                                {{#if encore}}
+                                    <p class="activated-text">{{ encore.name }}</p>
+                                    <input class="inline-checkbox maneuver-checkbox" type="checkbox" data-selector="activated" data-id="id{{encore.id}}" {{checked encore.activated}}>
+                                {{/if}}
+                                <button class="btn btn-primary reset-button sheet-row-button">{{localize "SHEET.reset"}}</button>
                             </div>
-                            <div class="holder">
-                                <input
-                                    class="background sheet-input"
-                                    value="{{actor.system.fisher_history.background}}"
-                                    name="system.fisher_history.background"
-                                    type="text"
-                                    placeholder="Background"
-                                />
-                                {{#each actor.system.downtime.rollable as |attrib key|}}
-                                <div class="resource-row flex-row">
-                                    <div class="downtime-attribute btn" attribute="{{key}}">{{attrib.label}}</div>
-                                    <input
-                                        class="downtime-value sheet-input"
-                                        value="{{attrib.value}}"
-                                        type="number"
-                                        name="system.downtime.rollable.{{key}}.value"
-                                    />
-                                </div>
+                            <div class="internal-category flex-row">
+                                {{#each maneuvers}}
+                                {{>
+                                    "systems/fathomlessgears/templates/partials/maneuver-partial.html"
+                                    item=this
+                                }}
                                 {{/each}}
-                                <div class="resource-row flex-row">
-                                    <p class="novok">Novok</p>
-                                    <input
-                                        class="downtime-value sheet-input"
-                                        value="{{actor.system.downtime.novok}}"
-                                        type="number"
-                                        name="system.downtime.novok"
-                                    />
-                                </div>
                             </div>
                         </div>
-                        <div class="flex-col">
-                            <input
-                                class="pilot-name sheet-input"
-                                value="{{actor.system.fisher_history.character-name}}"
-                                name="system.fisher_history.character-name"
-                                type="text"
-                                placeholder="Pilot name"
-                            />
-                            <div class="holder">
-                                <h3 class="description-header">Description</h3>
-                                {{editor actor.system.biography target="system.biography"
-                                button=true owner=owner editable=editable}}
+                        <div class="options-set">
+                            <h2 class="options-header">
+                                Deep Words
+                            </h2>
+                            <div class="internal-category flex-row">
+                                {{#each deep_words}}
+                                {{>
+                                    "systems/fathomlessgears/templates/partials/maneuver-partial.html"
+                                    item=this
+                                }}
+                                {{/each}}
                             </div>
                         </div>
                     </div>

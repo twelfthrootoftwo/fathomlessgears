@@ -3,6 +3,7 @@ import { ReelHandler } from "./reel.js";
 import {constructCollapsibleRollMessage} from "./collapsible-roll.js"
 import {ATTRIBUTES,ROLL_MODIFIER_TYPE} from "../constants.js";
 import {AttackHandler} from "./attack.js";
+import {Utils} from "../utilities/utils.js";
 
 export class RollHandler {
     isTargetedRoll(attributeKey) {

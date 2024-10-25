@@ -14,8 +14,8 @@ export class HLMActorSheet extends ActorSheet {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["fathomlessgears", "sheet", "actor"],
 			template: "systems/fathomlessgears/templates/fisher-sheet.html",
-			width: 700,
-			height: 550,
+			width: 730,
+			height: 650,
 			tabs: [
 				{
 					navSelector: ".sheet-tabs",
@@ -84,6 +84,23 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		})
 
+		//Other items
+		context.developments=items.development;
+		context.maneuvers=items.maneuver;
+		context.deep_words=items.deep_word;
+		context.maneuvers.forEach((maneuver) => {
+			maneuver.activated=maneuver.getFlag("fathomlessgears","activated")
+		})
+		const encore=context.developments.find((development) => development.isEncore())
+		if(encore) {
+			encore.activated=encore.getFlag("fathomlessgears","activated")
+			context.encore={
+				name: encore.name,
+				id: encore.id,
+				activated: encore.getFlag("fathomlessgears","activated")
+			}
+		}
+
 		context.interactiveGrid=false;
 		if(this.actor.getFlag("fathomlessgears","interactiveGrid")){
 			context.interactiveGrid=true;
@@ -134,12 +151,14 @@ export class HLMActorSheet extends ActorSheet {
 		super.activateListeners(html);
 		html.find(".rollable").click(this._onRoll.bind(this));
 		html.find(".break-button").click(this.breakInternal.bind(this));
-		html.find(".post-button").click(this.postInternal.bind(this));
-		html.find(".delete-internal").click(this.deleteInternal.bind(this));
+		html.find(".post-button").click(this.postItem.bind(this));
+		html.find(".delete-item").click(this.deleteItem.bind(this));
+		html.find(".reset-button").click(this.resetManeuvers.bind(this));
 		html.find("#hit-location").click(this.locationHitMessage.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
 		html.find("#initialise-import").click(this.selectImport.bind(this))
 		html.find("#initialise-manual").click(this.selectManualSetup.bind(this))
+		html.find(".maneuver-checkbox").click(this.toggleManeuver.bind(this));
 		if(this.actor.getFlag("fathomlessgears","interactiveGrid")) {
 			html=this.actor.grid.activateListeners(html);
 		}
@@ -226,14 +245,33 @@ export class HLMActorSheet extends ActorSheet {
 		document.querySelector(`[data-id=id${uuid}]`,".post-button").classList.toggle("btn-dark");
 	}
 
-	postInternal(event) {
+	toggleManeuver(event) {
 		if(!this.testOwnership()) {return false;}
-		this.actor.postInternal(safeIdClean(event.target.dataset.id));
+		this.actor.itemsManager.toggleManeuver(safeIdClean(event.target.dataset.id))
 	}
 
-	deleteInternal(event) {
+	resetManeuvers(event) {
 		if(!this.testOwnership()) {return false;}
-		this.actor.itemsManager.onInternalRemove(safeIdClean(event.target.dataset.id));
+		const maneuvers=this.actor.itemTypes.maneuver;
+		maneuvers.forEach((maneuver) => {
+			maneuver.setFlag("fathomlessgears","activated",false);
+		})
+		const developments=this.actor.itemTypes.development;
+		developments.forEach((development) => {
+			if(development.isEncore()) {
+				development.setFlag("fathomlessgears","activated",false);
+			}
+		})
+	}
+
+	postItem(event) {
+		if(!this.testOwnership()) {return false;}
+		this.actor.postItem(safeIdClean(event.target.dataset.id));
+	}
+
+	deleteItem(event) {
+		if(!this.testOwnership()) {return false;}
+		this.actor.itemsManager.removeItemCallback(safeIdClean(event.target.dataset.id));
 	}
 
 	locationHitMessage(event) {

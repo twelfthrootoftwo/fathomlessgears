@@ -206,7 +206,6 @@ function clearGrid() {
  * @param {HLMActor} actor The actor that has been updated
  */
 function refreshGrid(actor,updates,_,__) {
-	console.log("Refresh grid triggered");
 	if(
 		game.gridHover?.rendered &&
 		game.gridHover.object.actor._id==actor.id &&

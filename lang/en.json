@@ -16,7 +16,7 @@
 
 	"RESOURCES.repair": "Repair Kits",
 	"RESOURCES.marbles": "Marbles",
-	"RESOURCES.core": "Core Integrity",
+	"RESOURCES.core": "Core",
 	"RESOURCES.backlash": "Backlash",
 
 	"DOWNTIME.physical": "Physical",
@@ -39,13 +39,15 @@
 
 	"SHEET.internalbreak": "Break",
 	"SHEET.internalfix": "Repair",
-	"SHEET.post": "Use",
+	"SHEET.post": "Post",
 	"SHEET.delete": "Remove",
 	"SHEET.hitlocation": "Hit location",
 	"SHEET.scantrue": "Revoke scan",
 	"SHEET.scanfalse": "Scan",
 	"SHEET.initgearwright": "Import from Gearwright",
 	"SHEET.initmanual": "Create manually",
+	"SHEET.activated": "Activated",
+	"SHEET.reset": "Reset",
 
 	"MANAGER.init": "Initialising",
 	"MANAGER.datafile": "Data file",
@@ -99,6 +101,11 @@
 	"ITEMTYPE.internal_npc": "Fish Internal",
 	"ITEMTYPE.tag": "Internal Tag",
 	"ITEMTYPE.template": "Template",
+	"ITEMTYPE.development": "Development",
+	"ITEMTYPE.maneuver": "Maneuver",
+	"ITEMTYPE.deep_word": "Deep Word",
+	"ITEMTYPE.background": "Background",
+
 
 	"COVERSTATE.none": "No cover",
 	"COVERSTATE.soft": "Soft cover",

@@ -47,6 +47,9 @@ input.sheet-input {
 .text-center {
 	text-align: center;
 }
+.full-width{
+	width: 100%
+}
 .btn {
 	background: rgba(0, 0, 0, 0.1);
 	border: 2px groove var(--color-border-light-primary);

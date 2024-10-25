@@ -27,6 +27,14 @@ export class HLMActor extends Actor {
 			internal.description_text=internal.getInternalDescriptionText();
 		});
 
+		const attackItems=items.internal_pc.concat(items.internal_npc).concat(items.maneuver).concat(items.deep_word);
+		attackItems.forEach((item) => {
+			if(item.system.attack) {
+				item.system.attack.damageDescription=item.getDamageDescription(this);
+				item.system.attack.damageNumber=item.getDamageNumber(this);
+			}
+		});
+
 		this.itemsManager=new ItemsManager(this);
 	}
 
@@ -184,6 +192,8 @@ export class HLMActor extends Actor {
 		if(!Utils.isResource(resourceKey)) return false;
 		this.system.resources[resourceKey].value+=value;
 		this.system.resources[resourceKey].max+=value;
+		if(this.system.resources[resourceKey].value < 0) this.system.resources[resourceKey].value=0;
+		if(this.system.resources[resourceKey].max < 0) this.system.resources[resourceKey].max=0;
 		return true;
 	}
 
@@ -216,9 +226,9 @@ export class HLMActor extends Actor {
 	 * Posts the chat message associated with an internal
 	 * @param {string} uuid The ID of the internal
 	 */
-	async postInternal(uuid) {
-		const internal=this.items.get(uuid);
-		internal.postToChat(this);
+	async postItem(uuid) {
+		const item=this.items.get(uuid);
+		item.postToChat(this);
 	}
 
 	/**
@@ -229,7 +239,7 @@ export class HLMActor extends Actor {
 	 * @param {int} totalFlat Total flat bonus to the roll
 	 * @param {COVER_STATE} cover Whether or not this attack is affected by cover
 	 */
-	async triggerRolledInternal(uuid,attackKey,totalDieCount,totalFlat, cover,modifierStack) {
+	async triggerRolledItem(uuid,attackKey,totalDieCount,totalFlat, cover,modifierStack) {
 		const internal=this.items.get(uuid);
 		const defenceKey=game.rollHandler.isTargetedRoll(attackKey);
 		const rollOutput=await game.rollHandler.rollTargeted(this, attackKey,defenceKey,totalDieCount,totalFlat, cover,modifierStack);
@@ -237,7 +247,7 @@ export class HLMActor extends Actor {
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: internal,
-				minor_text: internal.getInternalDescriptionText(),
+				minor_text: internal.getItemDescriptionText(),
 				major_text: rollOutput.text,
 				showDamage: rollOutput.result!=HIT_TYPE.miss,
 				damageText: game.i18n.localize("INTERNALS.damage"),
@@ -284,7 +294,7 @@ export class HLMActor extends Actor {
 	async removeInternalDeactivateGrid(proceed,args) {
 		if(proceed) {
 			await args.actor.removeInteractiveGrid();
-			args.actor.itemsManager.removeInternal(args.uuid);
+			args.actor.itemsManager._removeItem(args.uuid);
 		}
 	}
 

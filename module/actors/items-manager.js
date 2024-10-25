@@ -30,7 +30,7 @@ export class ItemsManager {
 		let acceptedTypes=[]
 		switch(this.actor.type) {
 			case "fisher":
-				acceptedTypes=[ITEM_TYPES.frame_pc, ITEM_TYPES.internal_pc];
+				acceptedTypes=[ITEM_TYPES.frame_pc, ITEM_TYPES.internal_pc, ITEM_TYPES.development, ITEM_TYPES.maneuver, ITEM_TYPES.deep_word, ITEM_TYPES.background];
 				break;
 			case "fish":
 				acceptedTypes=[ITEM_TYPES.internal_npc,ITEM_TYPES.size];
@@ -58,6 +58,27 @@ export class ItemsManager {
 			case ITEM_TYPES.internal_npc:
 				this.onInternalDrop(item);
 				break;
+			case ITEM_TYPES.development:
+				this.applyDevelopment(item);
+				break;
+			case ITEM_TYPES.maneuver:
+				this.applyManeuver(item);
+				break;
+			case ITEM_TYPES.deep_word:
+				this.applyDeepWord(item);
+				break;
+			case ITEM_TYPES.background:
+				this.applyBackground(item);
+				break;
+		}
+	}
+
+	async removeItemCallback(uuid) {
+		const item=this.actor.items.get(uuid);
+		if(item.type == ITEM_TYPES.internal_npc || item.type ==ITEM_TYPES.internal_pc) {
+			this.onInternalRemove(uuid);
+		} else {
+			this._removeItem(uuid);
 		}
 	}
 
@@ -165,7 +186,7 @@ export class ItemsManager {
 				{"actor": this.actor, "uuid": uuid}
 			)
 		} else {
-			this.removeInternal(uuid);
+			this.removeItem(uuid);
 		}
 	}
 
@@ -235,28 +256,117 @@ export class ItemsManager {
 	 * Deletes an internal from this actor
 	 * @param {string} uuid The UUID of the internal to delete
 	 */
-	async removeInternal(uuid) {
-		const internal=this.actor.items.get(uuid);
-		Object.keys(internal.system.attributes).forEach((key) => {
-			if(internal.system.attributes[key]!=0) {
-				this.actor.removeAttributeModifier(key,uuid);
-			}
-		});
+	async _removeItem(uuid) {
+		const item=this.actor.items.get(uuid);
+		const isInternal = item.type==ITEM_TYPES.internal_npc || item.type==ITEM_TYPES.internal_pc
+		if(item.system.attributes) {
+			Object.keys(item.system.attributes).forEach((key) => {
+				if(item.system.attributes[key]!=0) {
+					this.actor.removeAttributeModifier(key,uuid);
+				}
+			});
+		}
 		this.actor.calculateBallast();
-		if(this.actor.system.resources) this.actor.modifyResourceValue("repair",-1*internal.system.repair_kits);
+		if(this.actor.system.resources) {
+			if(item.system.repair_kits) this.actor.modifyResourceValue("repair",-1*item.system.repair_kits);
+			if(item.system.marbles) this.actor.modifyResourceValue("marbles",-1*item.system.marbles);
+		}
 		await this.actor.update({"system": this.actor.system});
-		await internal.delete();
+		await item.delete();
 		
-		Hooks.callAll("internalDeleted",this)
+		if(isInternal) {
+			Hooks.callAll("internalDeleted",this)
+		}
 	}
 
 	/**
-	 * Remove all internals on this actor (pre import)
+	 * Remove all items on this actor, other than frame/size (pre import)
 	 */
-	async removeInternals() {
-		const internals=this.actor.itemTypes.internal_pc.concat(this.actor.itemTypes.internal_npc);
-		internals.forEach((internal) => {
-			this.removeInternal(internal.id);
+	async removeItems() {
+		const items=this.actor.itemTypes.internal_pc
+			.concat(this.actor.itemTypes.internal_npc)
+			.concat(this.actor.itemTypes.development)
+			.concat(this.actor.itemTypes.deep_word)
+			.concat(this.actor.itemTypes.maneuver);
+		items.forEach((item) => {
+			this._removeItem(item._id);
 		});
+		
+	}
+
+	async applyDevelopment(development) {
+		console.log("Applying development");
+		const item=await Item.create(development,{parent: this.actor});
+
+		//Special logic for Encore, since it's an activated development
+		if(item.isEncore()) {
+			item.setFlag("fathomlessgears","activated",false);
+		}
+		//Apply attributes
+		Object.keys(item.system.attributes).forEach((key) => {
+			if(Utils.isAttribute(key) && item.system.attributes[key]!=0) {
+				const modifier=new AttributeElement(
+					item.system.attributes[key],
+					item._id,
+					"development",
+					item.name
+				);
+				this.actor.addAttributeModifier(key,modifier);
+			}
+		})
+		//Modify resources
+		if(item.system.repair_kits) {this.actor.modifyResourceValue("repair",item.system.repair_kits);}
+		this.actor.calculateBallast();
+		
+		await this.actor.update({"system": this.actor.system});
+		return item._id;
+	}
+
+	async applyManeuver(maneuver) {
+		console.log("Applying maneuver");
+		const item=await Item.create(maneuver,{parent: this.actor});
+
+		item.setFlag("fathomlessgears","activated",false);
+		
+		await this.actor.update({"system": this.actor.system});
+		return item._id;
+	}
+
+	async applyDeepWord(word) {
+		console.log("Applying deep word");
+		const item=await Item.create(word,{parent: this.actor});
+
+		item.setFlag("fathomlessgears","activated",false);
+		
+		await this.actor.update({"system": this.actor.system});
+		return item._id;
+	}
+
+	async applyBackground(background) {
+		console.log("Applying background");
+
+		if(this.actor.type != ACTOR_TYPES.fisher) return false;
+		//Apply attribute changes
+		Object.keys(background.system.attributes).forEach((key) => {
+			this.actor.setBaseAttributeValue(key,background.system.attributes[key]);
+		})
+		//Remove existing size item
+		if(this.actor.itemTypes.background[0]) {
+			const oldBackground=this.actor.itemTypes.background[0];
+			this.actor.modifyResourceValue("marbles",-oldBackground.system.marbles);
+			oldBackground?.delete();
+		}
+		this.actor.modifyResourceValue("marbles",background.system.marbles);
+		await this.actor.update({"system": this.actor.system});
+
+		//Create new size item
+		const item=await Item.create(background,{parent: this.actor});
+		Hooks.callAll("backgroundUpdated",this.actor)
+	}
+
+	async toggleManeuver(uuid) {
+		const item=this.actor.items.get(uuid);
+		const currentState=item.getFlag("fathomlessgears","activated");
+		item.setFlag("fathomlessgears","activated",!currentState)
 	}
 }

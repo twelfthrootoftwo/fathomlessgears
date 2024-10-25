@@ -29,4 +29,71 @@
         <hr class="divider secondary">
     {{/unless}}
     {{/each}}
+    <hr class="divider primary">
+    {{#ifcond actor.type "==" 'fisher'}}
+    <div class="resource-row flex-row">
+        <label class="name-box">{{localize "RESOURCES.core"}}</label>
+        <div class="spacer"></div>
+        <input
+            class="marbles sheet-input attribute-bar-val marble-input"
+            value="{{actor.system.resources.core.value}}"
+            name="system.resources.core.value"
+            type="number"
+        />
+        <div class="marbles">/</div>
+        <input
+            class="marbles sheet-input attribute-bar-val marble-input"
+            value="{{actor.system.resources.core.max}}"
+            name="system.resources.core.max"
+            type="number"
+        />
+    </div>
+    <hr class="divider secondary">
+    <div class="resource-row flex-row">
+        <label class="name-box">{{localize "RESOURCES.repair"}}</label>
+        <div class="spacer"></div>
+        <input
+            class="marbles sheet-input attribute-bar-val marble-input"
+            value="{{actor.system.resources.repair.value}}"
+            name="system.resources.repair.value"
+            type="number"
+        />
+        <div class="marbles">/</div>
+        <input
+            class="marbles sheet-input attribute-bar-val marble-input"
+            value="{{actor.system.resources.repair.max}}"
+            name="system.resources.repair.max"
+            type="number"
+        />
+    </div>
+    <hr class="divider secondary">
+    <div class="resource-row flex-row">
+        <label class="name-box">{{localize "RESOURCES.marbles"}}</label>
+        <div class="spacer"></div>
+        <input
+            class="marbles sheet-input attribute-bar-val marble-input"
+            value="{{actor.system.resources.marbles.value}}"
+            name="system.resources.marbles.value"
+            type="number"
+        />
+        <div class="marbles">/</div>
+        <input
+            class="marbles sheet-input attribute-bar-val marble-input"
+            value="{{actor.system.resources.marbles.max}}"
+            name="system.resources.marbles.max"
+            type="number"
+        />
+    </div>
+    <hr class="divider secondary">
+    <div class="resource-row flex-row">
+        <label class="name-box">{{localize "RESOURCES.backlash"}}</label>
+        <div class="spacer"></div>
+        <input
+            class="marbles sheet-input attribute-bar-val marble-input"
+            value="{{actor.system.resources.backlash.value}}"
+            name="system.resources.backlash.value"
+            type="number"
+        />
+    </div>
+    {{/ifcond}}
 </div>

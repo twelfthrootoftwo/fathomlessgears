@@ -88,6 +88,14 @@ export class HLMItem extends Item {
 		return [ITEM_TYPES.internal_npc, ITEM_TYPES.internal_pc].includes(this.type);
 	}
 
+	isManeuver() {
+		return this.type==ITEM_TYPES.maneuver
+	}
+
+	isEncore() {
+		return this.name=="Encore"
+	}
+
 	isOptics() {
 		let result=false;
 		if(this.isInternal()) {
@@ -109,7 +117,16 @@ export class HLMItem extends Item {
 				if(this.system.attack) {
 					this.internalAttack(actor);
 				} else {
-					this.postFlatInternal(actor);
+					this.postFlatItem(actor);
+				}
+				break;
+			case ITEM_TYPES.development:
+			case ITEM_TYPES.maneuver:
+			case ITEM_TYPES.deep_word:
+				if(this.system.attack) {
+					this.internalAttack(actor);
+				} else {
+					this.postFlatItem(actor);
 				}
 				break;
 			default:
@@ -138,12 +155,12 @@ export class HLMItem extends Item {
 		game.rollHandler.startRollDialog(actor, attackKey,this._id);
 	}
 
-	async postFlatInternal(actor) {
+	async postFlatItem(actor) {
 		const displayMessage = await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: this,
-				major_text: this.getInternalDescriptionText(),
+				major_text: this.getItemDescriptionText(),
 				minor_text: false
 			}
 		);
@@ -151,6 +168,12 @@ export class HLMItem extends Item {
 			speaker: {actor: actor},
 			content: displayMessage,
 		});
+	}
+
+	getItemDescriptionText() {
+		if(this.isInternal()) {return this.getInternalDescriptionText();}
+		if(this.system.action_text) return this.system.action_text;
+		if(this.system.description_text) return this.system.description_text;
 	}
 
 	
@@ -168,6 +191,26 @@ export class HLMItem extends Item {
 		});
 		description_text=description_text.concat(this.system.action_text);
 		return description_text;
+	}
+
+	getDamageDescription(actor) {
+		if(!this.system.attack) {return false;}
+		if(isNaN(this.system.attack.damage)) {
+			if(this.system.attack.damage.includes("_BACKLASH_VALUE_")) {
+				return this.system.attack.damage.replace("_BACKLASH_VALUE_",actor.system.resources.backlash.value.toString());
+			}
+		}
+		return this.system.attack.damage;
+	}
+
+	getDamageNumber(actor) {
+		if(!this.system.attack) {return false;}
+		if(isNaN(this.system.attack.damage)) {
+			if(this.system.attack.damage.includes("_BACKLASH_VALUE_")) {
+				return actor.system.resources.backlash.value.toString();
+			}
+		}
+		return this.system.attack.damage;
 	}
 }
 
@@ -215,6 +258,22 @@ export function createHLMItemSystem(itemType, data, source) {
 		case ITEM_TYPES.grid:
 			console.log("Constructing grid...");
 			system=constructGridData(data);
+			break;
+		case ITEM_TYPES.development:
+			console.log("Constructing development...");
+			system=constructDevelopmentData(data);
+			break;
+		case ITEM_TYPES.maneuver:
+			console.log("Constructing maneuver...");
+			system=constructManeuverData(data);
+			break;
+		case ITEM_TYPES.deep_word:
+			console.log("Constructing deep word...");
+			system=constructDeepWordData(data);
+			break;
+		case ITEM_TYPES.background:
+			console.log("Constructing background...");
+			system=constructBackgroundData(data);
 			break;
 	}
 	system.source=source
@@ -313,6 +372,74 @@ function constructInternalNPCData(data) {
 	system.type=data.type;
 	system.grid_coords=unpackGridCoords(data.grid);
 	
+	return system
+}
+
+function constructDevelopmentData(data) {
+	const system={
+		attributes: {},
+		description_text: ""
+	};
+	Object.values(ATTRIBUTES).forEach((key) => {
+		if (Utils.isAttribute(key)){
+			system.attributes[key]=data[ATTRIBUTE_KEY_MAP[key]];
+		}
+	});
+	if(data.lightweight_modifier) {
+		system.attributes.weight=-data.lightweight_modifier
+	}
+	if(data.repair_kits) {
+		system.repair_kits=data.repair_kits
+	}
+	system.description_text=data.description;
+
+	return system
+}
+
+function constructManeuverData(data) {
+	const system={
+		action_text: data.action_text,
+		ap_cost: data.ap_cost
+	}
+	if(data.range) {
+		system.attack = new Attack("mental",ATTRIBUTES.mental,0,0,data.range);
+	}
+
+	return system
+}
+
+function constructDeepWordData(data) {
+	const system={
+		ap_cost: data.ap_cost,
+		action_text: data.action_text || data.extra_rules
+	}
+	if(data.range) {
+		system.attack = new Attack("mental",ATTRIBUTES.mental,0,0,data.range);
+	}
+	if(data.damage) {
+		if(data.damage=="Your Current Backlash") {
+			system.attack.damage = "Your current backlash (_BACKLASH_VALUE_)"
+		}
+	}
+	system.tags=[
+		new InternalTag("fathomless",data.fathomless)
+	]
+	
+	return system
+}
+
+function constructBackgroundData(data) {
+	const system={
+		attributes: {},
+		marbles: 0
+	}
+	Object.values(ATTRIBUTES).forEach((key) => {
+		if (Utils.isAttribute(key)){
+			system.attributes[key]=data[ATTRIBUTE_KEY_MAP[key]];
+		}
+	});
+	system.marbles=data.marbles;
+
 	return system
 }
 

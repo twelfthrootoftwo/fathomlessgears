@@ -62,6 +62,10 @@ export const ITEM_TYPES = {
 	frame_pc: "frame_pc",
 	size: "size",
 	grid: "grid",
+	development: "development",
+	maneuver: "maneuver",
+	deep_word: "deep_word",
+	background: "background"
 }
 
 export const COVER_STATES = {
@@ -83,6 +87,14 @@ export const GRID_SPACE_STATE = {
 	locked: "locked",
 	intact: "intact",
 	broken: "broken"
+}
+
+export const CUSTOM_BACKGROUND_PART = {
+	unlocks: "unlocks",
+	weight_cap: "weight_cap",
+	willpower: "willpower",
+	marbles: "marbles",
+	mental: "mental"
 }
 
 export const ATTRIBUTE_MIN=0;
