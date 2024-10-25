@@ -27,6 +27,14 @@ export class HLMActor extends Actor {
 			internal.description_text=internal.getInternalDescriptionText();
 		});
 
+		const attackItems=items.internal_pc.concat(items.internal_npc).concat(items.maneuver).concat(items.deep_word);
+		attackItems.forEach((item) => {
+			if(item.system.attack) {
+				item.system.attack.damageDescription=item.getDamageDescription(this);
+				item.system.attack.damageNumber=item.getDamageNumber(this);
+			}
+		});
+
 		this.itemsManager=new ItemsManager(this);
 	}
 

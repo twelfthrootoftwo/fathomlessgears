@@ -192,6 +192,26 @@ export class HLMItem extends Item {
 		description_text=description_text.concat(this.system.action_text);
 		return description_text;
 	}
+
+	getDamageDescription(actor) {
+		if(!this.system.attack) {return false;}
+		if(isNaN(this.system.attack.damage)) {
+			if(this.system.attack.damage.includes("_BACKLASH_VALUE_")) {
+				return this.system.attack.damage.replace("_BACKLASH_VALUE_",actor.system.resources.backlash.value.toString());
+			}
+		}
+		return this.system.attack.damage;
+	}
+
+	getDamageNumber(actor) {
+		if(!this.system.attack) {return false;}
+		if(isNaN(this.system.attack.damage)) {
+			if(this.system.attack.damage.includes("_BACKLASH_VALUE_")) {
+				return actor.system.resources.backlash.value.toString();
+			}
+		}
+		return this.system.attack.damage;
+	}
 }
 
 /**
