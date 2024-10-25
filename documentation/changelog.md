@@ -63,3 +63,8 @@ User testing performed on this patch!
 * Grid HUD for fish shows remaining HP
 * Grid HUD location defaults to top right
 * Added a setting to turn off the grid HUD appearing on hover
+
+## Version 0.5.0
+* Added item imports for backgrounds, developments, maneuvers, & deep words
+* Fisher imports will detect & import premade and custom backgrounds, developments, maneuvers & deep words
+* New layout for fisher sheets
