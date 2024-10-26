@@ -1,13 +1,14 @@
 <form class="flexcol {{cssClass}}" autocomplete="off">
 	{{!-- Sheet Header --}}
 	<header class="sheet-header">
-		<h1 class="charname">
+		<h1 class="charname flex-row">
             <input
                 name="name"
                 type="text"
                 value="{{actor.name}}"
                 placeholder="Name"
             />
+            <div id="import-button" class="btn actor-button import-button">{{localize "SHEET.initgearwright"}}</div>
         </h1>
 	</header>
     <div class="sheet-contents flex-row">
@@ -62,7 +63,6 @@
                             </div>
                             <div class="btn actor-button hit-location-button" id="hit-location">{{localize "SHEET.hitlocation"}}</div>
                             <div class="btn actor-button" id="scan">{{scan_text}}</div>
-                            <div id="initialise-import" class="btn actor-button import-button">{{localize "SHEET.initgearwright"}}</div>
                         </div>
                         <div class="flex-col">
                             {{#if interactiveGrid}}

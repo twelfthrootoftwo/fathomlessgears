@@ -68,3 +68,8 @@ User testing performed on this patch!
 * Added item imports for backgrounds, developments, maneuvers, & deep words
 * Fisher imports will detect & import premade and custom backgrounds, developments, maneuvers & deep words
 * New layout for fisher sheets
+
+## Version 0.5.1
+* Fixed import buttons for fresh characters
+* Renamed sheet tabs for fisher sheet
+* Relocated import button for fish

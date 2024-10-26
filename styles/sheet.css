@@ -262,6 +262,9 @@ label.marbles {
     margin: 1px 4px;
     padding-top: 2px;
 }
+.hit-location-button {
+    margin-top: 4px;
+}
 
 /*
 ---------------------------------

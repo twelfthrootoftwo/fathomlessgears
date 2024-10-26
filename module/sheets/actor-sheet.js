@@ -20,7 +20,7 @@ export class HLMActorSheet extends ActorSheet {
 				{
 					navSelector: ".sheet-tabs",
 					contentSelector: ".sheet-body",
-					initial: "character",
+					initial: "gear",
 				},
 			],
 			dragDrop: [{dragSelector: ".item-list .item", dropSelector: null}],
@@ -156,7 +156,8 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".reset-button").click(this.resetManeuvers.bind(this));
 		html.find("#hit-location").click(this.locationHitMessage.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
-		html.find("#initialise-import").click(this.selectImport.bind(this))
+		html.find("#initialise-import").click(this.selectImport.bind(this));
+		html.find("#import-button").click(this.selectImport.bind(this));
 		html.find("#initialise-manual").click(this.selectManualSetup.bind(this))
 		html.find(".maneuver-checkbox").click(this.toggleManeuver.bind(this));
 		if(this.actor.getFlag("fathomlessgears","interactiveGrid")) {
