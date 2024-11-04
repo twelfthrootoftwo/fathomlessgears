@@ -213,6 +213,12 @@ export class ItemsManager {
 		})
 		//Modify resources
 		if(internal.system.repair_kits) {this.actor.modifyResourceValue("repair",internal.system.repair_kits);}
+		
+		//Special logic for Ascended Form
+		if(internal.name=="Ascended Form") {
+			this.applyAllDeepWords();
+		}
+
 		this.actor.calculateBallast();
 		
 		await this.actor.update({"system": this.actor.system});
@@ -340,6 +346,15 @@ export class ItemsManager {
 		
 		await this.actor.update({"system": this.actor.system});
 		return item._id;
+	}
+
+	async applyAllDeepWords() {
+		const collection=await game.packs.get(`world.deep_word`);
+		const records = collection.index.filter(p => p.name != "Serenity, A Promise Kept");
+		records.forEach(async (record) => {
+			const item=await collection.getDocument(record._id);
+			this.applyDeepWord(item);
+		})
 	}
 
 	async applyBackground(background) {
