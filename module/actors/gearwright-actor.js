@@ -112,7 +112,7 @@ async function applyInternals(importData,actor,gridObject) {
 async function applyBackground(importData,actor) {
 	const backgroundName=importData.background;
 	const backgroundTemp=await findCompendiumItemFromName("background",Utils.capitaliseWords(Utils.fromLowerHyphen(backgroundName)));
-	const background=await Item.create(backgroundTemp);
+	const background=foundry.utils.deepClone(backgroundTemp);
 		
 	if(backgroundName=="custom"){
 		importData.custom_background.forEach((item) => {
@@ -130,7 +130,7 @@ async function applyBackground(importData,actor) {
 					break;
 			}
 		})
-		await background.update({"system": background.system});
+		// await background.update({"system": background.system});
 	} 
 	await actor.itemsManager.applyBackground(background);
 }
