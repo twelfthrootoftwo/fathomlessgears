@@ -103,7 +103,6 @@ export class RollHandler {
 	}
 
 	async rollNoTarget(attributeKey, dieCount, flatModifier,modifierStack) {
-		console.log("Rolling")
 		let roll = Utils.getRoller(dieCount, flatModifier);
 		await roll.evaluate();
 

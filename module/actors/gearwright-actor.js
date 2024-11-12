@@ -1,7 +1,7 @@
 import { testFieldsExist } from "../items/import-validator.js";
 import {Utils} from "../utilities/utils.js";
 import { constructGrid } from "../grid/grid-base.js";
-import { ACTOR_TYPES, CUSTOM_BACKGROUND_PART, GRID_SPACE_STATE } from "../constants.js";
+import { ACTOR_TYPES, CUSTOM_BACKGROUND_PART, DEEPWORD_NAME_MAP, GRID_SPACE_STATE } from "../constants.js";
 
 /**
  * Build an actor based on a Gearwright save (including interactive grid)
@@ -152,8 +152,10 @@ async function applyAdditionalFisher(importData,actor) {
 
 	const words=importData.deep_words;
 	targetCompendium = "deep_word";
+	console.log(words)
 	for(const wordName of words) {
-		const word=await findCompendiumItemFromName(targetCompendium,Utils.capitaliseWords(Utils.fromLowerHyphen(wordName)));
+		const word=await findCompendiumItemFromName(targetCompendium,DEEPWORD_NAME_MAP[wordName]);
+		console.log(word);
 		await actor.itemsManager.applyDeepWord(word);
 	}
 }
