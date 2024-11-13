@@ -120,7 +120,6 @@ export class GridHoverHUD extends HLMApplication{
 			if(this.hovering) {
 				this.lock=true;
 				if(!showOnHover) {
-					// game.gridHover.assignToken(game.gridHover.hoveredToken);
 					this.checkShowGridRequirements();
 				}
 			}
