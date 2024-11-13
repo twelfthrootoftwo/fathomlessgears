@@ -152,7 +152,6 @@ async function applyAdditionalFisher(importData,actor) {
 
 	const words=importData.deep_words;
 	targetCompendium = "deep_word";
-	console.log(words)
 	for(const wordName of words) {
 		const word=await findCompendiumItemFromName(targetCompendium,DEEPWORD_NAME_MAP[wordName]);
 		console.log(word);
