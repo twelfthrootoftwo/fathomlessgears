@@ -358,24 +358,28 @@ export class ItemsManager {
 	}
 
 	async applyBackground(background) {
-		console.log("Applying background");
+		this.applyBackgroundSystem(background.system);
+	}
 
-		if(this.actor.type != ACTOR_TYPES.fisher) return false;
-		//Apply attribute changes
-		Object.keys(background.system.attributes).forEach((key) => {
-			this.actor.setBaseAttributeValue(key,background.system.attributes[key]);
-		})
-		//Remove existing size item
+	async removeOldBackground() {
 		if(this.actor.itemTypes.background[0]) {
 			const oldBackground=this.actor.itemTypes.background[0];
 			this.actor.modifyResourceValue("marbles",-oldBackground.system.marbles);
 			oldBackground?.delete();
+			await this.actor.update({"system.attributes": this.actor.system.attributes, "system.resources": this.actor.system.resources});
 		}
-		this.actor.modifyResourceValue("marbles",background.system.marbles);
-		await this.actor.update({"system": this.actor.system});
+	}
 
-		//Create new size item
-		const item=await Item.create(background,{parent: this.actor});
+	async applyBackgroundSystem(system) {
+		await this.removeOldBackground();
+
+		Object.keys(system.attributes).forEach((key) => {
+			this.actor.setBaseAttributeValue(key,system.attributes[key]);
+		})
+		this.actor.modifyResourceValue("marbles",system.marbles);
+		this.actor.update({"system.attributes": this.actor.system.attributes, "system.resources": this.actor.system.resources});
+
+		await Item.create({name: "Background", type: ITEM_TYPES.background, system: system},{parent: this.actor});
 		Hooks.callAll("backgroundUpdated",this.actor)
 	}
 
