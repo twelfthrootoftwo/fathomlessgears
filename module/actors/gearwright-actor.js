@@ -130,7 +130,6 @@ async function applyBackground(importData,actor) {
 					break;
 			}
 		})
-		// await background.update({"system": background.system});
 	} 
 	await actor.itemsManager.applyBackgroundSystem(background);
 }
