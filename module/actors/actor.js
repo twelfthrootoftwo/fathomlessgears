@@ -337,9 +337,10 @@ export class HLMActor extends Actor {
 	}
 
 	async breakInternalMessage(internal) {
+		const isBroken = await internal.isBroken()
 		ChatMessage.create({
 			whisper: await this.getObservers(),
-			content: `${this.name}'s ${internal.name} ${internal.isBroken() ? "breaks!" : "is repaired"}`
+			content: `${this.name}'s ${internal.name} ${isBroken ? "breaks!" : "is repaired"}`
 		})
 	}
 
