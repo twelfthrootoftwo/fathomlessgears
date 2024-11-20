@@ -201,7 +201,6 @@ export class RollDialog extends HLMApplication {
     }
 
     updateTotalString() {
-        console.log("Updating total string")
         const totalString=this.calculateDieTotal().toString()+"d6 + "+this.calculateFlatTotal().toString();
         const totalElement = document.getElementById("total-string");
         totalElement.innerHTML = totalString;

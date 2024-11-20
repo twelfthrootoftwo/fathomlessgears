@@ -209,7 +209,7 @@ function refreshGrid(actor,updates,_,__) {
 	if(
 		game.gridHover?.rendered &&
 		game.gridHover.object.actor._id==actor.id &&
-		updates.system.grid
+		updates.system?.grid
 	) {
 		game.gridHover.render(true);
 	}

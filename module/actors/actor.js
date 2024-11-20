@@ -91,7 +91,7 @@ export class HLMActor extends Actor {
 			const attribute=this.system.attributes[key];
 			attribute.values.standard.additions.forEach((modifier) => {
 				if(!activeConditionNames.includes(modifier.source) && ATTRIBUTE_ONLY_CONDITIONS.includes(modifier.source)) {
-					this.removeAttributeModifier(attribute.key,modifier.source)
+					this.removeAttributeModifier(key,modifier.source)
 				}
 			})
 		});
