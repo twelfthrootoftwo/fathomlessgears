@@ -120,7 +120,7 @@ export class GridHoverHUD extends HLMApplication{
 			if(this.hovering) {
 				this.lock=true;
 				if(!showOnHover) {
-					game.gridHover.assignToken(game.gridHover.hoveredToken);
+					this.checkShowGridRequirements();
 				}
 			}
 		}
@@ -209,7 +209,7 @@ function refreshGrid(actor,updates,_,__) {
 	if(
 		game.gridHover?.rendered &&
 		game.gridHover.object.actor._id==actor.id &&
-		updates.system.grid
+		updates.system?.grid
 	) {
 		game.gridHover.render(true);
 	}

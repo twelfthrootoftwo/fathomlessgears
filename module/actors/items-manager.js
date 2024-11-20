@@ -213,6 +213,12 @@ export class ItemsManager {
 		})
 		//Modify resources
 		if(internal.system.repair_kits) {this.actor.modifyResourceValue("repair",internal.system.repair_kits);}
+		
+		//Special logic for Ascended Form
+		if(internal.name=="Ascended Form") {
+			this.applyAllDeepWords();
+		}
+
 		this.actor.calculateBallast();
 		
 		await this.actor.update({"system": this.actor.system});
@@ -342,25 +348,38 @@ export class ItemsManager {
 		return item._id;
 	}
 
-	async applyBackground(background) {
-		console.log("Applying background");
-
-		if(this.actor.type != ACTOR_TYPES.fisher) return false;
-		//Apply attribute changes
-		Object.keys(background.system.attributes).forEach((key) => {
-			this.actor.setBaseAttributeValue(key,background.system.attributes[key]);
+	async applyAllDeepWords() {
+		const collection=await game.packs.get(`world.deep_word`);
+		const records = collection.index.filter(p => p.name != "Serenity, A Promise Kept");
+		records.forEach(async (record) => {
+			const item=await collection.getDocument(record._id);
+			this.applyDeepWord(item);
 		})
-		//Remove existing size item
+	}
+
+	async applyBackground(background) {
+		this.applyBackgroundSystem(background.system);
+	}
+
+	async removeOldBackground() {
 		if(this.actor.itemTypes.background[0]) {
 			const oldBackground=this.actor.itemTypes.background[0];
 			this.actor.modifyResourceValue("marbles",-oldBackground.system.marbles);
 			oldBackground?.delete();
+			await this.actor.update({"system.attributes": this.actor.system.attributes, "system.resources": this.actor.system.resources});
 		}
-		this.actor.modifyResourceValue("marbles",background.system.marbles);
-		await this.actor.update({"system": this.actor.system});
+	}
 
-		//Create new size item
-		const item=await Item.create(background,{parent: this.actor});
+	async applyBackgroundSystem(system) {
+		await this.removeOldBackground();
+
+		Object.keys(system.attributes).forEach((key) => {
+			this.actor.setBaseAttributeValue(key,system.attributes[key]);
+		})
+		this.actor.modifyResourceValue("marbles",system.marbles);
+		this.actor.update({"system.attributes": this.actor.system.attributes, "system.resources": this.actor.system.resources});
+
+		await Item.create({name: "Background", type: ITEM_TYPES.background, system: system},{parent: this.actor});
 		Hooks.callAll("backgroundUpdated",this.actor)
 	}
 

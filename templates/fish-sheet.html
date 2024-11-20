@@ -124,6 +124,17 @@
                             }}
                             {{/each}}
                         </div>
+                        {{#if deep_words}}
+                            <div class="internal-category flex-row">
+                                <h3 class="internal-category-header">{{localize "ITEMTYPE.deep_word"}}s</h3>
+                                {{#each deep_words}}
+                                {{>
+                                    "systems/fathomlessgears/templates/partials/maneuver-partial.html"
+                                    item=this
+                                }}
+                                {{/each}}
+                            </div>
+                        {{/if}}
                     </div>
                 </div>
             </section>

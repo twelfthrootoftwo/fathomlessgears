@@ -154,6 +154,7 @@ export class RollDialog extends HLMApplication {
                 totalBonus+=parseInt(modifier.value);
             }
         });
+        totalBonus+=parseInt(this.additionalFlat);
         if(totalAttr<ATTRIBUTE_MIN) totalAttr=ATTRIBUTE_MIN;
         if(totalAttr>ATTRIBUTE_MAX_ROLLED) totalAttr=ATTRIBUTE_MAX_ROLLED;
         return totalAttr+totalBonus
@@ -168,7 +169,7 @@ export class RollDialog extends HLMApplication {
                 ROLL_MODIFIER_TYPE.bonus
             ))
         }
-        const modifierStack = [...this.flatModifiers,...this.flatBonuses]
+        const modifierStack = [...this.flatModifiers,...this.flatBonuses].filter(element => Boolean(element.active))
         if(this.focused) {
             modifierStack.push(this.focused);
         }

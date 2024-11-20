@@ -50,7 +50,7 @@ export class RollHandler {
 		const defenceKey = this.isTargetedRoll(attributeKey);
 		let message="";
 		if(defenceKey===ATTRIBUTES.power) {
-			message=await this.initiateReel(dieCount, flatModifier,modifierStack);
+			message=await this.initiateReel(actor, dieCount, flatModifier,modifierStack);
 		} else if (defenceKey) {
 			const output=await this.rollTargeted(actor, attributeKey, defenceKey, dieCount, flatModifier,cover,modifierStack);
 			message=output.text ? output.text : output;

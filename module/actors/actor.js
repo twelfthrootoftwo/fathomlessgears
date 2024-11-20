@@ -75,11 +75,26 @@ export class HLMActor extends Actor {
 
 	applyActiveEffects() {
 		super.applyActiveEffects()
+		const conditionNames=[]
 		this.effects.forEach((activeEffect) => {
-			if(ATTRIBUTE_ONLY_CONDITIONS.includes(activeEffect.statuses.values().next().value)) {
+			const condition=activeEffect.statuses.values().next().value
+			if(ATTRIBUTE_ONLY_CONDITIONS.includes(condition)) {
+				conditionNames.push(condition);
 				applyAttributeModifyingEffect(this,activeEffect)
 			}
 		})
+		this.removeInactiveEffects(conditionNames);
+	}
+
+	removeInactiveEffects(activeConditionNames) {
+		Object.keys(this.system.attributes).forEach((key) => {
+			const attribute=this.system.attributes[key];
+			attribute.values.standard.additions.forEach((modifier) => {
+				if(!activeConditionNames.includes(modifier.source) && ATTRIBUTE_ONLY_CONDITIONS.includes(modifier.source)) {
+					this.removeAttributeModifier(key,modifier.source)
+				}
+			})
+		});
 	}
 
 	async locationHitMessage() {

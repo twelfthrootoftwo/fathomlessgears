@@ -132,3 +132,15 @@ export const GRID_HUD_LOCATION = {
 	topLeft: "top-left",
 	topRight: "top-right",
 }
+
+export const DEEPWORD_NAME_MAP = {
+	word_one: "Ocean's Calm",
+	word_two: "Shore's Resilience",
+	word_three: "Current's Pull",
+	word_four: "Wave's Flow",
+	word_five: "Depth's Iron Grasp",
+	word_six: "Tidal Surge",
+	word_seven: "Storm's Wrath",
+	word_eight: "Abyssal Torpor",
+	word_final: "Serenity, A Promise Kept"
+}

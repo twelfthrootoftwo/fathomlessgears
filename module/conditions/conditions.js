@@ -23,6 +23,12 @@ export const CONDITIONS={
 
 export const conditions=[
     {
+        id: "ballast",
+        name: "CONDITIONS.ballast",
+        icon: "systems/fathomlessgears/assets/icons/Ballast.png",
+        statuses: []
+    },
+    {
         id: CONDITIONS.blind,
         name: "CONDITIONS.blind",
         icon: "systems/fathomlessgears/assets/icons/Blind.png",
@@ -171,6 +177,12 @@ export const conditions=[
         name: "CONDITIONS.hook7",
         icon: "systems/fathomlessgears/assets/icons/Yellow Hook.png",
         statuses: ["hook7"]
+    },
+    {
+        id: "catchcounter",
+        name: "CONDITIONS.catchcounter",
+        icon: "systems/fathomlessgears/assets/icons/Hooked.png",
+        statuses: []
     },
 ]
 

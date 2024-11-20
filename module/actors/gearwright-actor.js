@@ -1,7 +1,7 @@
 import { testFieldsExist } from "../items/import-validator.js";
 import {Utils} from "../utilities/utils.js";
 import { constructGrid } from "../grid/grid-base.js";
-import { ACTOR_TYPES, CUSTOM_BACKGROUND_PART, GRID_SPACE_STATE } from "../constants.js";
+import { ACTOR_TYPES, CUSTOM_BACKGROUND_PART, DEEPWORD_NAME_MAP, GRID_SPACE_STATE } from "../constants.js";
 
 /**
  * Build an actor based on a Gearwright save (including interactive grid)
@@ -111,28 +111,27 @@ async function applyInternals(importData,actor,gridObject) {
 
 async function applyBackground(importData,actor) {
 	const backgroundName=importData.background;
-	const backgroundTemp=await findCompendiumItemFromName("background",Utils.capitaliseWords(Utils.fromLowerHyphen(backgroundName)));
-	const background=await Item.create(backgroundTemp);
+	const backgroundBase=await findCompendiumItemFromName("background",Utils.capitaliseWords(Utils.fromLowerHyphen(backgroundName)));
+	const background=foundry.utils.deepClone(backgroundBase.system);
 		
 	if(backgroundName=="custom"){
 		importData.custom_background.forEach((item) => {
 			switch(item) {
 				case CUSTOM_BACKGROUND_PART.willpower:
-					background.system.attributes.willpower=background.system.attributes.willpower+1;
+					background.attributes.willpower=background.attributes.willpower+1;
 					break;
 				case CUSTOM_BACKGROUND_PART.mental:
-					background.system.attributes.mental=background.system.attributes.mental+1;
+					background.attributes.mental=background.attributes.mental+1;
 					break;
 				case CUSTOM_BACKGROUND_PART.marbles:
-					background.system.marbles=background.system.marbles+1;
+					background.marbles=background.marbles+1;
 					break;
 				default:
 					break;
 			}
 		})
-		await background.update({"system": background.system});
 	} 
-	await actor.itemsManager.applyBackground(background);
+	await actor.itemsManager.applyBackgroundSystem(background);
 }
 
 async function applyAdditionalFisher(importData,actor) {
@@ -153,7 +152,7 @@ async function applyAdditionalFisher(importData,actor) {
 	const words=importData.deep_words;
 	targetCompendium = "deep_word";
 	for(const wordName of words) {
-		const word=await findCompendiumItemFromName(targetCompendium,Utils.capitaliseWords(Utils.fromLowerHyphen(wordName)));
+		const word=await findCompendiumItemFromName(targetCompendium,DEEPWORD_NAME_MAP[wordName]);
 		await actor.itemsManager.applyDeepWord(word);
 	}
 }

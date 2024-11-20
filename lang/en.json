@@ -146,6 +146,8 @@
 	"CONDITIONS.hook5": "Hooked (5)",
 	"CONDITIONS.hook6": "Hooked (6)",
 	"CONDITIONS.hook7": "Hooked (7)",
+	"CONDITIONS.ballast": "Ballast",
+	"CONDITIONS.catchcounter": "Catch counters",
 
 	"GRIDHUD.lockON": "_KEY_ - Lock Grid",
 	"GRIDHUD.lockOFF": "_KEY_ - Unlock Grid",
