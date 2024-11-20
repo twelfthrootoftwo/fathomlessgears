@@ -73,3 +73,12 @@ User testing performed on this patch!
 * Fixed import buttons for fresh characters
 * Renamed sheet tabs for fisher sheet
 * Relocated import button for fish
+
+## Version 0.5.5
+* Added deep words for Ascended Form fish
+* Fix background creation (it will not create a new background item in the game's items tab on fisher import)
+* Fix a bug where power stat could not be rolled
+* Fix a bug where conditions were not being fully removed
+* Fix a bug where native Foundry CSS was overridden by system styles
+* Fix a bug where deep words were not found on actor import
+* Fix a bug where players could view fish grids without scanning via the grid HUD
