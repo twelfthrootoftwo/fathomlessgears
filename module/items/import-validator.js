@@ -10,7 +10,8 @@ const expectedFields={
     "development": ["name","description"],
     "maneuver": ["name","ap_cost","action_text"],
     "deep_word": ["short_name","fathomless","ap_cost"],
-    "background": ["marbles"]
+    "background": ["marbles"],
+    "fish_template": []
 }
 
 const expectedAttributes={
@@ -22,7 +23,8 @@ const expectedAttributes={
     "development": [],
     "maneuver": [],
     "deep_word": [],
-    "background": []
+    "background": [],
+    "fish_template": []
 }
 Object.values(ATTRIBUTES).forEach((attribute) => {
     if(![ATTRIBUTES.mental,ATTRIBUTES.willpower].includes(attribute)){

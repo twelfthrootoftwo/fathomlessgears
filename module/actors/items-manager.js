@@ -358,7 +358,9 @@ export class ItemsManager {
 	}
 
 	async applyBackground(background) {
-		this.applyBackgroundSystem(background.system);
+		if(this.actor.type==ACTOR_TYPES.fisher) {
+			this.applyBackgroundSystem(background.system);
+		}
 	}
 
 	async removeOldBackground() {
@@ -381,6 +383,33 @@ export class ItemsManager {
 
 		await Item.create({name: "Background", type: ITEM_TYPES.background, system: system},{parent: this.actor});
 		Hooks.callAll("backgroundUpdated",this.actor)
+	}
+
+	async removeOldTemplate() {
+		if(this.actor.itemTypes.fish_template[0]) {
+			const oldTemplate=this.actor.itemTypes.fish_template[0];
+			this._removeItem(oldTemplate._id);
+		}
+	}
+
+	async applyTemplateSystem(system, name) {
+		await this.removeOldTemplate();
+		const newTemplate = await Item.create({name: name, type: ITEM_TYPES.fish_template, system: system},{parent: this.actor});
+
+		Object.keys(newTemplate.system.attributes).forEach((key) => {
+			if(Utils.isAttribute(key) && newTemplate.system.attributes[key]!=0) {
+				const modifier=new AttributeElement(
+					newTemplate.system.attributes[key],
+					newTemplate._id,
+					"template",
+					newTemplate.name
+				);
+				this.actor.addAttributeModifier(key,modifier);
+			}
+		})
+		this.actor.update({"system.attributes": this.actor.system.attributes});
+
+		Hooks.callAll("templateUpdated",this.actor)
 	}
 
 	async toggleManeuver(uuid) {

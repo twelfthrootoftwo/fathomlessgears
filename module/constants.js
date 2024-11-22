@@ -65,7 +65,8 @@ export const ITEM_TYPES = {
 	development: "development",
 	maneuver: "maneuver",
 	deep_word: "deep_word",
-	background: "background"
+	background: "background",
+	fish_template: "fish_template"
 }
 
 export const COVER_STATES = {

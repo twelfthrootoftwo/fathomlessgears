@@ -213,11 +213,12 @@
 			"grid": "systems/fathomlessgears/assets/blank-grid-fish.jpg",
 			"gridType": "",
 			"size": "",
-			"has-interactive-grid": "false"
+			"has-interactive-grid": "false",
+			"template": "Common"
 		}
 	},
 	"Item": {
-		"types": ["tag","internal_pc","internal_npc","frame_pc","size","grid","development","maneuver","deep_word","background"],
+		"types": ["tag","internal_pc","internal_npc","frame_pc","size","grid","development","maneuver","deep_word","background","fish_template"],
 		"htmlFields": ["description"],
 		"templates": {
 			"source":{
@@ -285,6 +286,9 @@
 		},
 		"grid": {
 			"templates": ["toHit"]
+		},
+		"fish_template": {
+			"templates": ["attributes"]
 		}
 	  }
 }
