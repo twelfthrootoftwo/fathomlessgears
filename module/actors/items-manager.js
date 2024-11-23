@@ -128,6 +128,10 @@ export class ItemsManager {
 		//Apply grid
 		const newGrid=await Utils.getGridFromSize(size.name);
 		await this.applyGrid(newGrid);
+
+		//Update token size
+		this.actor.updateDefaultTokenSize(Utils.getTokenSizeFromSize(size.name))
+
 		Hooks.callAll("sizeUpdated",this.actor)
 	}
 

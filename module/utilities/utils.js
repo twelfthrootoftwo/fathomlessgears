@@ -27,15 +27,6 @@ export class Utils {
 		}
 	}
 
-	static getLocalisedDowntimeLabel(downtimeKey) {
-		const recognisedDowntime = ["physical","social","engineering","enlightenment"];
-		if (recognisedDowntime.includes(downtimeKey)) {
-			return game.i18n.localize("DOWNTIME." + downtimeKey);
-		} else {
-			console.log("Downtime key not recognised: " + downtimeKey);
-		}
-	}
-
 	static getLocalisedHitType(hitTypeKey) {
 		const recognisedHits = ["crit", "hit", "miss"];
 		if (recognisedHits.includes(hitTypeKey)) {
@@ -117,16 +108,6 @@ export class Utils {
 			if(attribute==attributeKey) returnVal=true;
 		})
 		return returnVal;
-	}
-
-	static isDowntimeAttribute(attributeKey) {
-		const recognisedDowntime=[
-			"physical",
-			"social",
-			"engineering",
-			"enlightenment"
-		]
-		return recognisedDowntime.includes(attributeKey);
 	}
 
 	static isAttributeComponent(key) {
@@ -216,6 +197,20 @@ export class Utils {
 		const record = gridCollection.index.filter(p => p.name == sizeName);
 		const grid=await gridCollection.getDocument(record[0]._id);
 		return grid;
+	}
+
+	static getTokenSizeFromSize(sizeName) {
+		switch(sizeName) {
+			case "Small":
+				return 1
+			case "Medium":
+			case "Large":
+				return 2
+			case "Massive":
+				return 3
+			default:
+				return 4
+		}
 	}
 
 	static activateButtons(html) {

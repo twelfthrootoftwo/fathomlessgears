@@ -42,7 +42,9 @@ async function buildFisher(actor,data) {
 }
 
 async function buildFish(actor,data) {
-	if(data.name) actor.update({"name": data.name});
+	if(data.name) {
+		actor.update({"name": data.name, "prototypeToken.name": data.name});
+	}
 	if(data.template) actor.update({"system.template": Utils.capitaliseWords(Utils.fromLowerHyphen(data.template))})
 	await applySize(data,actor);
 	await applyTemplate(data,actor);

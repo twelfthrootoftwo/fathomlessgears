@@ -409,4 +409,8 @@ export class HLMActor extends Actor {
 			})
 		}
 	}
+
+	updateDefaultTokenSize(size) {
+		this.update({"prototypeToken.height": size, "prototypeToken.width": size});
+	}
 }

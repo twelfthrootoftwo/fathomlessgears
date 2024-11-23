@@ -186,14 +186,6 @@ export class HLMActorSheet extends ActorSheet {
 				resource.label = Utils.getLocalisedResourceLabel(resourceKey);
 			}
 		}
-
-		//Downtime
-		if (actor.system.downtime) {
-			for (const downtimeKey in actor.system.downtime.rollable) {
-				const attribute = actor.system.downtime.rollable[downtimeKey];
-				attribute.label = Utils.getLocalisedDowntimeLabel(downtimeKey);
-			}
-		}
 	}
 
 	async _onRoll(event) {
