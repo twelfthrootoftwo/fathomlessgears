@@ -1,0 +1,54 @@
+export class HUDActionCollection {
+    static addHUDActions() {
+        game.hudActions = new HUDActionCollection();
+    }
+
+    weightTotal() {
+        //Originally written by VoidPhoenix, adapted with permission (thanks!)
+        // For each selected token, add up its weight
+        const selectedFish=canvas.tokens.controlled.filter((token) => {
+            return token.actor.type=="fish";
+        });
+        let totalWeight = selectedFish.reduce((total, token) => {
+            return Number(total) + Number(token?.actor?.system?.attributes.weight.total ?? 0)+Number(token?.actor?.system?.attributes.weight.values.custom ?? 0);
+        }, 0);
+
+        let images_html = selectedFish.map(token => {
+            return `<img src="${token.actor.img}" style="border:none; max-height: 30px; max-weight: 30px;"/>`;
+        }).join('');
+
+        // Print the result to chat.
+
+        let message =
+        `<div class="flex-col" style="align-items: center;">
+                <div class="flex-row" style="align-items: center;">
+                    ${images_html}
+                </div>
+            </div>
+            <div style="font-size: 16px; font-weight: bold;">${game.i18n.localize("MESSAGE.totalweight")}: ${totalWeight}</div>
+        </div>`;
+
+        // Send to chat
+
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker(),
+            content: message
+        });
+    }
+
+    createBallastTokens() {
+        const tokens = canvas.tokens.controlled;
+
+        const newDocuments=[]
+        tokens.forEach(async (token) => {
+            const newDocument = await token.actor.getTokenDocument({x: token.document.x+canvas.grid.size*8, y: token.document.y})
+            newDocuments.push(newDocument);            
+        })
+
+        canvas.scene.createEmbeddedDocuments("Token",newDocuments).then((createdTokenList) => {
+            createdTokenList.forEach((createdToken) => {
+                createdToken.update({"height": 1, "width": 1});
+            })
+        })
+    }
+}

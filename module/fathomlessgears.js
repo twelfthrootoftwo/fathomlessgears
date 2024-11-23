@@ -11,6 +11,7 @@ import {conditions} from "./conditions/conditions.js";
 import {GridHoverHUD} from "./tokens/grid-hover.js";
 import { GRID_HUD_LOCATION } from "./constants.js";
 import { RollHandler } from "./actions/roll-handler.js";
+import { HUDActionCollection } from "./actions/hud-actions.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -111,6 +112,7 @@ export const system_ready = new Promise((success) => {
 		})
 		GridHoverHUD.addGridHUD();
 		RollHandler.addRollHandler();
+		HUDActionCollection.addHUDActions();
 
 		game.settings.register("fathomlessgears", "datafiles", {
 			name: "Source data files",
