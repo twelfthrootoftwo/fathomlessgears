@@ -1,3 +1,5 @@
+// import { conditions, CONDITIONS } from "../conditions/conditions";
+
 export class HUDActionCollection {
     static addHUDActions() {
         game.hudActions = new HUDActionCollection();
@@ -45,9 +47,23 @@ export class HUDActionCollection {
             newDocuments.push(newDocument);            
         })
 
+        const ballastConditionId = {
+            id: "ballast",
+            name: "CONDITIONS.ballast",
+            icon: "systems/fathomlessgears/assets/icons/Ballast.png",
+            statuses: []
+        }
+
         canvas.scene.createEmbeddedDocuments("Token",newDocuments).then((createdTokenList) => {
             createdTokenList.forEach((createdToken) => {
                 createdToken.update({"height": 1, "width": 1});
+                createdToken.toggleActiveEffect(ballastConditionId).then(() => {
+                    const effect = createdToken.actor.appliedEffects[0]
+                    let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
+                    if(!effectCounter) {
+                        effectCounter = new ActiveEffectCounter(createdToken.actor.system.attributes.ballast.total,effect.icon,effect);
+                    }
+                })
             })
         })
     }
