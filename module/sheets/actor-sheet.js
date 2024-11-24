@@ -134,6 +134,9 @@ export class HLMActorSheet extends ActorSheet {
 			if(Utils.isRollableAttribute(key)) {
 				let attributeDocument=html.find(`#${key}`).find(".name-box")[0];
 				attributeDocument.classList.add("attribute-button","rollable", "btn");
+				if(this.type==ACTOR_TYPES.fish) {
+					attributeDocument.classList.add("btn-dark");
+				}
 			}
 		});
 

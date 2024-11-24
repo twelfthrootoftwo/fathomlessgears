@@ -1,9 +1,10 @@
-<div class="attribute-col flex-col">
+<div class="attribute-col flex-col {{#if dark}}dark{{/if}}">
     {{>
         "systems/fathomlessgears/templates/partials/attribute-box.html"
         attribute=ballast
         key="ballast"
-        type="flat"    
+        type="flat"
+        dark=dark
     }}
     <hr class="divider primary">
     {{#each rolled as |attrib key|}}
@@ -12,6 +13,7 @@
         attribute=attrib
         key=key
         type="rolled"
+        dark=dark
     }}
     {{#unless @last}}
         <hr class="divider secondary">
@@ -24,6 +26,7 @@
         attribute=attrib
         key=key
         type="flat"
+        dark=dark
     }}
     {{#unless @last}}
         <hr class="divider secondary">
