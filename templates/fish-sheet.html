@@ -32,66 +32,55 @@
             dark=true
         }}
         <div class="sheet-data">
-            <nav class="sheet-tabs flex-row dark">
-                <a data-tab="fish">{{localize "TABS.fish"}}</a>
-                <a data-tab="internals">{{localize "TABS.internals"}}</a>
-            </nav>
 
             <section class="sheet-body">                
                 <!---------------------------------------------------
                         FISH TAB
                 ---------------------------------------------------->
-                <div class="tab" data-tab="fish">
-                    <div class="tab-content flex-row">
-                        <div class="flex-col gear-col">
-                            <img
-                                class="profile-img"
-                                src="{{actor.img}}"
-                                data-edit="img"
-                                title="{{actor.name}}"
-                                max-height="200"
-                                width="130"
-                            />
-                            <div class="holder">
-                                <div class="resource-row flex-row">
-									<p class="novok">{{localize "ITEMTYPE.size"}}</p>
-									<p class="novok">{{size.name}}</p>
-								</div>
-                                <div class="resource-row flex-row">
-									<p class="novok">{{localize "ITEMTYPE.template"}}</p>
-									<p class="novok">Soon<sup>TM</sup></p>
-								</div>
+                <div class="tab-content">
+                    <div class="col">
+                        <div class="flex-row">
+                            <div class="flex-col gear-col">
+                                <img
+                                    class="profile-img"
+                                    src="{{actor.img}}"
+                                    data-edit="img"
+                                    title="{{actor.name}}"
+                                    max-height="200"
+                                    width="130"
+                                />
+                                <div class="holder">
+                                    <div class="resource-row flex-row">
+                                        <p class="novok">{{localize "ITEMTYPE.size"}}</p>
+                                        <p class="novok">{{size.name}}</p>
+                                    </div>
+                                    <div class="resource-row flex-row">
+                                        <p class="novok">{{localize "ITEMTYPE.template"}}</p>
+                                        <p class="novok">Soon<sup>TM</sup></p>
+                                    </div>
+                                </div>
+                                <div class="btn actor-button hit-location-button" id="hit-location">{{localize "SHEET.hitlocation"}}</div>
+                                <div class="btn actor-button" id="scan">{{scan_text}}</div>
                             </div>
-                            <div class="btn actor-button hit-location-button" id="hit-location">{{localize "SHEET.hitlocation"}}</div>
-                            <div class="btn actor-button" id="scan">{{scan_text}}</div>
+                            <div class="flex-col">
+                                {{#if interactiveGrid}}
+                                {{>
+                                    "systems/fathomlessgears/templates/partials/grid-box.html"
+                                    grid=grid
+                                }}
+                                {{else}}
+                                <img
+                                    class="grid-img"
+                                    id="grid-img"
+                                    src="{{actor.system.grid}}"
+                                    data-edit="system.grid"
+                                    title="{{actor.name}}"
+                                    max-height="350"
+                                    width="350"
+                                />
+                                {{/if}}
+                            </div>
                         </div>
-                        <div class="flex-col">
-                            {{#if interactiveGrid}}
-                            {{>
-                                "systems/fathomlessgears/templates/partials/grid-box.html"
-                                grid=grid
-                            }}
-                            {{else}}
-                            <img
-                                class="grid-img"
-                                id="grid-img"
-                                src="{{actor.system.grid}}"
-                                data-edit="system.grid"
-                                title="{{actor.name}}"
-                                max-height="350"
-                                width="350"
-                            />
-                            {{/if}}
-                        </div>
-                    </div>
-                </div>
-
-                
-                <!---------------------------------------------------
-                        INTERNALS TAB
-                ---------------------------------------------------->
-                <div class="tab" data-tab="internals">
-                    <div class="tab-content">
                         <div class="internal-category flex-row">
                             <h3 class="internal-category-header">{{localize "INTERNALS.weapons"}}</h3>
                             {{#each weapons}}
