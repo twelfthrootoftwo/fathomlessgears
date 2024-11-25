@@ -2,6 +2,7 @@ import { HLMApplication } from "../sheets/application.js";
 import { ATTRIBUTES, COVER_STATES, ROLL_MODIFIER_TYPE, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED } from "../constants.js";
 import { Utils } from "../utilities/utils.js";
 import { CONDITIONS } from "../conditions/conditions.js"
+import { RollParameters } from "./roll-params.js";
 
 export class RollElement {
     value
@@ -173,10 +174,12 @@ export class RollDialog extends HLMApplication {
         if(this.focused) {
             modifierStack.push(this.focused);
         }
+        const rollParams = new RollParameters(this.actor,this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(),modifierStack,this.cover,this.item_id)
+        console.log(rollParams)
         if(this.item_id) {
-            await this.actor.triggerRolledItem(this.item_id,this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(),this.cover,modifierStack);
+            await this.actor.triggerRolledItem(rollParams);
         } else {
-            await game.rollHandler.rollAttribute(this.actor, this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(), this.cover,modifierStack);
+            await game.rollHandler.rollAttribute(rollParams);
         }
         this.close();
     }

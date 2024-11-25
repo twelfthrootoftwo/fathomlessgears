@@ -254,10 +254,9 @@ export class HLMActor extends Actor {
 	 * @param {int} totalFlat Total flat bonus to the roll
 	 * @param {COVER_STATE} cover Whether or not this attack is affected by cover
 	 */
-	async triggerRolledItem(uuid,attackKey,totalDieCount,totalFlat, cover,modifierStack) {
-		const internal=this.items.get(uuid);
-		const defenceKey=game.rollHandler.isTargetedRoll(attackKey);
-		const rollOutput=await game.rollHandler.rollTargeted(this, attackKey,defenceKey,totalDieCount,totalFlat, cover,modifierStack);
+	async triggerRolledItem(rollParams) {
+		const internal=this.items.get(rollParams.internalId);
+		const rollOutput=await game.rollHandler.rollTargeted(rollParams);
 		const displayString=await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{

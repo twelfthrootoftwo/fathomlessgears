@@ -4,45 +4,37 @@ import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
 
 export class AttackHandler {
 	static async rollToHit(
-		attacker,
-		attackKey,
-		defender,
-		defenceKey,
-		dieCount,
-		flatModifier,
-		cover,
-		modifierStack
+		rollParams,
+		defender
 	) {
 		const attackRoll = Utils.getRoller(
-			dieCount,
-			flatModifier
+			rollParams.dieTotal,
+			rollParams.flatTotal
 		);
 		await attackRoll.evaluate();
 		const hitResult = AttackHandler.determineHitMargin(
 			attackRoll,
-			defender.system.attributes[defenceKey],
-			AttackHandler.canCrit(attacker,attackKey),
-			cover
+			defender.system.attributes[rollParams.defenceKey],
+			AttackHandler.canCrit(rollParams.actor,rollParams.attribute),
+			rollParams.cover
 		);
 
 		let locationResult = null;
-		if (AttackHandler.requiresLocationDisplay(attackKey,hitResult)) {
+		if (AttackHandler.requiresLocationDisplay(rollParams.attribute,hitResult)) {
 			locationResult = await AttackHandler.rollHitLocation(defender);
 		}
 
 		const attackAttrLabel = game.i18n.localize(
-			Utils.getLocalisedAttributeLabel(attackKey)
+			Utils.getLocalisedAttributeLabel(rollParams.attribute)
 		);
 		const rollOutput={};
 		rollOutput.text= await AttackHandler.createHitRollMessage(
+			rollParams,
 			attackRoll,
-			attacker,
 			defender,
 			attackAttrLabel,
-			cover,
 			hitResult,
-			locationResult,
-			modifierStack
+			locationResult
 		);
 		rollOutput.result=hitResult.upgraded ? hitResult.upgraded : hitResult.original;
 		return rollOutput;
@@ -73,22 +65,20 @@ export class AttackHandler {
 	}
 
 	static async createHitRollMessage(
+		rollParams,
 		attackRoll,
-		attacker,
 		defender,
 		attackAttrLabel,
-		cover,
 		hitResult,
-		locationResult,
-		modifierStack
+		locationResult
 	) {
 		const displayString = [];
 		//Intro
 		const introductionMessage = game.i18n
 			.localize("ROLLTEXT.attackHeader")
-			.replace("_ATTACKER_NAME_", attacker.name)
+			.replace("_ATTACKER_NAME_", rollParams.actor.name)
 			.replace("_TARGET_NAME_", defender.name)
-			.replace("_COVER_TEXT_", getCoverText(cover));
+			.replace("_COVER_TEXT_", getCoverText(rollParams.cover));
 		const introductionHtml=`<div class="attack-target">${introductionMessage}</div>`
 		displayString.push(introductionHtml);
 
@@ -97,7 +87,7 @@ export class AttackHandler {
 			attackAttrLabel,
 			hitResult,
 			locationResult,
-			modifierStack
+			rollParams.getDisplayModifierStack()
 		);
 		displayString.push(hitRollMessage);
 		return displayString.join("");
