@@ -118,3 +118,9 @@
     font-size: 8pt;
     text-align: center;
 }
+.grid-hud-attributes {
+    width: 100%;
+    font-size: var(--font-size-13);
+    color: var(--color-text-dark-2);
+    margin-top: -50px;
+}

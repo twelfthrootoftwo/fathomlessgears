@@ -35,6 +35,7 @@ export class GridHoverHUD extends HLMApplication{
 
 		if(tokenObject?.actor?.type==ACTOR_TYPES.fish) {
 			data.hp=grid.calculateHP()
+			data.showAttributes=true;
 		}
 
 		return data;

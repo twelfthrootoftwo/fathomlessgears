@@ -8,6 +8,22 @@
         }}
         {{/if}}
     </div>
+    {{#if showAttributes}}
+        <div class="grid-hud-attributes text-center">
+            <p>
+                {{localize "ATTRIBUTES.close"}} {{grid.actor.system.attributes.close.total}} - 
+                {{localize "ATTRIBUTES.far"}} {{grid.actor.system.attributes.far.total}} - 
+                {{localize "ATTRIBUTES.mental"}} {{grid.actor.system.attributes.mental.total}} - 
+                {{localize "ATTRIBUTES.power"}} {{grid.actor.system.attributes.power.total}}
+                <br>
+                {{localize "ATTRIBUTES.evasion"}} {{grid.actor.system.attributes.evasion.total}} - 
+                {{localize "ATTRIBUTES.willpower"}} {{grid.actor.system.attributes.willpower.total}} - 
+                {{localize "ATTRIBUTES.speed"}} {{grid.actor.system.attributes.speed.total}} - 
+                {{localize "ATTRIBUTES.sensors"}} {{grid.actor.system.attributes.sensors.total}} - 
+                {{localize "ATTRIBUTES.baseAP"}} {{grid.actor.system.attributes.baseAP.total}}
+            </p>
+        </div>
+    {{/if}}
     {{#if hp}}
         <div class="text-center">{{hp}} {{localize "GRID.remainingHP"}}</div>
     {{/if}}
