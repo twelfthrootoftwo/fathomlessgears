@@ -1,28 +1,31 @@
 <div id="grid-hover-hud" class="grid-hover-hud flex-col {{position}}">
     <div class="lock-prompt-text">{{ lockPrompt }}</div>
-    <div class="margin-auto">
-        {{#if grid}}
-        {{>
-            "systems/fathomlessgears/templates/partials/grid-box.html"
-            grid=grid
-        }}
+    {{#if grid}}
+    <div class="flex-row">
+        {{#if showAttributes}}
+            <div class="flex-col full-height flex-0">
+                <div class="grid-hud-attributes">
+                    <p>{{localize "ATTRIBUTES.close"}} {{grid.actor.system.attributes.close.total}}</p>
+                    <p>{{localize "ATTRIBUTES.far"}} {{grid.actor.system.attributes.far.total}}</p>
+                    <p>{{localize "ATTRIBUTES.mental"}} {{grid.actor.system.attributes.mental.total}}</p>
+                    <p>{{localize "ATTRIBUTES.power"}} {{grid.actor.system.attributes.power.total}}</p>
+                    <p>  -</p>
+                    <p>{{localize "ATTRIBUTES.evasion"}} {{grid.actor.system.attributes.evasion.total}}</p>
+                    <p>{{localize "ATTRIBUTES.willpower"}} {{grid.actor.system.attributes.willpower.total}}</p>
+                    <p>  -</p>
+                    <p>{{localize "ATTRIBUTES.speed"}} {{grid.actor.system.attributes.speed.total}}</p>
+                    <p>{{localize "ATTRIBUTES.sensors"}} {{grid.actor.system.attributes.sensors.total}}</p>
+                    <p>{{localize "ATTRIBUTES.baseAP"}} {{grid.actor.system.attributes.baseAP.total}}</p>
+                </div>
+            </div>
         {{/if}}
-    </div>
-    {{#if showAttributes}}
-        <div class="grid-hud-attributes text-center">
-            <p>
-                {{localize "ATTRIBUTES.close"}} {{grid.actor.system.attributes.close.total}} - 
-                {{localize "ATTRIBUTES.far"}} {{grid.actor.system.attributes.far.total}} - 
-                {{localize "ATTRIBUTES.mental"}} {{grid.actor.system.attributes.mental.total}} - 
-                {{localize "ATTRIBUTES.power"}} {{grid.actor.system.attributes.power.total}}
-                <br>
-                {{localize "ATTRIBUTES.evasion"}} {{grid.actor.system.attributes.evasion.total}} - 
-                {{localize "ATTRIBUTES.willpower"}} {{grid.actor.system.attributes.willpower.total}} - 
-                {{localize "ATTRIBUTES.speed"}} {{grid.actor.system.attributes.speed.total}} - 
-                {{localize "ATTRIBUTES.sensors"}} {{grid.actor.system.attributes.sensors.total}} - 
-                {{localize "ATTRIBUTES.baseAP"}} {{grid.actor.system.attributes.baseAP.total}}
-            </p>
+        <div class="flex-1">
+            {{>
+                "systems/fathomlessgears/templates/partials/grid-box.html"
+                grid=grid
+            }}
         </div>
+    </div>
     {{/if}}
     {{#if hp}}
         <div class="text-center">{{hp}} {{localize "GRID.remainingHP"}}</div>
