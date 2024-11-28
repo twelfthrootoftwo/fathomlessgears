@@ -160,6 +160,12 @@ export class ItemsManager {
 		const item=await Item.create(frame,{parent: this.actor});
 		this.actor.system.frame=item._id;
 		this.actor.calculateBallast();
+		
+		//Resize token if needed
+		if(item.name=="Jolly Roger") {
+			this.actor.updateDefaultTokenSize(2);
+		}
+
 		await this.actor.update({"system": this.actor.system});
 		Hooks.callAll("frameUpdated",this.actor)
 	}
