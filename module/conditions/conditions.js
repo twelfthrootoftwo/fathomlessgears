@@ -4,6 +4,7 @@ import { ATTRIBUTES } from "../constants.js";
 export const CONDITIONS={
     blind: "blind",
     burdened: "burdened",
+    catchcounter: "catchcounter",
     concealed: "concealed",
     dazed: "dazed",
     doomed: "doomed",

@@ -97,6 +97,12 @@ export class HLMActor extends Actor {
 		});
 	}
 
+	getConditionValue(conditionName) {
+		const condition=this.effects.getName(game.i18n.localize(`CONDITIONS.${conditionName}`));
+		if(!condition) return 0;
+		return condition.flags.statuscounter.counter.value || 0;
+	}
+
 	async locationHitMessage() {
 		const locationResult=await AttackHandler.rollHitLocation(this);
 		if(locationResult) {

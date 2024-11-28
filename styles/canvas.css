@@ -39,3 +39,6 @@
 .top-right .lock-prompt-text {
     text-align: left;
 }
+.hp-text {
+    margin-top: -20px;
+}

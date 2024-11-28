@@ -119,9 +119,11 @@
     text-align: center;
 }
 .grid-hud-attributes {
-    font-size: var(--font-size-12);
-    color: var(--color-text-dark-2);
     width: 70px;
     padding-top: 50px;
+}
+.grid-font-light {
+    font-size: var(--font-size-12);
     font-style: italic;
+    color: var(--color-text-dark-2);
 }

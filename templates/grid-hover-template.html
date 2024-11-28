@@ -3,7 +3,7 @@
     {{#if grid}}
     <div class="flex-row">
         <div class="flex-col full-height flex-0">
-            <div class="grid-hud-attributes">
+            <div class="grid-font-light grid-hud-attributes">
                 <p>{{localize "ATTRIBUTES.close"}} {{grid.actor.system.attributes.close.total}}</p>
                 <p>{{localize "ATTRIBUTES.far"}} {{grid.actor.system.attributes.far.total}}</p>
                 <p>{{localize "ATTRIBUTES.mental"}} {{grid.actor.system.attributes.mental.total}}</p>
@@ -26,6 +26,11 @@
     </div>
     {{/if}}
     {{#if hp}}
-        <div class="text-center">{{hp}} {{localize "GRID.remainingHP"}}</div>
+    <div class="flex-col full-width hp-text text-center">
+        {{hp}}
+        <div class="grid-font-light">
+            {{hpBreakdown}}
+        </div>
+    </div>
     {{/if}}
 </div>

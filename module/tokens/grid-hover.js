@@ -1,6 +1,7 @@
 //This code draws on from Eriku33's Image Hover: https://github.com/Eriku33/Foundry-VTT-Image-Hover
 import { ACTOR_TYPES } from "../constants.js";
 import { HLMApplication } from "../sheets/application.js";
+import { CONDITIONS } from "../conditions/conditions.js";
 
 
 /**
@@ -34,7 +35,19 @@ export class GridHoverHUD extends HLMApplication{
 		data.position=game.settings.get("fathomlessgears","gridHUDPosition")
 
 		if(tokenObject?.actor?.type==ACTOR_TYPES.fish) {
-			data.hp=grid.calculateHP();
+			const hp=grid.calculateHP();
+			const tranq = Math.min(tokenObject.actor.getConditionValue("tranq"),3);
+			const catchCounters = tokenObject.actor.getConditionValue("catchcounter");
+			const effectiveHP = Math.max(hp-tranq-catchCounters,0);
+			data.hp = `${effectiveHP} ${game.i18n.localize("GRID.remainingHP")}`
+			data.hpBreakdown=`(${hp} HP`
+			if(tranq) {
+				data.hpBreakdown=data.hpBreakdown.concat(` - ${tranq} ${game.i18n.localize("CONDITIONS.tranq")}`)
+			}
+			if(catchCounters) {
+				data.hpBreakdown=data.hpBreakdown.concat(` - ${catchCounters} ${game.i18n.localize("CONDITIONS.catchcounter")}`)
+			}
+			data.hpBreakdown=data.hpBreakdown.concat(")")
 		}
 
 		return data;
@@ -171,6 +184,9 @@ export class GridHoverHUD extends HLMApplication{
 		Hooks.on("closeApplication", (...args) => clearGrid());
 
 		Hooks.on("updateActor",(...args) => refreshGrid(...args));
+		Hooks.on("updateActiveEffect",(condition,updates) => refreshGrid(condition.parent,condition));
+		Hooks.on("deleteActiveEffect",(condition,updates) => refreshGrid(condition.parent,condition));
+		Hooks.on("createActiveEffect",(condition,updates) => refreshGrid(condition.parent,condition));
 	}
 
 	getLockPrompt() {
@@ -206,10 +222,11 @@ function clearGrid() {
  * @param {HLMActor} actor The actor that has been updated
  */
 function refreshGrid(actor,updates,_,__) {
+	const gridRelevantUpdate = Boolean(updates.system?.grid) || updates.statuses?.has(CONDITIONS.tranq) || updates.statuses?.has(CONDITIONS.catchcounter)
 	if(
 		game.gridHover?.rendered &&
 		game.gridHover.object.actor._id==actor.id &&
-		updates.system?.grid
+		gridRelevantUpdate
 	) {
 		game.gridHover.render(true);
 	}
