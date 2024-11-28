@@ -34,8 +34,7 @@ export class GridHoverHUD extends HLMApplication{
 		data.position=game.settings.get("fathomlessgears","gridHUDPosition")
 
 		if(tokenObject?.actor?.type==ACTOR_TYPES.fish) {
-			data.hp=grid.calculateHP()
-			data.showAttributes=true;
+			data.hp=grid.calculateHP();
 		}
 
 		return data;

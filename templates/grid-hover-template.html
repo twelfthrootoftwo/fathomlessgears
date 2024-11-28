@@ -2,23 +2,21 @@
     <div class="lock-prompt-text">{{ lockPrompt }}</div>
     {{#if grid}}
     <div class="flex-row">
-        {{#if showAttributes}}
-            <div class="flex-col full-height flex-0">
-                <div class="grid-hud-attributes">
-                    <p>{{localize "ATTRIBUTES.close"}} {{grid.actor.system.attributes.close.total}}</p>
-                    <p>{{localize "ATTRIBUTES.far"}} {{grid.actor.system.attributes.far.total}}</p>
-                    <p>{{localize "ATTRIBUTES.mental"}} {{grid.actor.system.attributes.mental.total}}</p>
-                    <p>{{localize "ATTRIBUTES.power"}} {{grid.actor.system.attributes.power.total}}</p>
-                    <p>  -</p>
-                    <p>{{localize "ATTRIBUTES.evasion"}} {{grid.actor.system.attributes.evasion.total}}</p>
-                    <p>{{localize "ATTRIBUTES.willpower"}} {{grid.actor.system.attributes.willpower.total}}</p>
-                    <p>  -</p>
-                    <p>{{localize "ATTRIBUTES.speed"}} {{grid.actor.system.attributes.speed.total}}</p>
-                    <p>{{localize "ATTRIBUTES.sensors"}} {{grid.actor.system.attributes.sensors.total}}</p>
-                    <p>{{localize "ATTRIBUTES.baseAP"}} {{grid.actor.system.attributes.baseAP.total}}</p>
-                </div>
+        <div class="flex-col full-height flex-0">
+            <div class="grid-hud-attributes">
+                <p>{{localize "ATTRIBUTES.close"}} {{grid.actor.system.attributes.close.total}}</p>
+                <p>{{localize "ATTRIBUTES.far"}} {{grid.actor.system.attributes.far.total}}</p>
+                <p>{{localize "ATTRIBUTES.mental"}} {{grid.actor.system.attributes.mental.total}}</p>
+                <p>{{localize "ATTRIBUTES.power"}} {{grid.actor.system.attributes.power.total}}</p>
+                <p>  -</p>
+                <p>{{localize "ATTRIBUTES.evasion"}} {{grid.actor.system.attributes.evasion.total}}</p>
+                <p>{{localize "ATTRIBUTES.willpower"}} {{grid.actor.system.attributes.willpower.total}}</p>
+                <p>  -</p>
+                <p>{{localize "ATTRIBUTES.speed"}} {{grid.actor.system.attributes.speed.total}}</p>
+                <p>{{localize "ATTRIBUTES.sensors"}} {{grid.actor.system.attributes.sensors.total}}</p>
+                <p>{{localize "ATTRIBUTES.baseAP"}} {{grid.actor.system.attributes.baseAP.total}}</p>
             </div>
-        {{/if}}
+        </div>
         <div class="flex-1">
             {{>
                 "systems/fathomlessgears/templates/partials/grid-box.html"
