@@ -119,4 +119,53 @@ export class GridSpace {
         const thisCover=gridElement.find(`#gridspace-${this.id}`).find(".cover")[0];
         thisCover.classList.toggle("highlight-cover");
     }
+
+    chooseBorders() {
+        const position=this.getRegionPosition();
+        const grid=this.parentRegion.gridSpaces;
+        const borderHighlights={
+            top: false,
+            bottom: false,
+            left: false,
+            right: false,
+        }
+
+        if(position.y==0) borderHighlights.top=true;
+        else {
+            const topSpace=this.parentRegion.parentGrid.findGridSpace(this.id-grid[0].length);
+            if(this.internal!=topSpace.internal) borderHighlights.top=true;
+        }
+        if(position.y==grid.length-1) borderHighlights.bottom=true;
+        else {
+            const bottomSpace=this.parentRegion.parentGrid.findGridSpace(this.id+grid[0].length);
+            if(this.internal!=bottomSpace.internal) borderHighlights.bottom=true;
+        }
+        if(position.x==0) borderHighlights.left=true;
+        else {
+            const leftSpace=this.parentRegion.parentGrid.findGridSpace(this.id-1);
+            if(this.internal!=leftSpace.internal) borderHighlights.left=true;
+        }
+        if(position.x==grid[0].length-1) borderHighlights.right=true;
+        else {
+            const rightSpace=this.parentRegion.parentGrid.findGridSpace(this.id+1);
+            if(this.internal!=rightSpace.internal) borderHighlights.right=true;
+        }
+        this.borders=borderHighlights;
+    }
+
+    getRegionPosition() {
+        let position=null;
+        let y=0;
+        this.parentRegion.gridSpaces.forEach((row) => {
+            let x=0;
+            row.forEach((space) => {
+                if(space.id==this.id) {
+                    position = {x: x, y: y}
+                }
+                x+=1
+            })
+            y+=1;
+        })
+        return position;
+    }
 }
