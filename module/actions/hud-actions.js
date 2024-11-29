@@ -62,7 +62,10 @@ export class HUDActionCollection {
                     let effectCounter = foundry.utils.getProperty(effect, "flags.statuscounter.counter");
                     if(!effectCounter) {
                         effectCounter = new ActiveEffectCounter(createdToken.actor.system.attributes.ballast.total,effect.icon,effect);
+                    } else {
+                        effectCounter.setValue(createdToken.actor.system.attributes.ballast.total,effect,true);
                     }
+                    effect.setFlag("statuscounter","counter",effectCounter);
                 })
             })
         })
