@@ -102,6 +102,9 @@ export const ATTRIBUTE_MIN=0;
 export const ATTRIBUTE_MAX_ROLLED=9;
 export const ATTRIBUTE_MAX_FLAT=16;
 
+export const BALLAST_MIN=1;
+export const BALLAST_MAX=10;
+
 export const ATTRIBUTE_KEY_MAP = {
 	[ATTRIBUTES.close]: "close",
 	[ATTRIBUTES.far]: "far",

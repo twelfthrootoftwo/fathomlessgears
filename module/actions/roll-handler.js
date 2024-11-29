@@ -49,7 +49,6 @@ export class RollHandler {
 	 */
     async rollAttribute(rollParams) {
 		let message="";
-		console.log(rollParams)
 		if(rollParams.defenceKey===ATTRIBUTES.power) {
 			message=await this.initiateReel(rollParams);
 		} else if (rollParams.defenceKey) {

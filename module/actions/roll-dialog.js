@@ -175,7 +175,6 @@ export class RollDialog extends HLMApplication {
             modifierStack.push(this.focused);
         }
         const rollParams = new RollParameters(this.actor,this.attribute,this.calculateDieTotal(),this.calculateFlatTotal(),modifierStack,this.cover,this.item_id)
-        console.log(rollParams)
         if(this.item_id) {
             await this.actor.triggerRolledItem(rollParams);
         } else {

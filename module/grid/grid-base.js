@@ -176,7 +176,6 @@ export class Grid {
     }
 
     prepareInternalBorders() {
-        console.log("Preparing internal borders")
         this.gridRegions.forEach((region) => {
             if(region) {
                 region.gridSpaces.forEach((row) => {
