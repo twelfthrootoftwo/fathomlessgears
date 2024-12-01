@@ -398,7 +398,7 @@ export class ItemsManager {
 	async removeOldTemplate() {
 		if(this.actor.itemTypes.fish_template[0]) {
 			const oldTemplate=this.actor.itemTypes.fish_template[0];
-			this._removeItem(oldTemplate._id);
+			await this._removeItem(oldTemplate._id);
 
 			//Template weight is stored as a bonus
 			const targetAttribute=this.actor.system.attributes.weight;
@@ -416,6 +416,7 @@ export class ItemsManager {
 			} else {
 				console.log(`Could not find modifier ${oldTemplate._id}`)			
 			}
+			await this.actor.update({"system.attributes.weight": this.actor.system.attributes.weight});
 		}
 	}
 
