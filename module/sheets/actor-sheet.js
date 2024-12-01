@@ -41,6 +41,7 @@ export class HLMActorSheet extends ActorSheet {
 		);
 		this.getLabels(context.actor);
 		context.scan_text=await context.actor.getScanText();
+		context.template=context.actor.itemTypes.fish_template.length > 0 ? context.actor.itemTypes.fish_template[0].name : TEMPLATE.common;
 
         const items=context.actor.itemTypes;
 		context.frame=items.frame_pc[0] ? items.frame_pc[0] : {
