@@ -223,13 +223,23 @@ export class HLMActor extends Actor {
 	 */
 	calculateBallast() {
 		const ballast=this.system.attributes.ballast;
-		const weightBallast=Math.floor(this.system.attributes.weight.total/5);
+		const weight=this.system.attributes.weight;
+
+		//Calculate ballast weight from standard values only
+		//Homebrew ballast modifications can be done via the ballast custom mods
+		let weightTotal=weight.values.standard.base;
+		weight.values.standard.additions.forEach((element) => {
+			weightTotal+=element.value;
+		})
+		const weightBallast=Math.floor(weightTotal/5);
+
 		ballast.values.standard.weight=weightBallast;
 		let ballastMods=0;
 		ballast.values.standard.additions.forEach((element) => {
 			ballastMods+=element.value;
 		})
 		ballast.total=ballast.values.standard.base+weightBallast+ballastMods+ballast.values.custom;
+
 		if(ballast.total<BALLAST_MIN) ballast.total=BALLAST_MIN;
 		if(ballast.total>BALLAST_MAX) ballast.total=BALLAST_MAX;
 	}

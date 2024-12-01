@@ -148,3 +148,17 @@ export const DEEPWORD_NAME_MAP = {
 	word_eight: "Abyssal Torpor",
 	word_final: "Serenity, A Promise Kept"
 }
+
+export const TEMPLATE = {
+	common: "Common",
+	abberant: "Abberant",
+	deepspawn: "Deepspawn",
+	elder: "Elder Deepspawn"
+}
+
+export const TEMPLATE_WEIGHT = {
+	[TEMPLATE.common]: 0,
+	[TEMPLATE.abberant]: 5,
+	[TEMPLATE.deepspawn]: 10,
+	[TEMPLATE.elder]: 20
+}

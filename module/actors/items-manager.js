@@ -1,5 +1,5 @@
 import {Utils} from "../utilities/utils.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE} from "../constants.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE, TEMPLATE_WEIGHT} from "../constants.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
 
 export class AttributeElement {
@@ -399,6 +399,23 @@ export class ItemsManager {
 		if(this.actor.itemTypes.fish_template[0]) {
 			const oldTemplate=this.actor.itemTypes.fish_template[0];
 			this._removeItem(oldTemplate._id);
+
+			//Template weight is stored as a bonus
+			const targetAttribute=this.actor.system.attributes.weight;
+			let delIndex=-1;
+			let index=0;
+			targetAttribute.values.bonus.forEach((modifier) => {
+				if(modifier.source==oldTemplate._id) {
+					delIndex=index;
+				}
+				index+=1;
+			})
+			if(delIndex>=0) {
+				console.log(`Deleted modifier ${oldTemplate._id}`)
+				targetAttribute.values.bonus.splice(delIndex,1);
+			} else {
+				console.log(`Could not find modifier ${oldTemplate._id}`)			
+			}
 		}
 	}
 
@@ -417,6 +434,13 @@ export class ItemsManager {
 				this.actor.addAttributeModifier(key,modifier);
 			}
 		})
+		const templateWeight=new AttributeElement(
+			TEMPLATE_WEIGHT[newTemplate.name],
+			newTemplate._id,
+			"template",
+			newTemplate.name
+		)
+		this.actor.system.attributes.weight.values.bonus.push(templateWeight);
 		this.actor.update({"system.attributes": this.actor.system.attributes});
 
 		Hooks.callAll("templateUpdated",this.actor)
