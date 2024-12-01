@@ -31,8 +31,8 @@
     justify-content: center;
 }
 .grid-space {
-    width: 18px;
-    padding: 1px;
+    width: 16px;
+    margin: 1px;
     aspect-ratio : 1 / 1;
     display: flex;
     justify-content: center;
@@ -117,4 +117,25 @@
 .grid-region-name {
     font-size: 8pt;
     text-align: center;
+}
+.grid-hud-attributes {
+    width: 70px;
+    padding-top: 50px;
+}
+.grid-font-light {
+    font-size: var(--font-size-12);
+    font-style: italic;
+    color: var(--color-text-dark-2);
+}
+.internal-border-top {
+    border-top: 1px solid;
+}
+.internal-border-right {
+    border-right: 1px solid;
+}
+.internal-border-bottom {
+    border-bottom: 1px solid;
+}
+.internal-border-left {
+    border-left: 1px solid;
 }

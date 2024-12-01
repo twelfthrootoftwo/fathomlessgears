@@ -65,7 +65,8 @@ export const ITEM_TYPES = {
 	development: "development",
 	maneuver: "maneuver",
 	deep_word: "deep_word",
-	background: "background"
+	background: "background",
+	fish_template: "fish_template"
 }
 
 export const COVER_STATES = {
@@ -100,6 +101,9 @@ export const CUSTOM_BACKGROUND_PART = {
 export const ATTRIBUTE_MIN=0;
 export const ATTRIBUTE_MAX_ROLLED=9;
 export const ATTRIBUTE_MAX_FLAT=16;
+
+export const BALLAST_MIN=1;
+export const BALLAST_MAX=10;
 
 export const ATTRIBUTE_KEY_MAP = {
 	[ATTRIBUTES.close]: "close",
@@ -143,4 +147,18 @@ export const DEEPWORD_NAME_MAP = {
 	word_seven: "Storm's Wrath",
 	word_eight: "Abyssal Torpor",
 	word_final: "Serenity, A Promise Kept"
+}
+
+export const TEMPLATE = {
+	common: "Common",
+	abberant: "Abberant",
+	deepspawn: "Deepspawn",
+	elder: "Elder Deepspawn"
+}
+
+export const TEMPLATE_WEIGHT = {
+	[TEMPLATE.common]: 0,
+	[TEMPLATE.abberant]: 5,
+	[TEMPLATE.deepspawn]: 10,
+	[TEMPLATE.elder]: 20
 }

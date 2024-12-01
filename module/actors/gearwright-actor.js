@@ -1,7 +1,7 @@
 import { testFieldsExist } from "../items/import-validator.js";
 import {Utils} from "../utilities/utils.js";
 import { constructGrid } from "../grid/grid-base.js";
-import { ACTOR_TYPES, CUSTOM_BACKGROUND_PART, DEEPWORD_NAME_MAP, GRID_SPACE_STATE } from "../constants.js";
+import { ACTOR_TYPES, ATTRIBUTES, CUSTOM_BACKGROUND_PART, DEEPWORD_NAME_MAP, GRID_SPACE_STATE } from "../constants.js";
 
 /**
  * Build an actor based on a Gearwright save (including interactive grid)
@@ -42,8 +42,12 @@ async function buildFisher(actor,data) {
 }
 
 async function buildFish(actor,data) {
-	if(data.name) actor.update({"name": data.name});
+	if(data.name) {
+		actor.update({"name": data.name, "prototypeToken.name": data.name});
+	}
+	if(data.template) actor.update({"system.template": Utils.capitaliseWords(Utils.fromLowerHyphen(data.template))})
 	await applySize(data,actor);
+	await applyTemplate(data,actor);
 	const gridObject=await constructGrid(actor);
 	await applyInternals(data,actor,gridObject);
 	gridObject.setAllToIntact();
@@ -107,6 +111,21 @@ async function applyInternals(importData,actor,gridObject) {
 			})
 		}
 	}
+}
+
+async function applyTemplate(importData,actor) {
+	const template={attributes: {}}
+	const templateName=Utils.capitaliseWords(Utils.fromLowerHyphen(importData.template));
+	
+	importData.mutations.forEach((item) => {
+		if(item==ATTRIBUTES.ballast) {
+			template.attributes.ballast = (template.attributes.ballast || 0 )-1
+		} else {
+			template.attributes[item] = template.attributes[item]+1 || 1
+		}
+	})
+	
+	await actor.itemsManager.applyTemplateSystem(template, templateName);
 }
 
 async function applyBackground(importData,actor) {

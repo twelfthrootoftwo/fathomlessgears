@@ -1,6 +1,6 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE} from "../constants.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE, BALLAST_MIN, BALLAST_MAX} from "../constants.js";
 
 import { Grid } from "../grid/grid-base.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
@@ -95,6 +95,12 @@ export class HLMActor extends Actor {
 				}
 			})
 		});
+	}
+
+	getConditionValue(conditionName) {
+		const condition=this.effects.getName(game.i18n.localize(`CONDITIONS.${conditionName}`));
+		if(!condition) return 0;
+		return condition.flags.statuscounter.counter.value || 0;
 	}
 
 	async locationHitMessage() {
@@ -217,14 +223,25 @@ export class HLMActor extends Actor {
 	 */
 	calculateBallast() {
 		const ballast=this.system.attributes.ballast;
-		const weightBallast=Math.floor(this.system.attributes.weight.total/5);
+		const weight=this.system.attributes.weight;
+
+		//Calculate ballast weight from standard values only
+		//Homebrew ballast modifications can be done via the ballast custom mods
+		let weightTotal=weight.values.standard.base;
+		weight.values.standard.additions.forEach((element) => {
+			weightTotal+=element.value;
+		})
+		const weightBallast=Math.floor(weightTotal/5);
+
 		ballast.values.standard.weight=weightBallast;
 		let ballastMods=0;
 		ballast.values.standard.additions.forEach((element) => {
 			ballastMods+=element.value;
 		})
 		ballast.total=ballast.values.standard.base+weightBallast+ballastMods+ballast.values.custom;
-		if(ballast.total<ATTRIBUTE_MIN) ballast.total=ATTRIBUTE_MIN;
+
+		if(ballast.total<BALLAST_MIN) ballast.total=BALLAST_MIN;
+		if(ballast.total>BALLAST_MAX) ballast.total=BALLAST_MAX;
 	}
 
 	
@@ -254,10 +271,9 @@ export class HLMActor extends Actor {
 	 * @param {int} totalFlat Total flat bonus to the roll
 	 * @param {COVER_STATE} cover Whether or not this attack is affected by cover
 	 */
-	async triggerRolledItem(uuid,attackKey,totalDieCount,totalFlat, cover,modifierStack) {
-		const internal=this.items.get(uuid);
-		const defenceKey=game.rollHandler.isTargetedRoll(attackKey);
-		const rollOutput=await game.rollHandler.rollTargeted(this, attackKey,defenceKey,totalDieCount,totalFlat, cover,modifierStack);
+	async triggerRolledItem(rollParams) {
+		const internal=this.items.get(rollParams.internalId);
+		const rollOutput=await game.rollHandler.rollTargeted(rollParams);
 		const displayString=await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
@@ -408,5 +424,9 @@ export class HLMActor extends Actor {
 				content: content,
 			})
 		}
+	}
+
+	updateDefaultTokenSize(size) {
+		this.update({"prototypeToken.height": size, "prototypeToken.width": size});
 	}
 }

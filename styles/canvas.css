@@ -2,7 +2,7 @@
     padding: 10px;
     border: 2px solid var(--color-border-dark-secondary);
     position: absolute;
-    width: 400px;
+    width: 450px;
     height: 400px;
     background-color: #ffffff90;
 }
@@ -38,4 +38,7 @@
 }
 .top-right .lock-prompt-text {
     text-align: left;
+}
+.hp-text {
+    margin-top: -20px;
 }

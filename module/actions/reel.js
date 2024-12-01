@@ -4,18 +4,15 @@ import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
 
 export class ReelHandler {
     static async reel(
-        initiator,
-        target,
-        dieCount,
-        flatModifier,
-        modifierStack
+        rollParams,
+        target
     ) {
         const powerRoll = Utils.getRoller(
-			dieCount,
-			flatModifier
+			rollParams.dieTotal,
+			rollParams.flatTotal
 		);
 		await powerRoll.evaluate();
-        const reelMessageText=initiator.type==ACTOR_TYPES.fisher ? "MESSAGE.reelPC" : "MESSAGE.reelNPC"
+        const reelMessageText=rollParams.actor.type==ACTOR_TYPES.fisher ? "MESSAGE.reelPC" : "MESSAGE.reelNPC"
         const reelMessage=game.i18n.localize(reelMessageText);
         const rollString=await renderTemplate(
             "systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
@@ -24,12 +21,12 @@ export class ReelHandler {
                 total: await constructCollapsibleRollMessage(powerRoll),
                 preformat: true,
                 outcome: "",
-                modifiers: modifierStack
+                modifiers: rollParams.getDisplayModifierStack()
             }
         )
         const displayString=
         `<div class="flex-col" style="align-items: center;">
-            <img src="${initiator.img}" style="border:none; max-height: 150px;"/>
+            <img src="${rollParams.actor.img}" style="border:none; max-height: 150px;"/>
             <div style="font-size: 16px; font-weight: bold;">${reelMessage}</div>
             ${rollString}
         </div>`

@@ -1,9 +1,10 @@
 import { RollElement, RollDialog } from "./roll-dialog.js";
 import { ReelHandler } from "./reel.js";
 import {constructCollapsibleRollMessage} from "./collapsible-roll.js"
-import {ATTRIBUTES,ROLL_MODIFIER_TYPE} from "../constants.js";
+import {ACTOR_TYPES, ATTRIBUTES,ROLL_MODIFIER_TYPE} from "../constants.js";
 import {AttackHandler} from "./attack.js";
 import {Utils} from "../utilities/utils.js";
+import { RollParameters } from "./roll-params.js";
 
 export class RollHandler {
     isTargetedRoll(attributeKey) {
@@ -46,69 +47,59 @@ export class RollHandler {
 	 * @param {int} dieCount: The total number of dice to roll
 	 * @param {int} flatModifier : The total modifier to add to the roll
 	 */
-    async rollAttribute(actor, attributeKey, dieCount, flatModifier,cover,modifierStack) {
-		const defenceKey = this.isTargetedRoll(attributeKey);
+    async rollAttribute(rollParams) {
 		let message="";
-		if(defenceKey===ATTRIBUTES.power) {
-			message=await this.initiateReel(actor, dieCount, flatModifier,modifierStack);
-		} else if (defenceKey) {
-			const output=await this.rollTargeted(actor, attributeKey, defenceKey, dieCount, flatModifier,cover,modifierStack);
+		if(rollParams.defenceKey===ATTRIBUTES.power) {
+			message=await this.initiateReel(rollParams);
+		} else if (rollParams.defenceKey) {
+			const output=await this.rollTargeted(rollParams);
 			message=output.text ? output.text : output;
 		} else {
-			const result=await this.rollNoTarget(attributeKey, dieCount, flatModifier,modifierStack);
+			const result=await this.rollNoTarget(rollParams);
 			message=result.text;
 		}
 		const hitMessage = await ChatMessage.create({
-			speaker: {actor: actor},
+			speaker: {actor: rollParams.actor},
 			content: message,
 		});
 	}
 
 
-	async rollTargeted(actor, attackKey, defenceKey, dieCount, flatModifier,cover,modifierStack) {
+	async rollTargeted(rollParams) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
-			const result= await this.rollNoTarget(attackKey, dieCount, flatModifier,modifierStack);
+			const result= await this.rollNoTarget(rollParams);
 			return result;
 		} else {
 			const target = targetSet.values().next().value;
 			return await AttackHandler.rollToHit(
-				actor,
-				attackKey,
-				target.actor,
-				defenceKey,
-				dieCount,
-				flatModifier,
-				cover,
-				modifierStack
+				rollParams,
+				target.actor
 			);
 		}
 	}
 
-	async initiateReel(actor, dieCount, flatModifier,modifierStack) {
+	async initiateReel(rollParams) {
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
-			const result= await this.rollNoTarget(ATTRIBUTES.power, dieCount, flatModifier,modifierStack);
+			const result= await this.rollNoTarget(rollParams);
 			return result.text;
 		} else {
 			const target = targetSet.values().next().value;
 			return await ReelHandler.reel(
-				actor,
-				target.actor,
-				dieCount,
-				flatModifier,
-				modifierStack
+				rollParams,
+				target
 			);
 		}
 	}
 
-	async rollNoTarget(attributeKey, dieCount, flatModifier,modifierStack) {
-		let roll = Utils.getRoller(dieCount, flatModifier);
+	async rollNoTarget(rollParams) {
+		let roll = Utils.getRoller(rollParams.dieTotal, rollParams.flatTotal);
 		await roll.evaluate();
 
 		var label = game.i18n.localize("ROLLTEXT.base");
-		if (attributeKey) {
-			label=label.replace("_ATTRIBUTE_NAME_", Utils.getLocalisedAttributeLabel(attributeKey));
+		if (rollParams.attribute) {
+			label=label.replace("_ATTRIBUTE_NAME_", Utils.getLocalisedAttributeLabel(rollParams.attribute));
 		} else {
 			label=label.replace("_ATTRIBUTE_NAME_", roll.formula);
 		}
@@ -119,7 +110,7 @@ export class RollHandler {
 				label_left: label,
 				total: await constructCollapsibleRollMessage(roll),
 				preformat: true,
-				modifiers: modifierStack
+				modifiers: rollParams.getDisplayModifierStack()
 			}
 		);
 		return {text: hitRollDisplay, result: null};

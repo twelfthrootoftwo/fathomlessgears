@@ -1,4 +1,4 @@
-import { ATTRIBUTES, ACTOR_TYPES } from "../constants.js";
+import { ATTRIBUTES, ACTOR_TYPES, TEMPLATE } from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 import { FileUploader } from "../data-files/uploader.js";
 import {populateActorFromGearwright} from "../actors/gearwright-actor.js"
@@ -41,6 +41,7 @@ export class HLMActorSheet extends ActorSheet {
 		);
 		this.getLabels(context.actor);
 		context.scan_text=await context.actor.getScanText();
+		context.template=context.actor.itemTypes.fish_template.length > 0 ? context.actor.itemTypes.fish_template[0].name : TEMPLATE.common;
 
         const items=context.actor.itemTypes;
 		context.frame=items.frame_pc[0] ? items.frame_pc[0] : {
@@ -55,7 +56,9 @@ export class HLMActorSheet extends ActorSheet {
 		context.rolled={};
 		context.flat={};
 		for (const [key, value] of Object.entries(context.actor.system.attributes)) {
-			if(key=="ballast") {context.ballast=value; }
+			if(key=="ballast") {
+				context.ballast=value;
+			}
 			else {
 				Utils.isRollableAttribute(key) ? context.rolled[key]=value : context.flat[key]=value;
 			}
@@ -134,6 +137,9 @@ export class HLMActorSheet extends ActorSheet {
 			if(Utils.isRollableAttribute(key)) {
 				let attributeDocument=html.find(`#${key}`).find(".name-box")[0];
 				attributeDocument.classList.add("attribute-button","rollable", "btn");
+				if(this.type==ACTOR_TYPES.fish) {
+					attributeDocument.classList.add("btn-dark");
+				}
 			}
 		});
 
@@ -184,14 +190,6 @@ export class HLMActorSheet extends ActorSheet {
 			for (const resourceKey in actor.system.resources) {
 				const resource = actor.system.resources[resourceKey];
 				resource.label = Utils.getLocalisedResourceLabel(resourceKey);
-			}
-		}
-
-		//Downtime
-		if (actor.system.downtime) {
-			for (const downtimeKey in actor.system.downtime.rollable) {
-				const attribute = actor.system.downtime.rollable[downtimeKey];
-				attribute.label = Utils.getLocalisedDowntimeLabel(downtimeKey);
 			}
 		}
 	}

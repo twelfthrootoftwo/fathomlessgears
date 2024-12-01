@@ -1,5 +1,5 @@
 import {Utils} from "../utilities/utils.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE} from "../constants.js";
+import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE, TEMPLATE_WEIGHT} from "../constants.js";
 import { ConfirmDialog } from "../utilities/confirm-dialog.js";
 
 export class AttributeElement {
@@ -128,6 +128,10 @@ export class ItemsManager {
 		//Apply grid
 		const newGrid=await Utils.getGridFromSize(size.name);
 		await this.applyGrid(newGrid);
+
+		//Update token size
+		this.actor.updateDefaultTokenSize(Utils.getTokenSizeFromSize(size.name))
+
 		Hooks.callAll("sizeUpdated",this.actor)
 	}
 
@@ -156,6 +160,12 @@ export class ItemsManager {
 		const item=await Item.create(frame,{parent: this.actor});
 		this.actor.system.frame=item._id;
 		this.actor.calculateBallast();
+		
+		//Resize token if needed
+		if(item.name=="Jolly Roger") {
+			this.actor.updateDefaultTokenSize(2);
+		}
+
 		await this.actor.update({"system": this.actor.system});
 		Hooks.callAll("frameUpdated",this.actor)
 	}
@@ -358,7 +368,9 @@ export class ItemsManager {
 	}
 
 	async applyBackground(background) {
-		this.applyBackgroundSystem(background.system);
+		if(this.actor.type==ACTOR_TYPES.fisher) {
+			this.applyBackgroundSystem(background.system);
+		}
 	}
 
 	async removeOldBackground() {
@@ -381,6 +393,58 @@ export class ItemsManager {
 
 		await Item.create({name: "Background", type: ITEM_TYPES.background, system: system},{parent: this.actor});
 		Hooks.callAll("backgroundUpdated",this.actor)
+	}
+
+	async removeOldTemplate() {
+		if(this.actor.itemTypes.fish_template[0]) {
+			const oldTemplate=this.actor.itemTypes.fish_template[0];
+			await this._removeItem(oldTemplate._id);
+
+			//Template weight is stored as a bonus
+			const targetAttribute=this.actor.system.attributes.weight;
+			let delIndex=-1;
+			let index=0;
+			targetAttribute.values.bonus.forEach((modifier) => {
+				if(modifier.source==oldTemplate._id) {
+					delIndex=index;
+				}
+				index+=1;
+			})
+			if(delIndex>=0) {
+				console.log(`Deleted modifier ${oldTemplate._id}`)
+				targetAttribute.values.bonus.splice(delIndex,1);
+			} else {
+				console.log(`Could not find modifier ${oldTemplate._id}`)			
+			}
+			await this.actor.update({"system.attributes.weight": this.actor.system.attributes.weight});
+		}
+	}
+
+	async applyTemplateSystem(system, name) {
+		await this.removeOldTemplate();
+		const newTemplate = await Item.create({name: name, type: ITEM_TYPES.fish_template, system: system},{parent: this.actor});
+
+		Object.keys(newTemplate.system.attributes).forEach((key) => {
+			if(Utils.isAttribute(key) && newTemplate.system.attributes[key]!=0) {
+				const modifier=new AttributeElement(
+					newTemplate.system.attributes[key],
+					newTemplate._id,
+					"template",
+					newTemplate.name
+				);
+				this.actor.addAttributeModifier(key,modifier);
+			}
+		})
+		const templateWeight=new AttributeElement(
+			TEMPLATE_WEIGHT[newTemplate.name],
+			newTemplate._id,
+			"template",
+			newTemplate.name
+		)
+		this.actor.system.attributes.weight.values.bonus.push(templateWeight);
+		this.actor.update({"system.attributes": this.actor.system.attributes});
+
+		Hooks.callAll("templateUpdated",this.actor)
 	}
 
 	async toggleManeuver(uuid) {

@@ -58,6 +58,7 @@ export class Grid {
                     this.gridRegions.push(new GridRegion(region,this));
                 }
             })
+            this.prepareInternalBorders();
         } else {
             this.actor=null;
             this.gridRegions=[];
@@ -172,6 +173,18 @@ export class Grid {
             }
         });
         return targetSpace;
+    }
+
+    prepareInternalBorders() {
+        this.gridRegions.forEach((region) => {
+            if(region) {
+                region.gridSpaces.forEach((row) => {
+                    row.forEach((space) => {
+                        if(space.internal) space.chooseBorders();
+                    });
+                });
+            }
+        });
     }
 
     /**
