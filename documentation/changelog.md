@@ -82,3 +82,10 @@ User testing performed on this patch!
 * Fix a bug where native Foundry CSS was overridden by system styles
 * Fix a bug where deep words were not found on actor import
 * Fix a bug where players could view fish grids without scanning via the grid HUD
+
+## Version 0.6.3
+* Fish templates will import from Gearwright saves
+* Fish sizes (and Jolly Roger) tokens will automatically resize the actor's default token
+* Added a macro to bulk generate ballast tokens (size 1 tokens with the ballast value shown as a marker, sutable for the ballast chart)
+* Added a display of attributes to the grid HUD
+* Enriched the Remaining HP display for fish on the grid HUD (it will now also count tranq and catch counters)
