@@ -1,4 +1,4 @@
-import { ATTRIBUTES, ACTOR_TYPES } from "../constants.js";
+import { ATTRIBUTES, ACTOR_TYPES, TEMPLATE } from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 import { FileUploader } from "../data-files/uploader.js";
 import {populateActorFromGearwright} from "../actors/gearwright-actor.js"
