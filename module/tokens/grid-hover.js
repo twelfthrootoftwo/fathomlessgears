@@ -222,11 +222,9 @@ function clearGrid() {
  * @param {HLMActor} actor The actor that has been updated
  */
 function refreshGrid(actor,updates,_,__) {
-	const gridRelevantUpdate = Boolean(updates.system?.grid) || Boolean(updates.system?.attributes) || updates.statuses?.has(CONDITIONS.tranq) || updates.statuses?.has(CONDITIONS.catchcounter)
 	if(
 		game.gridHover?.rendered &&
-		game.gridHover.object.actor._id==actor.id &&
-		gridRelevantUpdate
+		game.gridHover.object.actor._id==actor.id
 	) {
 		game.gridHover.render(true);
 	}
