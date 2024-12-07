@@ -1,44 +1,44 @@
 .grid-hover-hud {
-    padding: 10px;
-    border: 2px solid var(--color-border-dark-secondary);
-    position: absolute;
-    width: 450px;
-    height: 400px;
-    background-color: #ffffff90;
+	padding: 10px;
+	border: 2px solid var(--color-border-dark-secondary);
+	position: absolute;
+	width: 450px;
+	height: 400px;
+	background-color: #ffffff90;
 }
 .grid-hover-hud.bottom-left {
-    bottom: 100px;
-    left: 0;
+	bottom: 100px;
+	left: 0;
 }
 .grid-hover-hud.bottom-right {
-    bottom: 100px;
-    right: var(--sidebar-width);
+	bottom: 100px;
+	right: var(--sidebar-width);
 }
 .grid-hover-hud.top-left {
-    top: 0;
-    left: 0;
+	top: 0;
+	left: 0;
 }
 .grid-hover-hud.top-right {
-    top: 0;
-    right: var(--sidebar-width);
+	top: 0;
+	right: var(--sidebar-width);
 }
 .lock-prompt-text {
-    color: var(--color-text-light);
-    font-size: var(--font-size-15);
-    margin-bottom: -24px;
+	color: var(--color-text-light);
+	font-size: var(--font-size-15);
+	margin-bottom: -24px;
 }
 .bottom-left .lock-prompt-text {
-    text-align: right;
+	text-align: right;
 }
 .top-left .lock-prompt-text {
-    text-align: right;
+	text-align: right;
 }
 .bottom-right .lock-prompt-text {
-    text-align: left;
+	text-align: left;
 }
 .top-right .lock-prompt-text {
-    text-align: left;
+	text-align: left;
 }
 .hp-text {
-    margin-top: -20px;
+	margin-top: -20px;
 }

@@ -50,11 +50,11 @@ input.sheet-input {
 .text-center {
 	text-align: center;
 }
-.full-width{
-	width: 100%
+.full-width {
+	width: 100%;
 }
-.full-height{
-	height: 100%
+.full-height {
+	height: 100%;
 }
 .btn {
 	background: rgba(0, 0, 0, 0.1);
@@ -100,7 +100,7 @@ input.sheet-input {
 	cursor: wait;
 }
 .waiting {
-	cursor: wait !important
+	cursor: wait !important;
 }
 .loading-display {
 	padding-top: 250px;

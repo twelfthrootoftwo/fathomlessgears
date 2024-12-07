@@ -199,7 +199,14 @@
 			}
 		},
 		"fisher": {
-			"templates": ["attributes", "ballast", "internals", "resources", "fisher_history","downtime"],
+			"templates": [
+				"attributes",
+				"ballast",
+				"internals",
+				"resources",
+				"fisher_history",
+				"downtime"
+			],
 			"biography": "Good at catching fish",
 			"gridType": "",
 			"frame": "",
@@ -218,11 +225,23 @@
 		}
 	},
 	"Item": {
-		"types": ["tag","internal_pc","internal_npc","frame_pc","size","grid","development","maneuver","deep_word","background","fish_template"],
+		"types": [
+			"tag",
+			"internal_pc",
+			"internal_npc",
+			"frame_pc",
+			"size",
+			"grid",
+			"development",
+			"maneuver",
+			"deep_word",
+			"background",
+			"fish_template"
+		],
 		"htmlFields": ["description"],
 		"templates": {
-			"source":{
-				"source":{
+			"source": {
+				"source": {
 					"filename": "",
 					"version": ""
 				}
@@ -269,20 +288,20 @@
 			}
 		},
 		"tag": {
-			"templates": ["source","data"]
+			"templates": ["source", "data"]
 		},
 		"internal_pc": {
-			"templates": ["source","attributes","internal"],
+			"templates": ["source", "attributes", "internal"],
 			"section": ""
 		},
 		"internal_npc": {
-			"templates": ["source","attributes","internal"]
+			"templates": ["source", "attributes", "internal"]
 		},
 		"frame_pc": {
-			"templates": ["source","attributes","frame"]
+			"templates": ["source", "attributes", "frame"]
 		},
 		"size": {
-			"templates": ["source","attributes"]
+			"templates": ["source", "attributes"]
 		},
 		"grid": {
 			"templates": ["toHit"]
@@ -290,5 +309,5 @@
 		"fish_template": {
 			"templates": ["attributes"]
 		}
-	  }
+	}
 }
