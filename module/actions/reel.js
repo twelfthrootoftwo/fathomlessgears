@@ -8,10 +8,10 @@ export class ReelHandler {
         target
     ) {
         const powerRoll = Utils.getRoller(
-			rollParams.dieTotal,
-			rollParams.flatTotal
-		);
-		await powerRoll.evaluate();
+            rollParams.dieTotal,
+            rollParams.flatTotal
+        );
+        await powerRoll.evaluate();
         const reelMessageText=rollParams.actor.type==ACTOR_TYPES.fisher ? "MESSAGE.reelPC" : "MESSAGE.reelNPC"
         const reelMessage=game.i18n.localize(reelMessageText);
         const rollString=await renderTemplate(

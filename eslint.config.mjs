@@ -1,0 +1,34 @@
+import js from "@eslint/js"
+
+export default [
+    {ignores: ["scripts/**/*.js"]},
+    js.configs.recommended,
+    {
+        files: ["**/*.js"],
+        languageOptions: {
+            parserOptions: {
+                "ecmaVersion": "latest",
+                "sourceType": "module"
+            },
+        },
+        rules: {
+            "indent": ["error", 4],
+            "no-undef": 0,
+            "no-unused-vars": [
+                "error",
+                {
+                    "args": "all",
+                    "argsIgnorePattern": "^_",
+                    "caughtErrors": "all",
+                    "caughtErrorsIgnorePattern": "^_",
+                    "destructuredArrayIgnorePattern": "^_",
+                    "varsIgnorePattern": "^_",
+                    "ignoreRestSiblings": true
+                }
+            ]
+        },
+        linterOptions: {
+            reportUnusedDisableDirectives: "error"
+        }
+    }
+]

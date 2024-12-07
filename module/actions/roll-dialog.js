@@ -30,17 +30,19 @@ export class RollElement {
     static attributeElementToRollElement(term, actor, modifierType) {
         let elementType=ROLL_MODIFIER_TYPE.flat;
         switch(term.type) {
-            case "internal":
-                const internal=actor.items.get(term.source);
-                if(internal.isOptics()) {
-                    elementType=ROLL_MODIFIER_TYPE.optics;
-                } else {
-                    elementType=ROLL_MODIFIER_TYPE.flat;
-                }
-                break;
-            case "condition":
-                elementType=ROLL_MODIFIER_TYPE.condition;
-                break;
+        case "internal": {
+            const internal=actor.items.get(term.source);
+            if(internal.isOptics()) {
+                elementType=ROLL_MODIFIER_TYPE.optics;
+            } else {
+                elementType=ROLL_MODIFIER_TYPE.flat;
+            }
+            break;
+        }
+        case "condition": {
+            elementType=ROLL_MODIFIER_TYPE.condition;
+            break;
+        }
         }
         return new RollElement(
             term.value,
@@ -85,13 +87,13 @@ export class RollDialog extends HLMApplication {
     }
 
     static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
-			classes: ["fathomlessgears"],
-			template: "systems/fathomlessgears/templates/roll-dialog.html",
-			title: "Roll Inputs",
-			width: 300,
-		});
-	}
+        return mergeObject(super.defaultOptions, {
+            classes: ["fathomlessgears"],
+            template: "systems/fathomlessgears/templates/roll-dialog.html",
+            title: "Roll Inputs",
+            width: 300,
+        });
+    }
 
     async getData(options) {
         const context=await super.getData(options);
@@ -108,7 +110,7 @@ export class RollDialog extends HLMApplication {
     activateListeners(html) {
         super.activateListeners(html);
         Utils.activateButtons(html);
-		html.find(".btn").click(this.triggerRoll.bind(this));
+        html.find(".btn").click(this.triggerRoll.bind(this));
         html.find('[data-selector="additionalFlat"]').change(async (_evt) => {
             this.additionalFlat=_evt.target.value;
             this.updateTotalString();
