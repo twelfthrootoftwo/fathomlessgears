@@ -1,12 +1,9 @@
 import {Utils} from "../utilities/utils.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, COVER_STATES} from "../constants.js";
-import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js"
+import {ACTOR_TYPES, ATTRIBUTES, HIT_TYPE, COVER_STATES} from "../constants.js";
+import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js";
 
 export class AttackHandler {
-	static async rollToHit(
-		rollParams,
-		defender
-	) {
+	static async rollToHit(rollParams, defender) {
 		const attackRoll = Utils.getRoller(
 			rollParams.dieTotal,
 			rollParams.flatTotal
@@ -15,20 +12,25 @@ export class AttackHandler {
 		const hitResult = AttackHandler.determineHitMargin(
 			attackRoll,
 			defender.system.attributes[rollParams.defenceKey],
-			AttackHandler.canCrit(rollParams.actor,rollParams.attribute),
+			AttackHandler.canCrit(rollParams.actor, rollParams.attribute),
 			rollParams.cover
 		);
 
 		let locationResult = null;
-		if (AttackHandler.requiresLocationDisplay(rollParams.attribute,hitResult)) {
+		if (
+			AttackHandler.requiresLocationDisplay(
+				rollParams.attribute,
+				hitResult
+			)
+		) {
 			locationResult = await AttackHandler.rollHitLocation(defender);
 		}
 
 		const attackAttrLabel = game.i18n.localize(
 			Utils.getLocalisedAttributeLabel(rollParams.attribute)
 		);
-		const rollOutput={};
-		rollOutput.text= await AttackHandler.createHitRollMessage(
+		const rollOutput = {};
+		rollOutput.text = await AttackHandler.createHitRollMessage(
 			rollParams,
 			attackRoll,
 			defender,
@@ -36,29 +38,31 @@ export class AttackHandler {
 			hitResult,
 			locationResult
 		);
-		rollOutput.result=hitResult.upgraded ? hitResult.upgraded : hitResult.original;
+		rollOutput.result = hitResult.upgraded
+			? hitResult.upgraded
+			: hitResult.original;
 		return rollOutput;
 	}
 
 	static determineHitMargin(attackRoll, defenceAttr, canCrit, cover) {
-		const defenceVal=defenceAttr.total+defenceAttr.values.custom;
-		const modifiedDefence=AttackHandler.applyCover(defenceVal,cover);
+		const defenceVal = defenceAttr.total + defenceAttr.values.custom;
+		const modifiedDefence = AttackHandler.applyCover(defenceVal, cover);
 		const hitMargin = attackRoll.total - modifiedDefence;
-		const combinedResult={original: "", upgraded: null};
+		const combinedResult = {original: "", upgraded: null};
 
 		if (hitMargin >= 5 && canCrit) {
-			combinedResult.original= HIT_TYPE.crit;
+			combinedResult.original = HIT_TYPE.crit;
 		} else if (hitMargin >= 0) {
-			combinedResult.original= HIT_TYPE.hit;
+			combinedResult.original = HIT_TYPE.hit;
 		} else {
-			combinedResult.original= HIT_TYPE.miss;
+			combinedResult.original = HIT_TYPE.miss;
 		}
-		if(AttackHandler.upgradeRoll(attackRoll)) {
-			let upgradeResult=""
-			if(canCrit) upgradeResult=HIT_TYPE.crit;
-			else upgradeResult=HIT_TYPE.hit;
-			if(upgradeResult!=combinedResult.original) {
-				combinedResult.upgraded=upgradeResult;
+		if (AttackHandler.upgradeRoll(attackRoll)) {
+			let upgradeResult = "";
+			if (canCrit) upgradeResult = HIT_TYPE.crit;
+			else upgradeResult = HIT_TYPE.hit;
+			if (upgradeResult != combinedResult.original) {
+				combinedResult.upgraded = upgradeResult;
 			}
 		}
 		return combinedResult;
@@ -79,10 +83,10 @@ export class AttackHandler {
 			.replace("_ATTACKER_NAME_", rollParams.actor.name)
 			.replace("_TARGET_NAME_", defender.name)
 			.replace("_COVER_TEXT_", getCoverText(rollParams.cover));
-		const introductionHtml=`<div class="attack-target">${introductionMessage}</div>`
+		const introductionHtml = `<div class="attack-target">${introductionMessage}</div>`;
 		displayString.push(introductionHtml);
 
-		const hitRollMessage=await AttackHandler.hitRollText(
+		const hitRollMessage = await AttackHandler.hitRollText(
 			attackRoll,
 			attackAttrLabel,
 			hitResult,
@@ -100,21 +104,25 @@ export class AttackHandler {
 		locationResult,
 		modifierStack
 	) {
-		const displayString=[];
+		const displayString = [];
 		//To hit
-		let hitResultText="";
-		if(hitResult.upgraded) {
-			hitResultText="<s>"+game.i18n.localize("HIT."+hitResult.original)+"</s> "+game.i18n.localize("HIT."+hitResult.upgraded);
+		let hitResultText = "";
+		if (hitResult.upgraded) {
+			hitResultText =
+				"<s>" +
+				game.i18n.localize("HIT." + hitResult.original) +
+				"</s> " +
+				game.i18n.localize("HIT." + hitResult.upgraded);
 		} else {
-			hitResultText=game.i18n.localize("HIT."+hitResult.original);
+			hitResultText = game.i18n.localize("HIT." + hitResult.original);
 		}
-		
+
 		const hitRollDisplay = await renderTemplate(
 			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
 			{
 				label_left: game.i18n
-				.localize("ROLLTEXT.attackIntro")
-				.replace("_ATTRIBUTE_NAME_", attackAttrLabel),
+					.localize("ROLLTEXT.attackIntro")
+					.replace("_ATTRIBUTE_NAME_", attackAttrLabel),
 				total: await constructCollapsibleRollMessage(attackRoll),
 				outcome: hitResultText,
 				preformat: true,
@@ -124,28 +132,30 @@ export class AttackHandler {
 		displayString.push(hitRollDisplay);
 
 		if (locationResult != null) {
-			const locationDisplay = await AttackHandler.generateLocationDisplay(
-				locationResult
-			);
+			const locationDisplay =
+				await AttackHandler.generateLocationDisplay(locationResult);
 			displayString.push(locationDisplay);
-		} else if(hitResult.original===HIT_TYPE.crit || hitResult.upgraded ===HIT_TYPE.crit) {
-			displayString.push(
-				`<p>${game.i18n.localize("MESSAGE.crit")}</p>`
-			)
+		} else if (
+			hitResult.original === HIT_TYPE.crit ||
+			hitResult.upgraded === HIT_TYPE.crit
+		) {
+			displayString.push(`<p>${game.i18n.localize("MESSAGE.crit")}</p>`);
 		}
 		return displayString.join("");
 	}
 
 	static canCrit(actor, attackKey) {
-		return actor.type === ACTOR_TYPES.fisher && attackKey != ATTRIBUTES.mental;
+		return (
+			actor.type === ACTOR_TYPES.fisher && attackKey != ATTRIBUTES.mental
+		);
 	}
 
 	static async rollHitLocation(defender) {
-		const hitZoneInfo=defender.items.get(defender.system.gridType);
-		if(!hitZoneInfo) {
+		const hitZoneInfo = defender.items.get(defender.system.gridType);
+		if (!hitZoneInfo) {
 			ChatMessage.create({
 				speaker: {actor: defender},
-				content: defender.name+" has no grid type assigned!",
+				content: defender.name + " has no grid type assigned!"
 			});
 			return false;
 		}
@@ -180,9 +190,13 @@ export class AttackHandler {
 				{
 					label_left: game.i18n.localize("ROLLTEXT.hitZone"),
 					tooltip: `${locationResult.locationRoll.formula}:  ${locationResult.locationRoll.result}`,
-					total: await constructCollapsibleRollMessage(locationResult.locationRoll),
-					outcome: Utils.getLocalisedHitZone(locationResult.hitZone.location),
-					preformat: true,
+					total: await constructCollapsibleRollMessage(
+						locationResult.locationRoll
+					),
+					outcome: Utils.getLocalisedHitZone(
+						locationResult.hitZone.location
+					),
+					preformat: true
 				}
 			);
 			locationDisplayParts.push(hitZone);
@@ -192,8 +206,10 @@ export class AttackHandler {
 			{
 				label_left: game.i18n.localize("ROLLTEXT.hitColumn"),
 				tooltip: locationResult.columnRoll.formula,
-				total: await constructCollapsibleRollMessage(locationResult.columnRoll),
-				preformat: true,
+				total: await constructCollapsibleRollMessage(
+					locationResult.columnRoll
+				),
+				preformat: true
 			}
 		);
 		locationDisplayParts.push(column);
@@ -202,42 +218,41 @@ export class AttackHandler {
 
 	static upgradeRoll(rollResult) {
 		//Extract d6 terms from list of terms
-		const diceResults=[];
+		const diceResults = [];
 		rollResult.terms.forEach((term) => {
-			if(term.faces && term.faces===6) {
+			if (term.faces && term.faces === 6) {
 				diceResults.push(term);
 			}
-		})
+		});
 
 		//Count 6s
-		let counter=0;
+		let counter = 0;
 		diceResults.forEach((term) => {
 			term.results.forEach((die) => {
-				if(die.result===6) counter+=1;
-			})
-		})
+				if (die.result === 6) counter += 1;
+			});
+		});
 
-		return counter>1;
+		return counter > 1;
 	}
 
-	static requiresLocationDisplay(attackKey,hitResult) {
-		if(attackKey==ATTRIBUTES.mental) return false;
-		if(hitResult.upgraded) {
-			return hitResult.upgraded===HIT_TYPE.hit;
-		} 
-		else {
-			return hitResult.original===HIT_TYPE.hit;
+	static requiresLocationDisplay(attackKey, hitResult) {
+		if (attackKey == ATTRIBUTES.mental) return false;
+		if (hitResult.upgraded) {
+			return hitResult.upgraded === HIT_TYPE.hit;
+		} else {
+			return hitResult.original === HIT_TYPE.hit;
 		}
 	}
 
 	static applyCover(defenceVal, cover) {
-		switch(cover) {
+		switch (cover) {
 			case COVER_STATES.none:
 				return defenceVal;
 			case COVER_STATES.soft:
-				return defenceVal+2;
+				return defenceVal + 2;
 			case COVER_STATES.hard:
-				return defenceVal+4;
+				return defenceVal + 4;
 			default:
 				return defenceVal;
 		}
@@ -245,7 +260,7 @@ export class AttackHandler {
 }
 
 function getCoverText(cover) {
-	switch(cover) {
+	switch (cover) {
 		case COVER_STATES.none:
 			return "";
 		case COVER_STATES.soft:

@@ -1,8 +1,20 @@
 {
-  "compilerOptions": {
-    "module": "CommonJS",
-    "target": "ES6"
-  },
-  "include": ["module","module/actions","module/actors","module/data-files","module/items","module/sheets","module/tokens","module/utilities","scripts", "foundry"],
-  "exclude": ["foundry/client/config.js"]
+	"compilerOptions": {
+		"module": "CommonJS",
+		"target": "ES6"
+	},
+	"include": [
+		"module/**/*",
+		"scripts/**/*",
+		"foundry/client/**/*.js",
+		"foundry/**/*.mjs"
+	],
+	"exclude": [
+		"foundry/client/config.js",
+		"node_modules",
+		"**/node_modules/*"
+	],
+	"typeAcquisition": {
+		"include": ["jquery"]
+	}
 }

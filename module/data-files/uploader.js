@@ -1,28 +1,28 @@
-import { Utils } from "../utilities/utils.js";
+import {Utils} from "../utilities/utils.js";
 
 export class FileUploader extends Application {
-    targetFile
-    manager
-    newFile
+	targetFile;
+	manager;
+	newFile;
 
-    constructor(manager, targetFile=null) {
-        super();
-        this.targetFile=targetFile;
-        this.manager=manager;
-        this.render(true);
-    }
+	constructor(manager, targetFile = null) {
+		super();
+		this.targetFile = targetFile;
+		this.manager = manager;
+		this.render(true);
+	}
 
-    static get defaultOptions() {
+	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: ["fathomlessgears"],
 			template: "systems/fathomlessgears/templates/uploader.html",
 			title: "File Upload",
 			width: 400,
-			height: 100,
+			height: 100
 		});
 	}
 
-    activateListeners(html) {
+	activateListeners(html) {
 		super.activateListeners(html);
 		Utils.activateButtons(html);
 		let fileInput = document.getElementById("fsh-file-select");
@@ -31,18 +31,20 @@ export class FileUploader extends Application {
 				this._selectFile(ev);
 			};
 		}
-		document.getElementsByClassName("file-upload-button")[0]?.addEventListener("click", () => {
-		  	this._onUploadButtonClick().then();
-		});
+		document
+			.getElementsByClassName("file-upload-button")[0]
+			?.addEventListener("click", () => {
+				this._onUploadButtonClick().then();
+			});
 	}
 
-    /**
+	/**
 	 * Detect a selected file
 	 */
 	_selectFile(ev) {
 		let file = ev.target.files[0];
 		if (!file) return;
-		this.newFile=file;
+		this.newFile = file;
 	}
 
 	/**
@@ -53,8 +55,14 @@ export class FileUploader extends Application {
 		const fr = new FileReader();
 		fr.readAsBinaryString(this.newFile);
 		fr.addEventListener("load", (ev) => {
-			this.manager.onFileLoaded(ev.target.result,this.newFile.name, this.targetFile).then();
-            this.close();
-		  });
+			this.manager
+				.onFileLoaded(
+					ev.target.result,
+					this.newFile.name,
+					this.targetFile
+				)
+				.then();
+			this.close();
+		});
 	}
 }

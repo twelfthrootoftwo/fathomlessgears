@@ -1,12 +1,22 @@
 import {Utils} from "../utilities/utils.js";
 import {AttackHandler} from "../actions/attack.js";
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES, ATTRIBUTE_MIN, ATTRIBUTE_MAX_ROLLED, ATTRIBUTE_MAX_FLAT, GRID_TYPE, BALLAST_MIN, BALLAST_MAX} from "../constants.js";
+import {
+	ACTOR_TYPES,
+	ATTRIBUTES,
+	HIT_TYPE,
+	ATTRIBUTE_MIN,
+	ATTRIBUTE_MAX_ROLLED,
+	ATTRIBUTE_MAX_FLAT,
+	BALLAST_MIN,
+	BALLAST_MAX
+} from "../constants.js";
 
-import { Grid } from "../grid/grid-base.js";
-import { ConfirmDialog } from "../utilities/confirm-dialog.js";
-import { AttributeElement, ItemsManager } from "./items-manager.js";
-import { ATTRIBUTE_ONLY_CONDITIONS, applyAttributeModifyingEffect } from "../conditions/conditions.js";
-
+import {Grid} from "../grid/grid-base.js";
+import {ItemsManager} from "./items-manager.js";
+import {
+	ATTRIBUTE_ONLY_CONDITIONS,
+	applyAttributeModifyingEffect
+} from "../conditions/conditions.js";
 
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
@@ -16,50 +26,52 @@ export class HLMActor extends Actor {
 	/** @inheritdoc */
 	prepareDerivedData() {
 		super.prepareDerivedData();
-		if(this.getFlag("fathomlessgears","interactiveGrid")) {
-			this.grid=new Grid(this.system.grid);	
-			this.grid.actor=this;	
+		if (this.getFlag("fathomlessgears", "interactiveGrid")) {
+			this.grid = new Grid(this.system.grid);
+			this.grid.actor = this;
 		}
-		const items=this.itemTypes;
+		const items = this.itemTypes;
 
-		const internals=items.internal_pc.concat(items.internal_npc);
+		const internals = items.internal_pc.concat(items.internal_npc);
 		internals.forEach((internal) => {
-			internal.description_text=internal.getInternalDescriptionText();
+			internal.description_text = internal.getInternalDescriptionText();
 		});
 
-		const attackItems=items.internal_pc.concat(items.internal_npc).concat(items.maneuver).concat(items.deep_word);
+		const attackItems = items.internal_pc
+			.concat(items.internal_npc)
+			.concat(items.maneuver)
+			.concat(items.deep_word);
 		attackItems.forEach((item) => {
-			if(item.system.attack) {
-				item.system.attack.damageDescription=item.getDamageDescription(this);
-				item.system.attack.damageNumber=item.getDamageNumber(this);
+			if (item.system.attack) {
+				item.system.attack.damageDescription =
+					item.getDamageDescription(this);
+				item.system.attack.damageNumber = item.getDamageNumber(this);
 			}
 		});
 
-		this.itemsManager=new ItemsManager(this);
+		this.itemsManager = new ItemsManager(this);
 	}
 
 	/** @inheritdoc */
 	_onCreate(data, options, userId) {
 		super._onCreate(data, options, userId);
-		if(game.user._id==userId) {
-			this.setFlag("fathomlessgears","initialised",false)
+		if (game.user._id == userId) {
+			this.setFlag("fathomlessgears", "initialised", false);
 
-			if(this.type==ACTOR_TYPES.fish) {
+			if (this.type == ACTOR_TYPES.fish) {
 				//Initialise scanning state
-				const flag=this.getFlag("fathomlessgears","scanned");
-				if(flag==null || flag==undefined) {
-					this.setFlag("fathomlessgears","scanned",false);
+				const flag = this.getFlag("fathomlessgears", "scanned");
+				if (flag == null || flag == undefined) {
+					this.setFlag("fathomlessgears", "scanned", false);
 				}
 
 				//Default fish to None permissions
 				let ownership = foundry.utils.deepClone(this.ownership);
 				ownership["default"] = 0;
 				this.update({ownership});
-
-
-			} else if(this.type==ACTOR_TYPES.fisher){
-				if(!this.system.gridType){
-					this.itemsManager=new ItemsManager(this);
+			} else if (this.type == ACTOR_TYPES.fisher) {
+				if (!this.system.gridType) {
+					this.itemsManager = new ItemsManager(this);
 					Utils.getGridFromSize("Fisher").then((grid) => {
 						this.itemsManager.applyGrid(grid);
 					});
@@ -74,42 +86,48 @@ export class HLMActor extends Actor {
 	}
 
 	applyActiveEffects() {
-		super.applyActiveEffects()
-		const conditionNames=[]
+		super.applyActiveEffects();
+		const conditionNames = [];
 		this.effects.forEach((activeEffect) => {
-			const condition=activeEffect.statuses.values().next().value
-			if(ATTRIBUTE_ONLY_CONDITIONS.includes(condition)) {
+			const condition = activeEffect.statuses.values().next().value;
+			if (ATTRIBUTE_ONLY_CONDITIONS.includes(condition)) {
 				conditionNames.push(condition);
-				applyAttributeModifyingEffect(this,activeEffect)
+				applyAttributeModifyingEffect(this, activeEffect);
 			}
-		})
+		});
 		this.removeInactiveEffects(conditionNames);
 	}
 
 	removeInactiveEffects(activeConditionNames) {
 		Object.keys(this.system.attributes).forEach((key) => {
-			const attribute=this.system.attributes[key];
+			const attribute = this.system.attributes[key];
 			attribute.values.standard.additions.forEach((modifier) => {
-				if(!activeConditionNames.includes(modifier.source) && ATTRIBUTE_ONLY_CONDITIONS.includes(modifier.source)) {
-					this.removeAttributeModifier(key,modifier.source)
+				if (
+					!activeConditionNames.includes(modifier.source) &&
+					ATTRIBUTE_ONLY_CONDITIONS.includes(modifier.source)
+				) {
+					this.removeAttributeModifier(key, modifier.source);
 				}
-			})
+			});
 		});
 	}
 
 	getConditionValue(conditionName) {
-		const condition=this.effects.getName(game.i18n.localize(`CONDITIONS.${conditionName}`));
-		if(!condition) return 0;
+		const condition = this.effects.getName(
+			game.i18n.localize(`CONDITIONS.${conditionName}`)
+		);
+		if (!condition) return 0;
 		return condition.flags.statuscounter.counter.value || 0;
 	}
 
 	async locationHitMessage() {
-		const locationResult=await AttackHandler.rollHitLocation(this);
-		if(locationResult) {
-			const displayString=await AttackHandler.generateLocationDisplay(locationResult);
+		const locationResult = await AttackHandler.rollHitLocation(this);
+		if (locationResult) {
+			const displayString =
+				await AttackHandler.generateLocationDisplay(locationResult);
 			ChatMessage.create({
 				speaker: {actor: this},
-				content: displayString,
+				content: displayString
 			});
 		}
 	}
@@ -118,11 +136,11 @@ export class HLMActor extends Actor {
 	 * Evaluate totals for all attributes & save results
 	 */
 	calculateAttributeTotals(updateSource = true) {
-		const updateData={};
+		const updateData = {};
 		Object.keys(this.system.attributes).forEach((key) => {
-			updateData[key]=this.calculateSingleAttribute(key);
+			updateData[key] = this.calculateSingleAttribute(key);
 		});
-		if(this._id && updateSource) {
+		if (this._id && updateSource) {
 			this.update({"system.attributes": updateData});
 		}
 	}
@@ -133,24 +151,34 @@ export class HLMActor extends Actor {
 	 * @returns none
 	 */
 	calculateSingleAttribute(key) {
-		if(key=="ballast") {
+		if (key == "ballast") {
 			this.calculateBallast();
 			return;
 		}
-		const attr=this.system.attributes[key];
-		let total=0;
-		total=attr.values.standard.base;
+		const attr = this.system.attributes[key];
+		let total = 0;
+		total = attr.values.standard.base;
 		attr.values.standard.additions.forEach((val) => {
-			total+=val.value;
+			total += val.value;
 		});
-		if(total<ATTRIBUTE_MIN) total=ATTRIBUTE_MIN;
-		const applyAttributeMaxRolled=[ATTRIBUTES.close,ATTRIBUTES.far,ATTRIBUTES.power,ATTRIBUTES.speed];
-		if(applyAttributeMaxRolled.includes(key) && total>ATTRIBUTE_MAX_ROLLED) total=ATTRIBUTE_MAX_ROLLED;
-		if(Utils.isDefenceAttribute(key) && total>ATTRIBUTE_MAX_FLAT) total=ATTRIBUTE_MAX_FLAT;
+		if (total < ATTRIBUTE_MIN) total = ATTRIBUTE_MIN;
+		const applyAttributeMaxRolled = [
+			ATTRIBUTES.close,
+			ATTRIBUTES.far,
+			ATTRIBUTES.power,
+			ATTRIBUTES.speed
+		];
+		if (
+			applyAttributeMaxRolled.includes(key) &&
+			total > ATTRIBUTE_MAX_ROLLED
+		)
+			total = ATTRIBUTE_MAX_ROLLED;
+		if (Utils.isDefenceAttribute(key) && total > ATTRIBUTE_MAX_FLAT)
+			total = ATTRIBUTE_MAX_FLAT;
 		attr.values.bonus.forEach((val) => {
-			total+=val.value;
+			total += val.value;
 		});
-		attr.total=total;
+		attr.total = total;
 		return attr;
 	}
 
@@ -161,10 +189,10 @@ export class HLMActor extends Actor {
 	 * @returns true if the change was successful, false if the attribute key is not valid
 	 */
 	setBaseAttributeValue(attributeKey, value) {
-		if(!Utils.isAttribute(attributeKey)) return false;
-		const targetAttribute=this.system.attributes[attributeKey]
-		targetAttribute.values.standard.base=value;
-		this.calculateSingleAttribute(attributeKey)
+		if (!Utils.isAttribute(attributeKey)) return false;
+		const targetAttribute = this.system.attributes[attributeKey];
+		targetAttribute.values.standard.base = value;
+		this.calculateSingleAttribute(attributeKey);
 		return true;
 	}
 
@@ -173,8 +201,8 @@ export class HLMActor extends Actor {
 	 * @param {ATTRIBUTE} key The attribute to add the modifier to
 	 * @param {AttributeElement} modifier The modifier to add
 	 */
-	addAttributeModifier(key,modifier) {
-		const targetAttribute=this.system.attributes[key];
+	addAttributeModifier(key, modifier) {
+		const targetAttribute = this.system.attributes[key];
 		targetAttribute.values.standard.additions.push(modifier);
 		this.calculateSingleAttribute(key);
 	}
@@ -184,21 +212,21 @@ export class HLMActor extends Actor {
 	 * @param {ATTRIBUTE} key The attribute to modify
 	 * @param {string} source The id of the modifier to remove (usually the id of the object that created it)
 	 */
-	removeAttributeModifier(key,source) {
-		const targetAttribute=this.system.attributes[key];
-		let delIndex=-1;
-		let index=0;
+	removeAttributeModifier(key, source) {
+		const targetAttribute = this.system.attributes[key];
+		let delIndex = -1;
+		let index = 0;
 		targetAttribute.values.standard.additions.forEach((modifier) => {
-			if(modifier.source==source) {
-				delIndex=index;
+			if (modifier.source == source) {
+				delIndex = index;
 			}
-			index+=1;
-		})
-		if(delIndex>=0) {
-			console.log(`Deleted modifier ${source}`)
-			targetAttribute.values.standard.additions.splice(delIndex,1);
+			index += 1;
+		});
+		if (delIndex >= 0) {
+			console.log(`Deleted modifier ${source}`);
+			targetAttribute.values.standard.additions.splice(delIndex, 1);
 		} else {
-			console.log(`Could not find modifier ${source}`)			
+			console.log(`Could not find modifier ${source}`);
 		}
 		this.calculateSingleAttribute(key);
 	}
@@ -209,12 +237,14 @@ export class HLMActor extends Actor {
 	 * @param {int} value The value change to apply
 	 * @returns True if the change was successful, False if the key is not a resource
 	 */
-	modifyResourceValue(resourceKey,value) {
-		if(!Utils.isResource(resourceKey)) return false;
-		this.system.resources[resourceKey].value+=value;
-		this.system.resources[resourceKey].max+=value;
-		if(this.system.resources[resourceKey].value < 0) this.system.resources[resourceKey].value=0;
-		if(this.system.resources[resourceKey].max < 0) this.system.resources[resourceKey].max=0;
+	modifyResourceValue(resourceKey, value) {
+		if (!Utils.isResource(resourceKey)) return false;
+		this.system.resources[resourceKey].value += value;
+		this.system.resources[resourceKey].max += value;
+		if (this.system.resources[resourceKey].value < 0)
+			this.system.resources[resourceKey].value = 0;
+		if (this.system.resources[resourceKey].max < 0)
+			this.system.resources[resourceKey].max = 0;
 		return true;
 	}
 
@@ -222,35 +252,37 @@ export class HLMActor extends Actor {
 	 * Compute the actor's ballast value
 	 */
 	calculateBallast() {
-		const ballast=this.system.attributes.ballast;
-		const weight=this.system.attributes.weight;
+		const ballast = this.system.attributes.ballast;
+		const weight = this.system.attributes.weight;
 
 		//Calculate ballast weight from standard values only
 		//Homebrew ballast modifications can be done via the ballast custom mods
-		let weightTotal=weight.values.standard.base;
+		let weightTotal = weight.values.standard.base;
 		weight.values.standard.additions.forEach((element) => {
-			weightTotal+=element.value;
-		})
-		const weightBallast=Math.floor(weightTotal/5);
+			weightTotal += element.value;
+		});
+		const weightBallast = Math.floor(weightTotal / 5);
 
-		ballast.values.standard.weight=weightBallast;
-		let ballastMods=0;
+		ballast.values.standard.weight = weightBallast;
+		let ballastMods = 0;
 		ballast.values.standard.additions.forEach((element) => {
-			ballastMods+=element.value;
-		})
-		ballast.total=ballast.values.standard.base+weightBallast+ballastMods+ballast.values.custom;
+			ballastMods += element.value;
+		});
+		ballast.total =
+			ballast.values.standard.base +
+			weightBallast +
+			ballastMods +
+			ballast.values.custom;
 
-		if(ballast.total<BALLAST_MIN) ballast.total=BALLAST_MIN;
-		if(ballast.total>BALLAST_MAX) ballast.total=BALLAST_MAX;
+		if (ballast.total < BALLAST_MIN) ballast.total = BALLAST_MIN;
+		if (ballast.total > BALLAST_MAX) ballast.total = BALLAST_MAX;
 	}
-
-	
 
 	/**
 	 * Send this actor's flat attributes to the chat log
 	 */
 	async shareFrameAbility() {
-		const frame=this.itemTypes.frame_pc[0];
+		const frame = this.itemTypes.frame_pc[0];
 		frame.postToChat(this);
 	}
 
@@ -259,7 +291,7 @@ export class HLMActor extends Actor {
 	 * @param {string} uuid The ID of the internal
 	 */
 	async postItem(uuid) {
-		const item=this.items.get(uuid);
+		const item = this.items.get(uuid);
 		item.postToChat(this);
 	}
 
@@ -272,36 +304,36 @@ export class HLMActor extends Actor {
 	 * @param {COVER_STATE} cover Whether or not this attack is affected by cover
 	 */
 	async triggerRolledItem(rollParams) {
-		const internal=this.items.get(rollParams.internalId);
-		const rollOutput=await game.rollHandler.rollTargeted(rollParams);
-		const displayString=await renderTemplate(
+		const internal = this.items.get(rollParams.internalId);
+		const rollOutput = await game.rollHandler.rollTargeted(rollParams);
+		const displayString = await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: internal,
 				minor_text: internal.getItemDescriptionText(),
 				major_text: rollOutput.text,
-				showDamage: rollOutput.result!=HIT_TYPE.miss,
+				showDamage: rollOutput.result != HIT_TYPE.miss,
 				damageText: game.i18n.localize("INTERNALS.damage"),
 				marbleText: game.i18n.localize("INTERNALS.marbles")
 			}
 		);
 		await ChatMessage.create({
 			speaker: {actor: this},
-			content: displayString,
+			content: displayString
 		});
 	}
-
 
 	/**
 	 * Switch this actor from interactive to image grid
 	 */
 	async removeInteractiveGrid() {
-		this.grid=null;
-		let targetGridString="systems/fathomlessgears/assets/blank-grid-fish.jpg"
-		if(this.type==ACTOR_TYPES.fisher) {
-			targetGridString="systems/fathomlessgears/assets/blank-grid.jpg"
+		this.grid = null;
+		let targetGridString =
+			"systems/fathomlessgears/assets/blank-grid-fish.jpg";
+		if (this.type == ACTOR_TYPES.fisher) {
+			targetGridString = "systems/fathomlessgears/assets/blank-grid.jpg";
 		}
-		this.setFlag("fathomlessgears","interactiveGrid",false)
+		this.setFlag("fathomlessgears", "interactiveGrid", false);
 		await this.update({"system.grid": targetGridString});
 	}
 
@@ -310,8 +342,8 @@ export class HLMActor extends Actor {
 	 * @param {bool} proceed Take the action or no?
 	 * @param {Object} args {internal: HLMInternal, actor: HLMActor}
 	 */
-	async applyInternalDeactivateGrid(proceed,args) {
-		if(proceed) {
+	async applyInternalDeactivateGrid(proceed, args) {
+		if (proceed) {
 			await args.actor.removeInteractiveGrid();
 			args.actor.itemsManager.applyInternal(args.internal);
 		}
@@ -322,8 +354,8 @@ export class HLMActor extends Actor {
 	 * @param {bool} proceed Take the action or no?
 	 * @param {Object} args {uuid: str, actor: HLMActor}
 	 */
-	async removeInternalDeactivateGrid(proceed,args) {
-		if(proceed) {
+	async removeInternalDeactivateGrid(proceed, args) {
+		if (proceed) {
 			await args.actor.removeInteractiveGrid();
 			args.actor.itemsManager._removeItem(args.uuid);
 		}
@@ -334,9 +366,9 @@ export class HLMActor extends Actor {
 	 * @param {Grid} gridObject The initialised grid for this actor
 	 */
 	async assignInteractiveGrid(gridObject) {
-		this.grid=gridObject;
+		this.grid = gridObject;
 		await this.update({"system.grid": gridObject.toJson()});
-		await this.setFlag("fathomlessgears","interactiveGrid",true);
+		await this.setFlag("fathomlessgears", "interactiveGrid", true);
 	}
 
 	/**
@@ -345,19 +377,25 @@ export class HLMActor extends Actor {
 	 */
 	async getObservers() {
 		const observers = await game.users.filter((user) => {
-			const isOwner=this.testUserPermission(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER);
-			const isObserver=this.testUserPermission(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER);
-			return isOwner || isObserver
+			const isOwner = this.testUserPermission(
+				user,
+				CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
+			);
+			const isObserver = this.testUserPermission(
+				user,
+				CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER
+			);
+			return isOwner || isObserver;
 		});
 		return observers;
 	}
 
 	async breakInternalMessage(internal) {
-		const isBroken = await internal.isBroken()
+		const isBroken = await internal.isBroken();
 		ChatMessage.create({
 			whisper: await this.getObservers(),
 			content: `${this.name}'s ${internal.name} ${isBroken ? "breaks!" : "is repaired"}`
-		})
+		});
 	}
 
 	/**
@@ -365,22 +403,22 @@ export class HLMActor extends Actor {
 	 * Written by VoidPhoenix, used with permission (thanks!)
 	 */
 	async toggleScan() {
-		if(this.type!=ACTOR_TYPES.fish) {return false;}
-		const scanned=!await this.getFlag("fathomlessgears","scanned");
-		this.setFlag("fathomlessgears","scanned",scanned);
+		if (this.type != ACTOR_TYPES.fish) {
+			return false;
+		}
+		const scanned = !(await this.getFlag("fathomlessgears", "scanned"));
+		this.setFlag("fathomlessgears", "scanned", scanned);
 		let ownership = foundry.utils.deepClone(this.ownership);
 		ownership["default"] = scanned ? 2 : 0;
 		await this.update({ownership});
 
 		// Print the result to chat.
-		let message =
-		`<div style="display: flex; flex-direction: column; align-items: center;">
+		let message = `<div style="display: flex; flex-direction: column; align-items: center;">
 			<img src="${this.img}" style="border:none; max-height: 150px;"/>
 			<div style="font-size: 16px;">Scan data available!</div>
 		</div>`;
-		if(!scanned) {
-			message=
-			`<div style="display: flex; flex-direction: column; align-items: center;">
+		if (!scanned) {
+			message = `<div style="display: flex; flex-direction: column; align-items: center;">
 				<div style="font-size: 16px; font-style: italic;">Scan revoked</div>
 			</div>`;
 		}
@@ -398,7 +436,7 @@ export class HLMActor extends Actor {
 	 * @returns str
 	 */
 	async getScanText() {
-		if(await this.getFlag("fathomlessgears","scanned")) {
+		if (await this.getFlag("fathomlessgears", "scanned")) {
 			return game.i18n.localize("SHEET.scantrue");
 		} else {
 			return game.i18n.localize("SHEET.scanfalse");
@@ -410,7 +448,7 @@ export class HLMActor extends Actor {
 	 * @returns False if this action is invalid (this actor is a fish or there are no targeted actors)
 	 */
 	async scanTarget() {
-		if(this.type==ACTOR_TYPES.fish) return false;
+		if (this.type == ACTOR_TYPES.fish) return false;
 		const targetSet = game.user.targets;
 		if (targetSet.size < 1) {
 			//TODO allow choosing target afterwards
@@ -421,12 +459,15 @@ export class HLMActor extends Actor {
 			const content = `<p class="message-text-only">${game.i18n.localize("MESSAGE.scantarget").replace("_ACTOR_NAME_", this.name).replace("_TARGET_NAME_", target.name)}</p>`;
 			await ChatMessage.create({
 				speaker: {actor: this},
-				content: content,
-			})
+				content: content
+			});
 		}
 	}
 
 	updateDefaultTokenSize(size) {
-		this.update({"prototypeToken.height": size, "prototypeToken.width": size});
+		this.update({
+			"prototypeToken.height": size,
+			"prototypeToken.width": size
+		});
 	}
 }

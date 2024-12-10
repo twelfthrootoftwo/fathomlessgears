@@ -1,21 +1,22 @@
 export class HLMApplication extends Application {
-    loading
+	loading;
 
-    constructor(...args) {
-        super(...args);
-        this.loading=false;
-    }
+	constructor(...args) {
+		super(...args);
+		this.loading = false;
+	}
 
-    startLoading(message) {
-        document.getElementById("overlay").style.display = "block";
-        this.updateLoadingMessage(`${message}`);
-    }
+	startLoading(message) {
+		document.getElementById("overlay").style.display = "block";
+		this.updateLoadingMessage(`${message}`);
+	}
 
-    updateLoadingMessage(newMessage) {
-        document.getElementById("loading-text").innerHTML=`<p>${newMessage}...</p>`
-    }
+	updateLoadingMessage(newMessage) {
+		document.getElementById("loading-text").innerHTML =
+			`<p>${newMessage}...</p>`;
+	}
 
-    stopLoading() {
-        document.getElementById("overlay").style.display = "none";
-    }
+	stopLoading() {
+		document.getElementById("overlay").style.display = "none";
+	}
 }

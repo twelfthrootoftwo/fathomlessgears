@@ -10,15 +10,23 @@
 			"url": ""
 		}
 	],
-	"esmodules": ["module/fathomlessgears.js","scripts/jszip.js"],
-	"styles": ["styles/theme.css","styles/sheet.css","styles/dialogs.css","styles/utils.css","styles/chat.css","styles/canvas.css","styles/grid.css"],
+	"esmodules": ["module/fathomlessgears.js", "scripts/jszip.js"],
+	"styles": [
+		"styles/theme.css",
+		"styles/sheet.css",
+		"styles/dialogs.css",
+		"styles/utils.css",
+		"styles/chat.css",
+		"styles/canvas.css",
+		"styles/grid.css"
+	],
 	"packs": [
 		{
-		  "name": "core_macros",
-		  "label": "FG Macros",
-		  "system": "fathomlessgears",
-		  "path": "./packs/core_macros.db",
-		  "type": "Macro"
+			"name": "core_macros",
+			"label": "FG Macros",
+			"system": "fathomlessgears",
+			"path": "./packs/core_macros.db",
+			"type": "Macro"
 		},
 		{
 			"name": "grid_type",
@@ -26,7 +34,7 @@
 			"system": "fathomlessgears",
 			"path": "./packs/grid_types.db",
 			"type": "Item"
-		  }
+		}
 	],
 	"languages": [
 		{
@@ -40,39 +48,43 @@
 		"verified": "11.315"
 	},
 	"relationships": {
-		"requires": [{
-			"id": "token-action-hud-FG",
-			"type": "module",
-			"manifest": "https://github.com/twelfthrootoftwo/fvtt-token-action-hud-FG/releases/latest/download/module.json",
-			"compatibility": [{
-				"minimum": "0.3.0",
-				"verified": "0.3.0"
-			}]
-		},
-		{
-			"id": "token-action-hud-core",
-			"type": "module",
-			"compatibility": [
-				{
-					"minimum": "1.5.0",
-					"maximum": "1.5",
-					"verified": "1.5.0"
-				}
-			]
-		},
-		{
-			"id": "socketlib"
-		},
-		{
-			"id": "statuscounter",
-			"type": "module",
-			"compatibility": [
-				{
-					"minimum": "0.1.0",
-					"verified": "0.1.0"
-				}
-			]
-		}]
+		"requires": [
+			{
+				"id": "token-action-hud-FG",
+				"type": "module",
+				"manifest": "https://github.com/twelfthrootoftwo/fvtt-token-action-hud-FG/releases/latest/download/module.json",
+				"compatibility": [
+					{
+						"minimum": "0.3.0",
+						"verified": "0.3.0"
+					}
+				]
+			},
+			{
+				"id": "token-action-hud-core",
+				"type": "module",
+				"compatibility": [
+					{
+						"minimum": "1.5.0",
+						"maximum": "1.5",
+						"verified": "1.5.0"
+					}
+				]
+			},
+			{
+				"id": "socketlib"
+			},
+			{
+				"id": "statuscounter",
+				"type": "module",
+				"compatibility": [
+					{
+						"minimum": "0.1.0",
+						"verified": "0.1.0"
+					}
+				]
+			}
+		]
 	},
 	"gridDistance": 1,
 	"url": "#{URL}#",

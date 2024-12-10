@@ -1,4 +1,4 @@
-import {ACTOR_TYPES, ATTRIBUTES, RESOURCES, HIT_TYPE, ITEM_TYPES} from "../constants.js";
+import {ATTRIBUTES, RESOURCES, ITEM_TYPES} from "../constants.js";
 
 export class Utils {
 	static getLocalisedAttributeLabel(attrKey) {
@@ -65,10 +65,10 @@ export class Utils {
 	}
 
 	static isAttribute(attributeKey) {
-		let returnVal=false;
+		let returnVal = false;
 		Object.values(ATTRIBUTES).forEach((attribute) => {
-			if(attribute==attributeKey) returnVal=true;
-		})
+			if (attribute == attributeKey) returnVal = true;
+		});
 		return returnVal;
 	}
 
@@ -77,16 +77,13 @@ export class Utils {
 			ATTRIBUTES.close,
 			ATTRIBUTES.far,
 			ATTRIBUTES.mental,
-			ATTRIBUTES.power,
+			ATTRIBUTES.power
 		];
 		return rollable.includes(attributeKey);
 	}
 
 	static isDefenceAttribute(attributeKey) {
-		const def = [
-			ATTRIBUTES.evasion,
-			ATTRIBUTES.willpower,
-		];
+		const def = [ATTRIBUTES.evasion, ATTRIBUTES.willpower];
 		return def.includes(attributeKey);
 	}
 
@@ -97,34 +94,30 @@ export class Utils {
 			ATTRIBUTES.speed,
 			ATTRIBUTES.sensors,
 			ATTRIBUTES.weight,
-			ATTRIBUTES.baseAP,
+			ATTRIBUTES.baseAP
 		];
 		return flat.includes(attributeKey);
 	}
 
 	static isResource(attributeKey) {
-		let returnVal=false;
+		let returnVal = false;
 		Object.values(RESOURCES).forEach((attribute) => {
-			if(attribute==attributeKey) returnVal=true;
-		})
+			if (attribute == attributeKey) returnVal = true;
+		});
 		return returnVal;
 	}
 
 	static isAttributeComponent(key) {
-		const recognisedComponents = [
-			"base",
-			"internals",
-			"modifier"
-		];
+		const recognisedComponents = ["base", "internals", "modifier"];
 		return recognisedComponents.includes(key);
 	}
 
 	static isItem(itemType) {
-		return Object.keys(ITEM_TYPES).includes(itemType)
+		return Object.keys(ITEM_TYPES).includes(itemType);
 	}
 
 	static identifyAttackKey(internalType) {
-		switch(internalType) {
+		switch (internalType) {
 			case "close":
 				return ATTRIBUTES.close;
 			case "far":
@@ -132,26 +125,26 @@ export class Utils {
 			case "mental":
 				return ATTRIBUTES.mental;
 			default:
-				console.log("Attack type not recognised: "+internalType);
+				console.log("Attack type not recognised: " + internalType);
 				return false;
 		}
 	}
 
 	/**
 	 * Capitalise the first letter in the first word
-	 * @param {str} str 
-	 * @returns 
+	 * @param {str} str
+	 * @returns
 	 */
 	static capitaliseFirstLetter(str) {
-		return str[0].toUpperCase()+str.substring(1);
+		return str[0].toUpperCase() + str.substring(1);
 	}
 
 	/**
 	 * Capitalise the first letter in all words
-	 * @param {string} str 
+	 * @param {string} str
 	 */
 	static capitaliseWords(str) {
-		const words=str.split(" ")
+		const words = str.split(" ");
 		for (let i = 0; i < words.length; i++) {
 			words[i] = words[i][0].toUpperCase() + words[i].substring(1);
 		}
@@ -159,14 +152,14 @@ export class Utils {
 	}
 
 	static toLowerHyphen(str) {
-		return str.replaceAll(" ","-").replaceAll("_","-").toLowerCase();
+		return str.replaceAll(" ", "-").replaceAll("_", "-").toLowerCase();
 	}
 
 	static fromLowerHyphen(str) {
-		return str.replaceAll("_"," ");
+		return str.replaceAll("_", " ");
 	}
 
-	static isNumeric(str){
+	static isNumeric(str) {
 		return /^\d+$/.test(str);
 	}
 
@@ -175,13 +168,17 @@ export class Utils {
 	}
 
 	static extractIntFromString(string) {
-		const digitRegex=new RegExp("\\d+");//matches consecutive digits
-		const valueString=string.match(digitRegex)[0];
+		const digitRegex = new RegExp("\\d+"); //matches consecutive digits
+		const valueString = string.match(digitRegex)[0];
 		return parseInt(valueString);
 	}
 
 	static insertIntoString(startString, insertString, index) {
-		return startString.slice(0, index) + insertString + startString.slice(index);
+		return (
+			startString.slice(0, index) +
+			insertString +
+			startString.slice(index)
+		);
 	}
 
 	static getRoller(dieCount, flatModifier) {
@@ -190,31 +187,33 @@ export class Utils {
 	}
 
 	static async getGridFromSize(sizeName) {
-		const gridCollection=await game.packs.get("fathomlessgears.grid_type");
-		if(!gridCollection.indexed) {
+		const gridCollection = await game.packs.get(
+			"fathomlessgears.grid_type"
+		);
+		if (!gridCollection.indexed) {
 			await gridCollection.getIndex();
 		}
-		const record = gridCollection.index.filter(p => p.name == sizeName);
-		const grid=await gridCollection.getDocument(record[0]._id);
+		const record = gridCollection.index.filter((p) => p.name == sizeName);
+		const grid = await gridCollection.getDocument(record[0]._id);
 		return grid;
 	}
 
 	static getTokenSizeFromSize(sizeName) {
-		switch(sizeName) {
+		switch (sizeName) {
 			case "Small":
-				return 1
+				return 1;
 			case "Medium":
 			case "Large":
-				return 2
+				return 2;
 			case "Massive":
-				return 3
+				return 3;
 			default:
-				return 4
+				return 4;
 		}
 	}
 
 	static activateButtons(html) {
-		html.find(".btn").each(function() {
+		html.find(".btn").each(function () {
 			this.classList.add("btn-active");
 		});
 	}
@@ -222,10 +221,10 @@ export class Utils {
 	static isJsonString(str) {
 		try {
 			JSON.parse(str);
-		} catch (e) {
+		} catch (_error) {
 			return false;
 		}
-		if(str) return true;
+		if (str) return true;
 		return false;
 	}
 

@@ -1,8 +1,11 @@
 {
 	"useTabs": true,
 	"tabWidth": 4,
+	"trailingComma": "none",
+	"semi": true,
 	"bracketSpacing": false,
 	"jsxBracketSameLine": false,
 	"arrowParens": "always",
-	"requirePragma": false
+	"requirePragma": false,
+	"printWidth": 80
 }

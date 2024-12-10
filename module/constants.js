@@ -1,6 +1,6 @@
 export const ACTOR_TYPES = {
 	fisher: "fisher",
-	fish: "fish",
+	fish: "fish"
 };
 
 export const ATTRIBUTES = {
@@ -14,14 +14,14 @@ export const ATTRIBUTES = {
 	sensors: "sensors",
 	weight: "weight",
 	baseAP: "baseAP",
-	ballast: "ballast",
+	ballast: "ballast"
 };
 
 export const RESOURCES = {
 	repair: "repair",
 	marbles: "marbles",
 	core: "core",
-	backlash: "backlash",
+	backlash: "backlash"
 };
 
 export const FISH_TYPE = {
@@ -29,7 +29,7 @@ export const FISH_TYPE = {
 	amphibian: "amphibian",
 	abyssal: "abyssal",
 	pirate: "pirate",
-	forgotten: "forgotten",
+	forgotten: "forgotten"
 };
 
 export const GRID_TYPE = {
@@ -39,20 +39,20 @@ export const GRID_TYPE = {
 	large: "large",
 	massive: "massive",
 	leviathan: "leviathan",
-	serpent: "serpent",
+	serpent: "serpent"
 };
 
 export const HIT_TYPE = {
 	miss: "miss",
 	hit: "hit",
-	crit: "crit",
+	crit: "crit"
 };
 
 export const FILE_CONTENTS = {
 	tags_and_conds: "tags_and_conds",
 	fish: "fish",
 	item_data: "item_data",
-	frame_data: "frame_data",
+	frame_data: "frame_data"
 };
 
 export const ITEM_TYPES = {
@@ -67,13 +67,13 @@ export const ITEM_TYPES = {
 	deep_word: "deep_word",
 	background: "background",
 	fish_template: "fish_template"
-}
+};
 
 export const COVER_STATES = {
 	none: "none",
 	soft: "soft",
-	hard: "hard",
-}
+	hard: "hard"
+};
 
 export const ROLL_MODIFIER_TYPE = {
 	flat: "flat",
@@ -82,13 +82,13 @@ export const ROLL_MODIFIER_TYPE = {
 	bonus: "bonus",
 	condition: "condition",
 	optics: "optics"
-}
+};
 
 export const GRID_SPACE_STATE = {
 	locked: "locked",
 	intact: "intact",
 	broken: "broken"
-}
+};
 
 export const CUSTOM_BACKGROUND_PART = {
 	unlocks: "unlocks",
@@ -96,14 +96,14 @@ export const CUSTOM_BACKGROUND_PART = {
 	willpower: "willpower",
 	marbles: "marbles",
 	mental: "mental"
-}
+};
 
-export const ATTRIBUTE_MIN=0;
-export const ATTRIBUTE_MAX_ROLLED=9;
-export const ATTRIBUTE_MAX_FLAT=16;
+export const ATTRIBUTE_MIN = 0;
+export const ATTRIBUTE_MAX_ROLLED = 9;
+export const ATTRIBUTE_MAX_FLAT = 16;
 
-export const BALLAST_MIN=1;
-export const BALLAST_MAX=10;
+export const BALLAST_MIN = 1;
+export const BALLAST_MAX = 10;
 
 export const ATTRIBUTE_KEY_MAP = {
 	[ATTRIBUTES.close]: "close",
@@ -116,26 +116,26 @@ export const ATTRIBUTE_KEY_MAP = {
 	[ATTRIBUTES.sensors]: "sensors",
 	[ATTRIBUTES.weight]: "weight",
 	[ATTRIBUTES.baseAP]: "ap",
-	[ATTRIBUTES.ballast]: "ballast",
-}
+	[ATTRIBUTES.ballast]: "ballast"
+};
 
 export const SECTION_NUMBERING_MAP = {
-	fisher: [72,36,0,54,81],
+	fisher: [72, 36, 0, 54, 81],
 	small: [0],
 	medium: [0],
 	large: [0],
 	massive: [0],
-	leviathan: [0,36,18],
-	serpent_leviathan: [0,18,36,54,9],
-	siltstalker: [0,24,12,48,60]
-}
+	leviathan: [0, 36, 18],
+	serpent_leviathan: [0, 18, 36, 54, 9],
+	siltstalker: [0, 24, 12, 48, 60]
+};
 
 export const GRID_HUD_LOCATION = {
 	bottomLeft: "bottom-left",
 	bottomRight: "bottom-right",
 	topLeft: "top-left",
-	topRight: "top-right",
-}
+	topRight: "top-right"
+};
 
 export const DEEPWORD_NAME_MAP = {
 	word_one: "Ocean's Calm",
@@ -147,18 +147,18 @@ export const DEEPWORD_NAME_MAP = {
 	word_seven: "Storm's Wrath",
 	word_eight: "Abyssal Torpor",
 	word_final: "Serenity, A Promise Kept"
-}
+};
 
 export const TEMPLATE = {
 	common: "Common",
 	abberant: "Abberant",
 	deepspawn: "Deepspawn",
 	elder: "Elder Deepspawn"
-}
+};
 
 export const TEMPLATE_WEIGHT = {
 	[TEMPLATE.common]: 0,
 	[TEMPLATE.abberant]: 5,
 	[TEMPLATE.deepspawn]: 10,
 	[TEMPLATE.elder]: 20
-}
+};
