@@ -321,6 +321,9 @@ export class HLMActor extends Actor {
 			speaker: {actor: this},
 			content: displayString
 		});
+		if (game.sensitiveDataAvailable) {
+			game.tagHandler.addListeners();
+		}
 	}
 
 	/**

@@ -205,6 +205,11 @@ export class HLMActorSheet extends ActorSheet {
 				.getElementById("post-frame-ability")
 				.addEventListener("click", this.postFrameAbility.bind(this));
 		}
+
+		if (game.sensitiveDataAvailable) {
+			console.log("Adding tag listeners");
+			game.tagHandler.addListeners();
+		}
 	}
 
 	testOwnership() {

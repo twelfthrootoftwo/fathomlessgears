@@ -171,6 +171,9 @@ export class HLMItem extends Item {
 			speaker: {actor: actor},
 			content: displayMessage
 		});
+		if (game.sensitiveDataAvailable) {
+			game.tagHandler.addListeners();
+		}
 	}
 
 	getItemDescriptionText() {
