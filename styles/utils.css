@@ -56,6 +56,9 @@ input.sheet-input {
 .full-height {
 	height: 100%;
 }
+.inline-block {
+	display: inline-block;
+}
 .btn {
 	background: rgba(0, 0, 0, 0.1);
 	border: 2px groove var(--color-border-light-primary);
@@ -68,7 +71,7 @@ input.sheet-input {
 	background: rgba(255, 255, 255, 0.1);
 	border: 2px groove var(--color-border-dark-primary);
 }
-.btn.btn-active:hover {
+.btn-active:hover {
 	background-color: #44444466;
 	cursor: pointer;
 }

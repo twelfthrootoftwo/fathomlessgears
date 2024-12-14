@@ -208,6 +208,7 @@ export class HLMActorSheet extends ActorSheet {
 
 		if (game.sensitiveDataAvailable) {
 			console.log("Adding tag listeners");
+			game.tagHandler.transformTagNameToButton($(this.element).get(0));
 			game.tagHandler.addListeners();
 		}
 	}

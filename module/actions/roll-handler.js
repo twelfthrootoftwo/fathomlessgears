@@ -73,10 +73,14 @@ export class RollHandler {
 			const result = await this.rollNoTarget(rollParams);
 			message = result.text;
 		}
-		await ChatMessage.create({
-			speaker: {actor: rollParams.actor},
-			content: message
-		});
+		if (game.sensitiveDataAvailable) {
+			await game.tagHandler.createChatMessage(message, rollParams.actor);
+		} else {
+			await ChatMessage.create({
+				speaker: {actor: rollParams.actor},
+				content: message
+			});
+		}
 	}
 
 	async rollTargeted(rollParams) {

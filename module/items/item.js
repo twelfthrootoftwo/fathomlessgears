@@ -144,10 +144,14 @@ export class HLMItem extends Item {
 				frame_ability_text: this.system.gear_ability
 			}
 		);
-		await ChatMessage.create({
-			speaker: {actor: actor},
-			content: displayMessage
-		});
+		if (game.sensitiveDataAvailable) {
+			await game.tagHandler.createChatMessage(displayMessage, actor);
+		} else {
+			await ChatMessage.create({
+				speaker: {actor: actor},
+				content: displayMessage
+			});
+		}
 	}
 
 	async internalAttack(actor) {
@@ -167,12 +171,13 @@ export class HLMItem extends Item {
 				minor_text: false
 			}
 		);
-		await ChatMessage.create({
-			speaker: {actor: actor},
-			content: displayMessage
-		});
 		if (game.sensitiveDataAvailable) {
-			game.tagHandler.addListeners();
+			await game.tagHandler.createChatMessage(displayMessage, actor);
+		} else {
+			await ChatMessage.create({
+				speaker: {actor: actor},
+				content: displayMessage
+			});
 		}
 	}
 

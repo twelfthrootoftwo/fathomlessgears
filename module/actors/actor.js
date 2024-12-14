@@ -317,12 +317,13 @@ export class HLMActor extends Actor {
 				marbleText: game.i18n.localize("INTERNALS.marbles")
 			}
 		);
-		await ChatMessage.create({
-			speaker: {actor: this},
-			content: displayString
-		});
 		if (game.sensitiveDataAvailable) {
-			game.tagHandler.addListeners();
+			await game.tagHandler.createChatMessage(displayString, this);
+		} else {
+			await ChatMessage.create({
+				speaker: {actor: this},
+				content: displayString
+			});
 		}
 	}
 
