@@ -9,6 +9,7 @@
 }
 .popout {
 	background: var(--color-bg-dialog);
+	color: var(--color-text-dark-1);
 }
 input.sheet-input {
 	border: none;
