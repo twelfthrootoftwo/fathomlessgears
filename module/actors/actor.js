@@ -125,10 +125,7 @@ export class HLMActor extends Actor {
 		if (locationResult) {
 			const displayString =
 				await AttackHandler.generateLocationDisplay(locationResult);
-			ChatMessage.create({
-				speaker: {actor: this},
-				content: displayString
-			});
+			game.messageHandler.createChatMessage(displayString, this);
 		}
 	}
 
@@ -317,14 +314,7 @@ export class HLMActor extends Actor {
 				marbleText: game.i18n.localize("INTERNALS.marbles")
 			}
 		);
-		if (game.sensitiveDataAvailable) {
-			await game.tagHandler.createChatMessage(displayString, this);
-		} else {
-			await ChatMessage.create({
-				speaker: {actor: this},
-				content: displayString
-			});
-		}
+		game.messageHandler.createChatMessage(displayString, this);
 	}
 
 	/**
@@ -429,10 +419,7 @@ export class HLMActor extends Actor {
 
 		// Send to chat
 
-		ChatMessage.create({
-			speaker: ChatMessage.getSpeaker(),
-			content: message
-		});
+		game.messageHandler.createChatMessage(message, this);
 	}
 
 	/**
@@ -461,10 +448,7 @@ export class HLMActor extends Actor {
 		} else {
 			const target = targetSet.values().next().value;
 			const content = `<p class="message-text-only">${game.i18n.localize("MESSAGE.scantarget").replace("_ACTOR_NAME_", this.name).replace("_TARGET_NAME_", target.name)}</p>`;
-			await ChatMessage.create({
-				speaker: {actor: this},
-				content: content
-			});
+			game.messageHandler.createChatMessage(content, this);
 		}
 	}
 
