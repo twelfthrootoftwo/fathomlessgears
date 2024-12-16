@@ -236,7 +236,8 @@
 			"maneuver",
 			"deep_word",
 			"background",
-			"fish_template"
+			"fish_template",
+			"history_event"
 		],
 		"htmlFields": ["description"],
 		"templates": {
@@ -308,6 +309,11 @@
 		},
 		"fish_template": {
 			"templates": ["attributes"]
+		},
+		"history_event": {
+			"type": "",
+			"templates": ["attributes"],
+			"description": ""
 		}
 	}
 }
