@@ -313,7 +313,8 @@
 		"history_event": {
 			"type": "",
 			"templates": ["attributes"],
-			"description": ""
+			"description": "",
+			"mechanics": ""
 		}
 	}
 }
