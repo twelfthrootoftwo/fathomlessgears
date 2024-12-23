@@ -24,7 +24,7 @@ input.sheet-input {
 	display: flex;
 	flex-direction: column;
 }
-.justify-center {
+.justify-centre {
 	justify-content: center;
 }
 .justify-space-around {
