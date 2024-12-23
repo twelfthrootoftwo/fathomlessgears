@@ -91,7 +91,7 @@ async function constructFisherData(importData, actor) {
  * @param {Grid} gridObject The new grid which will be assigned to the actor later
  */
 async function applyFrame(importData, actor, gridObject) {
-	const frame = await findCompendiumItemFromName(
+	const frame = await Utils.findCompendiumItemFromName(
 		"frame_pc",
 		importData.frame
 	);
@@ -105,7 +105,10 @@ async function applyFrame(importData, actor, gridObject) {
 }
 
 async function applySize(importData, actor) {
-	const size = await findCompendiumItemFromName("size", importData.size);
+	const size = await Utils.findCompendiumItemFromName(
+		"size",
+		importData.size
+	);
 	if (size) {
 		await actor.itemsManager.applySize(size);
 	}
@@ -122,7 +125,7 @@ async function applyInternals(importData, actor, gridObject) {
 	const targetCompendium =
 		actor.type == ACTOR_TYPES.fisher ? "internal_pc" : "internal_npc";
 	for (const [gridSpace, internalName] of Object.entries(internalsList)) {
-		const internal = await findCompendiumItemFromName(
+		const internal = await Utils.findCompendiumItemFromName(
 			targetCompendium,
 			Utils.capitaliseWords(Utils.fromLowerHyphen(internalName))
 		);
@@ -164,7 +167,7 @@ async function applyTemplate(importData, actor) {
 
 async function applyBackground(importData, actor) {
 	const backgroundName = importData.background;
-	const backgroundBase = await findCompendiumItemFromName(
+	const backgroundBase = await Utils.findCompendiumItemFromName(
 		"background",
 		Utils.capitaliseWords(Utils.fromLowerHyphen(backgroundName))
 	);
@@ -196,7 +199,7 @@ async function applyAdditionalFisher(importData, actor) {
 	const developments = importData.developments;
 	let targetCompendium = "development";
 	for (const developmentName of developments) {
-		const development = await findCompendiumItemFromName(
+		const development = await Utils.findCompendiumItemFromName(
 			targetCompendium,
 			Utils.capitaliseWords(Utils.fromLowerHyphen(developmentName))
 		);
@@ -206,7 +209,7 @@ async function applyAdditionalFisher(importData, actor) {
 	const maneuvers = importData.maneuvers;
 	targetCompendium = "maneuver";
 	for (const maneuverName of maneuvers) {
-		const maneuver = await findCompendiumItemFromName(
+		const maneuver = await Utils.findCompendiumItemFromName(
 			targetCompendium,
 			Utils.capitaliseWords(Utils.fromLowerHyphen(maneuverName))
 		);
@@ -216,43 +219,12 @@ async function applyAdditionalFisher(importData, actor) {
 	const words = importData.deep_words;
 	targetCompendium = "deep_word";
 	for (const wordName of words) {
-		const word = await findCompendiumItemFromName(
+		const word = await Utils.findCompendiumItemFromName(
 			targetCompendium,
 			DEEPWORD_NAME_MAP[wordName]
 		);
 		await actor.itemsManager.applyDeepWord(word);
 	}
-}
-
-/**
- * Gets an item from a compendium by name
- * @param {str} compendiumName The compendium to search
- * @param {str} itemName The item to retrieve
- * @returns the HLMItem from the compendium (null if not found)
- */
-async function findCompendiumItemFromName(compendiumName, itemName) {
-	let collection = null;
-	if (["core_macros", "grid_type"].includes(compendiumName)) {
-		collection = await game.packs.get(`fathomlessgears.${compendiumName}`);
-	} else {
-		collection = await game.packs.get(`world.${compendiumName}`);
-	}
-	if (!collection.indexed) {
-		await collection.getIndex();
-	}
-	const record = collection.index.filter(
-		(p) =>
-			Utils.fromLowerHyphen(p.name.toLowerCase()) ==
-			Utils.fromLowerHyphen(itemName.toLowerCase())
-	);
-	if (record.length < 1) {
-		ui.notifications.warn(
-			`Could not identify item ${itemName} in collection ${compendiumName}`
-		);
-		return false;
-	}
-	const item = await collection.getDocument(record[0]._id);
-	return item;
 }
 
 /**

@@ -162,3 +162,19 @@ export const TEMPLATE_WEIGHT = {
 	[TEMPLATE.deepspawn]: 10,
 	[TEMPLATE.elder]: 20
 };
+
+export const COMPENDIUMS = {
+	core_macros: "fathomlessgears.core_macros",
+	grid_type: "fathomlessgears.grid_type",
+	touch_of_the_deep: "fathomless-foundry-sensitive.touch_of_the_deep",
+	injuries: "fathomless-foundry-sensitive.injuries",
+	fg_roll_tables: "fathomless-foundry-sensitive.fg_roll_tables",
+	internal_pc: "world.internal_pc",
+	internal_npc: "world.internal_npc",
+	frame_pc: "world.frame_pc",
+	size: "world.size",
+	development: "world.development",
+	maneuver: "world.maneuver",
+	deep_word: "world.deep_word",
+	background: "world.background"
+};

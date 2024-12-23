@@ -1,4 +1,4 @@
-import {ATTRIBUTES, RESOURCES, ITEM_TYPES} from "../constants.js";
+import {ATTRIBUTES, RESOURCES, ITEM_TYPES, COMPENDIUMS} from "../constants.js";
 
 export class Utils {
 	static getLocalisedAttributeLabel(attrKey) {
@@ -226,6 +226,32 @@ export class Utils {
 		}
 		if (str) return true;
 		return false;
+	}
+
+	/**
+	 * Gets an item from a compendium by name
+	 * @param {str} compendiumName The compendium to search
+	 * @param {str} itemName The item to retrieve
+	 * @returns the HLMItem from the compendium (null if not found)
+	 */
+	static async findCompendiumItemFromName(compendiumName, itemName) {
+		const collection = await game.packs.get(COMPENDIUMS[compendiumName]);
+		if (!collection.indexed) {
+			await collection.getIndex();
+		}
+		const record = collection.index.filter(
+			(p) =>
+				Utils.fromLowerHyphen(p.name.toLowerCase()) ==
+				Utils.fromLowerHyphen(itemName.toLowerCase())
+		);
+		if (record.length < 1) {
+			ui.notifications.warn(
+				`Could not identify item ${itemName} in collection ${compendiumName}`
+			);
+			return false;
+		}
+		const item = await collection.getDocument(record[0]._id);
+		return item;
 	}
 
 	/**
