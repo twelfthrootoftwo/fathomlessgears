@@ -57,6 +57,7 @@ export const FILE_CONTENTS = {
 
 export const ITEM_TYPES = {
 	tag: "tag",
+	condition: "condition",
 	internal_pc: "internal_pc",
 	internal_npc: "internal_npc",
 	frame_pc: "frame_pc",

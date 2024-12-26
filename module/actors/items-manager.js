@@ -226,7 +226,7 @@ export class ItemsManager {
 				{actor: this.actor, uuid: uuid}
 			);
 		} else {
-			this.removeItem(uuid);
+			this._removeItem(uuid);
 		}
 	}
 

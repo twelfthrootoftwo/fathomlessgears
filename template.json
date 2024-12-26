@@ -227,6 +227,7 @@
 	"Item": {
 		"types": [
 			"tag",
+			"condition",
 			"internal_pc",
 			"internal_npc",
 			"frame_pc",
@@ -289,7 +290,15 @@
 			}
 		},
 		"tag": {
-			"templates": ["source", "data"]
+			"templates": ["source"],
+			"value": false,
+			"text": ""
+		},
+		"condition": {
+			"templates": ["source", "attributes"],
+			"value": false,
+			"text": "",
+			"limit": false
 		},
 		"internal_pc": {
 			"templates": ["source", "attributes", "internal"],

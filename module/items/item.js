@@ -516,8 +516,12 @@ function separateTags(tagList) {
 		let name = "";
 		let value = null;
 		if (Utils.isNumeric(tagWords[tagWords.length - 1])) {
+			console.log("Numeric at end");
 			name = Utils.capitaliseWords(tagWords.slice(0, -1).join(" "));
 			value = parseInt(tagWords[tagWords.length - 1]);
+		} else if (Utils.isNumeric(tagWords[tagWords.length - 1][0])) {
+			name = Utils.capitaliseWords(tagWords.slice(0, -1).join(" "));
+			value = parseInt(tagWords[tagWords.length - 1][0]);
 		} else {
 			name = Utils.capitaliseWords(tagText);
 		}
