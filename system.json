@@ -10,7 +10,7 @@
 			"url": ""
 		}
 	],
-	"esmodules": ["module/fathomlessgears.js", "scripts/jszip.js"],
+	"esmodules": ["src/fathomlessgears.js", "scripts/jszip.js"],
 	"styles": [
 		"styles/theme.css",
 		"styles/sheet.css",

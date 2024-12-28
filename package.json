@@ -4,7 +4,9 @@
 	"description": "Fathomless Gears base system",
 	"main": "gulpfile.js",
 	"scripts": {
-		"lint": "eslint . --fix"
+		"lint": "eslint . --fix",
+		"pull-packs": "node ./scripts/LDBtoJSON.mjs",
+		"push-packs": "node ./scripts/JSONtoLDB.mjs"
 	},
 	"repository": {
 		"type": "git",

@@ -116,7 +116,7 @@ jobs:
                     LICENSE                              \
                     templates/                           \
                     assets/                              \
-                    module/                              \
+                    src/                                 \
                     scripts/                             \
                     styles/                              \
                     packs/                               \
