@@ -1,0 +1,59 @@
+{
+	"name": "Serpent Leviathan",
+	"type": "grid",
+	"system": {
+		"hitLocationRoll": "2d6",
+		"hitRegions": [
+			{
+				"location": "section1",
+				"range": [2, 3],
+				"columns": 3,
+				"rows": 3
+			},
+			{
+				"location": "section2",
+				"range": [4, 5],
+				"columns": 6,
+				"rows": 3
+			},
+			{
+				"location": "section3",
+				"range": [6, 8],
+				"columns": 6,
+				"rows": 3
+			},
+			{
+				"location": "section4",
+				"range": [9, 10],
+				"columns": 6,
+				"rows": 3
+			},
+			{
+				"location": "section5",
+				"range": [11, 12],
+				"columns": 3,
+				"rows": 3
+			}
+		],
+		"type": "serpent_leviathan"
+	},
+	"img": "icons/svg/item-bag.svg",
+	"effects": [],
+	"folder": null,
+	"ownership": {
+		"default": 0,
+		"iS31tVzQgzLNDSIa": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1722753361676,
+		"modifiedTime": 1722753361676,
+		"lastModifiedBy": "iS31tVzQgzLNDSIa"
+	},
+	"_id": "lPiAbHL9uSBMk1gL",
+	"sort": 0,
+	"_key": "!items!lPiAbHL9uSBMk1gL"
+}

@@ -16,13 +16,6 @@ foundry/
 *.fsh
 storage/
 storage_backup/
-packs/frames/
-packs/internal_npc/
-packs/internal_pc/
-packs/sizes/
-packs/tags/
-packs/*/LOCK
-packs/*/LOG
-packs/*/*.log
-packs/*/*.old
-packs/*/lost/
+
+# Binaries
+/packs/

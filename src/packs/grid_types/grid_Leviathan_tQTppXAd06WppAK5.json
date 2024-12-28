@@ -1,0 +1,47 @@
+{
+	"name": "Leviathan",
+	"type": "grid",
+	"system": {
+		"hitLocationRoll": "2d6",
+		"hitRegions": [
+			{
+				"location": "section1",
+				"range": [2, 5],
+				"columns": 3,
+				"rows": 6
+			},
+			{
+				"location": "section2",
+				"range": [6, 8],
+				"columns": 6,
+				"rows": 6
+			},
+			{
+				"location": "section3",
+				"range": [9, 12],
+				"columns": 3,
+				"rows": 6
+			}
+		],
+		"type": "leviathan"
+	},
+	"img": "icons/svg/item-bag.svg",
+	"effects": [],
+	"folder": null,
+	"ownership": {
+		"default": 0,
+		"iS31tVzQgzLNDSIa": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1722753361673,
+		"modifiedTime": 1722753361673,
+		"lastModifiedBy": "iS31tVzQgzLNDSIa"
+	},
+	"_id": "tQTppXAd06WppAK5",
+	"sort": 0,
+	"_key": "!items!tQTppXAd06WppAK5"
+}
