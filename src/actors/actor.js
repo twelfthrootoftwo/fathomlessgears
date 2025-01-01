@@ -13,10 +13,7 @@ import {
 
 import {Grid} from "../grid/grid-base.js";
 import {ItemsManager} from "./items-manager.js";
-import {
-	ATTRIBUTE_ONLY_CONDITIONS,
-	applyAttributeModifyingEffect
-} from "../conditions/conditions.js";
+import {ATTRIBUTE_ONLY_CONDITIONS} from "../conditions/conditions.js";
 
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
@@ -85,39 +82,117 @@ export class HLMActor extends Actor {
 		}
 	}
 
+	/** @inheritdoc */
 	applyActiveEffects() {
 		super.applyActiveEffects();
-		const conditionNames = [];
-		this.effects.forEach((activeEffect) => {
-			const condition = activeEffect.statuses.values().next().value;
-			if (ATTRIBUTE_ONLY_CONDITIONS.includes(condition)) {
-				conditionNames.push(condition);
-				applyAttributeModifyingEffect(this, activeEffect);
-			}
-		});
-		this.removeInactiveEffects(conditionNames);
+		this.applyConditions();
 	}
 
-	removeInactiveEffects(activeConditionNames) {
-		Object.keys(this.system.attributes).forEach((key) => {
-			const attribute = this.system.attributes[key];
-			attribute.values.standard.additions.forEach((modifier) => {
-				if (
-					!activeConditionNames.includes(modifier.source) &&
-					ATTRIBUTE_ONLY_CONDITIONS.includes(modifier.source)
-				) {
-					this.removeAttributeModifier(key, modifier.source);
+	async applyConditions() {
+		if (!this.itemsManager) {
+			this.itemsManager = new ItemsManager(this);
+		}
+
+		setTimeout(() => {
+			const conditionNames = [];
+			this.effects.forEach(async (activeEffect) => {
+				let conditionName = activeEffect.statuses.values().next().value;
+				conditionNames.push(conditionName);
+
+				if (game.availableConditionItems?.has(activeEffect.name)) {
+					let effectCounter = foundry.utils.getProperty(
+						activeEffect,
+						"flags.statuscounter.counter"
+					);
+					if (!effectCounter) {
+						effectCounter = new ActiveEffectCounter(
+							1,
+							activeEffect.icon,
+							activeEffect
+						);
+					}
+					const effectValue = Math.max(
+						Math.min(effectCounter.value, 3),
+						-3
+					);
+
+					const existingCondition = this.getConditionItem(
+						activeEffect.name
+					);
+
+					if (
+						existingCondition &&
+						ATTRIBUTE_ONLY_CONDITIONS.includes(conditionName) &&
+						existingCondition.system.value != effectValue
+					) {
+						existingCondition.system.value = effectValue;
+						existingCondition.update({"system.value": effectValue});
+						this.itemsManager.updateCondition(existingCondition);
+						console.log(
+							`Updated condition value to ${effectValue}`
+						);
+					} else if (!existingCondition) {
+						Utils.findCompendiumItemFromName(
+							game.sensitiveDataAvailable
+								? "conditions"
+								: "conditions_base",
+							activeEffect.name
+						).then((newCondition) => {
+							if (newCondition) {
+								this.itemsManager.applyCondition(newCondition);
+							}
+						});
+					}
+
+					// const condition = activeEffect.statuses.values().next().value;
+					// if (ATTRIBUTE_ONLY_CONDITIONS.includes(condition)) {
+					// 	conditionNames.push(condition);
+					// 	applyAttributeModifyingEffect(this, activeEffect);
+					// }
 				}
 			});
+			this.removeInactiveEffects(conditionNames);
+		}, 20);
+	}
+
+	/**
+	 * Removes condition items and attribute modifiers associated with conditions not currently active on this actor
+	 * @param {str[]} activeConditionNames List of condition names that are currently active
+	 */
+	removeInactiveEffects(activeConditionNames) {
+		this.itemTypes.condition.forEach((existingCondition) => {
+			if (
+				!activeConditionNames.includes(
+					Utils.toLowerHyphen(existingCondition.name)
+				)
+			) {
+				console.log(`Removing ${existingCondition.name}`);
+				this.itemsManager.removeItemCallback(existingCondition._id);
+			}
 		});
 	}
 
+	/**
+	 * Get the numerical value of a condition
+	 * @param {str} conditionName Name of the condition
+	 * @returns number
+	 */
 	getConditionValue(conditionName) {
 		const condition = this.effects.getName(
 			game.i18n.localize(`CONDITIONS.${conditionName}`)
 		);
 		if (!condition) return 0;
 		return condition.flags.statuscounter.counter.value || 0;
+	}
+
+	getConditionItem(conditionName) {
+		let targetCondition = null;
+		this.itemTypes.condition.forEach((existingCondition) => {
+			if (conditionName == existingCondition.name) {
+				targetCondition = existingCondition;
+			}
+		});
+		return targetCondition;
 	}
 
 	async locationHitMessage() {

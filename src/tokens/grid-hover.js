@@ -253,6 +253,8 @@ function refreshGrid(actor) {
 		game.gridHover?.rendered &&
 		game.gridHover.object.actor._id == actor.id
 	) {
-		game.gridHover.render(true);
+		setTimeout(() => {
+			game.gridHover.render(true);
+		}, 20);
 	}
 }

@@ -167,9 +167,11 @@ export const TEMPLATE_WEIGHT = {
 export const COMPENDIUMS = {
 	core_macros: "fathomlessgears.core_macros",
 	grid_type: "fathomlessgears.grid_type",
+	conditions_base: "fathomlessgears.conditions_base",
 	touch_of_the_deep: "fathomless-foundry-sensitive.touch_of_the_deep",
 	injuries: "fathomless-foundry-sensitive.injuries",
 	fg_roll_tables: "fathomless-foundry-sensitive.fg_roll_tables",
+	conditions: "fathomless-foundry-sensitive.conditions",
 	internal_pc: "world.internal_pc",
 	internal_npc: "world.internal_npc",
 	frame_pc: "world.frame_pc",

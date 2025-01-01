@@ -34,6 +34,13 @@
 			"system": "fathomlessgears",
 			"path": "./packs/grid_types.db",
 			"type": "Item"
+		},
+		{
+			"name": "conditions_base",
+			"label": "FG Conditions (Base)",
+			"system": "fathomlessgears",
+			"path": "./packs/conditions_base.db",
+			"type": "Item"
 		}
 	],
 	"languages": [

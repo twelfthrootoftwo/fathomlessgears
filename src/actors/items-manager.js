@@ -42,11 +42,16 @@ export class ItemsManager {
 					ITEM_TYPES.development,
 					ITEM_TYPES.maneuver,
 					ITEM_TYPES.deep_word,
-					ITEM_TYPES.background
+					ITEM_TYPES.background,
+					ITEM_TYPES.condition
 				];
 				break;
 			case "fish":
-				acceptedTypes = [ITEM_TYPES.internal_npc, ITEM_TYPES.size];
+				acceptedTypes = [
+					ITEM_TYPES.internal_npc,
+					ITEM_TYPES.size,
+					ITEM_TYPES.condition
+				];
 				break;
 		}
 		if (acceptedTypes.includes(item.type)) {
@@ -82,6 +87,9 @@ export class ItemsManager {
 				break;
 			case ITEM_TYPES.background:
 				this.applyBackground(item);
+				break;
+			case ITEM_TYPES.condition:
+				this.applyCondition(item);
 				break;
 		}
 	}
@@ -315,6 +323,10 @@ export class ItemsManager {
 	 */
 	async _removeItem(uuid) {
 		const item = this.actor.items.get(uuid);
+		if (!item) {
+			console.log(`No item ${uuid}`);
+			return;
+		}
 		const isInternal =
 			item.type == ITEM_TYPES.internal_npc ||
 			item.type == ITEM_TYPES.internal_pc;
@@ -525,5 +537,57 @@ export class ItemsManager {
 		const item = this.actor.items.get(uuid);
 		const currentState = item.getFlag("fathomlessgears", "activated");
 		item.setFlag("fathomlessgears", "activated", !currentState);
+	}
+
+	/**
+	 * Adds a condition to this actor, including any associated attribute modifiers
+	 * @param {Item} condition A new Condition item to duplicate onto this actor
+	 */
+	async applyCondition(condition) {
+		console.log("Applying condition");
+		const item = await Item.create(condition, {parent: this.actor});
+
+		//Apply attributes
+		Object.keys(condition.system.attributes).forEach((key) => {
+			if (
+				Utils.isAttribute(key) &&
+				condition.system.attributes[key] != 0
+			) {
+				const modifier = new AttributeElement(
+					condition.system.attributes[key] * condition.system.value,
+					item._id,
+					"condition",
+					condition.name
+				);
+				this.actor.addAttributeModifier(key, modifier);
+			}
+		});
+
+		this.actor.calculateBallast();
+		await this.actor.update({system: this.actor.system});
+		Hooks.callAll("conditionAdded", this.actor);
+	}
+
+	/**
+	 * Changes the attribute modifiers associated with a condition
+	 * @param {Item} condition The existing condition, updated with the new value
+	 */
+	async updateCondition(condition) {
+		console.log("Updating condition");
+		Object.keys(condition.system.attributes).forEach((key) => {
+			if (condition.system.attributes[key] != 0) {
+				this.actor.system.attributes[
+					key
+				].values.standard.additions.forEach((modifier) => {
+					if (modifier.source == condition._id) {
+						modifier.value =
+							condition.system.attributes[key] *
+							condition.system.value;
+					}
+				});
+			}
+		});
+		this.actor.calculateAttributeTotals();
+		this.actor.calculateBallast();
 	}
 }

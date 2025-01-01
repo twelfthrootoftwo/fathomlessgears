@@ -1,5 +1,5 @@
 import {AttributeElement} from "../actors/items-manager.js";
-import {ATTRIBUTES} from "../constants.js";
+import {ATTRIBUTES, ITEM_TYPES} from "../constants.js";
 
 export const CONDITIONS = {
 	blind: "blind",
@@ -329,4 +329,22 @@ function applyConditionModifier(actor, condition, value) {
 		}
 	});
 	actor.calculateAttributeTotals(false);
+}
+
+export function discoverConditions() {
+	const foundConditions = new Set();
+	const itemPacks = game.packs.filter((p) => p.metadata.type === "Item");
+
+	itemPacks.forEach((pack) => {
+		pack.getDocuments().then((allItems) => {
+			allItems
+				.filter((item) => item.type == ITEM_TYPES.condition)
+				.map((condition) => condition.name)
+				.forEach((conditionName) => {
+					foundConditions.add(conditionName);
+				});
+		});
+	});
+
+	return foundConditions;
 }

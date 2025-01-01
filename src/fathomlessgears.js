@@ -7,7 +7,7 @@ import {preloadHandlebarsTemplates} from "./utilities/templates.js";
 import {initialiseHelpers} from "./utilities/handlebars.js";
 import {FshManager, addFshManager} from "./data-files/fsh-manager.js";
 import {HLMItemSheet} from "./sheets/item-sheet.js";
-import {conditions} from "./conditions/conditions.js";
+import {conditions, discoverConditions} from "./conditions/conditions.js";
 import {GridHoverHUD} from "./tokens/grid-hover.js";
 import {GRID_HUD_LOCATION} from "./constants.js";
 import {RollHandler} from "./actions/roll-handler.js";
@@ -149,6 +149,7 @@ export const system_ready = new Promise((success) => {
 		}
 
 		CONFIG.statusEffects = foundry.utils.duplicate(conditions);
+		game.availableConditionItems = discoverConditions();
 
 		console.log("Ready!");
 		success();
