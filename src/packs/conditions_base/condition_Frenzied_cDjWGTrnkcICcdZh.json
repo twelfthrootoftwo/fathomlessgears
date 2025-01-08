@@ -23,7 +23,8 @@
 		},
 		"value": false,
 		"text": "",
-		"limit": false
+		"limit": false,
+		"effectName": false
 	},
 	"effects": [],
 	"folder": null,

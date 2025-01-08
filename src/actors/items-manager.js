@@ -7,6 +7,7 @@ import {
 	TEMPLATE_WEIGHT
 } from "../constants.js";
 import {ConfirmDialog} from "../utilities/confirm-dialog.js";
+import {findConditionEffect} from "../conditions/conditions.js";
 
 export class AttributeElement {
 	value;
@@ -540,11 +541,63 @@ export class ItemsManager {
 	}
 
 	/**
+	 * Adds a condition to this actor by dropping the condition item on it
+	 * Unlike applyCondition, this needs to set up the active effect
+	 * @param {Item} condition A new Condition item to duplicate onto this actor
+	 */
+	// async dropCondition(condition) {
+
+	// }
+
+	/**
 	 * Adds a condition to this actor, including any associated attribute modifiers
 	 * @param {Item} condition A new Condition item to duplicate onto this actor
 	 */
 	async applyCondition(condition) {
 		console.log("Applying condition");
+
+		const effect = this.actor.effects.getName(
+			game.i18n.localize(`CONDITIONS.${condition.system.effectName}`)
+		);
+		if (!effect) {
+			console.log(this.actor.getActiveTokens());
+			const tokens = this.actor
+				.getActiveTokens(true, true)
+				.filter((t) => !t.flags.fathomlessgears?.ballastToken);
+			if (condition.system.effectName) {
+				tokens.forEach((token) => {
+					token
+						.toggleActiveEffect(
+							findConditionEffect(condition.system.effectName)
+						)
+						.then(() => {
+							const effect = token.actor.appliedEffects[0]; //TODO this is wrong
+							let effectCounter = foundry.utils.getProperty(
+								effect,
+								"flags.statuscounter.counter"
+							);
+							if (!effectCounter) {
+								effectCounter = new ActiveEffectCounter(
+									condition.system.value,
+									effect.icon,
+									effect
+								);
+							} else {
+								effectCounter.setValue(
+									condition.system.value,
+									effect,
+									true
+								);
+							}
+							effect.setFlag(
+								"statuscounter",
+								"counter",
+								effectCounter
+							);
+						});
+				});
+			}
+		}
 		const item = await Item.create(condition, {parent: this.actor});
 
 		//Apply attributes

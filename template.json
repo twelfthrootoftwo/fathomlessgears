@@ -298,7 +298,8 @@
 			"templates": ["source", "attributes"],
 			"value": false,
 			"text": "",
-			"limit": false
+			"limit": false,
+			"effectName": ""
 		},
 		"internal_pc": {
 			"templates": ["source", "attributes", "internal"],

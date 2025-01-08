@@ -18,6 +18,7 @@ export const CONDITIONS = {
 	quickened: "quickened",
 	restrained: "restrained",
 	slowed: "slowed",
+	stalwart: "stalwart",
 	tranq: "tranq",
 	wired: "wired"
 };
@@ -347,4 +348,16 @@ export function discoverConditions() {
 	});
 
 	return foundConditions;
+}
+
+export function findConditionEffect(effectName) {
+	console.log(effectName);
+	let targetEffect = null;
+	conditions.forEach((effect) => {
+		console.log(effect);
+		if (effect.id == effectName) {
+			targetEffect = effect;
+		}
+	});
+	return targetEffect;
 }

@@ -163,7 +163,7 @@ export class HLMActor extends Actor {
 		this.itemTypes.condition.forEach((existingCondition) => {
 			if (
 				!activeConditionNames.includes(
-					Utils.toLowerHyphen(existingCondition.name)
+					existingCondition.system.effectName
 				)
 			) {
 				console.log(`Removing ${existingCondition.name}`);

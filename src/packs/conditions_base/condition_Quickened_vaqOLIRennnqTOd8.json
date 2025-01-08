@@ -23,7 +23,8 @@
 		},
 		"value": true,
 		"text": "",
-		"limit": true
+		"limit": true,
+		"effectName": "quickened"
 	},
 	"effects": [],
 	"folder": null,

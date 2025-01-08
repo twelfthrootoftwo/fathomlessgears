@@ -23,7 +23,8 @@
 		},
 		"value": false,
 		"text": "",
-		"limit": false
+		"limit": false,
+		"effectName": "stalwart"
 	},
 	"effects": [],
 	"folder": null,

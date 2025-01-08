@@ -23,7 +23,8 @@
 		},
 		"value": true,
 		"text": "",
-		"limit": 3
+		"limit": 3,
+		"effectName": "slowed"
 	},
 	"effects": [],
 	"folder": null,

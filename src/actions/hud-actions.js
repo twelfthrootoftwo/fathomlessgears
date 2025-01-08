@@ -97,6 +97,11 @@ export class HUDActionCollection {
 								effectCounter
 							);
 						});
+					createdToken.setFlag(
+						"fathomlessgears",
+						"ballastToken",
+						true
+					);
 				});
 			});
 	}
