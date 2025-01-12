@@ -8,12 +8,14 @@ import {
 	ATTRIBUTE_MAX_ROLLED,
 	ATTRIBUTE_MAX_FLAT,
 	BALLAST_MIN,
-	BALLAST_MAX
+	BALLAST_MAX,
+	ITEM_TYPES
 } from "../constants.js";
 
 import {Grid} from "../grid/grid-base.js";
 import {ItemsManager} from "./items-manager.js";
 import {ATTRIBUTE_ONLY_CONDITIONS} from "../conditions/conditions.js";
+import {ActiveEffectCounter} from "../../../../modules/statuscounter/module/api.js";
 
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
@@ -98,6 +100,7 @@ export class HLMActor extends Actor {
 			this.effects.forEach(async (activeEffect) => {
 				let conditionName = activeEffect.statuses.values().next().value;
 				conditionNames.push(conditionName);
+				console.log(conditionName);
 
 				if (game.availableConditionItems?.has(activeEffect.name)) {
 					let effectCounter = foundry.utils.getProperty(
@@ -105,20 +108,24 @@ export class HLMActor extends Actor {
 						"flags.statuscounter.counter"
 					);
 					if (!effectCounter) {
+						console.log("Creating new counter");
 						effectCounter = new ActiveEffectCounter(
 							1,
 							activeEffect.icon,
 							activeEffect
 						);
+						effectCounter.visible = true;
 					}
-					const effectValue = Math.max(
-						Math.min(effectCounter.value, 3),
-						-3
-					);
+					const counterValue = effectCounter.value;
+					console.log(counterValue);
 
-					const existingCondition = this.getConditionItem(
-						activeEffect.name
-					);
+					const effectValue = Math.max(Math.min(counterValue, 3), -3);
+
+					const existingCondition =
+						this.itemsManager.findItemByNameAndType(
+							ITEM_TYPES.condition,
+							activeEffect.name
+						);
 
 					if (
 						existingCondition &&
@@ -139,7 +146,9 @@ export class HLMActor extends Actor {
 							activeEffect.name
 						).then((newCondition) => {
 							if (newCondition) {
-								this.itemsManager.applyCondition(newCondition);
+								this.itemsManager.applyNewCondition(
+									newCondition
+								);
 							}
 						});
 					}
@@ -152,7 +161,7 @@ export class HLMActor extends Actor {
 				}
 			});
 			this.removeInactiveEffects(conditionNames);
-		}, 20);
+		}, 50);
 	}
 
 	/**

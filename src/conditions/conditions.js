@@ -263,6 +263,7 @@ export function applyAttributeModifyingEffect(actor, effect) {
 		);
 		if (!effectCounter) {
 			effectCounter = new ActiveEffectCounter(1, effect.icon, effect);
+			effectCounter.visible = true;
 		}
 		applyConditionModifier(
 			actor,
@@ -351,10 +352,8 @@ export function discoverConditions() {
 }
 
 export function findConditionEffect(effectName) {
-	console.log(effectName);
 	let targetEffect = null;
 	conditions.forEach((effect) => {
-		console.log(effect);
 		if (effect.id == effectName) {
 			targetEffect = effect;
 		}

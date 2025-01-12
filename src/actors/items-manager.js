@@ -8,6 +8,7 @@ import {
 } from "../constants.js";
 import {ConfirmDialog} from "../utilities/confirm-dialog.js";
 import {findConditionEffect} from "../conditions/conditions.js";
+import {ActiveEffectCounter} from "../../../../modules/statuscounter/module/api.js";
 
 export class AttributeElement {
 	value;
@@ -90,7 +91,7 @@ export class ItemsManager {
 				this.applyBackground(item);
 				break;
 			case ITEM_TYPES.condition:
-				this.applyCondition(item);
+				this.dropCondition(item);
 				break;
 		}
 	}
@@ -105,6 +106,23 @@ export class ItemsManager {
 		} else {
 			this._removeItem(uuid);
 		}
+	}
+
+	/**
+	 * Searches a particular item type for an existing item with a given name
+	 * Returns the existing item if it exists, otherwise null
+	 * @param {ITEM_TYPES} itemType The type of item to find
+	 * @param {string} itemName The name of the target item
+	 */
+	findItemByNameAndType(itemType, itemName) {
+		let existing = this.actor.itemTypes[itemType];
+		let target = null;
+		existing.forEach((item) => {
+			if (item.name == itemName) {
+				target = item;
+			}
+		});
+		return target;
 	}
 
 	/**
@@ -542,62 +560,61 @@ export class ItemsManager {
 
 	/**
 	 * Adds a condition to this actor by dropping the condition item on it
-	 * Unlike applyCondition, this needs to set up the active effect
+	 * Will both create the condition item and set the active effect on tokens
 	 * @param {Item} condition A new Condition item to duplicate onto this actor
 	 */
-	// async dropCondition(condition) {
-
-	// }
-
-	/**
-	 * Adds a condition to this actor, including any associated attribute modifiers
-	 * @param {Item} condition A new Condition item to duplicate onto this actor
-	 */
-	async applyCondition(condition) {
-		console.log("Applying condition");
-
-		const effect = this.actor.effects.getName(
-			game.i18n.localize(`CONDITIONS.${condition.system.effectName}`)
+	async dropCondition(condition) {
+		if (condition.system.value === true) {
+			condition.system.value = 1;
+		}
+		const tokens = this.actor
+			.getActiveTokens(true, true)
+			.filter((t) => !t.flags.fathomlessgears?.ballastToken);
+		let existingCondition = this.findItemByNameAndType(
+			ITEM_TYPES.condition,
+			condition.name
 		);
-		if (!effect) {
-			console.log(this.actor.getActiveTokens());
-			const tokens = this.actor
-				.getActiveTokens(true, true)
-				.filter((t) => !t.flags.fathomlessgears?.ballastToken);
+		if (existingCondition) {
+			tokens.forEach((token) => {
+				// const existingValue = ActiveEffectCounter.findCounterValue(token.actor, condition.system.effectName);
+				const existingEffect = token.actor.appliedEffects.filter(
+					(appliedEffect) =>
+						appliedEffect.statuses.has(condition.system.effectName)
+				)[0];
+				let effectCounter = foundry.utils.getProperty(
+					existingEffect,
+					"flags.statuscounter.counter"
+				);
+				let targetValue = Math.max(
+					Math.min(
+						effectCounter
+							? condition.system.value + effectCounter.value
+							: condition.system.value,
+						3
+					),
+					-3
+				);
+				console.log(targetValue);
+				this.setEffectValue(existingEffect, targetValue, token);
+			});
+		} else {
+			// this.applyNewCondition(condition);
 			if (condition.system.effectName) {
 				tokens.forEach((token) => {
-					token
-						.toggleActiveEffect(
-							findConditionEffect(condition.system.effectName)
-						)
-						.then(() => {
-							const effect = token.actor.appliedEffects[0]; //TODO this is wrong
-							let effectCounter = foundry.utils.getProperty(
-								effect,
-								"flags.statuscounter.counter"
-							);
-							if (!effectCounter) {
-								effectCounter = new ActiveEffectCounter(
-									condition.system.value,
-									effect.icon,
-									effect
-								);
-							} else {
-								effectCounter.setValue(
-									condition.system.value,
-									effect,
-									true
-								);
-							}
-							effect.setFlag(
-								"statuscounter",
-								"counter",
-								effectCounter
-							);
-						});
+					this.addNewTokenEffect(token, condition);
 				});
 			}
 		}
+	}
+
+	/**
+	 * Adds a condition item to this actor, including any associated attribute modifiers
+	 * This does not apply or update token effects (call addNewTokenEffect)
+	 * @param {Item} condition A new Condition item to duplicate onto this actor
+	 */
+	async applyNewCondition(condition) {
+		console.log("Applying condition");
+
 		const item = await Item.create(condition, {parent: this.actor});
 
 		//Apply attributes
@@ -619,6 +636,33 @@ export class ItemsManager {
 		this.actor.calculateBallast();
 		await this.actor.update({system: this.actor.system});
 		Hooks.callAll("conditionAdded", this.actor);
+
+		// const effect = this.actor.effects.getName(
+		// 	game.i18n.localize(`CONDITIONS.${condition.system.effectName}`)
+		// );
+		// const tokens = this.actor
+		// 	.getActiveTokens(true, true)
+		// 	.filter((t) => !t.flags.fathomlessgears?.ballastToken);
+		// if (!effect) {
+		// 	//New condition
+		// 	console.log(this.actor.getActiveTokens());
+		// 	const tokens = this.actor
+		// 		.getActiveTokens(true, true)
+		// 		.filter((t) => !t.flags.fathomlessgears?.ballastToken);
+
+		// } else if (condition.system.effectName) {
+		// 	//This condition already exists on the actor
+		// 	//Adjust the value of the effect counter (the condition itself will be changed by the actor data check)
+		// 	tokens.forEach((token) => {
+		// 		const existingEffect = token.actor.appliedEffects.filter((appliedEffect) => appliedEffect.id == condition.system.effectName)[0];
+		// 		let effectCounter = foundry.utils.getProperty(
+		// 			existingEffect,
+		// 			"flags.statuscounter.counter"
+		// 		);
+		// 		let targetValue = effectCounter ? condition.system.value+effectCounter.value : condition.system.value;
+		// 		this.setEffectValue(existingEffect,Math.max(Math.min(targetValue,3),0));
+		// 	})
+		// }
 	}
 
 	/**
@@ -642,5 +686,68 @@ export class ItemsManager {
 		});
 		this.actor.calculateAttributeTotals();
 		this.actor.calculateBallast();
+	}
+
+	/**
+	 * Add a token effect to a token (after dropping a condition item on an actor)
+	 * @param {TokenDocument} token The token to add the effect to
+	 * @param {Item} condition Condition item that triggers this effect
+	 */
+	addNewTokenEffect(token, condition) {
+		if (condition.system.value === true) {
+			condition.system.value = 1;
+		}
+		token
+			.toggleActiveEffect(
+				findConditionEffect(condition.system.effectName)
+			)
+			.then(() => {
+				const effect = token.actor.appliedEffects.filter(
+					(appliedEffect) =>
+						appliedEffect.statuses.has(condition.system.effectName)
+				)[0];
+				// let effectCounter = foundry.utils.getProperty(
+				// 	effect,
+				// 	"flags.statuscounter.counter"
+				// );
+				console.log(condition.system.value);
+				this.setEffectValue(effect, condition.system.value, token);
+			});
+	}
+
+	/**
+	 * Assign a value to a specific active effect (which may not yet have a effect counter initialised)
+	 * @param {ActiveEffect} activeEffect
+	 * @param {number} value
+	 * @param {TokenDocument} token
+	 */
+	async setEffectValue(activeEffect, value, token) {
+		// let effectCounter = ActiveEffectCounter.findCounter(token.actor,statusName)
+		let effectCounter = foundry.utils.getProperty(
+			activeEffect,
+			"flags.statuscounter.counter"
+		);
+		if (!effectCounter) {
+			effectCounter = new ActiveEffectCounter(
+				value,
+				activeEffect.icon,
+				token
+			);
+			effectCounter.visible = true;
+		} else {
+			// effectCounter.setValue(
+			// 	value,
+			// 	token,
+			// 	true
+			// );
+			effectCounter.value = value;
+		}
+		// await effectCounter.update(token);
+		activeEffect.setFlag("statuscounter", "counter", effectCounter);
+		// token.update({},{diff: false});
+		// setTimeout(async () => {
+		// 	await effectCounter.update(token);
+		// 	// token.object.drawEffects();
+		// },1000)
 	}
 }
