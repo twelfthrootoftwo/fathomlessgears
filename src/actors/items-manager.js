@@ -7,8 +7,10 @@ import {
 	TEMPLATE_WEIGHT
 } from "../constants.js";
 import {ConfirmDialog} from "../utilities/confirm-dialog.js";
-import {findConditionEffect} from "../conditions/conditions.js";
-import {ActiveEffectCounter} from "../../../../modules/statuscounter/module/api.js";
+import {
+	findConditionEffect,
+	quickCreateCounter
+} from "../conditions/conditions.js";
 
 export class AttributeElement {
 	value;
@@ -595,7 +597,7 @@ export class ItemsManager {
 					-3
 				);
 				console.log(targetValue);
-				this.setEffectValue(existingEffect, targetValue, token);
+				quickCreateCounter(existingEffect, targetValue);
 			});
 		} else {
 			// this.applyNewCondition(condition);
@@ -636,33 +638,6 @@ export class ItemsManager {
 		this.actor.calculateBallast();
 		await this.actor.update({system: this.actor.system});
 		Hooks.callAll("conditionAdded", this.actor);
-
-		// const effect = this.actor.effects.getName(
-		// 	game.i18n.localize(`CONDITIONS.${condition.system.effectName}`)
-		// );
-		// const tokens = this.actor
-		// 	.getActiveTokens(true, true)
-		// 	.filter((t) => !t.flags.fathomlessgears?.ballastToken);
-		// if (!effect) {
-		// 	//New condition
-		// 	console.log(this.actor.getActiveTokens());
-		// 	const tokens = this.actor
-		// 		.getActiveTokens(true, true)
-		// 		.filter((t) => !t.flags.fathomlessgears?.ballastToken);
-
-		// } else if (condition.system.effectName) {
-		// 	//This condition already exists on the actor
-		// 	//Adjust the value of the effect counter (the condition itself will be changed by the actor data check)
-		// 	tokens.forEach((token) => {
-		// 		const existingEffect = token.actor.appliedEffects.filter((appliedEffect) => appliedEffect.id == condition.system.effectName)[0];
-		// 		let effectCounter = foundry.utils.getProperty(
-		// 			existingEffect,
-		// 			"flags.statuscounter.counter"
-		// 		);
-		// 		let targetValue = effectCounter ? condition.system.value+effectCounter.value : condition.system.value;
-		// 		this.setEffectValue(existingEffect,Math.max(Math.min(targetValue,3),0));
-		// 	})
-		// }
 	}
 
 	/**
@@ -711,43 +686,7 @@ export class ItemsManager {
 				// 	"flags.statuscounter.counter"
 				// );
 				console.log(condition.system.value);
-				this.setEffectValue(effect, condition.system.value, token);
+				quickCreateCounter(effect, value);
 			});
-	}
-
-	/**
-	 * Assign a value to a specific active effect (which may not yet have a effect counter initialised)
-	 * @param {ActiveEffect} activeEffect
-	 * @param {number} value
-	 * @param {TokenDocument} token
-	 */
-	async setEffectValue(activeEffect, value, token) {
-		// let effectCounter = ActiveEffectCounter.findCounter(token.actor,statusName)
-		let effectCounter = foundry.utils.getProperty(
-			activeEffect,
-			"flags.statuscounter.counter"
-		);
-		if (!effectCounter) {
-			effectCounter = new ActiveEffectCounter(
-				value,
-				activeEffect.icon,
-				token
-			);
-			effectCounter.visible = true;
-		} else {
-			// effectCounter.setValue(
-			// 	value,
-			// 	token,
-			// 	true
-			// );
-			effectCounter.value = value;
-		}
-		// await effectCounter.update(token);
-		activeEffect.setFlag("statuscounter", "counter", effectCounter);
-		// token.update({},{diff: false});
-		// setTimeout(async () => {
-		// 	await effectCounter.update(token);
-		// 	// token.object.drawEffects();
-		// },1000)
 	}
 }

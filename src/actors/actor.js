@@ -14,8 +14,11 @@ import {
 
 import {Grid} from "../grid/grid-base.js";
 import {ItemsManager} from "./items-manager.js";
-import {ATTRIBUTE_ONLY_CONDITIONS} from "../conditions/conditions.js";
-import {ActiveEffectCounter} from "../../../../modules/statuscounter/module/api.js";
+import {
+	ATTRIBUTE_ONLY_CONDITIONS,
+	NUMBERED_CONDITIONS,
+	quickCreateCounter
+} from "../conditions/conditions.js";
 
 /**
  * Extend the base Actor document to support attributes and groups with a custom template creation dialog.
@@ -100,68 +103,57 @@ export class HLMActor extends Actor {
 			this.effects.forEach(async (activeEffect) => {
 				let conditionName = activeEffect.statuses.values().next().value;
 				conditionNames.push(conditionName);
-				console.log(conditionName);
+
+				if (NUMBERED_CONDITIONS.includes(conditionName)) {
+					quickCreateCounter(activeEffect, false);
+				}
 
 				if (game.availableConditionItems?.has(activeEffect.name)) {
-					let effectCounter = foundry.utils.getProperty(
-						activeEffect,
-						"flags.statuscounter.counter"
+					setTimeout(
+						() => this.applySingleActiveEffect(activeEffect),
+						50
 					);
-					if (!effectCounter) {
-						console.log("Creating new counter");
-						effectCounter = new ActiveEffectCounter(
-							1,
-							activeEffect.icon,
-							activeEffect
-						);
-						effectCounter.visible = true;
-					}
-					const counterValue = effectCounter.value;
-					console.log(counterValue);
-
-					const effectValue = Math.max(Math.min(counterValue, 3), -3);
-
-					const existingCondition =
-						this.itemsManager.findItemByNameAndType(
-							ITEM_TYPES.condition,
-							activeEffect.name
-						);
-
-					if (
-						existingCondition &&
-						ATTRIBUTE_ONLY_CONDITIONS.includes(conditionName) &&
-						existingCondition.system.value != effectValue
-					) {
-						existingCondition.system.value = effectValue;
-						existingCondition.update({"system.value": effectValue});
-						this.itemsManager.updateCondition(existingCondition);
-						console.log(
-							`Updated condition value to ${effectValue}`
-						);
-					} else if (!existingCondition) {
-						Utils.findCompendiumItemFromName(
-							game.sensitiveDataAvailable
-								? "conditions"
-								: "conditions_base",
-							activeEffect.name
-						).then((newCondition) => {
-							if (newCondition) {
-								this.itemsManager.applyNewCondition(
-									newCondition
-								);
-							}
-						});
-					}
-
-					// const condition = activeEffect.statuses.values().next().value;
-					// if (ATTRIBUTE_ONLY_CONDITIONS.includes(condition)) {
-					// 	conditionNames.push(condition);
-					// 	applyAttributeModifyingEffect(this, activeEffect);
-					// }
 				}
 			});
 			this.removeInactiveEffects(conditionNames);
 		}, 50);
+	}
+
+	applySingleActiveEffect(activeEffect) {
+		let effectCounter = foundry.utils.getProperty(
+			activeEffect,
+			"flags.statuscounter.counter"
+		);
+		const counterValue = effectCounter.value;
+
+		const effectValue = Math.max(Math.min(counterValue, 3), -3);
+
+		const existingCondition = this.itemsManager.findItemByNameAndType(
+			ITEM_TYPES.condition,
+			activeEffect.name
+		);
+
+		if (
+			existingCondition &&
+			ATTRIBUTE_ONLY_CONDITIONS.includes(
+				activeEffect.statuses.values().next().value
+			) &&
+			existingCondition.system.value != effectValue
+		) {
+			existingCondition.system.value = effectValue;
+			existingCondition.update({"system.value": effectValue});
+			this.itemsManager.updateCondition(existingCondition);
+			console.log(`Updated condition value to ${effectValue}`);
+		} else if (!existingCondition) {
+			Utils.findCompendiumItemFromName(
+				game.sensitiveDataAvailable ? "conditions" : "conditions_base",
+				activeEffect.name
+			).then((newCondition) => {
+				if (newCondition) {
+					this.itemsManager.applyNewCondition(newCondition);
+				}
+			});
+		}
 	}
 
 	/**

@@ -1,5 +1,6 @@
-import {AttributeElement} from "../actors/items-manager.js";
-import {ATTRIBUTES, ITEM_TYPES} from "../constants.js";
+//import {AttributeElement} from "../actors/items-manager.js";
+import {ITEM_TYPES} from "../constants.js";
+import {ActiveEffectCounter} from "../../../../modules/statuscounter/module/api.js";
 
 export const CONDITIONS = {
 	blind: "blind",
@@ -200,139 +201,187 @@ export const ATTRIBUTE_ONLY_CONDITIONS = [
 	CONDITIONS.wired
 ];
 
-export const IMPLEMENTED_CONDITIONS = {
-	burdened: {
-		id: CONDITIONS.burdened,
-		positive: [ATTRIBUTES.ballast],
-		negative: []
-	},
-	dazed: {
-		id: CONDITIONS.dazed,
-		positive: [],
-		negative: [
-			ATTRIBUTES.close,
-			ATTRIBUTES.far,
-			ATTRIBUTES.mental,
-			ATTRIBUTES.power
-		]
-	},
-	drained: {
-		id: CONDITIONS.drained,
-		positive: [],
-		negative: [ATTRIBUTES.baseAP]
-	},
-	evasive: {
-		id: CONDITIONS.evasive,
-		positive: [ATTRIBUTES.evasion],
-		negative: []
-	},
-	fatigued: {
-		id: CONDITIONS.fatigued,
-		positive: [],
-		negative: [ATTRIBUTES.willpower]
-	},
-	quickened: {
-		id: CONDITIONS.quickened,
-		positive: [],
-		negative: [ATTRIBUTES.ballast]
-	},
-	restrained: {
-		id: CONDITIONS.restrained,
-		positive: [],
-		negative: [ATTRIBUTES.evasion]
-	},
-	slowed: {
-		id: CONDITIONS.slowed,
-		positive: [],
-		negative: [ATTRIBUTES.speed]
-	},
-	wired: {
-		id: CONDITIONS.wired,
-		positive: [ATTRIBUTES.baseAP],
-		negative: []
-	}
-};
+export const NUMBERED_CONDITIONS = [
+	CONDITIONS.burdened,
+	CONDITIONS.dazed,
+	CONDITIONS.drained,
+	CONDITIONS.evasive,
+	CONDITIONS.fatigued,
+	CONDITIONS.quickened,
+	CONDITIONS.restrained,
+	CONDITIONS.slowed,
+	CONDITIONS.wired,
+	CONDITIONS.catchcounter,
+	CONDITIONS.doomed,
+	CONDITIONS.ironclad,
+	CONDITIONS.tranq,
+	"hook1",
+	"hook2",
+	"hook3",
+	"hook4",
+	"hook5",
+	"hook6",
+	"hook7"
+];
 
-export function applyAttributeModifyingEffect(actor, effect) {
-	const statusName = effect.statuses.values().next().value;
-	if (ATTRIBUTE_ONLY_CONDITIONS.includes(statusName)) {
-		const thisEffect = findImplementedCondition(statusName);
-		let effectCounter = foundry.utils.getProperty(
-			effect,
-			"flags.statuscounter.counter"
+export function quickCreateCounter(activeEffect, value) {
+	let effectCounter = foundry.utils.getProperty(
+		activeEffect,
+		"flags.statuscounter.counter"
+	);
+	if (!effectCounter) {
+		effectCounter = new ActiveEffectCounter(
+			value || 1,
+			activeEffect.icon,
+			activeEffect
 		);
-		if (!effectCounter) {
-			effectCounter = new ActiveEffectCounter(1, effect.icon, effect);
-			effectCounter.visible = true;
-		}
-		applyConditionModifier(
-			actor,
-			thisEffect,
-			Math.max(Math.min(effectCounter.value, 3), -3)
-		);
+	} else if (value) {
+		effectCounter.value = value;
 	}
+	effectCounter.visible = NUMBERED_CONDITIONS.includes(
+		activeEffect.statuses.values().next().value
+	);
+	activeEffect.setFlag("statuscounter", "counter", effectCounter);
+	return effectCounter;
 }
 
-function findModifier(modifierList, modifierId) {
-	let targetModifier = false;
-	modifierList.forEach((modifier) => {
-		if (modifier.source == modifierId) targetModifier = modifier;
-	});
-	return targetModifier;
-}
+// export const IMPLEMENTED_CONDITIONS = {
+// 	burdened: {
+// 		id: CONDITIONS.burdened,
+// 		positive: [ATTRIBUTES.ballast],
+// 		negative: []
+// 	},
+// 	dazed: {
+// 		id: CONDITIONS.dazed,
+// 		positive: [],
+// 		negative: [
+// 			ATTRIBUTES.close,
+// 			ATTRIBUTES.far,
+// 			ATTRIBUTES.mental,
+// 			ATTRIBUTES.power
+// 		]
+// 	},
+// 	drained: {
+// 		id: CONDITIONS.drained,
+// 		positive: [],
+// 		negative: [ATTRIBUTES.baseAP]
+// 	},
+// 	evasive: {
+// 		id: CONDITIONS.evasive,
+// 		positive: [ATTRIBUTES.evasion],
+// 		negative: []
+// 	},
+// 	fatigued: {
+// 		id: CONDITIONS.fatigued,
+// 		positive: [],
+// 		negative: [ATTRIBUTES.willpower]
+// 	},
+// 	quickened: {
+// 		id: CONDITIONS.quickened,
+// 		positive: [],
+// 		negative: [ATTRIBUTES.ballast]
+// 	},
+// 	restrained: {
+// 		id: CONDITIONS.restrained,
+// 		positive: [],
+// 		negative: [ATTRIBUTES.evasion]
+// 	},
+// 	slowed: {
+// 		id: CONDITIONS.slowed,
+// 		positive: [],
+// 		negative: [ATTRIBUTES.speed]
+// 	},
+// 	wired: {
+// 		id: CONDITIONS.wired,
+// 		positive: [ATTRIBUTES.baseAP],
+// 		negative: []
+// 	}
+// };
 
-function findImplementedCondition(statusName) {
-	let targetCondition = null;
-	Object.values(IMPLEMENTED_CONDITIONS).forEach((condition) => {
-		if (condition.id == statusName) targetCondition = condition;
-	});
-	return targetCondition;
-}
+// export function applyAttributeModifyingEffect(actor, effect) {
+// 	const statusName = effect.statuses.values().next().value;
+// 	if (ATTRIBUTE_ONLY_CONDITIONS.includes(statusName)) {
+// 		const thisEffect = findImplementedCondition(statusName);
+// 		let effectCounter = foundry.utils.getProperty(
+// 			effect,
+// 			"flags.statuscounter.counter"
+// 		);
+// 		if (!effectCounter) {
+// 			effectCounter = new ActiveEffectCounter(1, effect.icon, effect);
+// 			effectCounter.visible = true;
+// 		}
+// 		applyConditionModifier(
+// 			actor,
+// 			thisEffect,
+// 			Math.max(Math.min(effectCounter.value, 3), -3)
+// 		);
+// 	}
+// }
 
-function applyConditionModifier(actor, condition, value) {
-	condition.positive.forEach((attr) => {
-		const targetModifierList =
-			actor.system.attributes[attr].values.standard.additions;
-		let existingModifier = findModifier(targetModifierList, condition.id);
-		if (existingModifier) {
-			if (value == 0) {
-				actor.removeAttributeModifier(attr, condition.id);
-			} else if (value <= 3) {
-				existingModifier.value = value;
-			}
-		} else if (value != 0) {
-			const newModifier = new AttributeElement(
-				value,
-				condition.id,
-				"condition",
-				game.i18n.localize(`CONDITIONS.${condition.id}`)
-			);
-			targetModifierList.push(newModifier);
-		}
-	});
-	condition.negative.forEach((attr) => {
-		const targetModifierList =
-			actor.system.attributes[attr].values.standard.additions;
-		let existingModifier = findModifier(targetModifierList, condition.id);
-		if (existingModifier) {
-			if (value == 0) {
-				actor.removeAttributeModifier(attr, condition.id);
-			} else if (value <= 3) {
-				existingModifier.value = -value;
-			}
-		} else if (value != 0) {
-			const newModifier = new AttributeElement(
-				-value,
-				condition.id,
-				"condition",
-				game.i18n.localize(`CONDITIONS.${condition.id}`)
-			);
-			targetModifierList.push(newModifier);
-		}
-	});
-	actor.calculateAttributeTotals(false);
-}
+// function findModifier(modifierList, modifierId) {
+// 	let targetModifier = false;
+// 	modifierList.forEach((modifier) => {
+// 		if (modifier.source == modifierId) targetModifier = modifier;
+// 	});
+// 	return targetModifier;
+// }
 
+// function findImplementedCondition(statusName) {
+// 	let targetCondition = null;
+// 	Object.values(IMPLEMENTED_CONDITIONS).forEach((condition) => {
+// 		if (condition.id == statusName) targetCondition = condition;
+// 	});
+// 	return targetCondition;
+// }
+
+// function applyConditionModifier(actor, condition, value) {
+// 	condition.positive.forEach((attr) => {
+// 		const targetModifierList =
+// 			actor.system.attributes[attr].values.standard.additions;
+// 		let existingModifier = findModifier(targetModifierList, condition.id);
+// 		if (existingModifier) {
+// 			if (value == 0) {
+// 				actor.removeAttributeModifier(attr, condition.id);
+// 			} else if (value <= 3) {
+// 				existingModifier.value = value;
+// 			}
+// 		} else if (value != 0) {
+// 			const newModifier = new AttributeElement(
+// 				value,
+// 				condition.id,
+// 				"condition",
+// 				game.i18n.localize(`CONDITIONS.${condition.id}`)
+// 			);
+// 			targetModifierList.push(newModifier);
+// 		}
+// 	});
+// 	condition.negative.forEach((attr) => {
+// 		const targetModifierList =
+// 			actor.system.attributes[attr].values.standard.additions;
+// 		let existingModifier = findModifier(targetModifierList, condition.id);
+// 		if (existingModifier) {
+// 			if (value == 0) {
+// 				actor.removeAttributeModifier(attr, condition.id);
+// 			} else if (value <= 3) {
+// 				existingModifier.value = -value;
+// 			}
+// 		} else if (value != 0) {
+// 			const newModifier = new AttributeElement(
+// 				-value,
+// 				condition.id,
+// 				"condition",
+// 				game.i18n.localize(`CONDITIONS.${condition.id}`)
+// 			);
+// 			targetModifierList.push(newModifier);
+// 		}
+// 	});
+// 	actor.calculateAttributeTotals(false);
+// }
+
+/**
+ * Searches through all COmpendia attached to this world for all condition items
+ * @returns a Set of Condition items
+ */
 export function discoverConditions() {
 	const foundConditions = new Set();
 	const itemPacks = game.packs.filter((p) => p.metadata.type === "Item");
@@ -351,6 +400,11 @@ export function discoverConditions() {
 	return foundConditions;
 }
 
+/**
+ * Searches the list of token condition effects for a match to a given condition name
+ * @param {string} effectName The name to search for (usually from the condition item's statuses)
+ * @returns the effect associated with the condition
+ */
 export function findConditionEffect(effectName) {
 	let targetEffect = null;
 	conditions.forEach((effect) => {
