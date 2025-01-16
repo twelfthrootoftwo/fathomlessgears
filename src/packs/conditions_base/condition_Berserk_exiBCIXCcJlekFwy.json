@@ -5,7 +5,7 @@
 	"img": "icons/svg/item-bag.svg",
 	"system": {
 		"source": {
-			"filename": "FG Sensitive",
+			"filename": "FG Core",
 			"version": "#{VERSION}#"
 		},
 		"attributes": {
@@ -24,7 +24,7 @@
 		"value": false,
 		"text": "",
 		"limit": false,
-		"effectName": "false"
+		"effectName": false
 	},
 	"effects": [],
 	"folder": null,

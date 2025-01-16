@@ -118,7 +118,7 @@ export class HLMActor extends Actor {
 				}
 			});
 			this.removeInactiveEffects(conditionNames);
-		}, 100);
+		}, 200);
 	}
 
 	async applySingleActiveEffect(activeEffect) {
