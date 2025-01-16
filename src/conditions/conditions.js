@@ -245,139 +245,6 @@ export function quickCreateCounter(activeEffect, value) {
 	return effectCounter;
 }
 
-// export const IMPLEMENTED_CONDITIONS = {
-// 	burdened: {
-// 		id: CONDITIONS.burdened,
-// 		positive: [ATTRIBUTES.ballast],
-// 		negative: []
-// 	},
-// 	dazed: {
-// 		id: CONDITIONS.dazed,
-// 		positive: [],
-// 		negative: [
-// 			ATTRIBUTES.close,
-// 			ATTRIBUTES.far,
-// 			ATTRIBUTES.mental,
-// 			ATTRIBUTES.power
-// 		]
-// 	},
-// 	drained: {
-// 		id: CONDITIONS.drained,
-// 		positive: [],
-// 		negative: [ATTRIBUTES.baseAP]
-// 	},
-// 	evasive: {
-// 		id: CONDITIONS.evasive,
-// 		positive: [ATTRIBUTES.evasion],
-// 		negative: []
-// 	},
-// 	fatigued: {
-// 		id: CONDITIONS.fatigued,
-// 		positive: [],
-// 		negative: [ATTRIBUTES.willpower]
-// 	},
-// 	quickened: {
-// 		id: CONDITIONS.quickened,
-// 		positive: [],
-// 		negative: [ATTRIBUTES.ballast]
-// 	},
-// 	restrained: {
-// 		id: CONDITIONS.restrained,
-// 		positive: [],
-// 		negative: [ATTRIBUTES.evasion]
-// 	},
-// 	slowed: {
-// 		id: CONDITIONS.slowed,
-// 		positive: [],
-// 		negative: [ATTRIBUTES.speed]
-// 	},
-// 	wired: {
-// 		id: CONDITIONS.wired,
-// 		positive: [ATTRIBUTES.baseAP],
-// 		negative: []
-// 	}
-// };
-
-// export function applyAttributeModifyingEffect(actor, effect) {
-// 	const statusName = effect.statuses.values().next().value;
-// 	if (ATTRIBUTE_ONLY_CONDITIONS.includes(statusName)) {
-// 		const thisEffect = findImplementedCondition(statusName);
-// 		let effectCounter = foundry.utils.getProperty(
-// 			effect,
-// 			"flags.statuscounter.counter"
-// 		);
-// 		if (!effectCounter) {
-// 			effectCounter = new ActiveEffectCounter(1, effect.icon, effect);
-// 			effectCounter.visible = true;
-// 		}
-// 		applyConditionModifier(
-// 			actor,
-// 			thisEffect,
-// 			Math.max(Math.min(effectCounter.value, 3), -3)
-// 		);
-// 	}
-// }
-
-// function findModifier(modifierList, modifierId) {
-// 	let targetModifier = false;
-// 	modifierList.forEach((modifier) => {
-// 		if (modifier.source == modifierId) targetModifier = modifier;
-// 	});
-// 	return targetModifier;
-// }
-
-// function findImplementedCondition(statusName) {
-// 	let targetCondition = null;
-// 	Object.values(IMPLEMENTED_CONDITIONS).forEach((condition) => {
-// 		if (condition.id == statusName) targetCondition = condition;
-// 	});
-// 	return targetCondition;
-// }
-
-// function applyConditionModifier(actor, condition, value) {
-// 	condition.positive.forEach((attr) => {
-// 		const targetModifierList =
-// 			actor.system.attributes[attr].values.standard.additions;
-// 		let existingModifier = findModifier(targetModifierList, condition.id);
-// 		if (existingModifier) {
-// 			if (value == 0) {
-// 				actor.removeAttributeModifier(attr, condition.id);
-// 			} else if (value <= 3) {
-// 				existingModifier.value = value;
-// 			}
-// 		} else if (value != 0) {
-// 			const newModifier = new AttributeElement(
-// 				value,
-// 				condition.id,
-// 				"condition",
-// 				game.i18n.localize(`CONDITIONS.${condition.id}`)
-// 			);
-// 			targetModifierList.push(newModifier);
-// 		}
-// 	});
-// 	condition.negative.forEach((attr) => {
-// 		const targetModifierList =
-// 			actor.system.attributes[attr].values.standard.additions;
-// 		let existingModifier = findModifier(targetModifierList, condition.id);
-// 		if (existingModifier) {
-// 			if (value == 0) {
-// 				actor.removeAttributeModifier(attr, condition.id);
-// 			} else if (value <= 3) {
-// 				existingModifier.value = -value;
-// 			}
-// 		} else if (value != 0) {
-// 			const newModifier = new AttributeElement(
-// 				-value,
-// 				condition.id,
-// 				"condition",
-// 				game.i18n.localize(`CONDITIONS.${condition.id}`)
-// 			);
-// 			targetModifierList.push(newModifier);
-// 		}
-// 	});
-// 	actor.calculateAttributeTotals(false);
-// }
-
 /**
  * Searches through all COmpendia attached to this world for all condition items
  * @returns a Set of Condition items
@@ -413,4 +280,26 @@ export function findConditionEffect(effectName) {
 		}
 	});
 	return targetEffect;
+}
+
+export async function findConditionFromStatus(status) {
+	let itemPacks = game.packs.filter((p) => p.metadata.type === "Item");
+	if (game.sensitiveDataAvailable) {
+		itemPacks = itemPacks.filter((p) => p.name != "conditions_base");
+	}
+
+	let targetCondition = null;
+	for (const pack of itemPacks) {
+		const allItems = await pack.getDocuments();
+		const search = allItems.filter(
+			(item) =>
+				item.type == ITEM_TYPES.condition &&
+				item.system.effectName == status
+		);
+		if (search.length > 0) {
+			targetCondition = search[0];
+		}
+	}
+	console.log(targetCondition);
+	return targetCondition;
 }

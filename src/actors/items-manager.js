@@ -578,7 +578,6 @@ export class ItemsManager {
 		);
 		if (existingCondition) {
 			tokens.forEach((token) => {
-				// const existingValue = ActiveEffectCounter.findCounterValue(token.actor, condition.system.effectName);
 				const existingEffect = token.actor.appliedEffects.filter(
 					(appliedEffect) =>
 						appliedEffect.statuses.has(condition.system.effectName)
@@ -596,11 +595,9 @@ export class ItemsManager {
 					),
 					-3
 				);
-				console.log(targetValue);
 				quickCreateCounter(existingEffect, targetValue);
 			});
 		} else {
-			// this.applyNewCondition(condition);
 			if (condition.system.effectName) {
 				tokens.forEach((token) => {
 					this.addNewTokenEffect(token, condition);
@@ -615,8 +612,6 @@ export class ItemsManager {
 	 * @param {Item} condition A new Condition item to duplicate onto this actor
 	 */
 	async applyNewCondition(condition) {
-		console.log("Applying condition");
-
 		const item = await Item.create(condition, {parent: this.actor});
 
 		//Apply attributes
@@ -637,7 +632,7 @@ export class ItemsManager {
 
 		this.actor.calculateBallast();
 		await this.actor.update({system: this.actor.system});
-		Hooks.callAll("conditionAdded", this.actor);
+		Hooks.callAll("conditionItemAdded", this.actor);
 	}
 
 	/**
@@ -681,11 +676,6 @@ export class ItemsManager {
 					(appliedEffect) =>
 						appliedEffect.statuses.has(condition.system.effectName)
 				)[0];
-				// let effectCounter = foundry.utils.getProperty(
-				// 	effect,
-				// 	"flags.statuscounter.counter"
-				// );
-				console.log(condition.system.value);
 				quickCreateCounter(effect, value);
 			});
 	}

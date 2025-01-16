@@ -16,6 +16,7 @@ import {Grid} from "../grid/grid-base.js";
 import {ItemsManager} from "./items-manager.js";
 import {
 	ATTRIBUTE_ONLY_CONDITIONS,
+	findConditionFromStatus,
 	NUMBERED_CONDITIONS,
 	quickCreateCounter
 } from "../conditions/conditions.js";
@@ -89,6 +90,7 @@ export class HLMActor extends Actor {
 
 	/** @inheritdoc */
 	applyActiveEffects() {
+		console.log("Applying effects");
 		super.applyActiveEffects();
 		this.applyConditions();
 	}
@@ -116,15 +118,16 @@ export class HLMActor extends Actor {
 				}
 			});
 			this.removeInactiveEffects(conditionNames);
-		}, 50);
+		}, 100);
 	}
 
-	applySingleActiveEffect(activeEffect) {
+	async applySingleActiveEffect(activeEffect) {
 		let effectCounter = foundry.utils.getProperty(
 			activeEffect,
 			"flags.statuscounter.counter"
 		);
 		const counterValue = effectCounter.value;
+		const statusName = activeEffect.statuses.values().next().value;
 
 		const effectValue = Math.max(Math.min(counterValue, 3), -3);
 
@@ -135,20 +138,14 @@ export class HLMActor extends Actor {
 
 		if (
 			existingCondition &&
-			ATTRIBUTE_ONLY_CONDITIONS.includes(
-				activeEffect.statuses.values().next().value
-			) &&
+			ATTRIBUTE_ONLY_CONDITIONS.includes(statusName) &&
 			existingCondition.system.value != effectValue
 		) {
 			existingCondition.system.value = effectValue;
 			existingCondition.update({"system.value": effectValue});
 			this.itemsManager.updateCondition(existingCondition);
-			console.log(`Updated condition value to ${effectValue}`);
 		} else if (!existingCondition) {
-			Utils.findCompendiumItemFromName(
-				game.sensitiveDataAvailable ? "conditions" : "conditions_base",
-				activeEffect.name
-			).then((newCondition) => {
+			findConditionFromStatus(statusName).then((newCondition) => {
 				if (newCondition) {
 					this.itemsManager.applyNewCondition(newCondition);
 				}
