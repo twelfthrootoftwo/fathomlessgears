@@ -153,7 +153,7 @@ export class AttackHandler {
 	static async rollHitLocation(defender) {
 		const hitZoneInfo = defender.items.get(defender.system.gridType);
 		if (!hitZoneInfo) {
-			game.messageHandler.createChatMessage(
+			game.tagHandler.createChatMessage(
 				defender.name + " has no grid type assigned!",
 				defender
 			);

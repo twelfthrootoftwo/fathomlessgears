@@ -144,7 +144,7 @@ export class HLMItem extends Item {
 				frame_ability_text: this.system.gear_ability
 			}
 		);
-		game.messageHandler.createChatMessage(displayMessage, actor);
+		game.tagHandler.createChatMessage(displayMessage, actor);
 	}
 
 	async internalAttack(actor) {
@@ -164,7 +164,7 @@ export class HLMItem extends Item {
 				minor_text: false
 			}
 		);
-		game.messageHandler.createChatMessage(displayMessage, actor);
+		game.tagHandler.createChatMessage(displayMessage, actor);
 	}
 
 	getItemDescriptionText() {
