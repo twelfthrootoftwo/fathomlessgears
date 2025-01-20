@@ -8,6 +8,7 @@ export class MessageHandler {
 	constructor() {
 		this.loadItemTypes();
 		this.loadTags();
+		this.addConditionItemListener();
 	}
 
 	loadItemTypes() {
@@ -72,14 +73,26 @@ export class MessageHandler {
 	}
 
 	conditionToDisplay(condition, value) {
+		let elementId = foundry.utils.randomID();
 		if (condition.system.value && value) {
-			condition.system.value = value;
+			this.addConditionItemListener(elementId, value);
 		}
 		let valueText = "";
+		let valueHTMLTag = "";
 		if (value) {
 			valueText = ` ${value}`;
+			valueHTMLTag = ` data-value=${value}`;
 		}
 		const itemText = `@UUID[${condition.uuid}]{${condition.name}${valueText}}`;
-		return `<div class="tag-display inline-block no-listener" id="${condition.uuid}">${itemText}</div>`;
+		return `<div class="tag-display inline-block no-listener"${valueHTMLTag} id="${elementId}" data-tagItemId="${condition.uuid}">${itemText}</div>`;
+	}
+
+	addConditionItemListener() {
+		document.body.addEventListener("dragstart", (event) => {
+			const value = event.target.parentElement.dataset.value;
+			if (value) {
+				event.dataTransfer.setData("tagValue", value);
+			}
+		});
 	}
 }

@@ -90,7 +90,7 @@ export class HLMActor extends Actor {
 
 	/** @inheritdoc */
 	applyActiveEffects() {
-		console.log("Applying effects");
+		console.log("Applying effects on actor load");
 		super.applyActiveEffects();
 		this.applyConditions();
 	}
@@ -111,17 +111,19 @@ export class HLMActor extends Actor {
 				}
 
 				if (game.availableConditionItems?.has(activeEffect.name)) {
-					setTimeout(
-						() => this.applySingleActiveEffect(activeEffect),
-						50
-					);
+					this.applySingleActiveEffect(activeEffect);
+					// setTimeout(
+					// 	() => ,
+					// 	50
+					// );
 				}
 			});
 			this.removeInactiveEffects(conditionNames);
-		}, 200);
+		}, 300);
 	}
 
 	async applySingleActiveEffect(activeEffect) {
+		console.log("Checking for a new condition under active effect");
 		let effectCounter = foundry.utils.getProperty(
 			activeEffect,
 			"flags.statuscounter.counter"
@@ -141,10 +143,12 @@ export class HLMActor extends Actor {
 			ATTRIBUTE_ONLY_CONDITIONS.includes(statusName) &&
 			existingCondition.system.value != effectValue
 		) {
+			console.log("Found existing condition requiring update");
 			existingCondition.system.value = effectValue;
 			existingCondition.update({"system.value": effectValue});
 			this.itemsManager.updateCondition(existingCondition);
 		} else if (!existingCondition) {
+			console.log("No condition found - creating a new instance");
 			findConditionFromStatus(statusName).then((newCondition) => {
 				if (newCondition) {
 					this.itemsManager.applyNewCondition(newCondition);

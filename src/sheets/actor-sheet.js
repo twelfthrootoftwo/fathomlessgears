@@ -252,13 +252,13 @@ export class HLMActorSheet extends ActorSheet {
 	 * @param {DragEvent} event The initiating drag event
 	 * @param {*} data What's being dropped
 	 */
-	async _onDropItem(_event, data) {
+	async _onDropItem(event, data) {
 		if (!this.testOwnership()) {
 			return false;
 		}
 		const targetItem = await fromUuid(data.uuid);
 		if (this.actor.itemsManager.canDropItem(targetItem)) {
-			this.actor.itemsManager.receiveDrop(targetItem);
+			this.actor.itemsManager.receiveDrop(event, targetItem);
 		} else {
 			ui.notifications.info(
 				`Can't drop item type ${targetItem.type} on actor type ${this.actor.type}`

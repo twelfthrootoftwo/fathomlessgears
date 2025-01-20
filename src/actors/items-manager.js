@@ -68,7 +68,7 @@ export class ItemsManager {
 	 * Directs a new item to the correct process on adding the item to the actor
 	 * @param {Item} item The item to apply
 	 */
-	receiveDrop(item) {
+	receiveDrop(event, item) {
 		switch (item.type) {
 			case ITEM_TYPES.size:
 				this.applySize(item);
@@ -93,7 +93,7 @@ export class ItemsManager {
 				this.applyBackground(item);
 				break;
 			case ITEM_TYPES.condition:
-				this.dropCondition(item);
+				this.dropCondition(item, event);
 				break;
 		}
 	}
@@ -565,8 +565,12 @@ export class ItemsManager {
 	 * Will both create the condition item and set the active effect on tokens
 	 * @param {Item} condition A new Condition item to duplicate onto this actor
 	 */
-	async dropCondition(condition) {
-		if (condition.system.value === true) {
+	async dropCondition(condition, event) {
+		let transferredValue = event.dataTransfer.getData("tagValue");
+		console.log(transferredValue);
+		if (transferredValue) {
+			condition.system.value = parseInt(transferredValue);
+		} else if (condition.system.value === true) {
 			condition.system.value = 1;
 		}
 		const tokens = this.actor
@@ -599,8 +603,8 @@ export class ItemsManager {
 			});
 		} else {
 			if (condition.system.effectName) {
-				tokens.forEach((token) => {
-					this.addNewTokenEffect(token, condition);
+				tokens.forEach(async (token) => {
+					await this.addNewTokenEffect(token, condition);
 				});
 			}
 		}
@@ -640,7 +644,6 @@ export class ItemsManager {
 	 * @param {Item} condition The existing condition, updated with the new value
 	 */
 	async updateCondition(condition) {
-		console.log("Updating condition");
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
 				this.actor.system.attributes[
@@ -663,20 +666,19 @@ export class ItemsManager {
 	 * @param {TokenDocument} token The token to add the effect to
 	 * @param {Item} condition Condition item that triggers this effect
 	 */
-	addNewTokenEffect(token, condition) {
+	async addNewTokenEffect(token, condition) {
 		if (condition.system.value === true) {
 			condition.system.value = 1;
 		}
-		token
-			.toggleActiveEffect(
-				findConditionEffect(condition.system.effectName)
-			)
-			.then(() => {
-				const effect = token.actor.appliedEffects.filter(
-					(appliedEffect) =>
-						appliedEffect.statuses.has(condition.system.effectName)
-				)[0];
-				quickCreateCounter(effect, value);
-			});
+		await token.toggleActiveEffect(
+			findConditionEffect(condition.system.effectName)
+		);
+		const effect = token.actor.appliedEffects.filter((appliedEffect) =>
+			appliedEffect.statuses.has(condition.system.effectName)
+		)[0];
+		setTimeout(
+			() => quickCreateCounter(effect, condition.system.value),
+			250
+		);
 	}
 }
