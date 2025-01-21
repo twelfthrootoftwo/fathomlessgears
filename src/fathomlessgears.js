@@ -79,6 +79,10 @@ Hooks.on("init", async function () {
 
 export const system_ready = new Promise((success) => {
 	Hooks.once("ready", async function () {
+		MessageHandler.addMessageHandler();
+		RollHandler.addRollHandler();
+		HUDActionCollection.addHUDActions();
+
 		game.keybindings.initialize();
 		//Post-init stuff goes here
 		const gridCollection = await game.packs.get(
@@ -112,9 +116,6 @@ export const system_ready = new Promise((success) => {
 			default: true
 		});
 		GridHoverHUD.addGridHUD();
-		RollHandler.addRollHandler();
-		MessageHandler.addMessageHandler();
-		HUDActionCollection.addHUDActions();
 
 		game.settings.register("fathomlessgears", "datafiles", {
 			name: "Source data files",

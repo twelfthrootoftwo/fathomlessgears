@@ -2,6 +2,7 @@ import {ITEM_TYPES} from "../constants.js";
 
 export class MessageHandler {
 	static addMessageHandler() {
+		console.log("Adding regular");
 		game.tagHandler = new MessageHandler();
 	}
 
@@ -33,7 +34,12 @@ export class MessageHandler {
 	 * Gather the items that are referenced during formatting
 	 */
 	loadTags() {
-		const itemPacks = game.packs.filter((p) => p.metadata.type === "Item");
+		let itemPacks = game.packs.filter((p) => p.metadata.type === "Item");
+		if (game.sensitiveDataAvailable) {
+			itemPacks = itemPacks.filter(
+				(p) => p.metadata.name !== "conditions_base"
+			);
+		}
 		this.tagItems = [];
 
 		itemPacks.forEach((pack) => {
@@ -73,10 +79,7 @@ export class MessageHandler {
 	}
 
 	conditionToDisplay(condition, value) {
-		let elementId = foundry.utils.randomID();
-		if (condition.system.value && value) {
-			this.addConditionItemListener(elementId, value);
-		}
+		console.log("Formatting condition");
 		let valueText = "";
 		let valueHTMLTag = "";
 		if (value) {
@@ -84,7 +87,7 @@ export class MessageHandler {
 			valueHTMLTag = ` data-value=${value}`;
 		}
 		const itemText = `@UUID[${condition.uuid}]{${condition.name}${valueText}}`;
-		return `<div class="tag-display inline-block no-listener"${valueHTMLTag} id="${elementId}" data-tagItemId="${condition.uuid}">${itemText}</div>`;
+		return `<div class="tag-display inline-block no-listener"${valueHTMLTag} data-tagItemId="${condition.uuid}">${itemText}</div>`;
 	}
 
 	addConditionItemListener() {
