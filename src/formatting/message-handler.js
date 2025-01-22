@@ -87,7 +87,7 @@ export class MessageHandler {
 			valueHTMLTag = ` data-value=${value}`;
 		}
 		const itemText = `@UUID[${condition.uuid}]{${condition.name}${valueText}}`;
-		return `<div class="tag-display inline-block no-listener"${valueHTMLTag} data-tagItemId="${condition.uuid}">${itemText}</div>`;
+		return `<div class="tag-display with-item-code inline-block no-listener"${valueHTMLTag} data-tagItemId="${condition.uuid}">${itemText}</div>`;
 	}
 
 	addConditionItemListener() {

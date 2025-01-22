@@ -404,6 +404,9 @@ button.button.post-message {
 	display: flex;
 	flex-grow: 0;
 }
+.tag-display.with-item-code {
+	padding: 0;
+}
 .delete-box {
 	flex: 0 0 50px;
 	padding: 1px 0px 1px 2px;
