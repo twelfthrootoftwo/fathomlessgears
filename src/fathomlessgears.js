@@ -2,7 +2,7 @@
 import {HLMActor} from "./actors/actor.js";
 import {HLMItem} from "./items/item.js";
 import {HLMActorSheet} from "./sheets/actor-sheet.js";
-import {HLMToken, HLMTokenDocument} from "./tokens/token.js";
+import {HLMToken, HLMTokenDocument, TokenDropHandler} from "./tokens/token.js";
 import {preloadHandlebarsTemplates} from "./utilities/templates.js";
 import {initialiseHelpers} from "./utilities/handlebars.js";
 import {FshManager, addFshManager} from "./data-files/fsh-manager.js";
@@ -82,6 +82,7 @@ export const system_ready = new Promise((success) => {
 		MessageHandler.addMessageHandler();
 		RollHandler.addRollHandler();
 		HUDActionCollection.addHUDActions();
+		TokenDropHandler.addTokenDropHandler();
 
 		game.keybindings.initialize();
 		//Post-init stuff goes here

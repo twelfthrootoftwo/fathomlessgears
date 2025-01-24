@@ -79,7 +79,6 @@ export class MessageHandler {
 	}
 
 	conditionToDisplay(condition, value) {
-		console.log("Formatting condition");
 		let valueText = "";
 		let valueHTMLTag = "";
 		if (value) {
@@ -93,9 +92,18 @@ export class MessageHandler {
 	addConditionItemListener() {
 		document.body.addEventListener("dragstart", (event) => {
 			const value = event.target.parentElement.dataset.value;
+			event.stopPropagation();
+			let dataTransfer = {
+				type: "Item",
+				uuid: event.target.dataset.uuid
+			};
 			if (value) {
-				event.dataTransfer.setData("tagValue", value);
+				dataTransfer.value = value;
 			}
+			event.dataTransfer.setData(
+				"text/plain",
+				JSON.stringify(dataTransfer)
+			);
 		});
 	}
 }

@@ -68,7 +68,7 @@ export class ItemsManager {
 	 * Directs a new item to the correct process on adding the item to the actor
 	 * @param {Item} item The item to apply
 	 */
-	receiveDrop(event, item) {
+	receiveDrop(item, dataset) {
 		switch (item.type) {
 			case ITEM_TYPES.size:
 				this.applySize(item);
@@ -93,7 +93,7 @@ export class ItemsManager {
 				this.applyBackground(item);
 				break;
 			case ITEM_TYPES.condition:
-				this.dropCondition(item, event);
+				this.dropCondition(item, dataset);
 				break;
 		}
 	}
@@ -565,11 +565,9 @@ export class ItemsManager {
 	 * Will both create the condition item and set the active effect on tokens
 	 * @param {Item} condition A new Condition item to duplicate onto this actor
 	 */
-	async dropCondition(condition, event) {
-		let transferredValue = event.dataTransfer.getData("tagValue");
-		console.log(transferredValue);
-		if (transferredValue) {
-			condition.system.value = parseInt(transferredValue);
+	async dropCondition(condition, dataset) {
+		if (dataset.value) {
+			condition.system.value = parseInt(dataset.value);
 		} else if (condition.system.value === true) {
 			condition.system.value = 1;
 		}
