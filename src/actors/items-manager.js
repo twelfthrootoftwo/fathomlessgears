@@ -371,8 +371,15 @@ export class ItemsManager {
 					-1 * item.system.marbles
 				);
 		}
-		await this.actor.update({system: this.actor.system});
-		await item.delete();
+		this.actor.update({system: this.actor.system});
+
+		//Re-retrieve item in case delete has been called twice as a race condition
+		const itemCheck = this.actor.items.get(uuid);
+		if (itemCheck) {
+			setTimeout(async () => {
+				await item.delete();
+			}, 50);
+		}
 
 		if (isInternal) {
 			Hooks.callAll("internalDeleted", this);
