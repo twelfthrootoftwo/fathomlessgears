@@ -12,7 +12,6 @@ export class HLMToken extends Token {}
 
 export class TokenDropHandler {
 	static addTokenDropHandler() {
-		console.log("Token drop!!");
 		game.tokenDrop = new TokenDropHandler();
 		game.tokenDrop.initialiseHooks();
 	}

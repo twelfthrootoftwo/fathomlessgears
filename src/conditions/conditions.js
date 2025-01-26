@@ -300,6 +300,5 @@ export async function findConditionFromStatus(status) {
 			targetCondition = search[0];
 		}
 	}
-	console.log(targetCondition);
 	return targetCondition;
 }

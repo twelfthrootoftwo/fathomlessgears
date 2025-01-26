@@ -90,7 +90,6 @@ export class HLMActor extends Actor {
 
 	/** @inheritdoc */
 	applyActiveEffects() {
-		console.log("Applying effects on actor load");
 		super.applyActiveEffects();
 		this.applyConditions();
 	}
@@ -123,7 +122,6 @@ export class HLMActor extends Actor {
 	}
 
 	async applySingleActiveEffect(activeEffect) {
-		console.log("Checking for a new condition under active effect");
 		let effectCounter = foundry.utils.getProperty(
 			activeEffect,
 			"flags.statuscounter.counter"
@@ -132,7 +130,6 @@ export class HLMActor extends Actor {
 		const statusName = activeEffect.statuses.values().next().value;
 
 		const effectValue = Math.max(Math.min(counterValue, 3), -3);
-		console.log(`Found effect value ${effectValue}`);
 
 		const existingCondition = this.itemsManager.findItemByNameAndType(
 			ITEM_TYPES.condition,
@@ -144,12 +141,10 @@ export class HLMActor extends Actor {
 			ATTRIBUTE_ONLY_CONDITIONS.includes(statusName) &&
 			existingCondition.system.value != effectValue
 		) {
-			console.log("Found existing condition requiring update");
 			existingCondition.system.value = effectValue;
 			existingCondition.update({"system.value": effectValue});
 			this.itemsManager.updateCondition(existingCondition);
 		} else if (!existingCondition) {
-			console.log("No condition found - creating a new instance");
 			findConditionFromStatus(statusName).then((newCondition) => {
 				if (newCondition) {
 					this.itemsManager.applyNewCondition(newCondition);
@@ -169,7 +164,6 @@ export class HLMActor extends Actor {
 					existingCondition.system.effectName
 				)
 			) {
-				console.log(`Removing ${existingCondition.name}`);
 				this.itemsManager.removeItemCallback(existingCondition._id);
 			}
 		});
@@ -297,7 +291,6 @@ export class HLMActor extends Actor {
 			index += 1;
 		});
 		if (delIndex >= 0) {
-			console.log(`Deleted modifier ${source}`);
 			targetAttribute.values.standard.additions.splice(delIndex, 1);
 		} else {
 			console.log(`Could not find modifier ${source}`);
@@ -340,7 +333,6 @@ export class HLMActor extends Actor {
 		ballast.values.standard.weight = weightBallast;
 		let ballastMods = 0;
 		ballast.values.standard.additions.forEach((element) => {
-			console.log(`Element to add: ${element.value}`);
 			ballastMods += element.value;
 		});
 		ballast.total =
