@@ -253,11 +253,13 @@ input.actor-name {
 	padding: 2px 5px 0px;
 }
 input.marbles {
-	flex: 0 0 0px;
+	flex: 0 0 16px;
 	height: 17px;
-	width: 16px;
 	min-width: 16px;
 	margin: 2px;
+}
+input.marbles.wide {
+	flex: 0 0 24px;
 }
 label.marbles {
 	flex: 1 0 40px;

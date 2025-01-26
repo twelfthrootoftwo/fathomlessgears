@@ -21,19 +21,22 @@ export class TokenDropHandler {
 			if (data.type == "Item") {
 				setTimeout(() => {
 					game.tokenDrop.onCanvasDrop(data);
-				}, 10);
+				}, 20);
 			}
 		});
 		Hooks.on("hoverToken", (token, hovered) => {
 			if (hovered) {
+				console.log("Hover token on");
 				game.tokenDrop.hoveredToken = token;
 			} else {
+				console.log("Hover token off");
 				game.tokenDrop.hoveredToken = null;
 			}
 		});
 	}
 
 	async onCanvasDrop(data) {
+		console.log(game.tokenDrop.hoveredToken);
 		if (!game.tokenDrop.hoveredToken) return;
 		const item = await fromUuid(data.uuid);
 		const actor = game.tokenDrop.hoveredToken.actor;
