@@ -132,6 +132,7 @@ export class HLMActor extends Actor {
 		const statusName = activeEffect.statuses.values().next().value;
 
 		const effectValue = Math.max(Math.min(counterValue, 3), -3);
+		console.log(`Found effect value ${effectValue}`);
 
 		const existingCondition = this.itemsManager.findItemByNameAndType(
 			ITEM_TYPES.condition,
@@ -209,13 +210,13 @@ export class HLMActor extends Actor {
 	/**
 	 * Evaluate totals for all attributes & save results
 	 */
-	calculateAttributeTotals(updateSource = true) {
+	async calculateAttributeTotals(updateSource = true) {
 		const updateData = {};
 		Object.keys(this.system.attributes).forEach((key) => {
 			updateData[key] = this.calculateSingleAttribute(key);
 		});
 		if (this._id && updateSource) {
-			this.update({"system.attributes": updateData});
+			await this.update({"system.attributes": updateData});
 		}
 	}
 
@@ -226,8 +227,7 @@ export class HLMActor extends Actor {
 	 */
 	calculateSingleAttribute(key) {
 		if (key == "ballast") {
-			this.calculateBallast();
-			return;
+			return this.calculateBallast();
 		}
 		const attr = this.system.attributes[key];
 		let total = 0;
@@ -340,6 +340,7 @@ export class HLMActor extends Actor {
 		ballast.values.standard.weight = weightBallast;
 		let ballastMods = 0;
 		ballast.values.standard.additions.forEach((element) => {
+			console.log(`Element to add: ${element.value}`);
 			ballastMods += element.value;
 		});
 		ballast.total =
@@ -350,6 +351,8 @@ export class HLMActor extends Actor {
 
 		if (ballast.total < BALLAST_MIN) ballast.total = BALLAST_MIN;
 		if (ballast.total > BALLAST_MAX) ballast.total = BALLAST_MAX;
+
+		return ballast;
 	}
 
 	/**

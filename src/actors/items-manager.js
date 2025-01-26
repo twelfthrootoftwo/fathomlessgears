@@ -578,6 +578,7 @@ export class ItemsManager {
 		} else if (condition.system.value === true) {
 			condition.system.value = 1;
 		}
+		console.log(`dropCondition: ${condition.system.value}`);
 		const tokens = this.actor
 			.getActiveTokens(true, true)
 			.filter((t) => !t.flags.fathomlessgears?.ballastToken);
@@ -621,6 +622,7 @@ export class ItemsManager {
 	 * @param {Item} condition A new Condition item to duplicate onto this actor
 	 */
 	async applyNewCondition(condition) {
+		console.log(`applyNewCondition: ${condition.system.value}`);
 		const item = await Item.create(condition, {parent: this.actor});
 
 		//Apply attributes
@@ -651,6 +653,7 @@ export class ItemsManager {
 	async updateCondition(condition) {
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
+				console.log(`Key: ${key}`);
 				this.actor.system.attributes[
 					key
 				].values.standard.additions.forEach((modifier) => {
@@ -662,8 +665,8 @@ export class ItemsManager {
 				});
 			}
 		});
-		this.actor.calculateAttributeTotals();
 		this.actor.calculateBallast();
+		await this.actor.calculateAttributeTotals();
 	}
 
 	/**
@@ -675,6 +678,7 @@ export class ItemsManager {
 		if (condition.system.value === true) {
 			condition.system.value = 1;
 		}
+		console.log(`addNewTokenEffect: ${condition.system.value}`);
 		await token.toggleActiveEffect(
 			findConditionEffect(condition.system.effectName)
 		);
