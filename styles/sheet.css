@@ -526,3 +526,21 @@ input.background {
 	margin-left: 2px;
 	margin-right: 2px;
 }
+.history-table {
+	width: 100%;
+	border-collapse: collapse;
+	& td {
+		padding: 4px;
+	}
+	& .el-column {
+		width: 30px;
+		text-align: center;
+	}
+	& .item-column {
+		width: 45%;
+		& .history-row {
+			flex-wrap: wrap;
+			justify-content: flex-start;
+		}
+	}
+}
