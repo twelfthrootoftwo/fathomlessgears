@@ -53,6 +53,8 @@ export class HLMActor extends Actor {
 		});
 
 		this.itemsManager = new ItemsManager(this);
+
+		this.queuedEffects = [];
 	}
 
 	/** @inheritdoc */
@@ -126,6 +128,7 @@ export class HLMActor extends Actor {
 	}
 
 	async applySingleActiveEffect(activeEffect) {
+		if (this.queuedEffects.includes(activeEffect.name)) return;
 		let effectCounter = foundry.utils.getProperty(
 			activeEffect,
 			"flags.statuscounter.counter"
@@ -145,13 +148,20 @@ export class HLMActor extends Actor {
 			ATTRIBUTE_ONLY_CONDITIONS.includes(statusName) &&
 			existingCondition.system.value != effectValue
 		) {
+			this.queuedEffects.push(activeEffect.name);
 			existingCondition.system.value = effectValue;
-			existingCondition.update({"system.value": effectValue});
+			existingCondition.update({"system.value": effectValue}).then(() => {
+				this.queuedEffects.filter((name) => name != activeEffect.name);
+			});
 			this.itemsManager.updateCondition(existingCondition);
 		} else if (!existingCondition) {
-			findConditionFromStatus(statusName).then((newCondition) => {
+			this.queuedEffects.push(activeEffect.name);
+			findConditionFromStatus(statusName).then(async (newCondition) => {
 				if (newCondition) {
-					this.itemsManager.applyNewCondition(newCondition);
+					await this.itemsManager.applyNewCondition(newCondition);
+					this.queuedEffects.filter(
+						(name) => name != activeEffect.name
+					);
 				}
 			});
 		}
