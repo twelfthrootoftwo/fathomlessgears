@@ -19,6 +19,7 @@ export class MessageHandler {
 	}
 
 	addListeners() {
+		console.log("Normal listeners");
 		//Nothing to do here - this function is used in subclasses
 	}
 
@@ -41,6 +42,8 @@ export class MessageHandler {
 			speaker: {actor: speaker},
 			content: formattedMessage
 		});
+
+		setTimeout(() => Hooks.callAll("addTagListeners"), 20);
 	}
 
 	/**
