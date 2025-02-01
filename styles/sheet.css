@@ -543,4 +543,7 @@ input.background {
 			justify-content: flex-start;
 		}
 	}
+	& .valid-drop-hover {
+		background-color: #ffffff66;
+	}
 }

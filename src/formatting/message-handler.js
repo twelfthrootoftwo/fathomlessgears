@@ -13,7 +13,13 @@ export class MessageHandler {
 	constructor() {
 		this.loadItemTypes();
 		this.loadTags();
+		this.addListeners();
 		this.addConditionItemListener();
+		Hooks.on("addTagListeners", () => this.addListeners());
+	}
+
+	addListeners() {
+		//Nothing to do here - this function is used in subclasses
 	}
 
 	loadItemTypes() {

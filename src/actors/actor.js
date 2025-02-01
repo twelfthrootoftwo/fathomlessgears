@@ -99,26 +99,30 @@ export class HLMActor extends Actor {
 			this.itemsManager = new ItemsManager(this);
 		}
 
-		setTimeout(() => {
-			const conditionNames = [];
-			this.effects.forEach(async (activeEffect) => {
-				let conditionName = activeEffect.statuses.values().next().value;
-				conditionNames.push(conditionName);
+		if (game.user.id == this.firstOwner().id) {
+			setTimeout(() => {
+				const conditionNames = [];
+				this.effects.forEach(async (activeEffect) => {
+					let conditionName = activeEffect.statuses
+						.values()
+						.next().value;
+					conditionNames.push(conditionName);
 
-				if (NUMBERED_CONDITIONS.includes(conditionName)) {
-					quickCreateCounter(activeEffect, false);
-				}
+					if (NUMBERED_CONDITIONS.includes(conditionName)) {
+						quickCreateCounter(activeEffect, false);
+					}
 
-				if (game.availableConditionItems?.has(activeEffect.name)) {
-					this.applySingleActiveEffect(activeEffect);
-					// setTimeout(
-					// 	() => ,
-					// 	50
-					// );
-				}
-			});
-			this.removeInactiveEffects(conditionNames);
-		}, 300);
+					if (game.availableConditionItems?.has(activeEffect.name)) {
+						this.applySingleActiveEffect(activeEffect);
+						// setTimeout(
+						// 	() => ,
+						// 	50
+						// );
+					}
+				});
+				this.removeInactiveEffects(conditionNames);
+			}, 300);
+		}
 	}
 
 	async applySingleActiveEffect(activeEffect) {
@@ -529,5 +533,23 @@ export class HLMActor extends Actor {
 			"prototypeToken.height": size,
 			"prototypeToken.width": size
 		});
+	}
+
+	firstOwner() {
+		const playerOwners = Object.entries(this.ownership)
+			.filter(
+				([id, level]) =>
+					!game.users.get(id)?.isGM &&
+					game.users.get(id)?.active &&
+					level === 3
+			)
+			.map(([id, _level]) => id);
+
+		if (playerOwners.length > 0) {
+			return game.users.get(playerOwners[0]);
+		}
+
+		/* if no online player owns this actor, fall back to first GM */
+		return game.users.find((u) => u.isGM && u.active);
 	}
 }

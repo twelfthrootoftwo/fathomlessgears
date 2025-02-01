@@ -12,6 +12,23 @@
             </div>
         </td>
     </tr>
-    {{#each el}}
+    {{#each history}}
+    <tr class="history-table-row" data-el="{{history.el}}">
+        <td class="el-column">EL {{history.el}}</td>
+        <td class="item-column">
+            <div class="history-row flex-row">
+                {{#each injuries}}
+                Injury
+                {{/each}}
+            </div>
+        </td>
+        <td class="item-column">
+            <div class="history-row flex-row">
+                {{#each touches}}
+                Touch
+                {{/each}}
+            </div>
+        </td>
+    </tr>
     {{/each}}
 </table>

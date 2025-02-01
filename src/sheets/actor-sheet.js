@@ -98,6 +98,8 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		});
 
+		context.history = this.buildHistoryForDisplay(items);
+
 		//Other items
 		context.developments = items.development;
 		context.maneuvers = items.maneuver;
@@ -204,12 +206,36 @@ export class HLMActorSheet extends ActorSheet {
 			document
 				.getElementById("post-frame-ability")
 				.addEventListener("click", this.postFrameAbility.bind(this));
+			//html.find(".history-table-row").dragover(this.dragOverHistoryTable.bind(this));
+			//html.find(".history-table-row").drop(this.dropOnHistoryTable.bind(this));
 		}
 
 		if (game.sensitiveDataAvailable) {
 			game.tagHandler.transformTagNameToButton($(this.element).get(0));
 			game.tagHandler.addListeners();
 		}
+	}
+
+	buildHistoryForDisplay(items) {
+		const history = [];
+		for (let i = 1; i <= this.actor.system.fisher_history.el; i++) {
+			let injuries = items.history_event.filter(
+				(history) =>
+					history.system.obtainedAt == i &&
+					history.system.type == "injury"
+			);
+			let touches = items.history_event.filter(
+				(history) =>
+					history.system.obtainedAt == i &&
+					history.system.type == "touch"
+			);
+			history.push({
+				el: i,
+				injuries: injuries,
+				touches: touches
+			});
+		}
+		return history;
 	}
 
 	testOwnership() {
