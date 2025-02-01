@@ -158,6 +158,8 @@ export class HLMActor extends Actor {
 			this.queuedEffects.push(activeEffect.name);
 			findConditionFromStatus(statusName).then(async (newCondition) => {
 				if (newCondition) {
+					if (newCondition.system.value)
+						newCondition.system.value = effectValue;
 					await this.itemsManager.applyNewCondition(newCondition);
 					this.queuedEffects.filter(
 						(name) => name != activeEffect.name
