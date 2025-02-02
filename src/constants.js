@@ -67,7 +67,8 @@ export const ITEM_TYPES = {
 	maneuver: "maneuver",
 	deep_word: "deep_word",
 	background: "background",
-	fish_template: "fish_template"
+	fish_template: "fish_template",
+	history_event: "history_event"
 };
 
 export const COVER_STATES = {

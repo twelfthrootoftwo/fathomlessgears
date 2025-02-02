@@ -1,30 +1,17 @@
 <table class="history-table">
-    <tr>
-        <td class="el-column">EL0</td>
-        <td class="item-column">
-            <div class="history-row flex-row">
-                Injuries go here
-            </div>
-        </td>
-        <td class="item-column">
-            <div class="history-row flex-row">
-                TotD go here
-            </div>
-        </td>
-    </tr>
     {{#each history}}
     <tr class="history-table-row" data-el="{{history.el}}">
-        <td class="el-column">EL {{history.el}}</td>
+        <td class="el-column">EL {{this.el}}</td>
         <td class="item-column">
             <div class="history-row flex-row">
-                {{#each injuries}}
+                {{#each this.injuries}}
                 Injury
                 {{/each}}
             </div>
         </td>
         <td class="item-column">
             <div class="history-row flex-row">
-                {{#each touches}}
+                {{#each this.touches}}
                 Touch
                 {{/each}}
             </div>

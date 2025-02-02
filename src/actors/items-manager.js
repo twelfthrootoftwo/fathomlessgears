@@ -47,7 +47,8 @@ export class ItemsManager {
 					ITEM_TYPES.maneuver,
 					ITEM_TYPES.deep_word,
 					ITEM_TYPES.background,
-					ITEM_TYPES.condition
+					ITEM_TYPES.condition,
+					ITEM_TYPES.history_event
 				];
 				break;
 			case "fish":
@@ -94,6 +95,9 @@ export class ItemsManager {
 				break;
 			case ITEM_TYPES.condition:
 				this.dropCondition(item, dataset);
+				break;
+			case ITEM_TYPES.history_event:
+				this.dropHistory(item, dataset);
 				break;
 		}
 	}
@@ -684,5 +688,10 @@ export class ItemsManager {
 			() => quickCreateCounter(effect, condition.system.value),
 			100
 		);
+	}
+
+	async dropHistory(history, _dataset) {
+		let item = await Item.create(history, {parent: this.actor});
+		item.update({"system.obtainedAt": this.actor.system.fisher_history.el});
 	}
 }
