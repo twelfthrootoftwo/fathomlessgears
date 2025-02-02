@@ -102,9 +102,12 @@ export class HLMActor extends Actor {
 		}
 
 		if (game.user.id == this.firstOwner().id) {
-			setTimeout(() => {
+			if (!this.updatingConditions) {
+				this.updatingConditions = true;
 				const conditionNames = [];
-				this.effects.forEach(async (activeEffect) => {
+				let effectArray = this.effects.values().toArray();
+				for (let i in effectArray) {
+					let activeEffect = effectArray[i];
 					let conditionName = activeEffect.statuses
 						.values()
 						.next().value;
@@ -115,15 +118,18 @@ export class HLMActor extends Actor {
 					}
 
 					if (game.availableConditionItems?.has(activeEffect.name)) {
-						this.applySingleActiveEffect(activeEffect);
-						// setTimeout(
-						// 	() => ,
-						// 	50
-						// );
+						await this.applySingleActiveEffect(activeEffect);
 					}
-				});
-				this.removeInactiveEffects(conditionNames);
-			}, 300);
+				}
+				await this.removeInactiveEffects(conditionNames);
+				this.updatingConditions = false;
+				if (this.queueApply) {
+					this.queueApply = false;
+					this.applyConditions();
+				}
+			} else {
+				this.queueApply = true;
+			}
 		}
 	}
 
@@ -150,22 +156,23 @@ export class HLMActor extends Actor {
 		) {
 			this.queuedEffects.push(activeEffect.name);
 			existingCondition.system.value = effectValue;
-			existingCondition.update({"system.value": effectValue}).then(() => {
-				this.queuedEffects.filter((name) => name != activeEffect.name);
-			});
-			this.itemsManager.updateCondition(existingCondition);
-		} else if (!existingCondition) {
-			this.queuedEffects.push(activeEffect.name);
-			findConditionFromStatus(statusName).then(async (newCondition) => {
-				if (newCondition) {
-					if (newCondition.system.value)
-						newCondition.system.value = effectValue;
-					await this.itemsManager.applyNewCondition(newCondition);
+			await existingCondition
+				.update({"system.value": effectValue})
+				.then(() => {
 					this.queuedEffects.filter(
 						(name) => name != activeEffect.name
 					);
-				}
-			});
+				});
+			await this.itemsManager.updateCondition(existingCondition);
+		} else if (!existingCondition) {
+			this.queuedEffects.push(activeEffect.name);
+			let newCondition = await findConditionFromStatus(statusName);
+			if (newCondition) {
+				if (newCondition.system.value)
+					newCondition.system.value = effectValue;
+				await this.itemsManager.applyNewCondition(newCondition);
+				this.queuedEffects.filter((name) => name != activeEffect.name);
+			}
 		}
 	}
 
@@ -173,14 +180,16 @@ export class HLMActor extends Actor {
 	 * Removes condition items and attribute modifiers associated with conditions not currently active on this actor
 	 * @param {str[]} activeConditionNames List of condition names that are currently active
 	 */
-	removeInactiveEffects(activeConditionNames) {
-		this.itemTypes.condition.forEach((existingCondition) => {
+	async removeInactiveEffects(activeConditionNames) {
+		this.itemTypes.condition.forEach(async (existingCondition) => {
 			if (
 				!activeConditionNames.includes(
 					existingCondition.system.effectName
 				)
 			) {
-				this.itemsManager.removeItemCallback(existingCondition._id);
+				await this.itemsManager.removeItemCallback(
+					existingCondition._id
+				);
 			}
 		});
 	}

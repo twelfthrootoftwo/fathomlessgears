@@ -682,7 +682,7 @@ export class ItemsManager {
 		)[0];
 		setTimeout(
 			() => quickCreateCounter(effect, condition.system.value),
-			250
+			100
 		);
 	}
 }
