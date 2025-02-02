@@ -250,16 +250,19 @@ export function quickCreateCounter(activeEffect, value) {
  * @returns a Set of Condition items
  */
 export function discoverConditions() {
-	const foundConditions = new Set();
+	const foundConditions = new Map();
 	const itemPacks = game.packs.filter((p) => p.metadata.type === "Item");
 
 	itemPacks.forEach((pack) => {
 		pack.getDocuments().then((allItems) => {
 			allItems
 				.filter((item) => item.type == ITEM_TYPES.condition)
-				.map((condition) => condition.name)
-				.forEach((conditionName) => {
-					foundConditions.add(conditionName);
+				.forEach((condition) => {
+					if (condition.system.effectName)
+						foundConditions.set(
+							condition.system.effectName,
+							condition
+						);
 				});
 		});
 	});
@@ -283,22 +286,5 @@ export function findConditionEffect(effectName) {
 }
 
 export async function findConditionFromStatus(status) {
-	let itemPacks = game.packs.filter((p) => p.metadata.type === "Item");
-	if (game.sensitiveDataAvailable) {
-		itemPacks = itemPacks.filter((p) => p.name != "conditions_base");
-	}
-
-	let targetCondition = null;
-	for (const pack of itemPacks) {
-		const allItems = await pack.getDocuments();
-		const search = allItems.filter(
-			(item) =>
-				item.type == ITEM_TYPES.condition &&
-				item.system.effectName == status
-		);
-		if (search.length > 0) {
-			targetCondition = search[0];
-		}
-	}
-	return targetCondition;
+	return game.availableConditionItems.get(status);
 }

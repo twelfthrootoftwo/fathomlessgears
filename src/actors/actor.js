@@ -117,7 +117,12 @@ export class HLMActor extends Actor {
 						quickCreateCounter(activeEffect, false);
 					}
 
-					if (game.availableConditionItems?.has(activeEffect.name)) {
+					if (
+						game.availableConditionItems
+							?.keys()
+							.toArray()
+							.includes(conditionName)
+					) {
 						await this.applySingleActiveEffect(activeEffect);
 					}
 				}
