@@ -692,6 +692,20 @@ export class ItemsManager {
 
 	async dropHistory(history, _dataset) {
 		let item = await Item.create(history, {parent: this.actor});
+		console.log(item);
 		item.update({"system.obtainedAt": this.actor.system.fisher_history.el});
+
+		Object.keys(history.system.attributes).forEach((key) => {
+			if (Utils.isAttribute(key) && history.system.attributes[key] != 0) {
+				const modifier = new AttributeElement(
+					history.system.attributes[key],
+					history._id,
+					"history",
+					history.name
+				);
+				this.actor.addAttributeModifier(key, modifier);
+			}
+		});
+		this.actor.update({"system.attributes": this.actor.system.attributes});
 	}
 }

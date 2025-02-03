@@ -218,7 +218,6 @@ export class HLMActorSheet extends ActorSheet {
 
 	buildHistoryForDisplay(items) {
 		const history = [];
-		console.log(items);
 		for (let i = 1; i <= this.actor.system.fisher_history.el; i++) {
 			let injuries = items.history_event.filter(
 				(history) =>
