@@ -27,23 +27,42 @@ export class TokenDropHandler {
 	}
 
 	initialiseHooks() {
-		Hooks.on("dropCanvasData", (_canvas, data) => {
+		Hooks.on("dropCanvasData", (canvas, data) => {
+			console.log(canvas);
+			console.log(data);
 			if (data.type == "Item") {
-				setTimeout(() => {
-					game.tokenDrop.onCanvasDrop(data);
-				}, 50);
+				game.tokenDrop.onCanvasDrop(data);
 			}
 		});
 	}
 
 	async onCanvasDrop(data) {
-		console.log(game.hoveredToken);
-		if (!game.hoveredToken) return;
+		const token = getTokenAtPosition(data);
+		if (!token) return;
 		const item = await fromUuid(data.uuid);
-		const actor = game.hoveredToken.actor;
+		const actor = token.actor;
 
 		if (actor.itemsManager.canDropItem(item)) {
 			actor.itemsManager.receiveDrop(item, data);
 		}
 	}
+}
+
+function getTokenAtPosition(position) {
+	let tokenList = canvas.tokens.placeables.map((token) => token.document);
+
+	return tokenList.find((token) => withinBoundaries(token, position));
+}
+
+function withinBoundaries(token, position) {
+	let xWidth = token.width * token.parent.dimensions.size;
+	let yWidth = token.height * token.parent.dimensions.size;
+	let tokenCentre = {x: token.x + xWidth / 2, y: token.y + yWidth / 2};
+
+	let difference = [tokenCentre.x - position.x, tokenCentre.y - position.y];
+
+	return (
+		Math.abs(difference[0]) <= xWidth / 2 &&
+		Math.abs(difference[1]) <= yWidth / 2
+	);
 }

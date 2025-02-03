@@ -93,7 +93,9 @@ export class HLMActor extends Actor {
 	/** @inheritdoc */
 	applyActiveEffects() {
 		super.applyActiveEffects();
-		this.applyConditions();
+		setTimeout(() => {
+			this.applyConditions();
+		}, 50);
 	}
 
 	async applyConditions() {
@@ -105,7 +107,7 @@ export class HLMActor extends Actor {
 			if (!this.updatingConditions) {
 				this.updatingConditions = true;
 				const conditionNames = [];
-				let effectArray = this.effects.values().toArray();
+				let effectArray = this.effects.contents;
 				for (let i in effectArray) {
 					let activeEffect = effectArray[i];
 					let conditionName = activeEffect.statuses
@@ -116,12 +118,10 @@ export class HLMActor extends Actor {
 					if (NUMBERED_CONDITIONS.includes(conditionName)) {
 						quickCreateCounter(activeEffect, false);
 					}
-
 					if (
-						game.availableConditionItems
-							?.keys()
-							.toArray()
-							.includes(conditionName)
+						Array.from(
+							game.availableConditionItems?.keys()
+						).includes(conditionName)
 					) {
 						await this.applySingleActiveEffect(activeEffect);
 					}
