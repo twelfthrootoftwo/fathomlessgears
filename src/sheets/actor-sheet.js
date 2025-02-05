@@ -98,7 +98,9 @@ export class HLMActorSheet extends ActorSheet {
 			}
 		});
 
-		context.history = this.buildHistoryForDisplay(items);
+		if (this.actor.type === ACTOR_TYPES.fisher) {
+			context.history = this.buildHistoryForDisplay(items);
+		}
 
 		//Other items
 		context.developments = items.development;
