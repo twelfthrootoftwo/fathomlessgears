@@ -180,16 +180,6 @@ export class RollDialog extends HLMApplication {
 	}
 
 	async triggerRoll() {
-		if (parseInt(this.additionalFlat)) {
-			this.flatBonuses.push(
-				new RollElement(
-					parseInt(this.additionalFlat),
-					ROLL_MODIFIER_TYPE.flat,
-					game.i18n.localize("ROLLDIALOG.other"),
-					ROLL_MODIFIER_TYPE.bonus
-				)
-			);
-		}
 		const modifierStack = [
 			...this.flatModifiers,
 			...this.flatBonuses
@@ -206,6 +196,18 @@ export class RollDialog extends HLMApplication {
 			this.cover,
 			this.item_id
 		);
+
+		if (parseInt(this.additionalFlat)) {
+			rollParams.modifierStack.push(
+				new RollElement(
+					parseInt(this.additionalFlat),
+					ROLL_MODIFIER_TYPE.flat,
+					game.i18n.localize("ROLLDIALOG.other"),
+					ROLL_MODIFIER_TYPE.bonus
+				)
+			);
+		}
+
 		if (this.item_id) {
 			await this.actor.triggerRolledItem(rollParams);
 		} else {
