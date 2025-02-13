@@ -38,10 +38,14 @@ export class MessageHandler {
 			FormatterContext.message
 		);
 
-		await ChatMessage.create({
-			speaker: {actor: speaker},
+		let create = {
 			content: formattedMessage
-		});
+		};
+		if (speaker) {
+			create.speaker = speaker;
+		}
+
+		await ChatMessage.create(create);
 
 		setTimeout(() => Hooks.callAll("addTagListeners"), 20);
 	}
