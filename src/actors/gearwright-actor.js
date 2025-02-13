@@ -157,6 +157,8 @@ async function applyTemplate(importData, actor) {
 		if (item == ATTRIBUTES.ballast) {
 			template.attributes.ballast =
 				(template.attributes.ballast || 0) - 1;
+		} else if (item == ATTRIBUTES.sensors) {
+			template.attributes[item] = template.attributes[item] + 3 || 3;
 		} else {
 			template.attributes[item] = template.attributes[item] + 1 || 1;
 		}
