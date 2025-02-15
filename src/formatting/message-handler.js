@@ -15,7 +15,9 @@ export class MessageHandler {
 		this.loadTags();
 		this.addListeners();
 		this.addConditionItemListener();
-		Hooks.on("addTagListeners", () => this.addListeners());
+		Hooks.on("renderChatMessage", () =>
+			setTimeout(() => this.addListeners(), 50)
+		);
 	}
 
 	addListeners() {
@@ -46,8 +48,6 @@ export class MessageHandler {
 		}
 
 		await ChatMessage.create(create);
-
-		setTimeout(() => Hooks.callAll("addTagListeners"), 20);
 	}
 
 	/**

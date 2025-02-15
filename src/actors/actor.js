@@ -576,6 +576,6 @@ export class HLMActor extends Actor {
 		}
 
 		/* if no online player owns this actor, fall back to first GM */
-		return game.users.activeGM();
+		return game.users.activeGM;
 	}
 }
