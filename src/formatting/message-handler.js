@@ -42,7 +42,7 @@ export class MessageHandler {
 			content: formattedMessage
 		};
 		if (speaker) {
-			create.speaker = speaker;
+			create.speaker = ChatMessage.getSpeaker({actor: speaker});
 		}
 
 		await ChatMessage.create(create);

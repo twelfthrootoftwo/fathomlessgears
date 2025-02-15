@@ -39,7 +39,7 @@ export class HUDActionCollection {
 
 		// Send to chat
 
-		game.tagHandler.createChatMessage(message, ChatMessage.getSpeaker());
+		game.tagHandler.createChatMessage(message, false);
 	}
 
 	createBallastTokens() {
