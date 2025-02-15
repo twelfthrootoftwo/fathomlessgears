@@ -221,7 +221,8 @@ export const NUMBERED_CONDITIONS = [
 	"hook4",
 	"hook5",
 	"hook6",
-	"hook7"
+	"hook7",
+	"ballast"
 ];
 
 export function quickCreateCounter(activeEffect, value) {
