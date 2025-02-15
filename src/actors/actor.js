@@ -95,7 +95,7 @@ export class HLMActor extends Actor {
 		super.applyActiveEffects();
 		setTimeout(() => {
 			this.applyConditions();
-		}, 50);
+		}, 100);
 	}
 
 	async applyConditions() {
@@ -103,7 +103,7 @@ export class HLMActor extends Actor {
 			this.itemsManager = new ItemsManager(this);
 		}
 
-		if (game.user.id == this.firstOwner().id) {
+		if (this.firstOwner() && game.user.id == this.firstOwner().id) {
 			if (!this.updatingConditions) {
 				this.updatingConditions = true;
 				const conditionNames = [];
@@ -576,6 +576,6 @@ export class HLMActor extends Actor {
 		}
 
 		/* if no online player owns this actor, fall back to first GM */
-		return game.users.find((u) => u.isGM && u.active);
+		return game.users.activeGM();
 	}
 }
