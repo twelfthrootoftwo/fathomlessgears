@@ -42,7 +42,7 @@ export class GridHoverHUD extends HLMApplication {
 			const catchCounters =
 				tokenObject.actor.getConditionValue("catchcounter");
 			const effectiveHP = Math.max(hp - tranq - catchCounters, 0);
-			data.hp = `${effectiveHP} ${game.i18n.localize("GRID.remainingHP")}`;
+			data.hp = `${game.i18n.localize("GRID.remainingHP")}: ${effectiveHP}`;
 			data.hpBreakdown = `(${hp} HP`;
 			if (tranq) {
 				data.hpBreakdown = data.hpBreakdown.concat(
