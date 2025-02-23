@@ -208,8 +208,14 @@ export class HLMActorSheet extends ActorSheet {
 			document
 				.getElementById("post-frame-ability")
 				.addEventListener("click", this.postFrameAbility.bind(this));
-			//html.find(".history-table-row").dragover(this.dragOverHistoryTable.bind(this));
-			//html.find(".history-table-row").drop(this.dropOnHistoryTable.bind(this));
+			html.find(".history-table-row").on(
+				"dragover",
+				this.dragOverHistoryTable.bind(this)
+			);
+			html.find(".history-table-row").on(
+				"dragleave",
+				this.dragLeaveHistoryTable.bind(this)
+			);
 		}
 
 		if (game.sensitiveDataAvailable) {
@@ -285,10 +291,7 @@ export class HLMActorSheet extends ActorSheet {
 		}
 		const targetItem = await fromUuid(data.uuid);
 		if (this.actor.itemsManager.canDropItem(targetItem)) {
-			const eventData = JSON.parse(
-				event.dataTransfer.getData("text/plain")
-			);
-			this.actor.itemsManager.receiveDrop(targetItem, eventData);
+			this.actor.itemsManager.receiveDrop(targetItem, event);
 		} else {
 			ui.notifications.info(
 				`Can't drop item type ${targetItem.type} on actor type ${this.actor.type}`
@@ -412,6 +415,15 @@ export class HLMActorSheet extends ActorSheet {
 				this.render(true);
 			}, 20);
 		});
+	}
+
+	dragOverHistoryTable(event) {
+		//There's no simple way to only highlight for a history item
+		//TODO add extra data on drag start to pick up that this is a history item?
+		event.target.parentElement.classList.add("valid-drop-hover");
+	}
+	dragLeaveHistoryTable(event) {
+		event.target.parentElement.classList.remove("valid-drop-hover");
 	}
 }
 function safeIdClean(safeId) {

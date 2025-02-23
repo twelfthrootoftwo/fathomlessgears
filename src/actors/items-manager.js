@@ -69,7 +69,8 @@ export class ItemsManager {
 	 * Directs a new item to the correct process on adding the item to the actor
 	 * @param {Item} item The item to apply
 	 */
-	receiveDrop(item, dataset) {
+	receiveDrop(item, event) {
+		const dataset = JSON.parse(event.dataTransfer.getData("text/plain"));
 		switch (item.type) {
 			case ITEM_TYPES.size:
 				this.applySize(item);
@@ -97,7 +98,7 @@ export class ItemsManager {
 				this.dropCondition(item, dataset);
 				break;
 			case ITEM_TYPES.history_event:
-				this.dropHistory(item, dataset);
+				this.dropHistory(item, event);
 				break;
 		}
 	}
@@ -690,10 +691,17 @@ export class ItemsManager {
 		);
 	}
 
-	async dropHistory(history, _dataset) {
+	async dropHistory(history, event) {
 		let item = await Item.create(history, {parent: this.actor});
-		console.log(item);
-		item.update({"system.obtainedAt": this.actor.system.fisher_history.el});
+		console.log(event);
+		let targetEL = this.actor.system.fisher_history.el;
+		let targetRow = event.target.closest(".history-table-row");
+		console.log(targetRow);
+		if (targetRow.dataset.el) {
+			targetEL = targetRow.dataset.el;
+		}
+
+		item.update({"system.obtainedAt": targetEL});
 
 		Object.keys(history.system.attributes).forEach((key) => {
 			if (Utils.isAttribute(key) && history.system.attributes[key] != 0) {
