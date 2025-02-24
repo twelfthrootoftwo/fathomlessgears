@@ -5,14 +5,20 @@
         <td class="item-column">
             <div class="history-row flex-row">
                 {{#each this.injuries}}
-                Injury
+                {{>
+                    "systems/fathomlessgears/templates/partials/history-list-item.html"
+                    item = this
+                }}
                 {{/each}}
             </div>
         </td>
         <td class="item-column">
             <div class="history-row flex-row">
                 {{#each this.touches}}
-                Touch
+                {{>
+                    "systems/fathomlessgears/templates/partials/history-list-item.html"
+                    item = this
+                }}
                 {{/each}}
             </div>
         </td>

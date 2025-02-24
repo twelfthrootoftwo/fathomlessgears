@@ -693,27 +693,65 @@ export class ItemsManager {
 
 	async dropHistory(history, event) {
 		let item = await Item.create(history, {parent: this.actor});
-		console.log(event);
+
 		let targetEL = this.actor.system.fisher_history.el;
 		let targetRow = event.target.closest(".history-table-row");
-		console.log(targetRow);
-		if (targetRow.dataset.el) {
+		if (targetRow?.dataset.el) {
 			targetEL = targetRow.dataset.el;
 		}
-
 		item.update({"system.obtainedAt": targetEL});
 
-		Object.keys(history.system.attributes).forEach((key) => {
-			if (Utils.isAttribute(key) && history.system.attributes[key] != 0) {
+		if (item.system.type == "injury") {
+			item.update({"system.healed": false});
+		}
+
+		Object.keys(item.system.attributes).forEach((key) => {
+			if (Utils.isAttribute(key) && item.system.attributes[key] != 0) {
 				const modifier = new AttributeElement(
-					history.system.attributes[key],
-					history._id,
+					item.system.attributes[key],
+					item._id,
 					"history",
-					history.name
+					item.name
 				);
 				this.actor.addAttributeModifier(key, modifier);
 			}
 		});
 		this.actor.update({"system.attributes": this.actor.system.attributes});
+	}
+
+	async toggleInjuryHealed(id) {
+		let item = this.actor.items.get(id);
+		if (item.system.healed) {
+			Object.keys(item.system.attributes).forEach((key) => {
+				if (
+					Utils.isAttribute(key) &&
+					item.system.attributes[key] != 0
+				) {
+					const modifier = new AttributeElement(
+						item.system.attributes[key],
+						item._id,
+						"history",
+						item.name
+					);
+					this.actor.addAttributeModifier(key, modifier);
+				}
+			});
+			this.actor.update({
+				"system.attributes": this.actor.system.attributes
+			});
+		} else {
+			Object.keys(item.system.attributes).forEach((key) => {
+				if (
+					Utils.isAttribute(key) &&
+					item.system.attributes[key] != 0
+				) {
+					this.actor.removeAttributeModifier(key, id);
+				}
+			});
+			this.actor.update({
+				"system.attributes": this.actor.system.attributes
+			});
+		}
+		item.update({"system.healed": !item.system.healed});
 	}
 }

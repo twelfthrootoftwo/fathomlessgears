@@ -216,6 +216,9 @@ export class HLMActorSheet extends ActorSheet {
 				"dragleave",
 				this.dragLeaveHistoryTable.bind(this)
 			);
+			html.find(".injury-checkbox").click(
+				this.toggleInjuryHealed.bind(this)
+			);
 		}
 
 		if (game.sensitiveDataAvailable) {
@@ -424,6 +427,15 @@ export class HLMActorSheet extends ActorSheet {
 	}
 	dragLeaveHistoryTable(event) {
 		event.target.parentElement.classList.remove("valid-drop-hover");
+	}
+
+	toggleInjuryHealed(event) {
+		if (!this.testOwnership()) {
+			return false;
+		}
+		this.actor.itemsManager.toggleInjuryHealed(
+			safeIdClean(event.target.dataset.id)
+		);
 	}
 }
 function safeIdClean(safeId) {

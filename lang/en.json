@@ -48,6 +48,7 @@
 	"SHEET.initmanual": "Create manually",
 	"SHEET.activated": "Activated",
 	"SHEET.reset": "Reset",
+	"SHEET.healedInjury": "Healed",
 
 	"MANAGER.init": "Initialising",
 	"MANAGER.datafile": "Data file",
