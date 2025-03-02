@@ -69,8 +69,7 @@ export class ItemsManager {
 	 * Directs a new item to the correct process on adding the item to the actor
 	 * @param {Item} item The item to apply
 	 */
-	receiveDrop(item, event) {
-		const dataset = JSON.parse(event.dataTransfer.getData("text/plain"));
+	receiveDrop(item, context) {
 		switch (item.type) {
 			case ITEM_TYPES.size:
 				this.applySize(item);
@@ -95,10 +94,10 @@ export class ItemsManager {
 				this.applyBackground(item);
 				break;
 			case ITEM_TYPES.condition:
-				this.dropCondition(item, dataset);
+				this.dropCondition(item, context);
 				break;
 			case ITEM_TYPES.history_event:
-				this.dropHistory(item, event);
+				this.dropHistory(item, context);
 				break;
 		}
 	}
@@ -695,10 +694,13 @@ export class ItemsManager {
 		let item = await Item.create(history, {parent: this.actor});
 
 		let targetEL = this.actor.system.fisher_history.el;
-		let targetRow = event.target.closest(".history-table-row");
-		if (targetRow?.dataset.el) {
-			targetEL = targetRow.dataset.el;
+		if (event.target) {
+			let targetRow = event.target.closest(".history-table-row");
+			if (targetRow?.dataset.el) {
+				targetEL = targetRow.dataset.el;
+			}
 		}
+
 		item.update({"system.obtainedAt": targetEL});
 
 		if (item.system.type == "injury") {
