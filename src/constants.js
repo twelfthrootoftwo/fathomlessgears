@@ -42,7 +42,8 @@ export const GRID_TYPE = {
 	large: "large",
 	massive: "massive",
 	leviathan: "leviathan",
-	serpent: "serpent"
+	serpent: "serpent",
+	siltstalker: "siltstalker"
 };
 
 export const HIT_TYPE = {
@@ -135,12 +136,33 @@ export const SECTION_NUMBERING_MAP = {
 	siltstalker: [0, 24, 12, 48, 60]
 };
 
-export const FISHER_SECTION_REGION_INDICES = {
-	head: 1,
-	left_arm: 3,
-	torso: 4,
-	right_arm: 5,
-	legs: 7
+export const SECTION_REGION_INDICES = {
+	fisher: {
+		head: 1,
+		left_arm: 3,
+		torso: 4,
+		right_arm: 5,
+		legs: 7
+	},
+	siltstalker: {
+		body: 1,
+		left_arm: 3,
+		left_legs: 0,
+		right_arm: 4,
+		right_legs: 2
+	},
+	serpent: {
+		body: 4,
+		head: 0,
+		neck: 1,
+		tail: 7,
+		tip: 8
+	},
+	leviathan: {
+		body: 1,
+		head: 0,
+		tail: 2
+	}
 };
 
 export const GRID_HUD_LOCATION = {

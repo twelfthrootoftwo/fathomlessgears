@@ -2,7 +2,7 @@ import {GridSpace} from "./grid-space.js";
 import {Utils} from "../utilities/utils.js";
 import {
 	ACTOR_TYPES,
-	FISHER_SECTION_REGION_INDICES,
+	SECTION_REGION_INDICES,
 	GRID_SPACE_STATE,
 	SECTION_NUMBERING_MAP
 } from "../constants.js";
@@ -16,8 +16,13 @@ export async function constructGrid(actor) {
 	const gridObject = new Grid(null);
 	gridObject.actor = actor;
 	const gridType = await actor.items.get(actor.system.gridType);
+	console.log(gridType);
 	for (let i = 0; i < gridType.system.hitRegions.length; i += 1) {
 		if ((i == 0 || i == 4) && gridType.system.type == "fisher") {
+			gridObject.gridRegions.push(null);
+		}
+		if ((i == 2 || i == 3) && gridType.system.type == "serpent_leviathan") {
+			gridObject.gridRegions.push(null);
 			gridObject.gridRegions.push(null);
 		}
 		let regionData = gridType.system.hitRegions[i];
@@ -234,7 +239,7 @@ export class Grid {
 		}
 		Object.entries(unlockData).forEach(([key, unlocks]) => {
 			let targetRegion =
-				this.gridRegions[FISHER_SECTION_REGION_INDICES[key]];
+				this.gridRegions[SECTION_REGION_INDICES.fisher[key]];
 			unlocks.forEach((position) => {
 				targetRegion.gridSpaces[position.y][position.x].state =
 					GRID_SPACE_STATE.intact;

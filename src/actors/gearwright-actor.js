@@ -9,7 +9,7 @@ import {
 	ATTRIBUTES,
 	CUSTOM_BACKGROUND_PART,
 	DEEPWORD_NAME_MAP,
-	FISHER_SECTION_REGION_INDICES,
+	SECTION_REGION_INDICES,
 	GRID_SPACE_STATE
 } from "../constants.js";
 
@@ -112,10 +112,11 @@ async function applyFrame(importData, actor, gridObject) {
 }
 
 async function applySize(importData, actor) {
-	const size = await Utils.findCompendiumItemFromName(
-		"size",
-		importData.size
-	);
+	let size = await Utils.findCompendiumItemFromName("size", importData.size);
+	if (!size && importData.size == "siltstalker leviathan") {
+		console.log("Trying alternative spelling");
+		size = await Utils.findCompendiumItemFromName("size", "siltstalker");
+	}
 	if (size) {
 		await actor.itemsManager.applySize(size);
 	}
@@ -134,7 +135,7 @@ async function applyInternals(importData, actor, gridObject) {
 
 	for (const [key, internals] of Object.entries(internalsData)) {
 		let targetRegion =
-			gridObject.gridRegions[getRegionIndexFromKey(key, actor)];
+			gridObject.gridRegions[await getRegionIndexFromKey(key, actor)];
 		console.log(`Region ${key}`);
 
 		for (const internalIdentifier of internals) {
@@ -296,11 +297,20 @@ function identifyInternalSpaces(internal, region, originSpace) {
 	return internalSpaces;
 }
 
-function getRegionIndexFromKey(key, actor) {
+async function getRegionIndexFromKey(key, actor) {
 	if (actor.type == ACTOR_TYPES.fisher) {
-		return FISHER_SECTION_REGION_INDICES[key];
+		return SECTION_REGION_INDICES.fisher[key];
 	} else {
-		//TODO account for leviathans when I have that data
-		return 0;
+		let gridType = await actor.items.get(actor.system.gridType);
+		switch (gridType.system.type) {
+			case "leviathan":
+				return SECTION_REGION_INDICES.leviathan[key];
+			case "serpent_leviathan":
+				return SECTION_REGION_INDICES.serpent[key];
+			case "siltstalker":
+				return SECTION_REGION_INDICES.siltstalker[key];
+			default:
+				return 0;
+		}
 	}
 }
