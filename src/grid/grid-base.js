@@ -21,8 +21,7 @@ export async function constructGrid(actor) {
 		if ((i == 0 || i == 4) && gridType.system.type == "fisher") {
 			gridObject.gridRegions.push(null);
 		}
-		if ((i == 2 || i == 3) && gridType.system.type == "serpent_leviathan") {
-			gridObject.gridRegions.push(null);
+		if ((i == 0 || i == 2) && gridType.system.type == "serpent_leviathan") {
 			gridObject.gridRegions.push(null);
 		}
 		let regionData = gridType.system.hitRegions[i];
@@ -45,6 +44,9 @@ export async function constructGrid(actor) {
 		);
 		gridObject.gridRegions.push(region);
 		if ((i == 0 || i == 4) && gridType.system.type == "fisher") {
+			gridObject.gridRegions.push(null);
+		}
+		if ((i == 2 || i == 4) && gridType.system.type == "serpent_leviathan") {
 			gridObject.gridRegions.push(null);
 		}
 	}

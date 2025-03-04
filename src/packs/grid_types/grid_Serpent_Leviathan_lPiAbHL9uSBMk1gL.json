@@ -5,15 +5,15 @@
 		"hitLocationRoll": "2d6",
 		"hitRegions": [
 			{
-				"location": "section1",
-				"range": [2, 3],
-				"columns": 3,
-				"rows": 3
-			},
-			{
 				"location": "section2",
 				"range": [4, 5],
 				"columns": 6,
+				"rows": 3
+			},
+			{
+				"location": "section1",
+				"range": [2, 3],
+				"columns": 3,
 				"rows": 3
 			},
 			{
@@ -23,15 +23,15 @@
 				"rows": 3
 			},
 			{
-				"location": "section4",
-				"range": [9, 10],
-				"columns": 6,
-				"rows": 3
-			},
-			{
 				"location": "section5",
 				"range": [11, 12],
 				"columns": 3,
+				"rows": 3
+			},
+			{
+				"location": "section4",
+				"range": [9, 10],
+				"columns": 6,
 				"rows": 3
 			}
 		],

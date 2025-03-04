@@ -132,7 +132,7 @@ export const SECTION_NUMBERING_MAP = {
 	large: [0],
 	massive: [0],
 	leviathan: [0, 36, 18],
-	serpent_leviathan: [0, 18, 36, 54, 9],
+	serpent_leviathan: [18, 0, 36, 9, 54],
 	siltstalker: [0, 24, 12, 48, 60]
 };
 
@@ -153,15 +153,15 @@ export const SECTION_REGION_INDICES = {
 	},
 	serpent: {
 		body: 4,
-		head: 0,
+		head: 2,
 		neck: 1,
 		tail: 7,
-		tip: 8
+		tip: 6
 	},
 	leviathan: {
 		body: 1,
-		head: 0,
-		tail: 2
+		head: 2,
+		tail: 0
 	}
 };
 
