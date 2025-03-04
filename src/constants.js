@@ -1,3 +1,6 @@
+export const COMPATIBLE_GEARWRIGHT_MIN = [2, 0, 0];
+export const COMPATIBLE_GEARWRIGHT_MAX = [10, 10, 10];
+
 export const ACTOR_TYPES = {
 	fisher: "fisher",
 	fish: "fish"
@@ -130,6 +133,14 @@ export const SECTION_NUMBERING_MAP = {
 	leviathan: [0, 36, 18],
 	serpent_leviathan: [0, 18, 36, 54, 9],
 	siltstalker: [0, 24, 12, 48, 60]
+};
+
+export const FISHER_SECTION_REGION_INDICES = {
+	head: 1,
+	left_arm: 3,
+	torso: 4,
+	right_arm: 5,
+	legs: 7
 };
 
 export const GRID_HUD_LOCATION = {

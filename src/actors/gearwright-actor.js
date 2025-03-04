@@ -1,4 +1,7 @@
-import {testFieldsExist} from "../items/import-validator.js";
+import {
+	testFieldsExist,
+	compatibleGearwrightVersion
+} from "../items/import-validator.js";
 import {Utils} from "../utilities/utils.js";
 import {constructGrid} from "../grid/grid-base.js";
 import {
@@ -6,6 +9,7 @@ import {
 	ATTRIBUTES,
 	CUSTOM_BACKGROUND_PART,
 	DEEPWORD_NAME_MAP,
+	FISHER_SECTION_REGION_INDICES,
 	GRID_SPACE_STATE
 } from "../constants.js";
 
@@ -15,7 +19,10 @@ import {
  * @param {Object} data JSON import of Gearwright save
  */
 export async function populateActorFromGearwright(actor, data) {
-	if (!testFieldsExist(data, actor.type)) {
+	if (
+		!testFieldsExist(data, actor.type) ||
+		!compatibleGearwrightVersion(data)
+	) {
 		ui.notifications.error("Invalid Gearwright save data");
 		return false;
 	}
@@ -42,6 +49,7 @@ async function buildFisher(actor, data) {
 	const gridObject = await constructGrid(actor);
 	await constructFisherData(data, actor);
 	await applyFrame(data, actor, gridObject);
+	gridObject.applyUnlocksByCoords(data.unlocks);
 	await applyBackground(data, actor);
 	await applyAdditionalFisher(data, actor);
 	await applyInternals(data, actor, gridObject);
@@ -98,9 +106,8 @@ async function applyFrame(importData, actor, gridObject) {
 	if (frame) {
 		await actor.itemsManager.applyFrame(frame);
 		const unlocks = [];
-		unlocks.push(...importData.unlocks);
 		unlocks.push(...frame.system.default_unlocks);
-		gridObject.applyUnlocks(unlocks);
+		gridObject.applyUnlocksById(unlocks);
 	}
 }
 
@@ -121,30 +128,46 @@ async function applySize(importData, actor) {
  * @param {Grid} gridObject The new grid which will be assigned to the actor later
  */
 async function applyInternals(importData, actor, gridObject) {
-	const internalsList = importData.internals;
+	const internalsData = importData.internals;
 	const targetCompendium =
 		actor.type == ACTOR_TYPES.fisher ? "internal_pc" : "internal_npc";
-	for (const [gridSpace, internalName] of Object.entries(internalsList)) {
-		const internal = await Utils.findCompendiumItemFromName(
-			targetCompendium,
-			Utils.capitaliseWords(Utils.fromLowerHyphen(internalName))
-		);
-		if (internal) {
-			const internalId = await actor.itemsManager.applyInternal(internal);
-			const spaces = identifyInternalSpaces(
-				internal,
-				gridObject,
-				gridSpace
+
+	for (const [key, internals] of Object.entries(internalsData)) {
+		let targetRegion =
+			gridObject.gridRegions[getRegionIndexFromKey(key, actor)];
+		console.log(`Region ${key}`);
+
+		for (const internalIdentifier of internals) {
+			const internal = await Utils.findCompendiumItemFromName(
+				targetCompendium,
+				Utils.capitaliseWords(
+					Utils.fromLowerHyphen(internalIdentifier.internal_name)
+				)
 			);
-			spaces.forEach((id) => {
-				const space = gridObject.findGridSpace(id);
-				space.setInternal(
-					internalId,
-					`${internal.system.type}Internal`
+			if (internal) {
+				const internalId =
+					await actor.itemsManager.applyInternal(internal);
+				const spaces = identifyInternalSpaces(
+					internal,
+					targetRegion,
+					internalIdentifier.slot.x +
+						internalIdentifier.slot.y * targetRegion.width
 				);
-			});
+				spaces.forEach((id) => {
+					const space = gridObject.findGridSpace(id);
+					space.setInternal(
+						internalId,
+						`${internal.system.type}Internal`
+					);
+					console.log(
+						`Setting space ${id} to internal ${internalId}`
+					);
+				});
+			}
 		}
+		console.log(targetRegion);
 	}
+	console.log(gridObject);
 }
 
 async function applyTemplate(importData, actor) {
@@ -256,13 +279,13 @@ function mapGridState(source, destination) {
 /**
  * Finds all grid spaces that a particular internal would occupy
  * @param {HLMInternal} internal The internal to map
- * @param {Grid} grid The grid to place the internal on
+ * @param {GridRegon} region The grid region to place the internal on
  * @param {int} originSpace The space that the internal's [0,0] grid point occupies
  * @returns a list of spaces the internal occupies
  */
-function identifyInternalSpaces(internal, grid, originSpace) {
+function identifyInternalSpaces(internal, region, originSpace) {
+	originSpace += region.gridSpaces[0][0].id;
 	const internalSpaces = [];
-	const region = grid.findGridSpace(originSpace).parentRegion;
 	internal.system.grid_coords.forEach((relativeSpace) => {
 		internalSpaces.push(
 			parseInt(originSpace) +
@@ -271,4 +294,13 @@ function identifyInternalSpaces(internal, grid, originSpace) {
 		);
 	});
 	return internalSpaces;
+}
+
+function getRegionIndexFromKey(key, actor) {
+	if (actor.type == ACTOR_TYPES.fisher) {
+		return FISHER_SECTION_REGION_INDICES[key];
+	} else {
+		//TODO account for leviathans when I have that data
+		return 0;
+	}
 }

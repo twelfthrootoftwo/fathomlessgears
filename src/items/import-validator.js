@@ -1,4 +1,9 @@
-import {ATTRIBUTES, ATTRIBUTE_KEY_MAP} from "../constants.js";
+import {
+	ATTRIBUTES,
+	ATTRIBUTE_KEY_MAP,
+	COMPATIBLE_GEARWRIGHT_MAX,
+	COMPATIBLE_GEARWRIGHT_MIN
+} from "../constants.js";
 
 const expectedFields = {
 	frame: [
@@ -62,4 +67,27 @@ export function testFieldsExist(data, validationType) {
 		if (record == undefined) valid = false;
 	});
 	return valid;
+}
+
+export function compatibleGearwrightVersion(data) {
+	if (data.gearwright_version) {
+		if (isCompatibleVersion(data.gearwright_version)) {
+			return true;
+		}
+	}
+	ui.notifications.error("Incompatible Gearwright version");
+	return false;
+}
+
+function isCompatibleVersion(versionString) {
+	versionString.split(".").forEach((string, index) => {
+		let val = parseInt(string);
+		if (
+			val < COMPATIBLE_GEARWRIGHT_MIN[index] ||
+			val > COMPATIBLE_GEARWRIGHT_MAX[index]
+		) {
+			return false;
+		}
+	});
+	return true;
 }

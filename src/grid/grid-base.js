@@ -1,6 +1,11 @@
 import {GridSpace} from "./grid-space.js";
 import {Utils} from "../utilities/utils.js";
-import {GRID_SPACE_STATE, SECTION_NUMBERING_MAP} from "../constants.js";
+import {
+	ACTOR_TYPES,
+	FISHER_SECTION_REGION_INDICES,
+	GRID_SPACE_STATE,
+	SECTION_NUMBERING_MAP
+} from "../constants.js";
 
 /**
  * Unpack a grid serial json into a Grid object
@@ -207,10 +212,33 @@ export class Grid {
 	 * From a default (fully locked) grid, mark selected spaces as unlocked
 	 * @param {Array[int]} unlockList The list of spaces to mark unlocked
 	 */
-	applyUnlocks(unlockList) {
+	applyUnlocksById(unlockList) {
+		if (this.actor.type != ACTOR_TYPES.fisher) {
+			console.error("Attempted to unlock grid spaces on a fish grid");
+			return;
+		}
 		unlockList.forEach((id) => {
 			const space = this.findGridSpace(id);
 			space.state = GRID_SPACE_STATE.intact;
+		});
+	}
+
+	/**
+	 * From a default (fully locked) grid, mark selected spaces as unlocked
+	 * @param {Array[int]} unlockList The list of spaces to mark unlocked
+	 */
+	applyUnlocksByCoords(unlockData) {
+		if (this.actor.type != ACTOR_TYPES.fisher) {
+			console.error("Attempted to unlock grid spaces on a fish grid");
+			return;
+		}
+		Object.entries(unlockData).forEach(([key, unlocks]) => {
+			let targetRegion =
+				this.gridRegions[FISHER_SECTION_REGION_INDICES[key]];
+			unlocks.forEach((position) => {
+				targetRegion.gridSpaces[position.y][position.x].state =
+					GRID_SPACE_STATE.intact;
+			});
 		});
 	}
 
