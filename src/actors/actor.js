@@ -8,8 +8,7 @@ import {
 	ATTRIBUTE_MAX_ROLLED,
 	ATTRIBUTE_MAX_FLAT,
 	BALLAST_MIN,
-	BALLAST_MAX,
-	ITEM_TYPES
+	BALLAST_MAX
 } from "../constants.js";
 
 import {Grid} from "../grid/grid-base.js";
@@ -149,10 +148,8 @@ export class HLMActor extends Actor {
 
 		const effectValue = Math.max(Math.min(counterValue, 3), -3);
 
-		const existingCondition = this.itemsManager.findItemByNameAndType(
-			ITEM_TYPES.condition,
-			activeEffect.name
-		);
+		const existingCondition =
+			this.itemsManager.findConditionByStatus(statusName);
 
 		if (
 			existingCondition &&

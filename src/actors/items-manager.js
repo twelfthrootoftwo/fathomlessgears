@@ -132,6 +132,23 @@ export class ItemsManager {
 	}
 
 	/**
+	 * Searches a particular item type for an existing item with a given name
+	 * Returns the existing item if it exists, otherwise null
+	 * @param {ITEM_TYPES} itemType The type of item to find
+	 * @param {string} itemName The name of the target item
+	 */
+	findConditionByStatus(statusId) {
+		let existing = this.actor.itemTypes.condition;
+		let target = null;
+		existing.forEach((item) => {
+			if (item.system.effectName == statusId) {
+				target = item;
+			}
+		});
+		return target;
+	}
+
+	/**
 	 * Item drop processing for grid
 	 * @param {Item} grid
 	 */
@@ -584,9 +601,8 @@ export class ItemsManager {
 		const tokens = this.actor
 			.getActiveTokens(true, true)
 			.filter((t) => !t.flags.fathomlessgears?.ballastToken);
-		let existingCondition = this.findItemByNameAndType(
-			ITEM_TYPES.condition,
-			condition.name
+		let existingCondition = this.findConditionByStatus(
+			condition.system.effectName
 		);
 		if (existingCondition) {
 			tokens.forEach((token) => {
