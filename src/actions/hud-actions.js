@@ -66,6 +66,11 @@ export class HUDActionCollection {
 			.then((createdTokenList) => {
 				createdTokenList.forEach((createdToken) => {
 					createdToken.update({height: 1, width: 1});
+					let originalToken = tokens.filter(
+						(token) =>
+							token.document.baseActor._id ==
+							createdToken.baseActor._id
+					)[0].document;
 					createdToken
 						.toggleActiveEffect(ballastConditionId)
 						.then(() => {
@@ -98,6 +103,16 @@ export class HUDActionCollection {
 						"fathomlessgears",
 						"ballastToken",
 						true
+					);
+					createdToken.setFlag(
+						"fathomlessgears",
+						"originalTokenReference",
+						originalToken._id
+					);
+					originalToken.setFlag(
+						"fathomlessgears",
+						"ballastTokenReference",
+						createdToken._id
 					);
 				});
 			});

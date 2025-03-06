@@ -594,25 +594,19 @@ export class ItemsManager {
 	 * @param {Item} condition A new Condition item to duplicate onto this actor
 	 */
 	async dropCondition(condition, dataset) {
-		console.log("dropCondition");
 		if (dataset.value) {
 			condition.system.value = parseInt(dataset.value);
 		} else if (condition.system.value === true) {
 			condition.system.value = 1;
 		}
-		const tokens = this.actor.getActiveTokens(true, true).filter((t) => {
-			let returnVal = null;
-			if (t.flags.fathomlessgears?.ballastToken) {
-				returnVal = BALLAST_TOKEN_CONDITIONS.includes(
-					condition.system.effectName
-				);
-			} else {
-				returnVal = !BALLAST_TOKEN_CONDITIONS.includes(
-					condition.system.effectName
-				);
-			}
-			return returnVal;
-		});
+
+		let tokens = null;
+		if (BALLAST_TOKEN_CONDITIONS.includes(condition.system.effectName)) {
+			tokens = this.actor.getBallastTokens();
+		} else {
+			tokens = this.actor.getNonBallastTokens();
+		}
+
 		let existingCondition = this.findConditionByStatus(
 			condition.system.effectName
 		);

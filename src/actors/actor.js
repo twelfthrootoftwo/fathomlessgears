@@ -578,4 +578,36 @@ export class HLMActor extends Actor {
 		/* if no online player owns this actor, fall back to first GM */
 		return game.users.activeGM;
 	}
+
+	getBallastTokens() {
+		let result = this.getActiveTokens(true, true).filter(
+			(t) => t.flags.fathomlessgears?.ballastToken
+		);
+		if (result.length == 0) {
+			const allTokens = this.getActiveTokens(true, true);
+			result = allTokens.map(
+				(baseToken) =>
+					canvas.tokens.get(
+						baseToken.flags.fathomlessgears?.ballastTokenReference
+					).document
+			);
+		}
+		return result;
+	}
+
+	getNonBallastTokens() {
+		let result = this.getActiveTokens(true, true).filter((t) => {
+			return !(t.flags.fathomlessgears?.ballastToken == true);
+		});
+		if (result.length == 0) {
+			const allTokens = this.getActiveTokens(true, true);
+			result = allTokens.map(
+				(baseToken) =>
+					canvas.tokens.get(
+						baseToken.flags.fathomlessgears?.originalTokenReference
+					).document
+			);
+		}
+		return result;
+	}
 }
