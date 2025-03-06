@@ -225,6 +225,12 @@ export const NUMBERED_CONDITIONS = [
 	"ballast"
 ];
 
+export const BALLAST_TOKEN_CONDITIONS = [
+	"ballast",
+	CONDITIONS.burdened,
+	CONDITIONS.quickened
+];
+
 export function quickCreateCounter(activeEffect, value) {
 	let effectCounter = foundry.utils.getProperty(
 		activeEffect,
@@ -288,4 +294,18 @@ export function findConditionEffect(effectName) {
 
 export async function findConditionFromStatus(status) {
 	return game.availableConditionItems.get(status);
+}
+
+export function findEffectByImage(actor, imageString, index = 0) {
+	let targetEffect = null;
+	for (const effect of actor.appliedEffects) {
+		if (effect.img != imageString) continue;
+		if (index <= 0) {
+			targetEffect = effect;
+			break;
+		}
+		index--;
+	}
+	console.log(targetEffect);
+	return targetEffect;
 }

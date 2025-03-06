@@ -1,3 +1,6 @@
+import {BALLAST_TOKEN_CONDITIONS} from "../conditions/conditions.js";
+import {drawEffectCounters} from "./counter-rendering.js";
+
 /**
  * Extend the base TokenDocument to support resource type attributes.
  * @extends {TokenDocument}
@@ -17,6 +20,90 @@ export class HLMToken extends Token {
 	_onHoverOut(...args) {
 		super._onHoverOut(...args);
 		game.hoveredToken = null;
+	}
+	/**
+	 * A copy of a core function with a small modification to filter non-aplicable effects
+	 * @override
+	 */
+	async drawEffects() {
+		console.log("drawEffects");
+		const wasVisible = this.effects.visible;
+		this.effects.visible = false;
+		this.effects.removeChildren().forEach((c) => c.destroy());
+		this.effects.bg = this.effects.addChild(new PIXI.Graphics());
+		this.effects.bg.visible = false;
+		this.effects.overlay = null;
+
+		// Categorize new effects
+		const tokenEffects = this.document.effects;
+		let actorEffects = this.actor?.temporaryEffects || [];
+		actorEffects = this.filterEffectList(actorEffects);
+		let overlay = {
+			src: this.document.overlayEffect,
+			tint: null
+		};
+
+		// Draw status effects
+		if (tokenEffects.length || actorEffects.length) {
+			const promises = [];
+
+			// Draw actor effects first
+			for (let f of actorEffects) {
+				if (!f.icon) continue;
+				const tint = Color.from(f.tint ?? null);
+				if (f.getFlag("core", "overlay")) {
+					if (overlay)
+						promises.push(
+							this._drawEffect(overlay.src, overlay.tint)
+						);
+					overlay = {src: f.icon, tint};
+					continue;
+				}
+				promises.push(this._drawEffect(f.icon, tint));
+			}
+
+			// Next draw token effects
+			for (let f of tokenEffects) {
+				promises.push(this._drawEffect(f, null));
+			}
+			await Promise.all(promises);
+		}
+
+		// Draw overlay effect
+		this.effects.overlay = await this._drawOverlay(
+			overlay.src,
+			overlay.tint
+		);
+		this.effects.bg.visible = true;
+		this.effects.visible = wasVisible;
+		this._refreshEffects();
+	}
+
+	filterEffectList(actorEffects) {
+		return actorEffects.filter((effect) => {
+			const statusName = effect.statuses.values().next().value;
+			let result = false;
+			if (this.document.flags.fathomlessgears?.ballastToken) {
+				result = BALLAST_TOKEN_CONDITIONS.includes(statusName);
+			} else {
+				result = !BALLAST_TOKEN_CONDITIONS.includes(statusName);
+			}
+			return result;
+		});
+	}
+
+	_refreshEffects() {
+		console.log("refreshEffects");
+		super._refreshEffects();
+		drawEffectCounters(this);
+	}
+
+	async _drawEffect(src, tint) {
+		console.log("drawEffect");
+		const icon = await super._drawEffect(src, tint);
+		if (icon) icon.name = src;
+		console.log(icon);
+		return icon;
 	}
 }
 

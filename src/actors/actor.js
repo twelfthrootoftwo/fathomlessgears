@@ -101,6 +101,7 @@ export class HLMActor extends Actor {
 		if (!this.itemsManager) {
 			this.itemsManager = new ItemsManager(this);
 		}
+		console.log("applyConditions");
 
 		if (this.firstOwner() && game.user.id == this.firstOwner().id) {
 			if (!this.updatingConditions) {
@@ -138,6 +139,7 @@ export class HLMActor extends Actor {
 	}
 
 	async applySingleActiveEffect(activeEffect) {
+		console.log("applySingleActiveEffect");
 		if (this.queuedEffects.includes(activeEffect.name)) return;
 		let effectCounter = foundry.utils.getProperty(
 			activeEffect,

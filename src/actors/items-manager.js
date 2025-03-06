@@ -593,6 +593,7 @@ export class ItemsManager {
 	 * @param {Item} condition A new Condition item to duplicate onto this actor
 	 */
 	async dropCondition(condition, dataset) {
+		console.log("dropCondition");
 		if (dataset.value) {
 			condition.system.value = parseInt(dataset.value);
 		} else if (condition.system.value === true) {
@@ -640,6 +641,7 @@ export class ItemsManager {
 	 * @param {Item} condition A new Condition item to duplicate onto this actor
 	 */
 	async applyNewCondition(condition) {
+		console.log("applyNewCondition");
 		const item = await Item.create(condition, {parent: this.actor});
 
 		//Apply attributes
@@ -668,6 +670,7 @@ export class ItemsManager {
 	 * @param {Item} condition The existing condition, updated with the new value
 	 */
 	async updateCondition(condition) {
+		console.log("updateCondition");
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
 				this.actor.system.attributes[
