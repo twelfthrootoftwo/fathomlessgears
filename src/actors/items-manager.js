@@ -8,6 +8,7 @@ import {
 } from "../constants.js";
 import {ConfirmDialog} from "../utilities/confirm-dialog.js";
 import {
+	BALLAST_TOKEN_CONDITIONS,
 	findConditionEffect,
 	quickCreateCounter
 } from "../conditions/conditions.js";
@@ -599,9 +600,19 @@ export class ItemsManager {
 		} else if (condition.system.value === true) {
 			condition.system.value = 1;
 		}
-		const tokens = this.actor
-			.getActiveTokens(true, true)
-			.filter((t) => !t.flags.fathomlessgears?.ballastToken);
+		const tokens = this.actor.getActiveTokens(true, true).filter((t) => {
+			let returnVal = null;
+			if (t.flags.fathomlessgears?.ballastToken) {
+				returnVal = BALLAST_TOKEN_CONDITIONS.includes(
+					condition.system.effectName
+				);
+			} else {
+				returnVal = !BALLAST_TOKEN_CONDITIONS.includes(
+					condition.system.effectName
+				);
+			}
+			return returnVal;
+		});
 		let existingCondition = this.findConditionByStatus(
 			condition.system.effectName
 		);
@@ -628,7 +639,9 @@ export class ItemsManager {
 			});
 		} else {
 			if (condition.system.effectName) {
+				console.log("Starting effect creation");
 				tokens.forEach(async (token) => {
+					console.log("Creating new effect instance");
 					await this.addNewTokenEffect(token, condition);
 				});
 			}
