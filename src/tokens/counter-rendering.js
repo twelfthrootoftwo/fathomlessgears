@@ -15,7 +15,6 @@ const fontCache = new Map();
  * @param {Token} token The token to draw the effect counters for.
  */
 export function drawEffectCounters(token) {
-	console.log("Draw effect counters");
 	// Clean up old counters.
 	if (token.effectCounters) {
 		token.effectCounters.removeChildren().forEach((c) => c.destroy());
@@ -36,7 +35,6 @@ export function drawEffectCounters(token) {
 		(effect) => effect.isSprite && effect.name
 	)) {
 		if (sprite === token.effects.overlay) {
-			console.log("End");
 			continue;
 		}
 
@@ -45,7 +43,6 @@ export function drawEffectCounters(token) {
 			?.flags.statuscounter?.counter;
 		imgCount.set(sprite.name, duplicates + 1);
 		if (!counter) {
-			console.log("No counter");
 			continue;
 		}
 
@@ -71,7 +68,6 @@ export function drawEffectCounters(token) {
  * @returns {PIXI.Text} The PIXI object representing the value.
  */
 function createCounterValue(counter, effectIcon, double) {
-	console.log("Creating value");
 	const valueText = new PIXI.Text(
 		counter.value,
 		getScaledFont(counter, effectIcon.height, double)
@@ -82,7 +78,6 @@ function createCounterValue(counter, effectIcon, double) {
 	valueText.x = effectIcon.x + effectIcon.width + 1 * sizeRatio;
 	valueText.y = effectIcon.y + effectIcon.height + 4 * sizeRatio;
 	valueText.resolution = Math.max(1, (1 / sizeRatio) * 1.5);
-	console.log(valueText);
 	return valueText;
 }
 
@@ -127,8 +122,8 @@ function getScaledFont(counter, iconHeight, double, duration = false) {
 		font = CONFIG.canvasTextStyle.clone();
 		font.fontSize = calculateFontSize(iconHeight, double);
 		font.fill = duration
-			? `#${game.settings.get("statuscounter", "counterColor").replace("#", "")}`
-			: `#${game.settings.get("statuscounter", "countdownColor").replace("#", "")}`;
+			? `#${game.settings.get("statuscounter", "countdownColor").replace("#", "")}`
+			: `#${game.settings.get("statuscounter", "counterColor").replace("#", "")}`;
 		fontCache.set(cacheKey, font);
 	}
 

@@ -26,7 +26,6 @@ export class HLMToken extends Token {
 	 * @override
 	 */
 	async drawEffects() {
-		console.log("drawEffects");
 		const wasVisible = this.effects.visible;
 		this.effects.visible = false;
 		this.effects.removeChildren().forEach((c) => c.destroy());
@@ -93,16 +92,13 @@ export class HLMToken extends Token {
 	}
 
 	_refreshEffects() {
-		console.log("refreshEffects");
 		super._refreshEffects();
 		drawEffectCounters(this);
 	}
 
 	async _drawEffect(src, tint) {
-		console.log("drawEffect");
 		const icon = await super._drawEffect(src, tint);
 		if (icon) icon.name = src;
-		console.log(icon);
 		return icon;
 	}
 }
@@ -114,9 +110,7 @@ export class TokenDropHandler {
 	}
 
 	initialiseHooks() {
-		Hooks.on("dropCanvasData", (canvas, data) => {
-			console.log(canvas);
-			console.log(data);
+		Hooks.on("dropCanvasData", (_canvas, data) => {
 			if (data.type == "Item") {
 				game.tokenDrop.onCanvasDrop(data);
 			}

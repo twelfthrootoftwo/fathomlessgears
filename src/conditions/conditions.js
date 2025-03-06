@@ -306,6 +306,5 @@ export function findEffectByImage(actor, imageString, index = 0) {
 		}
 		index--;
 	}
-	console.log(targetEffect);
 	return targetEffect;
 }
