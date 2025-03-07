@@ -365,9 +365,11 @@ function extractRelevantData(preparedData, type) {
  * @param {FileRecord} oldFile The file to update, if any (null if this is not an update)
  */
 async function readZippedFileCollection(fileId, zippedFiles, oldFile, dialog) {
-	for (let zFileName of Object.keys(zippedFiles)) {
+	for (let zPathName of Object.keys(zippedFiles)) {
+		const pathElements = zPathName.split("/");
+		const zFileName = pathElements[pathElements.length - 1];
 		if (getExtension(zFileName) == "json") {
-			const fileData = await zippedFiles[zFileName].async("string");
+			const fileData = await zippedFiles[zPathName].async("string");
 			await readDataJson(fileData, zFileName, fileId, oldFile, dialog);
 		}
 	}
