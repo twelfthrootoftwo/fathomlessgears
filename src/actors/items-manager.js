@@ -8,6 +8,7 @@ import {
 } from "../constants.js";
 import {ConfirmDialog} from "../utilities/confirm-dialog.js";
 import {
+	BALLAST_TOKEN_CONDITIONS,
 	findConditionEffect,
 	quickCreateCounter
 } from "../conditions/conditions.js";
@@ -125,6 +126,23 @@ export class ItemsManager {
 		let target = null;
 		existing.forEach((item) => {
 			if (item.name == itemName) {
+				target = item;
+			}
+		});
+		return target;
+	}
+
+	/**
+	 * Searches a particular item type for an existing item with a given name
+	 * Returns the existing item if it exists, otherwise null
+	 * @param {ITEM_TYPES} itemType The type of item to find
+	 * @param {string} itemName The name of the target item
+	 */
+	findConditionByStatus(statusId) {
+		let existing = this.actor.itemTypes.condition;
+		let target = null;
+		existing.forEach((item) => {
+			if (item.system.effectName == statusId) {
 				target = item;
 			}
 		});
@@ -581,15 +599,19 @@ export class ItemsManager {
 		} else if (condition.system.value === true) {
 			condition.system.value = 1;
 		}
-		const tokens = this.actor
-			.getActiveTokens(true, true)
-			.filter((t) => !t.flags.fathomlessgears?.ballastToken);
-		let existingCondition = this.findItemByNameAndType(
-			ITEM_TYPES.condition,
-			condition.name
+
+		let tokens = null;
+		if (BALLAST_TOKEN_CONDITIONS.includes(condition.system.effectName)) {
+			tokens = this.actor.getBallastTokens();
+		} else {
+			tokens = this.actor.getNonBallastTokens();
+		}
+
+		let existingCondition = this.findConditionByStatus(
+			condition.system.effectName
 		);
 		if (existingCondition) {
-			tokens.forEach((token) => {
+			tokens.forEach(async (token) => {
 				const existingEffect = token.actor.appliedEffects.filter(
 					(appliedEffect) =>
 						appliedEffect.statuses.has(condition.system.effectName)
@@ -607,11 +629,13 @@ export class ItemsManager {
 					),
 					-3
 				);
-				quickCreateCounter(existingEffect, targetValue);
+				await quickCreateCounter(existingEffect, targetValue);
 			});
 		} else {
 			if (condition.system.effectName) {
+				console.log("Starting effect creation");
 				tokens.forEach(async (token) => {
+					console.log("Creating new effect instance");
 					await this.addNewTokenEffect(token, condition);
 				});
 			}
@@ -624,6 +648,7 @@ export class ItemsManager {
 	 * @param {Item} condition A new Condition item to duplicate onto this actor
 	 */
 	async applyNewCondition(condition) {
+		console.log("applyNewCondition");
 		const item = await Item.create(condition, {parent: this.actor});
 
 		//Apply attributes
@@ -652,6 +677,7 @@ export class ItemsManager {
 	 * @param {Item} condition The existing condition, updated with the new value
 	 */
 	async updateCondition(condition) {
+		console.log("updateCondition");
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
 				this.actor.system.attributes[
@@ -685,7 +711,8 @@ export class ItemsManager {
 			appliedEffect.statuses.has(condition.system.effectName)
 		)[0];
 		setTimeout(
-			() => quickCreateCounter(effect, condition.system.value),
+			async () =>
+				await quickCreateCounter(effect, condition.system.value),
 			100
 		);
 	}

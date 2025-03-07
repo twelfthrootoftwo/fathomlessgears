@@ -8,8 +8,7 @@ import {
 	ATTRIBUTE_MAX_ROLLED,
 	ATTRIBUTE_MAX_FLAT,
 	BALLAST_MIN,
-	BALLAST_MAX,
-	ITEM_TYPES
+	BALLAST_MAX
 } from "../constants.js";
 
 import {Grid} from "../grid/grid-base.js";
@@ -102,6 +101,7 @@ export class HLMActor extends Actor {
 		if (!this.itemsManager) {
 			this.itemsManager = new ItemsManager(this);
 		}
+		console.log("applyConditions");
 
 		if (this.firstOwner() && game.user.id == this.firstOwner().id) {
 			if (!this.updatingConditions) {
@@ -115,8 +115,11 @@ export class HLMActor extends Actor {
 						.next().value;
 					conditionNames.push(conditionName);
 
-					if (NUMBERED_CONDITIONS.includes(conditionName)) {
-						quickCreateCounter(activeEffect, false);
+					if (
+						NUMBERED_CONDITIONS.includes(conditionName) &&
+						!activeEffect.flags.statuscounter
+					) {
+						await quickCreateCounter(activeEffect, false);
 					}
 					if (
 						Array.from(
@@ -139,6 +142,7 @@ export class HLMActor extends Actor {
 	}
 
 	async applySingleActiveEffect(activeEffect) {
+		console.log("applySingleActiveEffect");
 		if (this.queuedEffects.includes(activeEffect.name)) return;
 		let effectCounter = foundry.utils.getProperty(
 			activeEffect,
@@ -149,10 +153,8 @@ export class HLMActor extends Actor {
 
 		const effectValue = Math.max(Math.min(counterValue, 3), -3);
 
-		const existingCondition = this.itemsManager.findItemByNameAndType(
-			ITEM_TYPES.condition,
-			activeEffect.name
-		);
+		const existingCondition =
+			this.itemsManager.findConditionByStatus(statusName);
 
 		if (
 			existingCondition &&
@@ -578,5 +580,37 @@ export class HLMActor extends Actor {
 
 		/* if no online player owns this actor, fall back to first GM */
 		return game.users.activeGM;
+	}
+
+	getBallastTokens() {
+		let result = this.getActiveTokens(true, true).filter(
+			(t) => t.flags.fathomlessgears?.ballastToken
+		);
+		if (result.length == 0) {
+			const allTokens = this.getActiveTokens(true, true);
+			result = allTokens.map(
+				(baseToken) =>
+					canvas.tokens.get(
+						baseToken.flags.fathomlessgears?.ballastTokenReference
+					).document
+			);
+		}
+		return result;
+	}
+
+	getNonBallastTokens() {
+		let result = this.getActiveTokens(true, true).filter((t) => {
+			return !(t.flags.fathomlessgears?.ballastToken == true);
+		});
+		if (result.length == 0) {
+			const allTokens = this.getActiveTokens(true, true);
+			result = allTokens.map(
+				(baseToken) =>
+					canvas.tokens.get(
+						baseToken.flags.fathomlessgears?.originalTokenReference
+					).document
+			);
+		}
+		return result;
 	}
 }

@@ -64,40 +64,65 @@ export class HUDActionCollection {
 		canvas.scene
 			.createEmbeddedDocuments("Token", newDocuments)
 			.then((createdTokenList) => {
-				createdTokenList.forEach((createdToken) => {
+				createdTokenList.forEach(async (createdToken) => {
 					createdToken.update({height: 1, width: 1});
-					createdToken
-						.toggleActiveEffect(ballastConditionId)
-						.then(() => {
-							const effect = createdToken.actor.appliedEffects[0];
-							let effectCounter = foundry.utils.getProperty(
-								effect,
-								"flags.statuscounter.counter"
-							);
-							if (!effectCounter) {
-								effectCounter = new ActiveEffectCounter(
-									createdToken.actor.system.attributes.ballast.total,
-									effect.icon,
-									effect
-								);
-							} else {
-								effectCounter.setValue(
-									createdToken.actor.system.attributes.ballast
-										.total,
-									effect,
-									true
-								);
-							}
-							effect.setFlag(
-								"statuscounter",
-								"counter",
-								effectCounter
-							);
+					let originalToken = tokens.filter(
+						(token) =>
+							token.document.baseActor._id ==
+							createdToken.baseActor._id
+					)[0].document;
+
+					//Check if ballast condition already exists (eg for a linked actor that already had a token made)
+					let ballastEffectList =
+						createdToken.actor.appliedEffects.filter((effect) => {
+							return effect.statuses.has("ballast");
 						});
+					if (ballastEffectList.length == 0) {
+						await createdToken.toggleActiveEffect(
+							ballastConditionId
+						);
+					}
+
+					console.log(
+						createdToken.actor.appliedEffects.filter((effect) => {
+							console.log(effect.statuses);
+							return effect.statuses.has("ballast");
+						})
+					);
+					const effect = createdToken.actor.appliedEffects.filter(
+						(effect) => {
+							return effect.statuses.has("ballast");
+						}
+					)[0];
+					let effectCounter = foundry.utils.getProperty(
+						effect,
+						"flags.statuscounter.counter"
+					);
+					if (!effectCounter) {
+						effectCounter = new ActiveEffectCounter(
+							createdToken.actor.system.attributes.ballast.total,
+							effect.icon,
+							effect
+						);
+					} else {
+						effectCounter.value =
+							createdToken.actor.system.attributes.ballast.total;
+					}
+					effect.setFlag("statuscounter", "counter", effectCounter);
 					createdToken.setFlag(
 						"fathomlessgears",
 						"ballastToken",
 						true
+					);
+					createdToken.setFlag(
+						"fathomlessgears",
+						"originalTokenReference",
+						originalToken._id
+					);
+					originalToken.setFlag(
+						"fathomlessgears",
+						"ballastTokenReference",
+						createdToken._id
 					);
 				});
 			});
