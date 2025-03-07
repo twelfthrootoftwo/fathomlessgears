@@ -115,8 +115,11 @@ export class HLMActor extends Actor {
 						.next().value;
 					conditionNames.push(conditionName);
 
-					if (NUMBERED_CONDITIONS.includes(conditionName)) {
-						quickCreateCounter(activeEffect, false);
+					if (
+						NUMBERED_CONDITIONS.includes(conditionName) &&
+						!activeEffect.flags.statuscounter
+					) {
+						await quickCreateCounter(activeEffect, false);
 					}
 					if (
 						Array.from(

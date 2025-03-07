@@ -611,7 +611,7 @@ export class ItemsManager {
 			condition.system.effectName
 		);
 		if (existingCondition) {
-			tokens.forEach((token) => {
+			tokens.forEach(async (token) => {
 				const existingEffect = token.actor.appliedEffects.filter(
 					(appliedEffect) =>
 						appliedEffect.statuses.has(condition.system.effectName)
@@ -629,7 +629,7 @@ export class ItemsManager {
 					),
 					-3
 				);
-				quickCreateCounter(existingEffect, targetValue);
+				await quickCreateCounter(existingEffect, targetValue);
 			});
 		} else {
 			if (condition.system.effectName) {
@@ -711,7 +711,8 @@ export class ItemsManager {
 			appliedEffect.statuses.has(condition.system.effectName)
 		)[0];
 		setTimeout(
-			() => quickCreateCounter(effect, condition.system.value),
+			async () =>
+				await quickCreateCounter(effect, condition.system.value),
 			100
 		);
 	}

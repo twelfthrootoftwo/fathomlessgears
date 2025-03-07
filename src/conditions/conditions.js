@@ -231,7 +231,7 @@ export const BALLAST_TOKEN_CONDITIONS = [
 	CONDITIONS.quickened
 ];
 
-export function quickCreateCounter(activeEffect, value) {
+export async function quickCreateCounter(activeEffect, value) {
 	let effectCounter = foundry.utils.getProperty(
 		activeEffect,
 		"flags.statuscounter.counter"
@@ -248,7 +248,7 @@ export function quickCreateCounter(activeEffect, value) {
 	effectCounter.visible = NUMBERED_CONDITIONS.includes(
 		activeEffect.statuses.values().next().value
 	);
-	activeEffect.setFlag("statuscounter", "counter", effectCounter);
+	await activeEffect.setFlag("statuscounter", "counter", effectCounter);
 	return effectCounter;
 }
 
