@@ -35,7 +35,9 @@
 				"rows": 4
 			}
 		],
-		"type": "siltstalker"
+		"type": "siltstalker",
+		"bashDamage": 5,
+		"threatDisplayMarbles": 4
 	},
 	"img": "icons/svg/item-bag.svg",
 	"effects": [],

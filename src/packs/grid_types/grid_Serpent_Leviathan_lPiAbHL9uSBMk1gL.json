@@ -35,7 +35,9 @@
 				"rows": 3
 			}
 		],
-		"type": "serpent_leviathan"
+		"type": "serpent_leviathan",
+		"bashDamage": 5,
+		"threatDisplayMarbles": 4
 	},
 	"img": "icons/svg/item-bag.svg",
 	"effects": [],

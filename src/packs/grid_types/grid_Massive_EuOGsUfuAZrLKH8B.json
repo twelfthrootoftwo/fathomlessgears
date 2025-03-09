@@ -11,7 +11,9 @@
 				"rows": 6
 			}
 		],
-		"type": "massive"
+		"type": "massive",
+		"bashDamage": 4,
+		"threatDisplayMarbles": 3
 	},
 	"img": "icons/svg/item-bag.svg",
 	"effects": [],

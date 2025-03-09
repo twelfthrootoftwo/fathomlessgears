@@ -35,7 +35,8 @@
 				"rows": 6
 			}
 		],
-		"type": "fisher"
+		"type": "fisher",
+		"bashDamage": 3
 	},
 	"img": "icons/svg/item-bag.svg",
 	"effects": [],

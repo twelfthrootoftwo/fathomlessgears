@@ -23,7 +23,9 @@
 				"rows": 6
 			}
 		],
-		"type": "leviathan"
+		"type": "leviathan",
+		"bashDamage": 5,
+		"threatDisplayMarbles": 4
 	},
 	"img": "icons/svg/item-bag.svg",
 	"effects": [],
