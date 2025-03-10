@@ -421,6 +421,10 @@ button.button.post-message {
 	font-size: var(--font-size-12);
 	white-space: pre-line;
 }
+.minor-text {
+	padding: 3px;
+	font-size: var(--font-size-12);
+}
 .internal-body {
 	position: relative;
 	flex: 1 0 23px;

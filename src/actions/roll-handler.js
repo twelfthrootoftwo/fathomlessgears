@@ -142,9 +142,11 @@ export class RollHandler {
 		let rollText = output.text;
 		let heading = "";
 		let minorText = "";
+		let ap = 0;
 		switch (rollParams.actionCode) {
 			case "bash": {
 				heading = "Bash";
+				ap = 2;
 				if (output.result != HIT_TYPE.miss) {
 					const actorGrid = await rollParams.actor.items.get(
 						rollParams.actor.system.gridType
@@ -163,6 +165,7 @@ export class RollHandler {
 			}
 			case "threatDisplay": {
 				heading = "Threat Display";
+				ap = 2;
 				if (output.result != HIT_TYPE.miss) {
 					const actorGrid = await rollParams.actor.items.get(
 						rollParams.actor.system.gridType
@@ -180,23 +183,16 @@ export class RollHandler {
 				break;
 			}
 			case "wrangle":
-				heading = "Wrangle";
-				minorText = game.sensitiveActionHandler.getActionText(
-					rollParams.actionCode
-				);
-				break;
 			case "push":
-				heading = "Push";
-				minorText = game.sensitiveActionHandler.getActionText(
+			case "intimidate": {
+				const details = game.sensitiveActionHandler.getActionText(
 					rollParams.actionCode
 				);
+				heading = details.name;
+				minorText = details.text;
+				ap = details.ap;
 				break;
-			case "intimidate":
-				heading = "Intimidate";
-				minorText = game.sensitiveActionHandler.getActionText(
-					rollParams.actionCode
-				);
-				break;
+			}
 		}
 
 		const messageText = await renderTemplate(
@@ -204,7 +200,8 @@ export class RollHandler {
 			{
 				heading: heading,
 				minor_text: minorText,
-				body: rollText
+				body: rollText,
+				ap: ap
 			}
 		);
 
