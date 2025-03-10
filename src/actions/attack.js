@@ -17,12 +17,7 @@ export class AttackHandler {
 		);
 
 		let locationResult = null;
-		if (
-			AttackHandler.requiresLocationDisplay(
-				rollParams.attribute,
-				hitResult
-			)
-		) {
+		if (AttackHandler.requiresLocationDisplay(rollParams, hitResult)) {
 			locationResult = await AttackHandler.rollHitLocation(defender);
 		}
 
@@ -236,8 +231,9 @@ export class AttackHandler {
 		return counter > 1;
 	}
 
-	static requiresLocationDisplay(attackKey, hitResult) {
-		if (attackKey == ATTRIBUTES.mental) return false;
+	static requiresLocationDisplay(rollParams, hitResult) {
+		if (rollParams.hideHitLocation) return false;
+		if (rollParams.attribute == ATTRIBUTES.mental) return false;
 		if (hitResult.upgraded) {
 			return hitResult.upgraded === HIT_TYPE.hit;
 		} else {

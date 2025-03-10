@@ -9,7 +9,8 @@ export class RollParameters {
 		modifierStack,
 		cover,
 		internalId,
-		actionCode
+		actionCode,
+		hideHitLocation
 	) {
 		this.actor = actor;
 		this.attribute = attribute;
@@ -25,6 +26,7 @@ export class RollParameters {
 		}
 		if (internalId) this.internalId = internalId;
 		if (actionCode) this.actionCode = actionCode;
+		if (hideHitLocation) this.hideHitLocation = true;
 		this.defenceKey = this.setDefenceKey();
 	}
 

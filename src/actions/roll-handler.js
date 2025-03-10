@@ -138,6 +138,9 @@ export class RollHandler {
 
 	async basicAction(rollParams) {
 		console.log("Basic action function");
+		if (rollParams.actionCode != "bash") {
+			rollParams.hideHitLocation = true;
+		}
 		const output = await this.rollTargeted(rollParams);
 		let rollText = output.text;
 		let heading = "";
