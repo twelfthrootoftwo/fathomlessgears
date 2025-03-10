@@ -67,10 +67,11 @@ export class RollDialog extends HLMApplication {
 	additionalFlat;
 	additionalDie;
 	focused;
-	item_id;
+	itemId;
+	actionCode;
 	cover;
 
-	constructor(modifiers, actor, attribute, item_id) {
+	constructor(modifiers, actor, attribute, itemId, actionCode) {
 		super();
 		this.flatModifiers = [];
 		this.flatBonuses = [];
@@ -84,7 +85,8 @@ export class RollDialog extends HLMApplication {
 		});
 		this.actor = actor;
 		this.attribute = attribute;
-		this.item_id = item_id;
+		this.itemId = itemId;
+		this.actionCode = actionCode;
 		this.additionalFlat = 0;
 		this.additionalDie = 0;
 		this.focused = actor.statuses.has(CONDITIONS.focused);
@@ -194,7 +196,8 @@ export class RollDialog extends HLMApplication {
 			this.calculateFlatTotal(),
 			modifierStack,
 			this.cover,
-			this.item_id
+			this.itemId,
+			this.actionCode
 		);
 
 		if (parseInt(this.additionalFlat)) {
@@ -208,8 +211,10 @@ export class RollDialog extends HLMApplication {
 			);
 		}
 
-		if (this.item_id) {
+		if (this.itemId) {
 			await this.actor.triggerRolledItem(rollParams);
+		} else if (this.actionCode) {
+			await game.rollHandler.basicAction(rollParams);
 		} else {
 			await game.rollHandler.rollAttribute(rollParams);
 		}

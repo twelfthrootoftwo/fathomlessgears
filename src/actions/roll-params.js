@@ -8,7 +8,8 @@ export class RollParameters {
 		flatTotal,
 		modifierStack,
 		cover,
-		internalId
+		internalId,
+		actionCode
 	) {
 		this.actor = actor;
 		this.attribute = attribute;
@@ -23,6 +24,7 @@ export class RollParameters {
 			}
 		}
 		if (internalId) this.internalId = internalId;
+		if (actionCode) this.actionCode = actionCode;
 		this.defenceKey = this.setDefenceKey();
 	}
 

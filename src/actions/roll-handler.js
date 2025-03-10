@@ -1,7 +1,7 @@
 import {RollElement, RollDialog} from "./roll-dialog.js";
 import {ReelHandler} from "./reel.js";
 import {constructCollapsibleRollMessage} from "./collapsible-roll.js";
-import {ATTRIBUTES, ROLL_MODIFIER_TYPE} from "../constants.js";
+import {ATTRIBUTES, ROLL_MODIFIER_TYPE, HIT_TYPE} from "../constants.js";
 import {AttackHandler} from "./attack.js";
 import {Utils} from "../utilities/utils.js";
 
@@ -14,7 +14,7 @@ export class RollHandler {
 		return false;
 	}
 
-	startRollDialog(actor, attributeKey, internalId) {
+	startRollDialog(actor, attributeKey, internalId, actionCode) {
 		const modifiers = [];
 		const attribute = actor.system.attributes[attributeKey];
 		modifiers.push(
@@ -53,7 +53,13 @@ export class RollHandler {
 				)
 			);
 		}
-		return new RollDialog(modifiers, actor, attributeKey, internalId);
+		return new RollDialog(
+			modifiers,
+			actor,
+			attributeKey,
+			internalId,
+			actionCode
+		);
 	}
 
 	/**
@@ -66,6 +72,8 @@ export class RollHandler {
 		let message = "";
 		if (rollParams.defenceKey === ATTRIBUTES.power) {
 			message = await this.initiateReel(rollParams);
+		} else if (rollParams.actionCode) {
+			this.basicAction(rollParams);
 		} else if (rollParams.defenceKey) {
 			const output = await this.rollTargeted(rollParams);
 			message = output.text ? output.text : output;
@@ -126,5 +134,80 @@ export class RollHandler {
 
 	static addRollHandler() {
 		game.rollHandler = new RollHandler();
+	}
+
+	async basicAction(rollParams) {
+		console.log("Basic action function");
+		const output = await this.rollTargeted(rollParams);
+		let rollText = output.text;
+		let heading = "";
+		let minorText = "";
+		switch (rollParams.actionCode) {
+			case "bash": {
+				heading = "Bash";
+				if (output.result != HIT_TYPE.miss) {
+					const actorGrid = await rollParams.actor.items.get(
+						rollParams.actor.system.gridType
+					);
+					const damageText = await renderTemplate(
+						"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
+						{
+							label_left: game.i18n.localize("INTERNALS.damage"),
+							total: actorGrid.system.bashDamage,
+							outcome: ""
+						}
+					);
+					rollText = rollText.concat(damageText);
+				}
+				break;
+			}
+			case "threatDisplay": {
+				heading = "Threat Display";
+				if (output.result != HIT_TYPE.miss) {
+					const actorGrid = await rollParams.actor.items.get(
+						rollParams.actor.system.gridType
+					);
+					const damageText = await renderTemplate(
+						"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
+						{
+							label_left: game.i18n.localize("INTERNALS.marbles"),
+							total: actorGrid.system.threatDisplayMarbles,
+							outcome: ""
+						}
+					);
+					rollText = rollText.concat(damageText);
+				}
+				break;
+			}
+			case "wrangle":
+				heading = "Wrangle";
+				minorText = game.sensitiveActionHandler.getActionText(
+					rollParams.actionCode
+				);
+				break;
+			case "push":
+				heading = "Push";
+				minorText = game.sensitiveActionHandler.getActionText(
+					rollParams.actionCode
+				);
+				break;
+			case "intimidate":
+				heading = "Intimidate";
+				minorText = game.sensitiveActionHandler.getActionText(
+					rollParams.actionCode
+				);
+				break;
+		}
+
+		const messageText = await renderTemplate(
+			"systems/fathomlessgears/templates/messages/message-outline.html",
+			{
+				heading: heading,
+				minor_text: minorText,
+				body: rollText
+			}
+		);
+
+		game.tagHandler.createChatMessage(messageText, rollParams.actor);
 	}
 }
