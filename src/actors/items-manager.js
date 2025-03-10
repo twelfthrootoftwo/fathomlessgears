@@ -505,12 +505,20 @@ export class ItemsManager {
 	}
 
 	async applyBackgroundSystem(system) {
+		let originalMarbles = false;
+		if (await this.actor.getFlag("fathomlessgears", "initialised")) {
+			originalMarbles = this.actor.system.resources.marbles.value;
+		}
+
 		await this.removeOldBackground();
 
 		Object.keys(system.attributes).forEach((key) => {
 			this.actor.setBaseAttributeValue(key, system.attributes[key]);
 		});
 		this.actor.modifyResourceValue("marbles", system.marbles);
+		if (originalMarbles) {
+			this.actor.system.resources.marbles.value = originalMarbles;
+		}
 		this.actor.update({
 			"system.attributes": this.actor.system.attributes,
 			"system.resources": this.actor.system.resources
