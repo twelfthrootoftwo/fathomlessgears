@@ -1,4 +1,5 @@
 // import { conditions, CONDITIONS } from "../conditions/conditions";
+import {ACTOR_TYPES} from "../constants.js";
 
 export class HUDActionCollection {
 	static addHUDActions() {
@@ -126,5 +127,47 @@ export class HUDActionCollection {
 					);
 				});
 			});
+	}
+
+	scanTarget(speaker) {
+		if (speaker.type == ACTOR_TYPES.fish) return false;
+		const targetSet = game.user.targets;
+		if (targetSet.size < 1) {
+			//TODO allow choosing target afterwards
+			ui.notifications.info(game.i18n.localize("MESSAGE.scannotarget"));
+			return false;
+		} else {
+			const target = targetSet.values().next().value;
+			const content = game.i18n
+				.localize("MESSAGE.scantarget")
+				.replace("_ACTOR_NAME_", speaker.name)
+				.replace("_TARGET_NAME_", target.name);
+			renderTemplate(
+				"systems/fathomlessgears/templates/messages/message-outline.html",
+				{
+					heading: "Scan",
+					body: content,
+					ap: 1
+				}
+			).then((messageText) => {
+				game.tagHandler.createChatMessage(messageText, speaker);
+			});
+		}
+	}
+
+	textAction(speaker, actionCode) {
+		if (!game.sensitiveDataAvailable) return;
+		const actionRecord =
+			game.sensitiveActionHandler.getActionText(actionCode);
+		renderTemplate(
+			"systems/fathomlessgears/templates/messages/message-outline.html",
+			{
+				heading: actionRecord.name,
+				body: actionRecord.text,
+				ap: actionRecord.ap
+			}
+		).then((messageText) => {
+			game.tagHandler.createChatMessage(messageText, speaker);
+		});
 	}
 }
