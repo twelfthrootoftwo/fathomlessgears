@@ -2,6 +2,7 @@
 import {HLMActor} from "./actors/actor.js";
 import {HLMItem} from "./items/item.js";
 import {HLMActorSheet} from "./sheets/actor-sheet.js";
+import {HLMActiveEffect} from "./conditions/active-effect.js";
 import {HLMToken, HLMTokenDocument, TokenDropHandler} from "./tokens/token.js";
 import {preloadHandlebarsTemplates} from "./utilities/templates.js";
 import {initialiseHelpers} from "./utilities/handlebars.js";
@@ -34,6 +35,7 @@ Hooks.once("init", async function () {
 	CONFIG.Item.documentClass = HLMItem;
 	CONFIG.Token.documentClass = HLMTokenDocument;
 	CONFIG.Token.objectClass = HLMToken;
+	CONFIG.ActiveEffect.documentClass = HLMActiveEffect;
 
 	// Register sheet application classes
 	Actors.unregisterSheet("core", ActorSheet);

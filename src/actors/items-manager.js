@@ -791,4 +791,11 @@ export class ItemsManager {
 		}
 		item.update({"system.healed": !item.system.healed});
 	}
+
+	async clearConditions() {
+		for (const effect of this.actor.effects) {
+			if (effect.statuses.has("ballast")) continue;
+			await effect.delete();
+		}
+	}
 }

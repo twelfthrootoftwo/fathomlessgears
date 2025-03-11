@@ -314,7 +314,6 @@ export class HLMActor extends Actor {
 	 */
 	removeAttributeModifier(key, source) {
 		const targetAttribute = this.system.attributes[key];
-		console.log(this.system.attributes[key]);
 		let delIndex = -1;
 		let index = 0;
 		targetAttribute.values.standard.additions.forEach((modifier) => {
