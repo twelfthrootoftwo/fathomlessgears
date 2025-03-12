@@ -188,7 +188,7 @@ export class HLMActor extends Actor {
 	 * @param {str[]} activeConditionNames List of condition names that are currently active
 	 */
 	async removeInactiveEffects(activeConditionNames) {
-		this.itemTypes.condition.forEach(async (existingCondition) => {
+		for (let existingCondition of this.itemTypes.condition) {
 			if (
 				!activeConditionNames.includes(
 					existingCondition.system.effectName
@@ -198,7 +198,7 @@ export class HLMActor extends Actor {
 					existingCondition._id
 				);
 			}
-		});
+		}
 	}
 
 	/**
