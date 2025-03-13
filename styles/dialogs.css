@@ -3,6 +3,10 @@
     Roll Intercept
 ---------------------------------
 */
+input[type="number"].roll-component-value.additional-value::-webkit-inner-spin-button {
+	appearance: auto !important;
+	margin-left: 8px;
+}
 .roll-component-header {
 	font-size: var(--font-size-16);
 	font-style: italic;
@@ -27,7 +31,7 @@ li.roll-component-item {
 	margin: 0;
 }
 .roll-component-value {
-	flex: 0 0 15px;
+	flex: 0 0 60px;
 	width: 30px;
 	padding: 4px 10px;
 	margin: 0;
@@ -40,7 +44,7 @@ li.roll-component-item {
 input.roll-component-value {
 	text-align: end;
 	height: 19px;
-	width: 15px;
+	width: 60px;
 	min-width: none;
 	border: none;
 	border-radius: 0;
