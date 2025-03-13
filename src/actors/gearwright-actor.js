@@ -166,9 +166,7 @@ async function applyInternals(importData, actor, gridObject) {
 				});
 			}
 		}
-		console.log(targetRegion);
 	}
-	console.log(gridObject);
 }
 
 async function applyTemplate(importData, actor) {

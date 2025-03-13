@@ -83,13 +83,6 @@ export class HUDActionCollection {
 							ballastConditionId
 						);
 					}
-
-					console.log(
-						createdToken.actor.appliedEffects.filter((effect) => {
-							console.log(effect.statuses);
-							return effect.statuses.has("ballast");
-						})
-					);
 					const effect = createdToken.actor.appliedEffects.filter(
 						(effect) => {
 							return effect.statuses.has("ballast");
@@ -115,16 +108,18 @@ export class HUDActionCollection {
 						"ballastToken",
 						true
 					);
-					createdToken.setFlag(
-						"fathomlessgears",
-						"originalTokenReference",
-						originalToken._id
-					);
-					originalToken.setFlag(
-						"fathomlessgears",
-						"ballastTokenReference",
-						createdToken._id
-					);
+					if (!originalToken.isLinked) {
+						createdToken.actor.setFlag(
+							"fathomlessgears",
+							"originalActorReference",
+							originalToken.actor.uuid
+						);
+						originalToken.actor.setFlag(
+							"fathomlessgears",
+							"ballastActorReference",
+							createdToken.actor.uuid
+						);
+					}
 				});
 			});
 	}

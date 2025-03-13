@@ -16,7 +16,6 @@ export async function constructGrid(actor) {
 	const gridObject = new Grid(null);
 	gridObject.actor = actor;
 	const gridType = await actor.items.get(actor.system.gridType);
-	console.log(gridType);
 	for (let i = 0; i < gridType.system.hitRegions.length; i += 1) {
 		if ((i == 0 || i == 4) && gridType.system.type == "fisher") {
 			gridObject.gridRegions.push(null);

@@ -16,6 +16,7 @@ import {ItemsManager} from "./items-manager.js";
 import {
 	ATTRIBUTE_ONLY_CONDITIONS,
 	findConditionFromStatus,
+	findConditionEffect,
 	NUMBERED_CONDITIONS,
 	quickCreateCounter
 } from "../conditions/conditions.js";
@@ -91,10 +92,87 @@ export class HLMActor extends Actor {
 
 	/** @inheritdoc */
 	applyActiveEffects() {
+		console.log("applyActiveEffects");
 		super.applyActiveEffects();
-		setTimeout(() => {
-			this.applyConditions();
-		}, 100);
+		if (this.firstOwner() && game.availableConditionItems) {
+			if (
+				this.getFlag("fathomlessgears", "originalActorReference") ||
+				this.getFlag("fathomlessgears", "ballastActorReference")
+			) {
+				this.transferEffects();
+			}
+			setTimeout(() => {
+				this.applyConditions();
+			}, 100);
+		}
+	}
+
+	async transferEffects() {
+		console.log("transferEffects");
+		let thisIsBallast = Boolean(
+			this.getFlag("fathomlessgears", "originalActorReference")
+		);
+		let pairedActorId = thisIsBallast
+			? this.getFlag("fathomlessgears", "originalActorReference")
+			: this.getFlag("fathomlessgears", "ballastActorReference");
+		let pairedActor = fromUuidSync(pairedActorId);
+		if (!pairedActor) return;
+		let thisEffects = this.appliedEffects;
+		let pairedEffects = pairedActor.appliedEffects;
+		let pairedTokens = thisIsBallast
+			? pairedActor?.getNonBallastTokens()
+			: pairedActor?.getBallastTokens();
+		if (!pairedTokens || pairedTokens.length == 0) return;
+
+		for (let effect of thisEffects) {
+			if (effect.statuses.has("ballast")) continue;
+			let matchingEffect = pairedEffects.find(
+				(pairedEffect) => pairedEffect.name == effect.name
+			);
+			if (!matchingEffect) {
+				const statusKey = effect.statuses.values().next().value;
+				const newEffect = await findConditionEffect(statusKey);
+				console.log(newEffect);
+				await pairedTokens[0].toggleActiveEffect(newEffect);
+				const createdEffect =
+					pairedTokens[0].actor.appliedEffects.filter(
+						(appliedEffect) => appliedEffect.statuses.has(statusKey)
+					)[0];
+				setTimeout(
+					async () =>
+						await quickCreateCounter(
+							createdEffect,
+							effect.getFlag("statuscounter", "counter").value
+						),
+					100
+				);
+			} else if (
+				effect.getFlag("statuscounter", "counter").value !=
+				matchingEffect.getFlag("statuscounter", "counter").value
+			) {
+				let counter = matchingEffect.getFlag(
+					"statuscounter",
+					"counter"
+				);
+				counter.value = effect.getFlag(
+					"statuscounter",
+					"counter"
+				).value;
+				matchingEffect.setFlag("statuscounter", "counter", counter);
+			}
+		}
+
+		for (let effect of pairedEffects) {
+			if (effect.statuses.has("ballast")) continue;
+			let matchingEffect = thisEffects.find(
+				(thisEffect) => thisEffect.name == effect.name
+			);
+			if (!matchingEffect) {
+				const statusKey = effect.statuses.values().next().value;
+				const effectId = findConditionEffect(statusKey);
+				await pairedTokens[0].toggleActiveEffect(effectId);
+			}
+		}
 	}
 
 	async applyConditions() {
@@ -586,13 +664,17 @@ export class HLMActor extends Actor {
 			(t) => t.flags.fathomlessgears?.ballastToken
 		);
 		if (result.length == 0) {
-			const allTokens = this.getActiveTokens(true, true);
-			result = allTokens.map(
-				(baseToken) =>
-					canvas.tokens.get(
-						baseToken.flags.fathomlessgears?.ballastTokenReference
-					).document
+			let pairedActor = fromUuidSync(
+				this.getFlag("fathomlessgears", "ballastActorReference")
 			);
+			result = pairedActor?.getBallastTokens();
+			// const allTokens = this.getActiveTokens(true, true);
+			// result = allTokens.map(
+			// 	(baseToken) =>
+			// 		canvas.tokens.get(
+			// 			baseToken.flags.fathomlessgears?.ballastTokenReference
+			// 		).document
+			// );
 		}
 		return result;
 	}
@@ -602,13 +684,17 @@ export class HLMActor extends Actor {
 			return !(t.flags.fathomlessgears?.ballastToken == true);
 		});
 		if (result.length == 0) {
-			const allTokens = this.getActiveTokens(true, true);
-			result = allTokens.map(
-				(baseToken) =>
-					canvas.tokens.get(
-						baseToken.flags.fathomlessgears?.originalTokenReference
-					).document
+			let pairedActor = fromUuidSync(
+				this.getFlag("fathomlessgears", "originalActorReference")
 			);
+			result = pairedActor?.getNonBallastTokens();
+			// const allTokens = this.getActiveTokens(true, true);
+			// result = allTokens.map(
+			// 	(baseToken) =>
+			// 		canvas.tokens.get(
+			// 			baseToken.flags.fathomlessgears?.originalTokenReference
+			// 		).document
+			// );
 		}
 		return result;
 	}
