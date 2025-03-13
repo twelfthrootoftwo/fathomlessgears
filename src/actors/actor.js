@@ -18,7 +18,8 @@ import {
 	findConditionFromStatus,
 	findConditionEffect,
 	NUMBERED_CONDITIONS,
-	quickCreateCounter
+	quickCreateCounter,
+	CONDITIONS
 } from "../conditions/conditions.js";
 
 /**
@@ -147,18 +148,14 @@ export class HLMActor extends Actor {
 					100
 				);
 			} else if (
-				effect.getFlag("statuscounter", "counter").value !=
-				matchingEffect.getFlag("statuscounter", "counter").value
+				effect.getFlag("statuscounter", "counter") &&
+				effect.getFlag("statuscounter", "counter")?.value !=
+					matchingEffect.getFlag("statuscounter", "counter")?.value
 			) {
-				let counter = matchingEffect.getFlag(
-					"statuscounter",
-					"counter"
+				await quickCreateCounter(
+					matchingEffect,
+					effect.getFlag("statuscounter", "counter").value
 				);
-				counter.value = effect.getFlag(
-					"statuscounter",
-					"counter"
-				).value;
-				matchingEffect.setFlag("statuscounter", "counter", counter);
 			}
 		}
 
@@ -697,5 +694,16 @@ export class HLMActor extends Actor {
 			// );
 		}
 		return result;
+	}
+
+	removeFocused() {
+		let token = this.getNonBallastTokens()[0];
+		const currentFocus = this.effects.find((effect) =>
+			effect.statuses.has(CONDITIONS.focused)
+		);
+		if (currentFocus) {
+			let effectId = findConditionEffect(CONDITIONS.focused);
+			token.toggleActiveEffect(effectId);
+		}
 	}
 }

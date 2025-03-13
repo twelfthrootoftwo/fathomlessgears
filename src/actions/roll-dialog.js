@@ -188,6 +188,7 @@ export class RollDialog extends HLMApplication {
 		].filter((element) => Boolean(element.active));
 		if (this.focused) {
 			modifierStack.push(this.focused);
+			this.actor.removeFocused();
 		}
 		const rollParams = new RollParameters(
 			this.actor,
