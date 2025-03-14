@@ -14,7 +14,7 @@ import {
 import {Grid} from "../grid/grid-base.js";
 import {ItemsManager} from "./items-manager.js";
 import {
-	ATTRIBUTE_ONLY_CONDITIONS,
+	//ATTRIBUTE_ONLY_CONDITIONS,
 	findConditionFromStatus,
 	findConditionEffect,
 	NUMBERED_CONDITIONS,
@@ -29,6 +29,7 @@ import {
 export class HLMActor extends Actor {
 	/** @inheritdoc */
 	prepareDerivedData() {
+		console.log("prepareDerivedData");
 		super.prepareDerivedData();
 		if (this.getFlag("fathomlessgears", "interactiveGrid")) {
 			this.grid = new Grid(this.system.grid);
@@ -56,6 +57,12 @@ export class HLMActor extends Actor {
 		this.itemsManager = new ItemsManager(this);
 
 		this.queuedEffects = [];
+		Hooks.on("conditionsReady", () => {
+			console.log("Hook received");
+			setTimeout(() => {
+				this.applyConditions();
+			}, 200);
+		});
 	}
 
 	/** @inheritdoc */
@@ -102,10 +109,40 @@ export class HLMActor extends Actor {
 			) {
 				this.transferEffects();
 			}
-			setTimeout(() => {
-				this.applyConditions();
-			}, 100);
+			// setTimeout(() => {
+			// 	this.applyConditions();
+			// }, 100);
 		}
+	}
+
+	/** @inheritdoc */
+	update(data, options) {
+		console.log(data);
+		for (const [key, value] of Object.entries(data)) {
+			if (key == "system.attributes") {
+				//All attributes
+				for (let [attrKey, attrData] of Object.entries(value)) {
+					let modifiers = attrData.values.standard.additions;
+					let filtered = modifiers.filter(
+						(mod) => mod.type != "condition"
+					);
+					attrData.values.standard.additions = filtered;
+					attrData = this.calculateAttributeData(attrData);
+					value[attrKey] = attrData;
+				}
+				data[key] = value;
+			} else if (key.indexOf("system.attributes" > -1) && value.values) {
+				//One attribute
+				let modifiers = value.values.standard.additions;
+				let filtered = modifiers.filter(
+					(mod) => mod.type != "condition"
+				);
+				value.values.standard.additions = filtered;
+				const attrData = this.calculateAttributeData(value);
+				data[key] = attrData;
+			}
+		}
+		super.update(data, options).then(() => this.applyConditions());
 	}
 
 	async transferEffects() {
@@ -178,42 +215,44 @@ export class HLMActor extends Actor {
 		}
 		console.log("applyConditions");
 
-		if (this.firstOwner() && game.user.id == this.firstOwner().id) {
-			if (!this.updatingConditions) {
-				this.updatingConditions = true;
-				const conditionNames = [];
-				let effectArray = this.effects.contents;
-				for (let i in effectArray) {
-					let activeEffect = effectArray[i];
-					let conditionName = activeEffect.statuses
-						.values()
-						.next().value;
-					conditionNames.push(conditionName);
+		//if (this.firstOwner() && game.user.id == this.firstOwner().id) {
+		if (!this.updatingConditions) {
+			console.log("Not already updating");
+			this.updatingConditions = true;
+			const conditionNames = [];
+			let effectArray = this.effects.contents;
+			for (let i in effectArray) {
+				console.log("Something in effect array");
+				let activeEffect = effectArray[i];
+				let conditionName = activeEffect.statuses.values().next().value;
+				conditionNames.push(conditionName);
 
-					if (
-						NUMBERED_CONDITIONS.includes(conditionName) &&
-						!activeEffect.flags.statuscounter
-					) {
-						await quickCreateCounter(activeEffect, false);
-					}
-					if (
-						Array.from(
-							game.availableConditionItems?.keys()
-						).includes(conditionName)
-					) {
-						await this.applySingleActiveEffect(activeEffect);
-					}
+				if (
+					NUMBERED_CONDITIONS.includes(conditionName) &&
+					!activeEffect.flags.statuscounter
+				) {
+					console.log("Needs a counter");
+					await quickCreateCounter(activeEffect, false);
 				}
-				await this.removeInactiveEffects(conditionNames);
-				this.updatingConditions = false;
-				if (this.queueApply) {
-					this.queueApply = false;
-					this.applyConditions();
+				if (
+					Array.from(game.availableConditionItems?.keys()).includes(
+						conditionName
+					)
+				) {
+					console.log("Apply!");
+					await this.applySingleActiveEffect(activeEffect);
 				}
-			} else {
-				this.queueApply = true;
 			}
+			await this.removeInactiveEffects(conditionNames);
+			this.updatingConditions = false;
+			if (this.queueApply) {
+				this.queueApply = false;
+				this.applyConditions();
+			}
+		} else {
+			this.queueApply = true;
 		}
+		//}
 	}
 
 	async applySingleActiveEffect(activeEffect) {
@@ -231,22 +270,7 @@ export class HLMActor extends Actor {
 		const existingCondition =
 			this.itemsManager.findConditionByStatus(statusName);
 
-		if (
-			existingCondition &&
-			ATTRIBUTE_ONLY_CONDITIONS.includes(statusName) &&
-			existingCondition.system.value != effectValue
-		) {
-			this.queuedEffects.push(activeEffect.name);
-			existingCondition.system.value = effectValue;
-			await existingCondition
-				.update({"system.value": effectValue})
-				.then(() => {
-					this.queuedEffects.filter(
-						(name) => name != activeEffect.name
-					);
-				});
-			await this.itemsManager.updateCondition(existingCondition);
-		} else if (!existingCondition) {
+		if (!existingCondition) {
 			this.queuedEffects.push(activeEffect.name);
 			let newCondition = await findConditionFromStatus(statusName);
 			if (newCondition) {
@@ -255,7 +279,47 @@ export class HLMActor extends Actor {
 				await this.itemsManager.applyNewCondition(newCondition);
 				this.queuedEffects.filter((name) => name != activeEffect.name);
 			}
+		} else if (existingCondition) {
+			if (existingCondition.system.value != effectValue) {
+				this.queuedEffects.push(activeEffect.name);
+				existingCondition.system.value = effectValue;
+				await existingCondition
+					.update({"system.value": effectValue})
+					.then(() => {
+						this.queuedEffects.filter(
+							(name) => name != activeEffect.name
+						);
+					});
+			}
+			await this.itemsManager.updateCondition(existingCondition);
+			//this.itemsManager.applyCondition(existingCondition);
 		}
+
+		// if (
+		// 	existingCondition &&
+		// 	ATTRIBUTE_ONLY_CONDITIONS.includes(statusName) &&
+		// 	existingCondition.system.value != effectValue
+		// ) {
+		// 	this.queuedEffects.push(activeEffect.name);
+		// 	existingCondition.system.value = effectValue;
+		// 	await existingCondition
+		// 		.update({"system.value": effectValue})
+		// 		.then(() => {
+		// 			this.queuedEffects.filter(
+		// 				(name) => name != activeEffect.name
+		// 			);
+		// 		});
+		// 	await this.itemsManager.updateCondition(existingCondition);
+		// } else if (!existingCondition) {
+		// 	this.queuedEffects.push(activeEffect.name);
+		// 	let newCondition = await findConditionFromStatus(statusName);
+		// 	if (newCondition) {
+		// 		if (newCondition.system.value)
+		// 			newCondition.system.value = effectValue;
+		// 		await this.itemsManager.applyNewCondition(newCondition);
+		// 		this.queuedEffects.filter((name) => name != activeEffect.name);
+		// 	}
+		// }
 	}
 
 	/**
@@ -330,7 +394,10 @@ export class HLMActor extends Actor {
 		if (key == "ballast") {
 			return this.calculateBallast();
 		}
-		const attr = this.system.attributes[key];
+		return this.calculateAttributeData(this.system.attributes[key]);
+	}
+
+	calculateAttributeData(attr) {
 		let total = 0;
 		total = attr.values.standard.base;
 		attr.values.standard.additions.forEach((val) => {
@@ -344,15 +411,18 @@ export class HLMActor extends Actor {
 			ATTRIBUTES.speed
 		];
 		if (
-			applyAttributeMaxRolled.includes(key) &&
+			applyAttributeMaxRolled.includes(attr.key) &&
 			total > ATTRIBUTE_MAX_ROLLED
 		)
 			total = ATTRIBUTE_MAX_ROLLED;
-		if (Utils.isDefenceAttribute(key) && total > ATTRIBUTE_MAX_FLAT)
+		if (Utils.isDefenceAttribute(attr.key) && total > ATTRIBUTE_MAX_FLAT)
 			total = ATTRIBUTE_MAX_FLAT;
-		attr.values.bonus.forEach((val) => {
-			total += val.value;
-		});
+		if (attr.values.bonus) {
+			attr.values.bonus.forEach((val) => {
+				total += val.value;
+			});
+		}
+
 		attr.total = total;
 		return attr;
 	}

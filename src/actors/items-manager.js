@@ -658,7 +658,30 @@ export class ItemsManager {
 	async applyNewCondition(condition) {
 		console.log("applyNewCondition");
 		const item = await Item.create(condition, {parent: this.actor});
+		this.applyCondition(item);
 
+		//Apply attributes
+		// Object.keys(condition.system.attributes).forEach((key) => {
+		// 	if (
+		// 		Utils.isAttribute(key) &&
+		// 		condition.system.attributes[key] != 0
+		// 	) {
+		// 		const modifier = new AttributeElement(
+		// 			condition.system.attributes[key] * condition.system.value,
+		// 			item._id,
+		// 			"condition",
+		// 			condition.name
+		// 		);
+		// 		this.actor.addAttributeModifier(key, modifier);
+		// 	}
+		// });
+
+		// this.actor.calculateBallast();
+		//await this.actor.update({system: this.actor.system});
+		Hooks.callAll("conditionItemAdded", this.actor);
+	}
+
+	applyCondition(condition) {
 		//Apply attributes
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (
@@ -667,7 +690,7 @@ export class ItemsManager {
 			) {
 				const modifier = new AttributeElement(
 					condition.system.attributes[key] * condition.system.value,
-					item._id,
+					condition._id,
 					"condition",
 					condition.name
 				);
@@ -676,8 +699,6 @@ export class ItemsManager {
 		});
 
 		this.actor.calculateBallast();
-		await this.actor.update({system: this.actor.system});
-		Hooks.callAll("conditionItemAdded", this.actor);
 	}
 
 	/**
@@ -688,19 +709,34 @@ export class ItemsManager {
 		console.log("updateCondition");
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
+				let found = false;
 				this.actor.system.attributes[
 					key
 				].values.standard.additions.forEach((modifier) => {
 					if (modifier.source == condition._id) {
+						console.log("Updating existing mod");
 						modifier.value =
 							condition.system.attributes[key] *
 							condition.system.value;
+						found = true;
 					}
 				});
+				if (!found) {
+					console.log("Applying new mod");
+					const modifier = new AttributeElement(
+						condition.system.attributes[key] *
+							condition.system.value,
+						condition._id,
+						"condition",
+						condition.name
+					);
+					this.actor.addAttributeModifier(key, modifier);
+				}
 			}
 		});
 		this.actor.calculateBallast();
-		await this.actor.calculateAttributeTotals();
+		await this.actor.calculateAttributeTotals(false);
+		console.log(this);
 	}
 
 	/**

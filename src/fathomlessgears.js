@@ -154,6 +154,7 @@ export const system_ready = new Promise((success) => {
 
 		CONFIG.statusEffects = foundry.utils.duplicate(conditions);
 		game.availableConditionItems = discoverConditions();
+		Hooks.callAll("conditionsReady");
 
 		console.log("Ready!");
 		success();
