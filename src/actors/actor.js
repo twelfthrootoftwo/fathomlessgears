@@ -57,12 +57,14 @@ export class HLMActor extends Actor {
 		this.itemsManager = new ItemsManager(this);
 
 		this.queuedEffects = [];
-		Hooks.on("conditionsReady", () => {
+		Hooks.on("conditionListReady", () => {
 			console.log("Hook received");
 			setTimeout(() => {
 				this.applyConditions();
-			}, 200);
+			}, 1000);
 		});
+		this.applyConditions();
+		this.calculateBallast();
 	}
 
 	/** @inheritdoc */
@@ -102,17 +104,19 @@ export class HLMActor extends Actor {
 	applyActiveEffects() {
 		console.log("applyActiveEffects");
 		super.applyActiveEffects();
-		if (this.firstOwner() && game.availableConditionItems) {
-			if (
-				this.getFlag("fathomlessgears", "originalActorReference") ||
-				this.getFlag("fathomlessgears", "ballastActorReference")
-			) {
-				this.transferEffects();
-			}
-			// setTimeout(() => {
-			// 	this.applyConditions();
-			// }, 100);
-		}
+		// if (this.firstOwner() && game.availableConditionItems) {
+		// 	if (
+		// 		this.getFlag("fathomlessgears", "originalActorReference") ||
+		// 		this.getFlag("fathomlessgears", "ballastActorReference")
+		// 	) {
+		// 		setTimeout(() => {
+		// 			this.transferEffects();
+		// 		}, 100);
+		// 	}
+		// 	// setTimeout(() => {
+		// 	// 	this.applyConditions();
+		// 	// }, 100);
+		// }
 	}
 
 	/** @inheritdoc */
@@ -146,108 +150,137 @@ export class HLMActor extends Actor {
 	}
 
 	async transferEffects() {
-		console.log("transferEffects");
-		let thisIsBallast = Boolean(
-			this.getFlag("fathomlessgears", "originalActorReference")
-		);
-		let pairedActorId = thisIsBallast
-			? this.getFlag("fathomlessgears", "originalActorReference")
-			: this.getFlag("fathomlessgears", "ballastActorReference");
-		let pairedActor = fromUuidSync(pairedActorId);
-		if (!pairedActor) return;
-		let thisEffects = this.appliedEffects;
-		let pairedEffects = pairedActor.appliedEffects;
-		let pairedTokens = thisIsBallast
-			? pairedActor?.getNonBallastTokens()
-			: pairedActor?.getBallastTokens();
-		if (!pairedTokens || pairedTokens.length == 0) return;
-
-		for (let effect of thisEffects) {
-			if (effect.statuses.has("ballast")) continue;
-			let matchingEffect = pairedEffects.find(
-				(pairedEffect) => pairedEffect.name == effect.name
+		if (this.firstOwner() && game.user.id == this.firstOwner().id) {
+			console.log("transferEffects");
+			let thisIsBallast = Boolean(
+				this.getFlag("fathomlessgears", "originalActorReference")
 			);
-			if (!matchingEffect) {
-				const statusKey = effect.statuses.values().next().value;
-				const newEffect = await findConditionEffect(statusKey);
-				console.log(newEffect);
-				await pairedTokens[0].toggleActiveEffect(newEffect);
-				const createdEffect =
-					pairedTokens[0].actor.appliedEffects.filter(
-						(appliedEffect) => appliedEffect.statuses.has(statusKey)
-					)[0];
-				setTimeout(
-					async () =>
-						await quickCreateCounter(
-							createdEffect,
-							effect.getFlag("statuscounter", "counter").value
-						),
-					100
-				);
-			} else if (
-				effect.getFlag("statuscounter", "counter") &&
-				effect.getFlag("statuscounter", "counter")?.value !=
-					matchingEffect.getFlag("statuscounter", "counter")?.value
-			) {
-				await quickCreateCounter(
-					matchingEffect,
-					effect.getFlag("statuscounter", "counter").value
-				);
-			}
-		}
+			let pairedActorId = thisIsBallast
+				? this.getFlag("fathomlessgears", "originalActorReference")
+				: this.getFlag("fathomlessgears", "ballastActorReference");
+			let pairedActor = fromUuidSync(pairedActorId);
+			if (!pairedActor) return;
+			let thisEffects = this.appliedEffects;
+			let pairedEffects = pairedActor.appliedEffects;
+			let pairedTokens = thisIsBallast
+				? pairedActor?.getNonBallastTokens()
+				: pairedActor?.getBallastTokens();
+			if (!pairedTokens || pairedTokens.length == 0) return;
 
-		for (let effect of pairedEffects) {
-			if (effect.statuses.has("ballast")) continue;
-			let matchingEffect = thisEffects.find(
-				(thisEffect) => thisEffect.name == effect.name
-			);
-			if (!matchingEffect) {
-				const statusKey = effect.statuses.values().next().value;
-				const effectId = findConditionEffect(statusKey);
-				await pairedTokens[0].toggleActiveEffect(effectId);
+			for (let effect of thisEffects) {
+				if (effect.statuses.has("ballast")) continue;
+				let matchingEffect = pairedEffects.find(
+					(pairedEffect) => pairedEffect.name == effect.name
+				);
+				if (!matchingEffect) {
+					const statusKey = effect.statuses.values().next().value;
+					const newEffect = await findConditionEffect(statusKey);
+					console.log(newEffect);
+					await pairedTokens[0].toggleActiveEffect(newEffect);
+					const createdEffect =
+						pairedTokens[0].actor.appliedEffects.filter(
+							(appliedEffect) =>
+								appliedEffect.statuses.has(statusKey)
+						)[0];
+					setTimeout(
+						async () =>
+							await quickCreateCounter(
+								createdEffect,
+								effect.getFlag("statuscounter", "counter").value
+							),
+						100
+					);
+				} else if (
+					effect.getFlag("statuscounter", "counter") &&
+					effect.getFlag("statuscounter", "counter")?.value !=
+						matchingEffect.getFlag("statuscounter", "counter")
+							?.value
+				) {
+					await quickCreateCounter(
+						matchingEffect,
+						effect.getFlag("statuscounter", "counter").value
+					);
+				}
 			}
+
+			for (let effect of pairedEffects) {
+				if (effect.statuses.has("ballast")) continue;
+				let matchingEffect = thisEffects.find(
+					(thisEffect) => thisEffect.name == effect.name
+				);
+				if (!matchingEffect) {
+					const statusKey = effect.statuses.values().next().value;
+					const effectId = findConditionEffect(statusKey);
+					await pairedTokens[0].toggleActiveEffect(effectId);
+				}
+			}
+		} else {
+			console.log("Not first owner");
 		}
 	}
 
 	async applyConditions() {
+		if (!game.availableConditionItems) {
+			console.log("Conditios not ready yet");
+			return;
+		}
 		if (!this.itemsManager) {
 			this.itemsManager = new ItemsManager(this);
 		}
 		console.log("applyConditions");
 
 		//if (this.firstOwner() && game.user.id == this.firstOwner().id) {
-		if (!this.updatingConditions) {
+		if (!this.updatingConditions && game.availableConditionItems) {
 			console.log("Not already updating");
 			this.updatingConditions = true;
-			const conditionNames = [];
-			let effectArray = this.effects.contents;
-			for (let i in effectArray) {
-				console.log("Something in effect array");
-				let activeEffect = effectArray[i];
-				let conditionName = activeEffect.statuses.values().next().value;
-				conditionNames.push(conditionName);
+			try {
+				const conditionNames = [];
+				let effectArray = this.effects.contents;
+				let somethingChanged = false;
+				for (let i in effectArray) {
+					console.log("Something in effect array");
+					let activeEffect = effectArray[i];
+					let conditionName = activeEffect.statuses
+						.values()
+						.next().value;
+					conditionNames.push(conditionName);
 
-				if (
-					NUMBERED_CONDITIONS.includes(conditionName) &&
-					!activeEffect.flags.statuscounter
-				) {
-					console.log("Needs a counter");
-					await quickCreateCounter(activeEffect, false);
+					if (
+						NUMBERED_CONDITIONS.includes(conditionName) &&
+						!activeEffect.flags.statuscounter
+					) {
+						console.log("Needs a counter");
+						await quickCreateCounter(activeEffect, false);
+						somethingChanged = true;
+					}
+					console.log(game.availableConditionItems);
+					if (
+						Array.from(
+							game.availableConditionItems?.keys()
+						).includes(conditionName)
+					) {
+						console.log("Apply!");
+						somethingChanged =
+							(await this.applySingleActiveEffect(
+								activeEffect
+							)) || somethingChanged;
+					}
 				}
-				if (
-					Array.from(game.availableConditionItems?.keys()).includes(
-						conditionName
-					)
-				) {
-					console.log("Apply!");
-					await this.applySingleActiveEffect(activeEffect);
+				somethingChanged =
+					(await this.removeInactiveEffects(conditionNames)) ||
+					somethingChanged;
+				this.updatingConditions = false;
+				if (this.queueApply) {
+					this.queueApply = false;
+					this.applyConditions();
 				}
-			}
-			await this.removeInactiveEffects(conditionNames);
-			this.updatingConditions = false;
-			if (this.queueApply) {
-				this.queueApply = false;
-				this.applyConditions();
+				// if(somethingChanged) {
+				// 	setTimeout(() => {
+				// 		this.transferEffects();
+				// 	},100);
+				// }
+			} catch {
+				this.updatingConditions = false;
 			}
 		} else {
 			this.queueApply = true;
@@ -257,6 +290,7 @@ export class HLMActor extends Actor {
 
 	async applySingleActiveEffect(activeEffect) {
 		console.log("applySingleActiveEffect");
+		let wasChanged = false;
 		if (this.queuedEffects.includes(activeEffect.name)) return;
 		let effectCounter = foundry.utils.getProperty(
 			activeEffect,
@@ -271,30 +305,59 @@ export class HLMActor extends Actor {
 			this.itemsManager.findConditionByStatus(statusName);
 
 		if (!existingCondition) {
+			console.log("Needs new item");
 			this.queuedEffects.push(activeEffect.name);
 			let newCondition = await findConditionFromStatus(statusName);
 			if (newCondition) {
 				if (newCondition.system.value)
 					newCondition.system.value = effectValue;
-				await this.itemsManager.applyNewCondition(newCondition);
+				await this.itemsManager
+					.applyNewCondition(newCondition)
+					.then(() => {
+						if (
+							this.getFlag(
+								"fathomlessgears",
+								"originalActorReference"
+							) ||
+							this.getFlag(
+								"fathomlessgears",
+								"ballastActorReference"
+							)
+						) {
+							// setTimeout(() => {
+							// 	this.transferEffects();
+							// },400)
+						}
+					});
+
 				this.queuedEffects.filter((name) => name != activeEffect.name);
 			}
-		} else if (existingCondition) {
+		} else if (existingCondition && existingCondition.system.value) {
 			if (existingCondition.system.value != effectValue) {
+				console.log("Changing value");
 				this.queuedEffects.push(activeEffect.name);
 				existingCondition.system.value = effectValue;
 				await existingCondition
 					.update({"system.value": effectValue})
 					.then(() => {
+						// if (
+						// 	this.getFlag("fathomlessgears", "originalActorReference") ||
+						// 	this.getFlag("fathomlessgears", "ballastActorReference")
+						// ) {
+						// 	// setTimeout(() => {
+						// 	// 	this.transferEffects();
+						// 	// },400)
+						// }
 						this.queuedEffects.filter(
 							(name) => name != activeEffect.name
 						);
 					});
+				wasChanged = true;
 			}
 			await this.itemsManager.updateCondition(existingCondition);
 			//this.itemsManager.applyCondition(existingCondition);
 		}
-
+		return wasChanged;
 		// if (
 		// 	existingCondition &&
 		// 	ATTRIBUTE_ONLY_CONDITIONS.includes(statusName) &&
@@ -327,17 +390,22 @@ export class HLMActor extends Actor {
 	 * @param {str[]} activeConditionNames List of condition names that are currently active
 	 */
 	async removeInactiveEffects(activeConditionNames) {
+		let wasChanged = false;
 		for (let existingCondition of this.itemTypes.condition) {
 			if (
 				!activeConditionNames.includes(
 					existingCondition.system.effectName
 				)
 			) {
+				console.log(`Removing condition ${existingCondition.name}`);
 				await this.itemsManager.removeItemCallback(
 					existingCondition._id
 				);
+				wasChanged = true;
 			}
 		}
+		if (wasChanged) this.transferEffects();
+		return wasChanged;
 	}
 
 	/**
@@ -469,10 +537,12 @@ export class HLMActor extends Actor {
 		});
 		if (delIndex >= 0) {
 			targetAttribute.values.standard.additions.splice(delIndex, 1);
+			this.calculateSingleAttribute(key);
+			return true;
 		} else {
 			console.log(`Could not find modifier ${source}`);
+			return false;
 		}
-		this.calculateSingleAttribute(key);
 	}
 
 	/**
@@ -520,6 +590,11 @@ export class HLMActor extends Actor {
 
 		if (ballast.total < BALLAST_MIN) ballast.total = BALLAST_MIN;
 		if (ballast.total > BALLAST_MAX) ballast.total = BALLAST_MAX;
+
+		this.update(
+			"system.attributes.ballast",
+			this.system.attributes.ballast
+		);
 
 		return ballast;
 	}

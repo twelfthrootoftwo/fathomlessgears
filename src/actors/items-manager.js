@@ -373,32 +373,45 @@ export class ItemsManager {
 		const isInternal =
 			item.type == ITEM_TYPES.internal_npc ||
 			item.type == ITEM_TYPES.internal_pc;
+		console.log("Clearing attributes");
+		let attributeChanged = false;
 		if (item.system.attributes) {
 			Object.keys(item.system.attributes).forEach((key) => {
 				if (item.system.attributes[key] != 0) {
-					this.actor.removeAttributeModifier(key, uuid);
+					attributeChanged =
+						this.actor.removeAttributeModifier(key, uuid) ||
+						attributeChanged;
 				}
 			});
 		}
-		this.actor.calculateBallast();
+
+		console.log("Clearing resources");
 		if (this.actor.system.resources) {
 			if (item.system.repair_kits)
-				this.actor.modifyResourceValue(
-					"repair",
-					-1 * item.system.repair_kits
-				);
+				attributeChanged =
+					this.actor.modifyResourceValue(
+						"repair",
+						-1 * item.system.repair_kits
+					) || attributeChanged;
 			if (item.system.marbles)
-				this.actor.modifyResourceValue(
-					"marbles",
-					-1 * item.system.marbles
-				);
+				attributeChanged =
+					this.actor.modifyResourceValue(
+						"marbles",
+						-1 * item.system.marbles
+					) || attributeChanged;
 		}
-		this.actor.update({system: this.actor.system});
+
+		if (attributeChanged) {
+			console.log("Updating");
+			this.actor.calculateBallast();
+			this.actor.update({system: this.actor.system});
+		}
 
 		//Re-retrieve item in case delete has been called twice as a race condition
 		const itemCheck = this.actor.items.get(uuid);
 		if (itemCheck) {
 			setTimeout(async () => {
+				console.log("Deleting item");
 				await item.delete();
 			}, 100);
 		}
@@ -678,6 +691,7 @@ export class ItemsManager {
 
 		// this.actor.calculateBallast();
 		//await this.actor.update({system: this.actor.system});
+		this.actor.transferEffects();
 		Hooks.callAll("conditionItemAdded", this.actor);
 	}
 
@@ -707,6 +721,7 @@ export class ItemsManager {
 	 */
 	async updateCondition(condition) {
 		console.log("updateCondition");
+		let changes = false;
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
 				let found = false;
@@ -715,9 +730,17 @@ export class ItemsManager {
 				].values.standard.additions.forEach((modifier) => {
 					if (modifier.source == condition._id) {
 						console.log("Updating existing mod");
-						modifier.value =
+						if (
+							modifier.value !=
 							condition.system.attributes[key] *
-							condition.system.value;
+								condition.system.value
+						) {
+							modifier.value =
+								condition.system.attributes[key] *
+								condition.system.value;
+							changes = true;
+						}
+
 						found = true;
 					}
 				});
@@ -731,11 +754,13 @@ export class ItemsManager {
 						condition.name
 					);
 					this.actor.addAttributeModifier(key, modifier);
+					changes = true;
 				}
 			}
 		});
 		this.actor.calculateBallast();
 		await this.actor.calculateAttributeTotals(false);
+		if (changes) this.actor.transferEffects();
 		console.log(this);
 	}
 
