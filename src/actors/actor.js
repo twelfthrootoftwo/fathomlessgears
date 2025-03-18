@@ -61,7 +61,7 @@ export class HLMActor extends Actor {
 			console.log("Hook received");
 			setTimeout(() => {
 				this.applyConditions();
-			}, 1000);
+			}, 2000);
 		});
 		this.applyConditions();
 		this.calculateBallast();
