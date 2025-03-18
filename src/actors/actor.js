@@ -236,10 +236,10 @@ export class HLMActor extends Actor {
 			try {
 				const conditionNames = [];
 				let effectArray = this.effects.contents;
-				let somethingChanged = false;
-				for (let i in effectArray) {
-					console.log("Something in effect array");
-					let activeEffect = effectArray[i];
+				//let somethingChanged = false;
+				for (let activeEffect of effectArray) {
+					console.log("Effect array");
+					//let activeEffect = effectArray[i];
 					let conditionName = activeEffect.statuses
 						.values()
 						.next().value;
@@ -251,28 +251,28 @@ export class HLMActor extends Actor {
 					) {
 						console.log("Needs a counter");
 						await quickCreateCounter(activeEffect, false);
-						somethingChanged = true;
+						//somethingChanged = true;
 					}
-					console.log(game.availableConditionItems);
+					console.log(activeEffect);
 					if (
 						Array.from(
 							game.availableConditionItems?.keys()
 						).includes(conditionName)
 					) {
 						console.log("Apply!");
-						somethingChanged =
-							(await this.applySingleActiveEffect(
-								activeEffect
-							)) || somethingChanged;
+						await this.applySingleActiveEffect(activeEffect);
+						console.log("Apply done");
 					}
 				}
-				somethingChanged =
-					(await this.removeInactiveEffects(conditionNames)) ||
-					somethingChanged;
+
+				//await this.removeInactiveEffects(conditionNames)
+
 				this.updatingConditions = false;
 				if (this.queueApply) {
 					this.queueApply = false;
 					this.applyConditions();
+				} else {
+					this.transferEffects();
 				}
 				// if(somethingChanged) {
 				// 	setTimeout(() => {
@@ -290,7 +290,7 @@ export class HLMActor extends Actor {
 
 	async applySingleActiveEffect(activeEffect) {
 		console.log("applySingleActiveEffect");
-		let wasChanged = false;
+		//let wasChanged = false;
 		if (this.queuedEffects.includes(activeEffect.name)) return;
 		let effectCounter = foundry.utils.getProperty(
 			activeEffect,
@@ -301,63 +301,68 @@ export class HLMActor extends Actor {
 
 		const effectValue = Math.max(Math.min(counterValue, 3), -3);
 
-		const existingCondition =
-			this.itemsManager.findConditionByStatus(statusName);
+		const templateCondition = await findConditionFromStatus(statusName);
+		templateCondition.system.value = effectValue;
 
-		if (!existingCondition) {
-			console.log("Needs new item");
-			this.queuedEffects.push(activeEffect.name);
-			let newCondition = await findConditionFromStatus(statusName);
-			if (newCondition) {
-				if (newCondition.system.value)
-					newCondition.system.value = effectValue;
-				await this.itemsManager
-					.applyNewCondition(newCondition)
-					.then(() => {
-						if (
-							this.getFlag(
-								"fathomlessgears",
-								"originalActorReference"
-							) ||
-							this.getFlag(
-								"fathomlessgears",
-								"ballastActorReference"
-							)
-						) {
-							// setTimeout(() => {
-							// 	this.transferEffects();
-							// },400)
-						}
-					});
+		// const existingCondition =
+		// 	this.itemsManager.findConditionByStatus(statusName);
 
-				this.queuedEffects.filter((name) => name != activeEffect.name);
-			}
-		} else if (existingCondition && existingCondition.system.value) {
-			if (existingCondition.system.value != effectValue) {
-				console.log("Changing value");
-				this.queuedEffects.push(activeEffect.name);
-				existingCondition.system.value = effectValue;
-				await existingCondition
-					.update({"system.value": effectValue})
-					.then(() => {
-						// if (
-						// 	this.getFlag("fathomlessgears", "originalActorReference") ||
-						// 	this.getFlag("fathomlessgears", "ballastActorReference")
-						// ) {
-						// 	// setTimeout(() => {
-						// 	// 	this.transferEffects();
-						// 	// },400)
-						// }
-						this.queuedEffects.filter(
-							(name) => name != activeEffect.name
-						);
-					});
-				wasChanged = true;
-			}
-			await this.itemsManager.updateCondition(existingCondition);
-			//this.itemsManager.applyCondition(existingCondition);
-		}
-		return wasChanged;
+		// if (!existingCondition) {
+		// 	console.log("Needs new item");
+		// 	this.queuedEffects.push(activeEffect.name);
+		// 	let newCondition = await findConditionFromStatus(statusName);
+		// 	if (newCondition) {
+		// 		if (newCondition.system.value)
+		// 			newCondition.system.value = effectValue;
+		// 		await this.itemsManager
+		// 			.applyNewCondition(newCondition)
+		// 			.then(() => {
+		// 				if (
+		// 					this.getFlag(
+		// 						"fathomlessgears",
+		// 						"originalActorReference"
+		// 					) ||
+		// 					this.getFlag(
+		// 						"fathomlessgears",
+		// 						"ballastActorReference"
+		// 					)
+		// 				) {
+		// 					// setTimeout(() => {
+		// 					// 	this.transferEffects();
+		// 					// },400)
+		// 				}
+		// 			});
+
+		// 		this.queuedEffects.filter((name) => name != activeEffect.name);
+		// 	}
+		// } else if (existingCondition && existingCondition.system.value) {
+		// 	if (existingCondition.system.value != effectValue) {
+		// 		console.log("Changing value");
+		// 		this.queuedEffects.push(activeEffect.name);
+		// 		existingCondition.system.value = effectValue;
+		// 		await existingCondition
+		// 			.update({"system.value": effectValue})
+		// 			.then(() => {
+		// 				// if (
+		// 				// 	this.getFlag("fathomlessgears", "originalActorReference") ||
+		// 				// 	this.getFlag("fathomlessgears", "ballastActorReference")
+		// 				// ) {
+		// 				// 	// setTimeout(() => {
+		// 				// 	// 	this.transferEffects();
+		// 				// 	// },400)
+		// 				// }
+		// 				this.queuedEffects.filter(
+		// 					(name) => name != activeEffect.name
+		// 				);
+		// 			});
+		// 		wasChanged = true;
+		// 	}
+		// 	await this.itemsManager.updateCondition(existingCondition);
+		// 	//this.itemsManager.applyCondition(existingCondition);
+		// }
+		await this.itemsManager.updateCondition(templateCondition);
+		console.log("applySingle done");
+		//return wasChanged;
 		// if (
 		// 	existingCondition &&
 		// 	ATTRIBUTE_ONLY_CONDITIONS.includes(statusName) &&
@@ -565,7 +570,7 @@ export class HLMActor extends Actor {
 	/**
 	 * Compute the actor's ballast value
 	 */
-	calculateBallast() {
+	calculateBallast(update = false) {
 		const ballast = this.system.attributes.ballast;
 		const weight = this.system.attributes.weight;
 
@@ -591,10 +596,11 @@ export class HLMActor extends Actor {
 		if (ballast.total < BALLAST_MIN) ballast.total = BALLAST_MIN;
 		if (ballast.total > BALLAST_MAX) ballast.total = BALLAST_MAX;
 
-		this.update(
-			"system.attributes.ballast",
-			this.system.attributes.ballast
-		);
+		if (update) {
+			this.update({
+				"system.attributes.ballast": this.system.attributes.ballast
+			});
+		}
 
 		return ballast;
 	}

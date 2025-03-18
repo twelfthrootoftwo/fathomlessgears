@@ -240,7 +240,7 @@ export class ItemsManager {
 		//Create new size item
 		const item = await Item.create(frame, {parent: this.actor});
 		this.actor.system.frame = item._id;
-		this.actor.calculateBallast();
+		this.actor.calculateBallast(true);
 
 		//Resize token if needed
 		if (item.name == "Jolly Roger") {
@@ -318,7 +318,7 @@ export class ItemsManager {
 			this.applyAllDeepWords();
 		}
 
-		this.actor.calculateBallast();
+		this.actor.calculateBallast(true);
 
 		await this.actor.update({system: this.actor.system});
 		Hooks.callAll("internalAdded", this.actor);
@@ -459,7 +459,7 @@ export class ItemsManager {
 		if (item.system.repair_kits) {
 			this.actor.modifyResourceValue("repair", item.system.repair_kits);
 		}
-		this.actor.calculateBallast();
+		this.actor.calculateBallast(true);
 
 		await this.actor.update({system: this.actor.system});
 		return item._id;
@@ -670,27 +670,8 @@ export class ItemsManager {
 	 */
 	async applyNewCondition(condition) {
 		console.log("applyNewCondition");
-		const item = await Item.create(condition, {parent: this.actor});
-		this.applyCondition(item);
-
-		//Apply attributes
-		// Object.keys(condition.system.attributes).forEach((key) => {
-		// 	if (
-		// 		Utils.isAttribute(key) &&
-		// 		condition.system.attributes[key] != 0
-		// 	) {
-		// 		const modifier = new AttributeElement(
-		// 			condition.system.attributes[key] * condition.system.value,
-		// 			item._id,
-		// 			"condition",
-		// 			condition.name
-		// 		);
-		// 		this.actor.addAttributeModifier(key, modifier);
-		// 	}
-		// });
-
-		// this.actor.calculateBallast();
-		//await this.actor.update({system: this.actor.system});
+		//const item = await Item.create(condition, {parent: this.actor});
+		this.applyCondition(condition);
 		this.actor.transferEffects();
 		Hooks.callAll("conditionItemAdded", this.actor);
 	}
@@ -757,11 +738,12 @@ export class ItemsManager {
 					changes = true;
 				}
 			}
+			//this.actor.calculateSingleAttribute(key);
 		});
-		this.actor.calculateBallast();
-		await this.actor.calculateAttributeTotals(false);
+		// this.actor.calculateBallast();
+		// await this.actor.calculateAttributeTotals(false);
 		if (changes) this.actor.transferEffects();
-		console.log(this);
+		console.log("updateCondition done");
 	}
 
 	/**
