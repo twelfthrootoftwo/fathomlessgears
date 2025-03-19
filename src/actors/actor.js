@@ -156,7 +156,6 @@ export class HLMActor extends Actor {
 			game.user.id == this.firstOwner().id &&
 			!this.isTransferring
 		) {
-			this.isTransferring = true;
 			console.log("transferEffects");
 			let thisIsBallast = Boolean(
 				this.getFlag("fathomlessgears", "originalActorReference")
@@ -173,6 +172,7 @@ export class HLMActor extends Actor {
 				: pairedActor?.getBallastTokens();
 			if (!pairedTokens || pairedTokens.length == 0) return;
 
+			this.isTransferring = true;
 			for (let effect of thisEffects) {
 				if (effect.statuses.has("ballast")) continue;
 				let matchingEffect = pairedEffects.find(
