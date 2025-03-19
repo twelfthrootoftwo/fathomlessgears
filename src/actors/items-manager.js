@@ -672,7 +672,7 @@ export class ItemsManager {
 		console.log("applyNewCondition");
 		//const item = await Item.create(condition, {parent: this.actor});
 		this.applyCondition(condition);
-		this.actor.transferEffects();
+		//this.actor.transferEffects();
 		Hooks.callAll("conditionItemAdded", this.actor);
 	}
 
@@ -702,7 +702,7 @@ export class ItemsManager {
 	 */
 	async updateCondition(condition) {
 		console.log("updateCondition");
-		let changes = false;
+		//let changes = false;
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
 				let found = false;
@@ -735,14 +735,14 @@ export class ItemsManager {
 						condition.name
 					);
 					this.actor.addAttributeModifier(key, modifier);
-					changes = true;
+					//changes = true;
 				}
 			}
 			//this.actor.calculateSingleAttribute(key);
 		});
 		// this.actor.calculateBallast();
 		// await this.actor.calculateAttributeTotals(false);
-		if (changes) this.actor.transferEffects();
+		//if (changes) this.actor.transferEffects();
 		console.log("updateCondition done");
 	}
 

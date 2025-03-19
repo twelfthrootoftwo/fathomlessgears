@@ -57,12 +57,14 @@ export class HLMActor extends Actor {
 		this.itemsManager = new ItemsManager(this);
 
 		this.queuedEffects = [];
+
 		Hooks.on("conditionListReady", () => {
 			console.log("Hook received");
 			setTimeout(() => {
 				this.applyConditions();
 			}, 2000);
 		});
+
 		this.applyConditions();
 		this.calculateBallast();
 	}
@@ -102,7 +104,6 @@ export class HLMActor extends Actor {
 
 	/** @inheritdoc */
 	applyActiveEffects() {
-		console.log("applyActiveEffects");
 		super.applyActiveEffects();
 		// if (this.firstOwner() && game.availableConditionItems) {
 		// 	if (
@@ -121,7 +122,6 @@ export class HLMActor extends Actor {
 
 	/** @inheritdoc */
 	update(data, options) {
-		console.log(data);
 		for (const [key, value] of Object.entries(data)) {
 			if (key == "system.attributes") {
 				//All attributes
@@ -150,7 +150,13 @@ export class HLMActor extends Actor {
 	}
 
 	async transferEffects() {
-		if (this.firstOwner() && game.user.id == this.firstOwner().id) {
+		console.log("Trying transfer");
+		if (
+			this.firstOwner() &&
+			game.user.id == this.firstOwner().id &&
+			!this.isTransferring
+		) {
+			this.isTransferring = true;
 			console.log("transferEffects");
 			let thisIsBallast = Boolean(
 				this.getFlag("fathomlessgears", "originalActorReference")
@@ -173,9 +179,9 @@ export class HLMActor extends Actor {
 					(pairedEffect) => pairedEffect.name == effect.name
 				);
 				if (!matchingEffect) {
+					console.log("New condition");
 					const statusKey = effect.statuses.values().next().value;
 					const newEffect = await findConditionEffect(statusKey);
-					console.log(newEffect);
 					await pairedTokens[0].toggleActiveEffect(newEffect);
 					const createdEffect =
 						pairedTokens[0].actor.appliedEffects.filter(
@@ -209,14 +215,33 @@ export class HLMActor extends Actor {
 					(thisEffect) => thisEffect.name == effect.name
 				);
 				if (!matchingEffect) {
+					console.log("No matching condition");
 					const statusKey = effect.statuses.values().next().value;
 					const effectId = findConditionEffect(statusKey);
 					await pairedTokens[0].toggleActiveEffect(effectId);
 				}
 			}
+			this.isTransferring = false;
 		} else {
 			console.log("Not first owner");
 		}
+	}
+
+	async getPairedTokenValue(targetEffect) {
+		let thisIsBallast = Boolean(
+			this.getFlag("fathomlessgears", "originalActorReference")
+		);
+		let pairedActorId = thisIsBallast
+			? this.getFlag("fathomlessgears", "originalActorReference")
+			: this.getFlag("fathomlessgears", "ballastActorReference");
+		let pairedActor = fromUuidSync(pairedActorId);
+		if (!pairedActor) return;
+		let pairedEffects = pairedActor.appliedEffects;
+		let matchingEffect = pairedEffects.find(
+			(effect) => effect.name == targetEffect.name
+		);
+		if (!matchingEffect) return;
+		return matchingEffect.getFlag("statuscounter", "counter")?.value;
 	}
 
 	async applyConditions() {
@@ -231,14 +256,12 @@ export class HLMActor extends Actor {
 
 		//if (this.firstOwner() && game.user.id == this.firstOwner().id) {
 		if (!this.updatingConditions && game.availableConditionItems) {
-			console.log("Not already updating");
 			this.updatingConditions = true;
 			try {
 				const conditionNames = [];
 				let effectArray = this.effects.contents;
 				//let somethingChanged = false;
 				for (let activeEffect of effectArray) {
-					console.log("Effect array");
 					//let activeEffect = effectArray[i];
 					let conditionName = activeEffect.statuses
 						.values()
@@ -249,11 +272,9 @@ export class HLMActor extends Actor {
 						NUMBERED_CONDITIONS.includes(conditionName) &&
 						!activeEffect.flags.statuscounter
 					) {
-						console.log("Needs a counter");
 						await quickCreateCounter(activeEffect, false);
 						//somethingChanged = true;
 					}
-					console.log(activeEffect);
 					if (
 						Array.from(
 							game.availableConditionItems?.keys()
@@ -272,7 +293,8 @@ export class HLMActor extends Actor {
 					this.queueApply = false;
 					this.applyConditions();
 				} else {
-					this.transferEffects();
+					//console.log("Transfer from apply")
+					//this.transferEffects();
 				}
 				// if(somethingChanged) {
 				// 	setTimeout(() => {
@@ -296,7 +318,9 @@ export class HLMActor extends Actor {
 			activeEffect,
 			"flags.statuscounter.counter"
 		);
-		const counterValue = effectCounter.value;
+		const counterValue = effectCounter.value
+			? effectCounter.value
+			: await this.getPairedTokenValue(activeEffect);
 		const statusName = activeEffect.statuses.values().next().value;
 
 		const effectValue = Math.max(Math.min(counterValue, 3), -3);
@@ -409,7 +433,10 @@ export class HLMActor extends Actor {
 				wasChanged = true;
 			}
 		}
-		if (wasChanged) this.transferEffects();
+		if (wasChanged) {
+			//console.log("Transfer from remove")
+			//this.transferEffects();
+		}
 		return wasChanged;
 	}
 
