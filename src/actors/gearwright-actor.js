@@ -108,6 +108,10 @@ async function applyFrame(importData, actor, gridObject) {
 		const unlocks = [];
 		unlocks.push(...frame.system.default_unlocks);
 		gridObject.applyUnlocksById(unlocks);
+	} else {
+		ui.notifications.alert(
+			`Could not find frame ${importData.frame}, skipping`
+		);
 	}
 }
 
@@ -119,6 +123,10 @@ async function applySize(importData, actor) {
 	}
 	if (size) {
 		await actor.itemsManager.applySize(size);
+	} else {
+		ui.notifications.alert(
+			`Could not find size ${importData.size}, skipping`
+		);
 	}
 }
 
@@ -139,31 +147,37 @@ async function applyInternals(importData, actor, gridObject) {
 		console.log(`Region ${key}`);
 
 		for (const internalIdentifier of internals) {
-			const internal = await Utils.findCompendiumItemFromName(
-				targetCompendium,
-				Utils.capitaliseWords(
-					Utils.fromLowerHyphen(internalIdentifier.internal_name)
-				)
-			);
-			if (internal) {
-				const internalId =
-					await actor.itemsManager.applyInternal(internal);
-				const spaces = identifyInternalSpaces(
-					internal,
-					targetRegion,
-					internalIdentifier.slot.x +
-						internalIdentifier.slot.y * targetRegion.width
+			if (internalIdentifier.internal_name) {
+				const internal = await Utils.findCompendiumItemFromName(
+					targetCompendium,
+					Utils.capitaliseWords(
+						Utils.fromLowerHyphen(internalIdentifier.internal_name)
+					)
 				);
-				spaces.forEach((id) => {
-					const space = gridObject.findGridSpace(id);
-					space.setInternal(
-						internalId,
-						`${internal.system.type}Internal`
+				if (internal) {
+					const internalId =
+						await actor.itemsManager.applyInternal(internal);
+					const spaces = identifyInternalSpaces(
+						internal,
+						targetRegion,
+						internalIdentifier.slot.x +
+							internalIdentifier.slot.y * targetRegion.width
 					);
-					console.log(
-						`Setting space ${id} to internal ${internalId}`
+					spaces.forEach((id) => {
+						const space = gridObject.findGridSpace(id);
+						space.setInternal(
+							internalId,
+							`${internal.system.type}Internal`
+						);
+						console.log(
+							`Setting space ${id} to internal ${internalId}`
+						);
+					});
+				} else {
+					ui.notifications.alert(
+						`Could not find internal ${internalIdentifier.internal_name}, skipping`
 					);
-				});
+				}
 			}
 		}
 	}
@@ -171,6 +185,7 @@ async function applyInternals(importData, actor, gridObject) {
 
 async function applyTemplate(importData, actor) {
 	const template = {attributes: {}};
+	if (!templateName) return;
 	const templateName = Utils.capitaliseWords(
 		Utils.fromLowerHyphen(importData.template)
 	);
@@ -191,10 +206,19 @@ async function applyTemplate(importData, actor) {
 
 async function applyBackground(importData, actor) {
 	const backgroundName = importData.background;
+	if (!backgroundName) return;
 	const backgroundBase = await Utils.findCompendiumItemFromName(
 		"background",
 		Utils.capitaliseWords(Utils.fromLowerHyphen(backgroundName))
 	);
+
+	if (!backgroundBase) {
+		ui.notifications.alert(
+			`Could not find background ${importData.background}, skipping`
+		);
+		return;
+	}
+
 	const background = foundry.utils.deepClone(backgroundBase.system);
 
 	if (backgroundName == "custom") {
@@ -223,31 +247,55 @@ async function applyAdditionalFisher(importData, actor) {
 	const developments = importData.developments;
 	let targetCompendium = "development";
 	for (const developmentName of developments) {
-		const development = await Utils.findCompendiumItemFromName(
-			targetCompendium,
-			Utils.capitaliseWords(Utils.fromLowerHyphen(developmentName))
-		);
-		await actor.itemsManager.applyDevelopment(development);
+		if (developmentName) {
+			const development = await Utils.findCompendiumItemFromName(
+				targetCompendium,
+				Utils.capitaliseWords(Utils.fromLowerHyphen(developmentName))
+			);
+			if (development) {
+				await actor.itemsManager.applyDevelopment(development);
+			} else {
+				ui.notifications.alert(
+					`Could not find development ${developmentName}, skipping`
+				);
+			}
+		}
 	}
 
 	const maneuvers = importData.maneuvers;
 	targetCompendium = "maneuver";
 	for (const maneuverName of maneuvers) {
-		const maneuver = await Utils.findCompendiumItemFromName(
-			targetCompendium,
-			Utils.capitaliseWords(Utils.fromLowerHyphen(maneuverName))
-		);
-		await actor.itemsManager.applyManeuver(maneuver);
+		if (maneuverName) {
+			const maneuver = await Utils.findCompendiumItemFromName(
+				targetCompendium,
+				Utils.capitaliseWords(Utils.fromLowerHyphen(maneuverName))
+			);
+			if (maneuver) {
+				await actor.itemsManager.applyManeuver(maneuver);
+			} else {
+				ui.notifications.alert(
+					`Could not find maneuver ${maneuverName}, skipping`
+				);
+			}
+		}
 	}
 
 	const words = importData.deep_words;
 	targetCompendium = "deep_word";
 	for (const wordName of words) {
-		const word = await Utils.findCompendiumItemFromName(
-			targetCompendium,
-			DEEPWORD_NAME_MAP[wordName]
-		);
-		await actor.itemsManager.applyDeepWord(word);
+		if (wordName) {
+			const word = await Utils.findCompendiumItemFromName(
+				targetCompendium,
+				DEEPWORD_NAME_MAP[wordName]
+			);
+			if (word) {
+				await actor.itemsManager.applyDeepWord(word);
+			} else {
+				ui.notifications.alert(
+					`Could not find deep word ${wordName}, skipping`
+				);
+			}
+		}
 	}
 }
 
