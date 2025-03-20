@@ -139,11 +139,11 @@ export class ItemsManager {
 	 * @param {string} itemName The name of the target item
 	 */
 	findConditionByStatus(statusId) {
-		let existing = this.actor.itemTypes.condition;
+		let existing = this.actor.effects;
 		let target = null;
-		existing.forEach((item) => {
-			if (item.system.effectName == statusId) {
-				target = item;
+		existing.forEach((effect) => {
+			if (effect.statuses.has(statusId)) {
+				target = effect;
 			}
 		});
 		return target;
