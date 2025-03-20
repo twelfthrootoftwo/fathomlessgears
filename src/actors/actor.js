@@ -29,7 +29,6 @@ import {
 export class HLMActor extends Actor {
 	/** @inheritdoc */
 	prepareDerivedData() {
-		console.log("prepareDerivedData");
 		super.prepareDerivedData();
 		if (this.getFlag("fathomlessgears", "interactiveGrid")) {
 			this.grid = new Grid(this.system.grid);
@@ -59,7 +58,6 @@ export class HLMActor extends Actor {
 		this.queuedEffects = [];
 
 		Hooks.on("conditionListReady", () => {
-			console.log("Hook received");
 			setTimeout(() => {
 				this.applyConditions();
 			}, 2000);
@@ -121,7 +119,7 @@ export class HLMActor extends Actor {
 	}
 
 	/** @inheritdoc */
-	update(data, options) {
+	async update(data, options) {
 		for (const [key, value] of Object.entries(data)) {
 			if (key == "system.attributes") {
 				//All attributes
@@ -146,17 +144,16 @@ export class HLMActor extends Actor {
 				data[key] = attrData;
 			}
 		}
-		super.update(data, options).then(() => this.applyConditions());
+		await super.update(data, options);
+		this.applyConditions();
 	}
 
 	async transferEffects() {
-		console.log("Trying transfer");
 		if (
 			this.firstOwner() &&
 			game.user.id == this.firstOwner().id &&
 			!this.isTransferring
 		) {
-			console.log("transferEffects");
 			let thisIsBallast = Boolean(
 				this.getFlag("fathomlessgears", "originalActorReference")
 			);
@@ -179,7 +176,6 @@ export class HLMActor extends Actor {
 					(pairedEffect) => pairedEffect.name == effect.name
 				);
 				if (!matchingEffect) {
-					console.log("New condition");
 					const statusKey = effect.statuses.values().next().value;
 					const newEffect = await findConditionEffect(statusKey);
 					await pairedTokens[0].toggleActiveEffect(newEffect);
@@ -215,7 +211,6 @@ export class HLMActor extends Actor {
 					(thisEffect) => thisEffect.name == effect.name
 				);
 				if (!matchingEffect) {
-					console.log("No matching condition");
 					const statusKey = effect.statuses.values().next().value;
 					const effectId = findConditionEffect(statusKey);
 					await pairedTokens[0].toggleActiveEffect(effectId);
@@ -246,13 +241,12 @@ export class HLMActor extends Actor {
 
 	async applyConditions() {
 		if (!game.availableConditionItems) {
-			console.log("Conditios not ready yet");
+			console.log("Conditions not ready yet");
 			return;
 		}
 		if (!this.itemsManager) {
 			this.itemsManager = new ItemsManager(this);
 		}
-		console.log("applyConditions");
 
 		//if (this.firstOwner() && game.user.id == this.firstOwner().id) {
 		if (!this.updatingConditions && game.availableConditionItems) {
@@ -280,9 +274,7 @@ export class HLMActor extends Actor {
 							game.availableConditionItems?.keys()
 						).includes(conditionName)
 					) {
-						console.log("Apply!");
 						await this.applySingleActiveEffect(activeEffect);
-						console.log("Apply done");
 					}
 				}
 
@@ -385,7 +377,6 @@ export class HLMActor extends Actor {
 		// 	//this.itemsManager.applyCondition(existingCondition);
 		// }
 		await this.itemsManager.updateCondition(templateCondition);
-		console.log("applySingle done");
 		//return wasChanged;
 		// if (
 		// 	existingCondition &&
@@ -591,6 +582,8 @@ export class HLMActor extends Actor {
 			this.system.resources[resourceKey].value = 0;
 		if (this.system.resources[resourceKey].max < 0)
 			this.system.resources[resourceKey].max = 0;
+		console.log("In modify:");
+		console.log(this.system.resources[resourceKey]);
 		return true;
 	}
 

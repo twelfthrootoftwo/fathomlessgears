@@ -509,11 +509,11 @@ export class ItemsManager {
 				"marbles",
 				-oldBackground.system.marbles
 			);
-			oldBackground?.delete();
 			await this.actor.update({
 				"system.attributes": this.actor.system.attributes,
 				"system.resources": this.actor.system.resources
 			});
+			oldBackground?.delete();
 		}
 	}
 
@@ -532,7 +532,7 @@ export class ItemsManager {
 		if (originalMarbles) {
 			this.actor.system.resources.marbles.value = originalMarbles;
 		}
-		this.actor.update({
+		await this.actor.update({
 			"system.attributes": this.actor.system.attributes,
 			"system.resources": this.actor.system.resources
 		});

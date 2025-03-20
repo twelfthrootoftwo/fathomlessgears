@@ -27,6 +27,7 @@ export async function populateActorFromGearwright(actor, data) {
 		return false;
 	}
 	console.log("Importing actor from gearwright");
+	actor.isImporting = true;
 	document
 		.querySelector(`#HLMActorSheet-Actor-${actor._id}`)
 		?.classList.add("waiting");
@@ -43,6 +44,7 @@ export async function populateActorFromGearwright(actor, data) {
 	document
 		.querySelector(`#HLMActorSheet-Actor-${actor._id}`)
 		?.classList.remove("waiting");
+	actor.isImporting = false;
 }
 
 async function buildFisher(actor, data) {
@@ -168,9 +170,6 @@ async function applyInternals(importData, actor, gridObject) {
 						space.setInternal(
 							internalId,
 							`${internal.system.type}Internal`
-						);
-						console.log(
-							`Setting space ${id} to internal ${internalId}`
 						);
 					});
 				} else {
