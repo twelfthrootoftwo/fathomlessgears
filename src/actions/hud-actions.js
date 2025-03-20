@@ -67,6 +67,11 @@ export class HUDActionCollection {
 			.then((createdTokenList) => {
 				createdTokenList.forEach(async (createdToken) => {
 					createdToken.update({height: 1, width: 1});
+					await createdToken.setFlag(
+						"fathomlessgears",
+						"ballastToken",
+						true
+					);
 					let originalToken = tokens.filter(
 						(token) =>
 							token.document.baseActor._id ==
@@ -102,12 +107,12 @@ export class HUDActionCollection {
 						effectCounter.value =
 							createdToken.actor.system.attributes.ballast.total;
 					}
-					effect.setFlag("statuscounter", "counter", effectCounter);
-					createdToken.setFlag(
-						"fathomlessgears",
-						"ballastToken",
-						true
+					await effect.setFlag(
+						"statuscounter",
+						"counter",
+						effectCounter
 					);
+
 					if (!originalToken.isLinked) {
 						createdToken.actor.setFlag(
 							"fathomlessgears",
@@ -119,6 +124,12 @@ export class HUDActionCollection {
 							"ballastActorReference",
 							createdToken.actor.uuid
 						);
+					} else {
+						let createdTokenDrawn = canvas.tokens.placeables.filter(
+							(token) => token.document.id == createdToken.id
+						)[0];
+						createdTokenDrawn.drawEffects();
+						//createdToken.update({});
 					}
 				});
 			});
