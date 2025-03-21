@@ -186,14 +186,14 @@ export const DEEPWORD_NAME_MAP = {
 
 export const TEMPLATE = {
 	common: "Common",
-	abberant: "Abberant",
+	aberrant: "Aberrant",
 	deepspawn: "Deepspawn",
 	elder: "Elder Deepspawn"
 };
 
 export const TEMPLATE_WEIGHT = {
 	[TEMPLATE.common]: 0,
-	[TEMPLATE.abberant]: 5,
+	[TEMPLATE.aberrant]: 5,
 	[TEMPLATE.deepspawn]: 10,
 	[TEMPLATE.elder]: 20
 };

@@ -184,7 +184,7 @@ async function applyInternals(importData, actor, gridObject) {
 
 async function applyTemplate(importData, actor) {
 	const template = {attributes: {}};
-	if (!templateName) return;
+	if (!importData.template) return;
 	const templateName = Utils.capitaliseWords(
 		Utils.fromLowerHyphen(importData.template)
 	);
