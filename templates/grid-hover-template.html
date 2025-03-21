@@ -15,6 +15,15 @@
                 <p>{{localize "ATTRIBUTES.speed"}} {{grid.actor.system.attributes.speed.total}}</p>
                 <p>{{localize "ATTRIBUTES.sensors"}} {{grid.actor.system.attributes.sensors.total}}</p>
                 <p>{{localize "ATTRIBUTES.baseAP"}} {{grid.actor.system.attributes.baseAP.total}}</p>
+                <p> -</p>
+                {{#ifcond grid.actor.type "==" 'fisher'}}
+                <p>{{localize "RESOURCES.repair"}} {{grid.actor.system.resources.repair.value}}/{{grid.actor.system.resources.repair.max}}</p>
+                <p>{{localize "RESOURCES.core"}} {{grid.actor.system.resources.core.value}}/{{grid.actor.system.resources.core.max}}</p>
+                {{/ifcond}}
+                {{#ifcond grid.actor.type "==" 'fish'}}
+                <p>{{localize "ATTRIBUTES.weight"}} {{grid.actor.system.attributes.weight.total}}</p>
+                <p>{{grid.actor.system.template}}</p>
+                {{/ifcond}}
             </div>
         </div>
         <div class="flex-1">
