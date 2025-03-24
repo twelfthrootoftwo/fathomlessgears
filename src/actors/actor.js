@@ -101,24 +101,6 @@ export class HLMActor extends Actor {
 	}
 
 	/** @inheritdoc */
-	applyActiveEffects() {
-		super.applyActiveEffects();
-		// if (this.firstOwner() && game.availableConditionItems) {
-		// 	if (
-		// 		this.getFlag("fathomlessgears", "originalActorReference") ||
-		// 		this.getFlag("fathomlessgears", "ballastActorReference")
-		// 	) {
-		// 		setTimeout(() => {
-		// 			this.transferEffects();
-		// 		}, 100);
-		// 	}
-		// 	// setTimeout(() => {
-		// 	// 	this.applyConditions();
-		// 	// }, 100);
-		// }
-	}
-
-	/** @inheritdoc */
 	async update(data, options) {
 		for (const [key, value] of Object.entries(data)) {
 			if (key == "system.attributes") {
@@ -248,15 +230,12 @@ export class HLMActor extends Actor {
 			this.itemsManager = new ItemsManager(this);
 		}
 
-		//if (this.firstOwner() && game.user.id == this.firstOwner().id) {
 		if (!this.updatingConditions && game.availableConditionItems) {
 			this.updatingConditions = true;
 			try {
 				const conditionNames = [];
 				let effectArray = this.effects.contents;
-				//let somethingChanged = false;
 				for (let activeEffect of effectArray) {
-					//let activeEffect = effectArray[i];
 					let conditionName = activeEffect.statuses
 						.values()
 						.next().value;
@@ -266,8 +245,8 @@ export class HLMActor extends Actor {
 						NUMBERED_CONDITIONS.includes(conditionName) &&
 						!activeEffect.flags.statuscounter
 					) {
-						await quickCreateCounter(activeEffect, false);
-						//somethingChanged = true;
+						await timeout(200);
+						activeEffect = await fromUuid(activeEffect.uuid);
 					}
 					if (
 						Array.from(
@@ -278,21 +257,11 @@ export class HLMActor extends Actor {
 					}
 				}
 
-				//await this.removeInactiveEffects(conditionNames)
-
 				this.updatingConditions = false;
 				if (this.queueApply) {
 					this.queueApply = false;
 					this.applyConditions();
-				} else {
-					//console.log("Transfer from apply")
-					//this.transferEffects();
 				}
-				// if(somethingChanged) {
-				// 	setTimeout(() => {
-				// 		this.transferEffects();
-				// 	},100);
-				// }
 			} catch {
 				this.updatingConditions = false;
 			}
@@ -303,8 +272,6 @@ export class HLMActor extends Actor {
 	}
 
 	async applySingleActiveEffect(activeEffect) {
-		console.log("applySingleActiveEffect");
-		//let wasChanged = false;
 		if (this.queuedEffects.includes(activeEffect.name)) return;
 		let effectCounter = foundry.utils.getProperty(
 			activeEffect,
@@ -319,116 +286,7 @@ export class HLMActor extends Actor {
 
 		const templateCondition = await findConditionFromStatus(statusName);
 		templateCondition.system.value = effectValue;
-
-		// const existingCondition =
-		// 	this.itemsManager.findConditionByStatus(statusName);
-
-		// if (!existingCondition) {
-		// 	console.log("Needs new item");
-		// 	this.queuedEffects.push(activeEffect.name);
-		// 	let newCondition = await findConditionFromStatus(statusName);
-		// 	if (newCondition) {
-		// 		if (newCondition.system.value)
-		// 			newCondition.system.value = effectValue;
-		// 		await this.itemsManager
-		// 			.applyNewCondition(newCondition)
-		// 			.then(() => {
-		// 				if (
-		// 					this.getFlag(
-		// 						"fathomlessgears",
-		// 						"originalActorReference"
-		// 					) ||
-		// 					this.getFlag(
-		// 						"fathomlessgears",
-		// 						"ballastActorReference"
-		// 					)
-		// 				) {
-		// 					// setTimeout(() => {
-		// 					// 	this.transferEffects();
-		// 					// },400)
-		// 				}
-		// 			});
-
-		// 		this.queuedEffects.filter((name) => name != activeEffect.name);
-		// 	}
-		// } else if (existingCondition && existingCondition.system.value) {
-		// 	if (existingCondition.system.value != effectValue) {
-		// 		console.log("Changing value");
-		// 		this.queuedEffects.push(activeEffect.name);
-		// 		existingCondition.system.value = effectValue;
-		// 		await existingCondition
-		// 			.update({"system.value": effectValue})
-		// 			.then(() => {
-		// 				// if (
-		// 				// 	this.getFlag("fathomlessgears", "originalActorReference") ||
-		// 				// 	this.getFlag("fathomlessgears", "ballastActorReference")
-		// 				// ) {
-		// 				// 	// setTimeout(() => {
-		// 				// 	// 	this.transferEffects();
-		// 				// 	// },400)
-		// 				// }
-		// 				this.queuedEffects.filter(
-		// 					(name) => name != activeEffect.name
-		// 				);
-		// 			});
-		// 		wasChanged = true;
-		// 	}
-		// 	await this.itemsManager.updateCondition(existingCondition);
-		// 	//this.itemsManager.applyCondition(existingCondition);
-		// }
 		await this.itemsManager.updateCondition(templateCondition);
-		//return wasChanged;
-		// if (
-		// 	existingCondition &&
-		// 	ATTRIBUTE_ONLY_CONDITIONS.includes(statusName) &&
-		// 	existingCondition.system.value != effectValue
-		// ) {
-		// 	this.queuedEffects.push(activeEffect.name);
-		// 	existingCondition.system.value = effectValue;
-		// 	await existingCondition
-		// 		.update({"system.value": effectValue})
-		// 		.then(() => {
-		// 			this.queuedEffects.filter(
-		// 				(name) => name != activeEffect.name
-		// 			);
-		// 		});
-		// 	await this.itemsManager.updateCondition(existingCondition);
-		// } else if (!existingCondition) {
-		// 	this.queuedEffects.push(activeEffect.name);
-		// 	let newCondition = await findConditionFromStatus(statusName);
-		// 	if (newCondition) {
-		// 		if (newCondition.system.value)
-		// 			newCondition.system.value = effectValue;
-		// 		await this.itemsManager.applyNewCondition(newCondition);
-		// 		this.queuedEffects.filter((name) => name != activeEffect.name);
-		// 	}
-		// }
-	}
-
-	/**
-	 * Removes condition items and attribute modifiers associated with conditions not currently active on this actor
-	 * @param {str[]} activeConditionNames List of condition names that are currently active
-	 */
-	async removeInactiveEffects(activeConditionNames) {
-		let wasChanged = false;
-		for (let existingCondition of this.itemTypes.condition) {
-			if (
-				!activeConditionNames.includes(
-					existingCondition.system.effectName
-				)
-			) {
-				console.log(`Removing condition ${existingCondition.name}`);
-				await this.itemsManager.removeItemCallback(
-					existingCondition._id
-				);
-				wasChanged = true;
-			}
-		}
-		if (wasChanged) {
-			//console.log("Transfer from remove")
-			//this.transferEffects();
-		}
-		return wasChanged;
 	}
 
 	/**

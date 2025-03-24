@@ -663,19 +663,6 @@ export class ItemsManager {
 		}
 	}
 
-	/**
-	 * Adds a condition item to this actor, including any associated attribute modifiers
-	 * This does not apply or update token effects (call addNewTokenEffect)
-	 * @param {Item} condition A new Condition item to duplicate onto this actor
-	 */
-	async applyNewCondition(condition) {
-		console.log("applyNewCondition");
-		//const item = await Item.create(condition, {parent: this.actor});
-		this.applyCondition(condition);
-		//this.actor.transferEffects();
-		Hooks.callAll("conditionItemAdded", this.actor);
-	}
-
 	applyCondition(condition) {
 		//Apply attributes
 		Object.keys(condition.system.attributes).forEach((key) => {
@@ -701,8 +688,6 @@ export class ItemsManager {
 	 * @param {Item} condition The existing condition, updated with the new value
 	 */
 	async updateCondition(condition) {
-		console.log("updateCondition");
-		//let changes = false;
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
 				let found = false;
@@ -735,15 +720,10 @@ export class ItemsManager {
 						condition.name
 					);
 					this.actor.addAttributeModifier(key, modifier);
-					//changes = true;
+					console.log(this.actor);
 				}
 			}
-			//this.actor.calculateSingleAttribute(key);
 		});
-		// this.actor.calculateBallast();
-		// await this.actor.calculateAttributeTotals(false);
-		//if (changes) this.actor.transferEffects();
-		console.log("updateCondition done");
 	}
 
 	/**
