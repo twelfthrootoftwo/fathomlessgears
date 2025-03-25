@@ -354,7 +354,7 @@ export class ItemsManager {
 				}
 			}
 		});
-		this.actor.update({system: this.actor.system});
+		await this.actor.update({system: this.actor.system});
 		this.actor.breakInternalMessage(internal);
 
 		Hooks.callAll("internalBrokenToggled", internal, this.actor);
@@ -404,7 +404,7 @@ export class ItemsManager {
 		if (attributeChanged) {
 			console.log("Updating");
 			this.actor.calculateBallast();
-			this.actor.update({system: this.actor.system});
+			await this.actor.update({system: this.actor.system});
 		}
 
 		//Re-retrieve item in case delete has been called twice as a race condition
@@ -776,7 +776,9 @@ export class ItemsManager {
 				this.actor.addAttributeModifier(key, modifier);
 			}
 		});
-		this.actor.update({"system.attributes": this.actor.system.attributes});
+		await this.actor.update({
+			"system.attributes": this.actor.system.attributes
+		});
 	}
 
 	async toggleInjuryHealed(id) {
