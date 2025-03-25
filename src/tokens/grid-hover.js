@@ -13,7 +13,7 @@ export class GridHoverHUD extends HLMApplication {
 			minimizable: false,
 			resizable: false,
 			popOut: false,
-			width: 450,
+			width: 500,
 			height: 380,
 			template:
 				"systems/fathomlessgears/templates/grid-hover-template.html" // HTML template
