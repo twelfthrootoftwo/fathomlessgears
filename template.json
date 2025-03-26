@@ -212,15 +212,13 @@
 			"frame": "",
 			"gear-name": "",
 			"pilot-portrait": "icons/svg/mystery-man.svg",
-			"grid": "systems/fathomlessgears/assets/blank-grid.jpg",
-			"has-interactive-grid": "false"
+			"grid": "systems/fathomlessgears/assets/blank-grid.jpg"
 		},
 		"fish": {
 			"templates": ["attributes", "ballast", "internals"],
 			"grid": "systems/fathomlessgears/assets/blank-grid-fish.jpg",
 			"gridType": "",
 			"size": "",
-			"has-interactive-grid": "false",
 			"template": "Common"
 		}
 	},
