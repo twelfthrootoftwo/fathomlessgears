@@ -21,7 +21,7 @@
 			"sensors": 0,
 			"ballast": 0
 		},
-		"value": true,
+		"value": -1,
 		"text": "",
 		"limit": 3,
 		"effectName": "doomed"

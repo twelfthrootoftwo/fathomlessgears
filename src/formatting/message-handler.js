@@ -75,7 +75,7 @@ export class MessageHandler {
 
 	formatText(text, context) {
 		this.tagItems.forEach((tag) => {
-			if (tag.system.value) {
+			if (tag.system.value != null) {
 				const re = new RegExp(` ${tag.name} (\\d\\+?)`);
 				const result = re.exec(text);
 				if (result) {

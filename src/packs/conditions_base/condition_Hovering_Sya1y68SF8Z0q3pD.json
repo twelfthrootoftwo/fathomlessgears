@@ -21,7 +21,7 @@
 			"sensors": 0,
 			"ballast": 0
 		},
-		"value": false,
+		"value": null,
 		"text": "",
 		"limit": false,
 		"effectName": "hover"

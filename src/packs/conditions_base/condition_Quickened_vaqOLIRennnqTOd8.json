@@ -21,7 +21,7 @@
 			"sensors": 0,
 			"ballast": -1
 		},
-		"value": true,
+		"value": -1,
 		"text": "",
 		"limit": true,
 		"effectName": "quickened"
