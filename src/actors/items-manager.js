@@ -336,24 +336,27 @@ export class ItemsManager {
 		//Apply attribute changes
 		const isBroken = await internal.isBroken();
 		console.log("Toggling internal to broken state " + isBroken);
-		Object.keys(internal.system.attributes).forEach((key) => {
-			if (
-				key != ATTRIBUTES.weight &&
-				internal.system.attributes[key] != 0
-			) {
-				if (isBroken) {
-					this.actor.removeAttributeModifier(key, uuid);
-				} else {
-					const modifier = new AttributeElement(
-						internal.system.attributes[key],
-						internal._id,
-						"internal",
-						internal.name
-					);
-					this.actor.addAttributeModifier(key, modifier);
+		if (!internal.isSturdy()) {
+			Object.keys(internal.system.attributes).forEach((key) => {
+				if (
+					key != ATTRIBUTES.weight &&
+					internal.system.attributes[key] != 0
+				) {
+					if (isBroken) {
+						this.actor.removeAttributeModifier(key, uuid);
+					} else {
+						const modifier = new AttributeElement(
+							internal.system.attributes[key],
+							internal._id,
+							"internal",
+							internal.name
+						);
+						this.actor.addAttributeModifier(key, modifier);
+					}
 				}
-			}
-		});
+			});
+		}
+
 		await this.actor.update({system: this.actor.system});
 		this.actor.breakInternalMessage(internal);
 
