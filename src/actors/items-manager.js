@@ -714,7 +714,6 @@ export class ItemsManager {
 					}
 				});
 				if (!found) {
-					console.log("Applying new mod");
 					const modifier = new AttributeElement(
 						condition.system.attributes[key] *
 							condition.system.value,
@@ -723,7 +722,6 @@ export class ItemsManager {
 						condition.name
 					);
 					this.actor.addAttributeModifier(key, modifier);
-					console.log(this.actor);
 				}
 			}
 		});

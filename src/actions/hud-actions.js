@@ -93,20 +93,26 @@ export class HUDActionCollection {
 							return effect.statuses.has("ballast");
 						}
 					)[0];
-					let effectCounter = foundry.utils.getProperty(
-						effect,
-						"flags.statuscounter.counter"
+					let effectCounter = new ActiveEffectCounter(
+						createdToken.actor.system.attributes.ballast.total,
+						effect.icon,
+						effect
 					);
-					if (!effectCounter) {
-						effectCounter = new ActiveEffectCounter(
-							createdToken.actor.system.attributes.ballast.total,
-							effect.icon,
-							effect
-						);
-					} else {
-						effectCounter.value =
-							createdToken.actor.system.attributes.ballast.total;
-					}
+					// let effectCounter = foundry.utils.getProperty(
+					// 	effect,
+					// 	"flags.statuscounter.counter"
+					// );
+					// if (!effectCounter) {
+					// 	effectCounter = new ActiveEffectCounter(
+					// 		createdToken.actor.system.attributes.ballast.total,
+					// 		effect.icon,
+					// 		effect
+					// 	);
+					// } else {
+					// 	effectCounter.value =
+					// 		createdToken.actor.system.attributes.ballast.total;
+					// }
+					console.log(effectCounter);
 					await effect.setFlag(
 						"statuscounter",
 						"counter",
@@ -128,7 +134,10 @@ export class HUDActionCollection {
 						let createdTokenDrawn = canvas.tokens.placeables.filter(
 							(token) => token.document.id == createdToken.id
 						)[0];
-						createdTokenDrawn.drawEffects();
+						setTimeout(() => {
+							createdTokenDrawn.drawEffects();
+						}, 100);
+
 						//createdToken.update({});
 					}
 				});

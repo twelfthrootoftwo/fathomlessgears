@@ -245,9 +245,6 @@ export class HLMActor extends Actor {
 						NUMBERED_CONDITIONS.includes(conditionName) &&
 						!activeEffect.flags.statuscounter
 					) {
-						// await quickCreateCounter(activeEffect, false);
-						// await timeout(200);
-						// activeEffect = await fromUuid(activeEffect.uuid);
 						// Create a temp value (this will be overridden when the actual value gets saved)
 						activeEffect.flags.statuscounter = {
 							counter: {
