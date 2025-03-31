@@ -245,12 +245,11 @@ export class HLMActor extends Actor {
 						NUMBERED_CONDITIONS.includes(conditionName) &&
 						!activeEffect.flags.statuscounter
 					) {
-						// Create a temp value (this will be overridden when the actual value gets saved)
-						activeEffect.flags.statuscounter = {
-							counter: {
-								value: 1
-							}
-						};
+						//Wait for the value to be saved
+						await new Promise((resolve) =>
+							setTimeout(resolve, 500)
+						);
+						activeEffect = fromUuidSync(activeEffect.uuid);
 					}
 					if (
 						Array.from(
@@ -272,7 +271,6 @@ export class HLMActor extends Actor {
 		} else {
 			this.queueApply = true;
 		}
-		//}
 	}
 
 	async applySingleActiveEffect(activeEffect) {
@@ -284,10 +282,10 @@ export class HLMActor extends Actor {
 		const counterValue = effectCounter.value
 			? effectCounter.value
 			: await this.getPairedTokenValue(activeEffect);
-		const statusName = activeEffect.statuses.values().next().value;
 
 		const effectValue = Math.max(Math.min(counterValue, 3), -3);
 
+		const statusName = activeEffect.statuses.values().next().value;
 		const templateCondition = await findConditionFromStatus(statusName);
 		templateCondition.system.value = effectValue;
 		await this.itemsManager.updateCondition(templateCondition);
@@ -600,7 +598,9 @@ export class HLMActor extends Actor {
 		const isBroken = await internal.isBroken();
 		ChatMessage.create({
 			whisper: await this.getObservers(),
-			content: `${this.name}'s ${internal.name} ${isBroken ? "breaks!" : "is repaired"}`
+			content: `${this.name}'s ${internal.name} ${
+				isBroken ? "breaks!" : "is repaired"
+			}`
 		});
 	}
 
@@ -659,7 +659,10 @@ export class HLMActor extends Actor {
 			return false;
 		} else {
 			const target = targetSet.values().next().value;
-			const content = `<p class="message-text-only">${game.i18n.localize("MESSAGE.scantarget").replace("_ACTOR_NAME_", this.name).replace("_TARGET_NAME_", target.name)}</p>`;
+			const content = `<p class="message-text-only">${game.i18n
+				.localize("MESSAGE.scantarget")
+				.replace("_ACTOR_NAME_", this.name)
+				.replace("_TARGET_NAME_", target.name)}</p>`;
 			game.tagHandler.createChatMessage(content, this);
 		}
 	}

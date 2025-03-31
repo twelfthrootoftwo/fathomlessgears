@@ -130,16 +130,13 @@ export class HUDActionCollection {
 							"ballastActorReference",
 							createdToken.actor.uuid
 						);
-					} else {
-						let createdTokenDrawn = canvas.tokens.placeables.filter(
-							(token) => token.document.id == createdToken.id
-						)[0];
-						setTimeout(() => {
-							createdTokenDrawn.drawEffects();
-						}, 100);
-
-						//createdToken.update({});
 					}
+					let createdTokenDrawn = canvas.tokens.placeables.filter(
+						(token) => token.document.id == createdToken.id
+					)[0];
+					setTimeout(() => {
+						createdTokenDrawn.drawEffects();
+					}, 500);
 				});
 			});
 	}

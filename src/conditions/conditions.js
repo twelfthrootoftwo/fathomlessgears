@@ -242,8 +242,11 @@ export async function quickCreateCounter(activeEffect, value) {
 			activeEffect.icon,
 			activeEffect
 		);
-	} else if (value) {
+	}
+	if (value) {
 		effectCounter.value = value;
+	} else {
+		effectCounter.value = 1;
 	}
 	effectCounter.visible = NUMBERED_CONDITIONS.includes(
 		activeEffect.statuses.values().next().value

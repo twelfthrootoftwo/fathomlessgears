@@ -657,9 +657,7 @@ export class ItemsManager {
 			});
 		} else {
 			if (condition.system.effectName) {
-				console.log("Starting effect creation");
 				tokens.forEach(async (token) => {
-					console.log("Creating new effect instance");
 					await this.addNewTokenEffect(token, condition);
 				});
 			}
@@ -742,11 +740,10 @@ export class ItemsManager {
 		const effect = token.actor.appliedEffects.filter((appliedEffect) =>
 			appliedEffect.statuses.has(condition.system.effectName)
 		)[0];
-		setTimeout(
-			async () =>
-				await quickCreateCounter(effect, condition.system.value),
-			100
-		);
+		setTimeout(async () => {
+			console.log("Creating new counter");
+			await quickCreateCounter(effect, condition.system.value);
+		}, 100);
 	}
 
 	async dropHistory(history, event) {
