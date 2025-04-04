@@ -1,26 +1,26 @@
-<div class="internal-box flex-col " data-id="id{{item._id}}">
-    <div class="internal-header flex-row">
+<div class="card flex-col " data-id="id{{item._id}}">
+    <div class="card-header flex-row">
         <div class="expander-icon"></div>
-        <h3 class="internal-name">{{item.name}}</h3>
+        <h3 class="card-name">{{item.name}}</h3>
         <div class="spacer"></div>
         {{#if item.isManeuver}}
-            <p class="activated-text">{{localize "SHEET.activated" }}</p>
+            <p class="activated-text font-12">{{localize "SHEET.activated" }}</p>
             <input class="inline-checkbox maneuver-checkbox" type="checkbox" data-selector="activated" data-id="id{{item._id}}" {{checked item.activated}}>
         {{/if}}
         {{#ifcond item.system.ap_cost '!=' null}}
-        <p class="internal-ap">{{item.system.ap_cost}} AP</p>
+        <p class="card-ap font-12">{{item.system.ap_cost}} AP</p>
         {{/ifcond}}
         <div class="btn btn-primary post-button sheet-row-button" data-id="id{{item._id}}">{{localize "SHEET.post"}}</div>
     </div>
     
-    <div class="internal-body">
-        <div class="delete-overlay">
+    <div class="card-body">
+        <!-- <div class="delete-overlay">
             <div class="delete-box">
                 <div class="delete-item btn" data-id="id{{item._id}}">
                     {{localize "SHEET.delete"}}
                 </div>
             </div>
-        </div>
+        </div> -->
         {{#if item.system.attack}}
         {{>
             "systems/fathomlessgears/templates/partials/attack-info.html"
@@ -33,6 +33,6 @@
             tags=item.system.tags
         }}
         {{/if}}
-        <div class="internal-text">{{{item.system.action_text}}}</div>
+        <div class="card-text font-12">{{{item.system.action_text}}}</div>
     </div>
 </div>

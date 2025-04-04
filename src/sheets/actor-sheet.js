@@ -179,9 +179,9 @@ export class HLMActorSheet extends ActorSheet {
 			)
 		) {
 			Utils.activateButtons(html);
-			html.find(".internal-body").each(function () {
-				this.classList.add("interactable");
-			});
+			// html.find(".card-body").each(function () {
+			// 	this.classList.add("interactable");
+			// });
 			html.find(".grid-base").each(function () {
 				this.classList.add("interactable");
 			});
@@ -191,7 +191,7 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".rollable").click(this._onRoll.bind(this));
 		html.find(".break-button").click(this.breakInternal.bind(this));
 		html.find(".post-button").click(this.postItem.bind(this));
-		html.find(".delete-item").click(this.deleteItem.bind(this));
+		//html.find(".delete-item").click(this.deleteItem.bind(this));
 		html.find(".reset-button").click(this.resetManeuvers.bind(this));
 		html.find("#hit-location").click(this.locationHitMessage.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
@@ -327,7 +327,7 @@ export class HLMActorSheet extends ActorSheet {
 
 	toggleInternalBrokenDisplay(uuid) {
 		document
-			.querySelector(`[data-id=id${uuid}]`, ".internal-box")
+			.querySelector(`[data-id=id${uuid}]`, ".card")
 			.classList.toggle("broken");
 		document
 			.querySelector(`[data-id=id${uuid}]`, ".break-button")
