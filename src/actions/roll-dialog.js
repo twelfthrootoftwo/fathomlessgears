@@ -95,7 +95,7 @@ export class RollDialog extends HLMApplication {
 	}
 
 	static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
+		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["fathomlessgears"],
 			template: "systems/fathomlessgears/templates/roll-dialog.html",
 			title: "Roll Inputs",

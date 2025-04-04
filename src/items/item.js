@@ -113,7 +113,6 @@ export class HLMItem extends Item {
 		let result = false;
 		if (this.isInternal()) {
 			this.system.tags.forEach((tag) => {
-				console.log(tag);
 				if (tag.name.toLowerCase() == "sturdy") {
 					result = true;
 				}

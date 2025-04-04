@@ -98,21 +98,6 @@ export class HUDActionCollection {
 						effect.icon,
 						effect
 					);
-					// let effectCounter = foundry.utils.getProperty(
-					// 	effect,
-					// 	"flags.statuscounter.counter"
-					// );
-					// if (!effectCounter) {
-					// 	effectCounter = new ActiveEffectCounter(
-					// 		createdToken.actor.system.attributes.ballast.total,
-					// 		effect.icon,
-					// 		effect
-					// 	);
-					// } else {
-					// 	effectCounter.value =
-					// 		createdToken.actor.system.attributes.ballast.total;
-					// }
-					console.log(effectCounter);
 					await effect.setFlag(
 						"statuscounter",
 						"counter",

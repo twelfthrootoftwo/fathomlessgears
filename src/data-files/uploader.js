@@ -13,7 +13,7 @@ export class FileUploader extends Application {
 	}
 
 	static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
+		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["fathomlessgears"],
 			template: "systems/fathomlessgears/templates/uploader.html",
 			title: "File Upload",

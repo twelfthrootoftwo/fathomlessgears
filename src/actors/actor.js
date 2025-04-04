@@ -442,8 +442,6 @@ export class HLMActor extends Actor {
 			this.system.resources[resourceKey].value = 0;
 		if (this.system.resources[resourceKey].max < 0)
 			this.system.resources[resourceKey].max = 0;
-		console.log("In modify:");
-		console.log(this.system.resources[resourceKey]);
 		return true;
 	}
 
