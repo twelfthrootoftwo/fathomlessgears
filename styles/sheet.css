@@ -1,4 +1,18 @@
 .fathomlessgears.sheet {
+	& .fish {
+		--color-bg-header: #1e122d;
+		--color-text-light-heading: #fff;
+		--color-text-dark-3: #305c5f;
+		--color-text-dark-primary: #24343b;
+		--color-bg-dialog: #fff;
+		--color-bg-dialog-contrast: #aedde0;
+		--color-bg-dialog-high-contrast: #4e999e;
+		--color-bg-header-secondary: #5a4c8f;
+		--color-border-highlight: #333333;
+		--color-border-dark-primary: #1e122d;
+		--color-border-light-primary: #eee;
+	}
+
 	& .sheet-header {
 		flex: 0 0 50px;
 		overflow: hidden;
@@ -50,6 +64,7 @@
 		width: 100%;
 		height: calc(100% - 50px);
 		position: relative;
+		background-color: var(--color-bg-dialog);
 
 		& .initialiser {
 			/*
@@ -95,7 +110,7 @@
 			font-size: 11pt;
 
 			&.dark {
-				background-color: var(--color-text-dark-3);
+				/* background-color: var(--color-text-dark-3); */
 				color: var(--color-text-light-heading);
 			}
 
@@ -149,6 +164,12 @@
 				& .attribute-button {
 					margin: 0;
 					padding: 0;
+
+					.dark & {
+						&:hover {
+							background-color: #eeeeee66;
+						}
+					}
 				}
 			}
 
@@ -206,7 +227,7 @@
 				}
 
 				&.dark {
-					background-color: var(--color-text-dark-3);
+					background-color: var(--color-bg-header-secondary);
 					color: var(--color-text-light-heading);
 				}
 			}
@@ -357,6 +378,10 @@
 					& .sheet-col {
 						margin-left: 2px;
 						margin-right: 2px;
+					}
+
+					& .profile-img {
+						background-color: #eee;
 					}
 
 					& .history-table {

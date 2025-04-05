@@ -7,6 +7,7 @@
         dark=dark
     }}
     <hr class="divider primary">
+    <hr class="divider primary">
     {{#each rolled as |attrib key|}}
     {{>
         "systems/fathomlessgears/templates/partials/attribute-box.html"
@@ -20,6 +21,7 @@
     {{/unless}}
     {{/each}}
     <hr class="divider primary">
+    <hr class="divider primary">
     {{#each flat as |attrib key|}}
     {{>
         "systems/fathomlessgears/templates/partials/attribute-box.html"
@@ -32,6 +34,7 @@
         <hr class="divider secondary">
     {{/unless}}
     {{/each}}
+    <hr class="divider primary">
     <hr class="divider primary">
     {{#ifcond actor.type "==" 'fisher'}}
     <div class="resource-row flex-row">
