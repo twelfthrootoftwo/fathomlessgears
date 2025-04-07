@@ -63,8 +63,8 @@ export class HLMActor extends Actor {
 			}, 2000);
 		});
 
-		this.applyConditions();
 		this.calculateBallast();
+		this.applyConditions();
 	}
 
 	/** @inheritdoc */
@@ -102,6 +102,8 @@ export class HLMActor extends Actor {
 
 	/** @inheritdoc */
 	async update(data, options) {
+		console.log("Update data:");
+		console.log(data);
 		for (const [key, value] of Object.entries(data)) {
 			if (key == "system.attributes") {
 				//All attributes
@@ -232,6 +234,10 @@ export class HLMActor extends Actor {
 
 		if (!this.updatingConditions && game.availableConditionItems) {
 			this.updatingConditions = true;
+			this.attributesWithConditions =
+				foundry.utils.deepClone(this).system.attributes;
+			console.log(`Display ballast:`);
+			console.log(this.attributesWithConditions.ballast);
 			try {
 				const conditionNames = [];
 				let effectArray = this.effects.contents;
@@ -331,6 +337,7 @@ export class HLMActor extends Actor {
 		Object.keys(this.system.attributes).forEach((key) => {
 			updateData[key] = this.calculateSingleAttribute(key);
 		});
+		this.applyConditions();
 		if (this._id && updateSource) {
 			await this.update({"system.attributes": updateData});
 		}
@@ -375,6 +382,7 @@ export class HLMActor extends Actor {
 		}
 
 		attr.total = total;
+		this.applyConditions();
 		return attr;
 	}
 
@@ -448,7 +456,8 @@ export class HLMActor extends Actor {
 	/**
 	 * Compute the actor's ballast value
 	 */
-	calculateBallast(update = false) {
+	calculateBallast() {
+		console.log(`Calculating ballast`);
 		const ballast = this.system.attributes.ballast;
 		const weight = this.system.attributes.weight;
 
@@ -473,14 +482,18 @@ export class HLMActor extends Actor {
 
 		if (ballast.total < BALLAST_MIN) ballast.total = BALLAST_MIN;
 		if (ballast.total > BALLAST_MAX) ballast.total = BALLAST_MAX;
-
-		if (update) {
-			this.update({
-				"system.attributes.ballast": this.system.attributes.ballast
-			});
-		}
+		console.log(ballast.total);
+		console.log(this.system.attributes.ballast);
+		this.applyConditions();
 
 		return ballast;
+	}
+
+	async calculateBallastAsync() {
+		this.calculateBallast();
+		await this.update({
+			"system.attributes.ballast": this.system.attributes.ballast
+		});
 	}
 
 	/**

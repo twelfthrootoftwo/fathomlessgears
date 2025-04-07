@@ -240,7 +240,7 @@ export class ItemsManager {
 		//Create new size item
 		const item = await Item.create(frame, {parent: this.actor});
 		this.actor.system.frame = item._id;
-		this.actor.calculateBallast(true);
+		await this.actor.calculateBallastAsync();
 
 		//Resize token if needed
 		if (item.name == "Jolly Roger") {
@@ -318,7 +318,7 @@ export class ItemsManager {
 			this.applyAllDeepWords();
 		}
 
-		this.actor.calculateBallast(true);
+		await this.actor.calculateBallastAsync();
 
 		await this.actor.update({system: this.actor.system});
 		Hooks.callAll("internalAdded", this.actor);
@@ -462,7 +462,7 @@ export class ItemsManager {
 		if (item.system.repair_kits) {
 			this.actor.modifyResourceValue("repair", item.system.repair_kits);
 		}
-		this.actor.calculateBallast(true);
+		await this.actor.calculateBallast(true);
 
 		await this.actor.update({system: this.actor.system});
 		return item._id;
@@ -692,7 +692,7 @@ export class ItemsManager {
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
 				let found = false;
-				this.actor.system.attributes[
+				this.actor.attributesWithConditions[
 					key
 				].values.standard.additions.forEach((modifier) => {
 					if (modifier.source == condition._id) {
@@ -719,7 +719,43 @@ export class ItemsManager {
 						"condition",
 						condition.name
 					);
-					this.actor.addAttributeModifier(key, modifier);
+					this.actor.attributesWithConditions[
+						key
+					].values.standard.additions.push(modifier);
+					if (key == "ballast") {
+						const ballast =
+							this.actor.attributesWithConditions.ballast;
+						const weight = this.actor.system.attributes.weight;
+
+						let weightTotal = weight.values.standard.base;
+						weight.values.standard.additions.forEach((element) => {
+							weightTotal += element.value;
+						});
+						const weightBallast = Math.floor(weightTotal / 5);
+
+						ballast.values.standard.weight = weightBallast;
+						let ballastMods = 0;
+						ballast.values.standard.additions.forEach((element) => {
+							ballastMods += element.value;
+						});
+						ballast.total =
+							ballast.values.standard.base +
+							weightBallast +
+							ballastMods +
+							ballast.values.custom;
+
+						if (ballast.total < BALLAST_MIN)
+							ballast.total = BALLAST_MIN;
+						if (ballast.total > BALLAST_MAX)
+							ballast.total = BALLAST_MAX;
+						console.log(
+							`Update conditions w/ ballast to ${ballast.total}`
+						);
+					} else {
+						this.actor.calculateAttributeData(
+							this.actor.attributesWithConditions[key]
+						);
+					}
 				}
 			}
 		});

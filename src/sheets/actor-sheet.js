@@ -64,7 +64,7 @@ export class HLMActorSheet extends ActorSheet {
 		context.rolled = {};
 		context.flat = {};
 		for (const [key, value] of Object.entries(
-			context.actor.system.attributes
+			context.actor.attributesWithConditions
 		)) {
 			if (key == "ballast") {
 				context.ballast = value;
