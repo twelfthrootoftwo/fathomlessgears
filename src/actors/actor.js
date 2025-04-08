@@ -127,7 +127,7 @@ export class HLMActor extends Actor {
 			}
 		}
 		await super.update(data, options);
-		this.applyConditions();
+		await this.applyConditions();
 	}
 
 	async transferEffects() {
@@ -265,7 +265,7 @@ export class HLMActor extends Actor {
 				this.updatingConditions = false;
 				if (this.queueApply) {
 					this.queueApply = false;
-					this.applyConditions();
+					await this.applyConditions();
 				}
 			} catch {
 				this.updatingConditions = false;
@@ -333,7 +333,7 @@ export class HLMActor extends Actor {
 		Object.keys(this.system.attributes).forEach((key) => {
 			updateData[key] = this.calculateSingleAttribute(key);
 		});
-		this.applyConditions();
+		await this.applyConditions();
 		if (this._id && updateSource) {
 			await this.update({"system.attributes": updateData});
 		}
@@ -381,6 +381,7 @@ export class HLMActor extends Actor {
 				total += val.value;
 			});
 		}
+		console.log(total);
 
 		attr.total = total;
 		//this.applyConditions();
@@ -470,6 +471,7 @@ export class HLMActor extends Actor {
 		await this.update({
 			"system.attributes.ballast": this.system.attributes.ballast
 		});
+		await this.applyConditions();
 	}
 
 	calculateBallastData(ballast) {

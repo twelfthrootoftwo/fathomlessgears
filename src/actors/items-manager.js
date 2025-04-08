@@ -693,6 +693,8 @@ export class ItemsManager {
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
 				let found = false;
+
+				//Look for an existing modifier to update
 				this.actor.attributesWithConditions[
 					key
 				].values.standard.additions.forEach((modifier) => {
@@ -712,6 +714,8 @@ export class ItemsManager {
 						found = true;
 					}
 				});
+
+				//Create a new modifier if none exists
 				if (!found) {
 					const modifier = new AttributeElement(
 						condition.system.attributes[key] *
@@ -723,40 +727,19 @@ export class ItemsManager {
 					this.actor.attributesWithConditions[
 						key
 					].values.standard.additions.push(modifier);
-					if (key == "ballast") {
-						const ballast =
-							this.actor.attributesWithConditions.ballast;
-						const weight = this.actor.system.attributes.weight;
+				}
 
-						let weightTotal = weight.values.standard.base;
-						weight.values.standard.additions.forEach((element) => {
-							weightTotal += element.value;
-						});
-						const weightBallast = Math.floor(weightTotal / 5);
-
-						ballast.values.standard.weight = weightBallast;
-						let ballastMods = 0;
-						ballast.values.standard.additions.forEach((element) => {
-							ballastMods += element.value;
-						});
-						ballast.total =
-							ballast.values.standard.base +
-							weightBallast +
-							ballastMods +
-							ballast.values.custom;
-
-						if (ballast.total < BALLAST_MIN)
-							ballast.total = BALLAST_MIN;
-						if (ballast.total > BALLAST_MAX)
-							ballast.total = BALLAST_MAX;
-						console.log(
-							`Update conditions w/ ballast to ${ballast.total}`
+				//Recalculate totals
+				if (key == "ballast") {
+					this.actor.attributesWithConditions.ballast =
+						this.actor.calculateBallastData(
+							this.actor.attributesWithConditions.ballast
 						);
-					} else {
+				} else {
+					this.actor.attributesWithConditions[key] =
 						this.actor.calculateAttributeData(
 							this.actor.attributesWithConditions[key]
 						);
-					}
 				}
 			}
 		});
