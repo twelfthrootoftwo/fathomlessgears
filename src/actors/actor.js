@@ -102,8 +102,6 @@ export class HLMActor extends Actor {
 
 	/** @inheritdoc */
 	async update(data, options) {
-		console.log("Update data:");
-		console.log(data);
 		for (const [key, value] of Object.entries(data)) {
 			if (key == "system.attributes") {
 				//All attributes
@@ -236,8 +234,6 @@ export class HLMActor extends Actor {
 			this.updatingConditions = true;
 			this.attributesWithConditions =
 				foundry.utils.deepClone(this).system.attributes;
-			console.log(`Display ballast:`);
-			console.log(this.attributesWithConditions.ballast);
 			try {
 				const conditionNames = [];
 				let effectArray = this.effects.contents;
@@ -350,12 +346,17 @@ export class HLMActor extends Actor {
 	 */
 	calculateSingleAttribute(key) {
 		if (key == "ballast") {
-			return this.calculateBallast();
+			let result = this.calculateBallast();
+			return result;
 		}
 		return this.calculateAttributeData(this.system.attributes[key]);
 	}
 
 	calculateAttributeData(attr) {
+		if (attr.label == "Ballast") {
+			return this.calculateBallastData(attr);
+		}
+
 		let total = 0;
 		total = attr.values.standard.base;
 		attr.values.standard.additions.forEach((val) => {
@@ -382,7 +383,7 @@ export class HLMActor extends Actor {
 		}
 
 		attr.total = total;
-		this.applyConditions();
+		//this.applyConditions();
 		return attr;
 	}
 
@@ -457,8 +458,21 @@ export class HLMActor extends Actor {
 	 * Compute the actor's ballast value
 	 */
 	calculateBallast() {
-		console.log(`Calculating ballast`);
-		const ballast = this.system.attributes.ballast;
+		const ballast = this.calculateBallastData(
+			this.system.attributes.ballast
+		);
+		this.applyConditions();
+		return ballast;
+	}
+
+	async calculateBallastAsync() {
+		this.calculateBallast();
+		await this.update({
+			"system.attributes.ballast": this.system.attributes.ballast
+		});
+	}
+
+	calculateBallastData(ballast) {
 		const weight = this.system.attributes.weight;
 
 		//Calculate ballast weight from standard values only
@@ -482,18 +496,7 @@ export class HLMActor extends Actor {
 
 		if (ballast.total < BALLAST_MIN) ballast.total = BALLAST_MIN;
 		if (ballast.total > BALLAST_MAX) ballast.total = BALLAST_MAX;
-		console.log(ballast.total);
-		console.log(this.system.attributes.ballast);
-		this.applyConditions();
-
 		return ballast;
-	}
-
-	async calculateBallastAsync() {
-		this.calculateBallast();
-		await this.update({
-			"system.attributes.ballast": this.system.attributes.ballast
-		});
 	}
 
 	/**

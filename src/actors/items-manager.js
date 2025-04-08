@@ -689,6 +689,7 @@ export class ItemsManager {
 	 * @param {Item} condition The existing condition, updated with the new value
 	 */
 	async updateCondition(condition) {
+		console.log("Update condition");
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
 				let found = false;
