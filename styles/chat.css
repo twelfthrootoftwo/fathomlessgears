@@ -101,3 +101,42 @@
 	padding: 1px 4px 1px 2px;
 	margin: 2px;
 }
+ul.tag-pop-list {
+	margin: 4px;
+}
+
+.tag-popout {
+	width: 150;
+	margin: -6px -8px;
+	border: 1px solid var(--color-border-dark-primary);
+	box-shadow: 0 0 7px rgba(0, 0, 0, 0.8);
+	text-align: left;
+}
+
+.tag-popout-text {
+	padding: 3px;
+	font-size: var(--font-size-14);
+}
+
+.rollable-table-header {
+	font-size: var(--font-size-16);
+	font-style: italic;
+	padding: 4px;
+	margin-bottom: 4px;
+	border-bottom: 1px solid var(--color-border-dark-secondary);
+}
+
+.message-flavour {
+	font-size: var(--font-size-13);
+	font-style: italic;
+	color: var(--color-text-dark-secondary);
+	padding-top: 4px;
+}
+
+.item-reference-holder {
+	margin: 4px;
+}
+
+.message-button-row {
+	padding: 4px 32px;
+}

@@ -5,7 +5,7 @@
 	"description": "A Foundry VTT system for Fathomless Gears, the mech fishing game by Ralf Ziegler",
 	"authors": [
 		{
-			"name": "Twelfth",
+			"name": "Natasha Pegler",
 			"url": "https://github.com/twelfthrootoftwo"
 		}
 	],
@@ -89,8 +89,8 @@
 				"manifest": "https://github.com/twelfthrootoftwo/fvtt-token-action-hud-FG/releases/latest/download/module.json",
 				"compatibility": [
 					{
-						"minimum": "0.3.0",
-						"verified": "0.3.0"
+						"minimum": "0.5.1",
+						"verified": "0.5.1"
 					}
 				]
 			},
