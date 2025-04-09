@@ -36,11 +36,39 @@
 			"type": "Item"
 		},
 		{
-			"name": "conditions_base",
-			"label": "FG Conditions (Base)",
+			"name": "conditions",
+			"label": "FG Conditions",
 			"system": "fathomlessgears",
-			"path": "./packs/conditions_base.db",
+			"path": "./packs/conditions.db",
 			"type": "Item"
+		},
+		{
+			"name": "touch_of_the_deep",
+			"label": "FG Touch of the Deep",
+			"system": "fathomlessgears",
+			"path": "./packs/touch_of_the_deep.db",
+			"type": "Item"
+		},
+		{
+			"name": "injuries",
+			"label": "FG Injuries",
+			"system": "fathomlessgears",
+			"path": "./packs/injuries.db",
+			"type": "Item"
+		},
+		{
+			"name": "internal_tags",
+			"label": "FG Tags",
+			"system": "fathomlessgears",
+			"path": "./packs/internal_tags.db",
+			"type": "Item"
+		},
+		{
+			"name": "fg_roll_tables",
+			"label": "FG Rollable Tables",
+			"system": "fathomlessgears",
+			"path": "./packs/fg_roll_tables.db",
+			"type": "RollTable"
 		}
 	],
 	"languages": [

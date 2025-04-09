@@ -1,0 +1,32 @@
+{
+	"name": "Limited",
+	"type": "tag",
+	"_id": "04k8NWQ4JitCzuU2",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": -1,
+		"roll": null,
+		"text": "<p>You may not install this Internal more than X times.</p>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175377594,
+		"modifiedTime": 1735175377594,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!04k8NWQ4JitCzuU2"
+}

@@ -1,0 +1,41 @@
+{
+	"name": "One with the Deep",
+	"type": "history_event",
+	"_id": "b2fG7KJMxPVWc0Tm",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"attributes": {
+			"close": 0,
+			"far": 0,
+			"mental": 0,
+			"evasion": 0,
+			"willpower": 0,
+			"speed": 0,
+			"power": 0,
+			"weight": 0,
+			"baseAP": 0,
+			"sensors": 0,
+			"ballast": 0
+		},
+		"type": "touch",
+		"description": "",
+		"mechanics": "The call of the Deep is too strong. Your Fisher ventures out one last time, never to be seen again."
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1734844317242,
+		"modifiedTime": 1734844317242,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!b2fG7KJMxPVWc0Tm"
+}

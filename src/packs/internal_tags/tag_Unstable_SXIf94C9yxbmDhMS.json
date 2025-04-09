@@ -1,0 +1,32 @@
+{
+	"name": "Unstable",
+	"type": "tag",
+	"_id": "SXIf94C9yxbmDhMS",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": null,
+		"roll": null,
+		"text": "<p>Unless it is destroyed you mark 1 Crushing damage anywhere on this Internal after it is Engaged.</p>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175342451,
+		"modifiedTime": 1735175342451,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!SXIf94C9yxbmDhMS"
+}

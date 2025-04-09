@@ -14,6 +14,7 @@ import {GRID_HUD_LOCATION} from "./constants.js";
 import {RollHandler} from "./actions/roll-handler.js";
 import {MessageHandler} from "./formatting/message-handler.js";
 import {HUDActionCollection} from "./actions/hud-actions.js";
+import {addRollableTables} from "./actions/roll-table.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -154,6 +155,7 @@ export const system_ready = new Promise((success) => {
 
 		CONFIG.statusEffects = foundry.utils.duplicate(conditions);
 		game.availableConditionItems = discoverConditions();
+		addRollableTables();
 		Hooks.callAll("conditionListReady");
 
 		console.log("Ready!");

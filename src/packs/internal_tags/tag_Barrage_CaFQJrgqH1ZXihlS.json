@@ -1,0 +1,32 @@
+{
+	"name": "Barrage",
+	"type": "tag",
+	"_id": "CaFQJrgqH1ZXihlS",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": -1,
+		"roll": null,
+		"text": "<p>When this Weapon Internal is Engaged it makes up to X attacks instead of one. All attacks must be against the same target. You may not move or perform other actions between Barrage attacks. You may choose to stop attacking after each attack.</p>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175212510,
+		"modifiedTime": 1735175212510,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!CaFQJrgqH1ZXihlS"
+}

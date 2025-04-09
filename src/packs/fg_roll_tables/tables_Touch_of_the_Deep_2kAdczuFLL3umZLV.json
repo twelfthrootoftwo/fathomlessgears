@@ -1,0 +1,159 @@
+{
+	"name": "Touch of the Deep",
+	"img": "icons/svg/d20-grey.svg",
+	"description": "",
+	"results": [
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.touch_of_the_deep",
+			"weight": 1,
+			"range": [2, 12],
+			"drawn": false,
+			"text": "A Calming Breeze",
+			"documentId": "zPNB4RfrnjVxdl32",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "zd6iVNBKRanKoDEA",
+			"flags": {},
+			"_key": "!tables.results!2kAdczuFLL3umZLV.zd6iVNBKRanKoDEA"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.touch_of_the_deep",
+			"weight": 1,
+			"range": [13, 13],
+			"drawn": false,
+			"text": "Cracked Reflection",
+			"documentId": "dltQhNc2qpz802VA",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "i3Uej8vuVmKtwdya",
+			"flags": {},
+			"_key": "!tables.results!2kAdczuFLL3umZLV.i3Uej8vuVmKtwdya"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.touch_of_the_deep",
+			"weight": 1,
+			"range": [14, 14],
+			"drawn": false,
+			"text": "The Deep Speaks",
+			"documentId": "1PC9VUkd1yHg2QrQ",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "KiEUWxmfvktIEnzK",
+			"flags": {},
+			"_key": "!tables.results!2kAdczuFLL3umZLV.KiEUWxmfvktIEnzK"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.touch_of_the_deep",
+			"weight": 1,
+			"range": [16, 16],
+			"drawn": false,
+			"text": "A Cruel Smile",
+			"documentId": "Ue946pxJJnEh9vZt",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "gXBAgHAPC8VEuTx5",
+			"flags": {},
+			"_key": "!tables.results!2kAdczuFLL3umZLV.gXBAgHAPC8VEuTx5"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.touch_of_the_deep",
+			"weight": 1,
+			"range": [17, 17],
+			"drawn": false,
+			"text": "Demented Inspiration",
+			"documentId": "RMqzvdmVzEAtuqzl",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "KJI6wKy0n4W09ml4",
+			"flags": {},
+			"_key": "!tables.results!2kAdczuFLL3umZLV.KJI6wKy0n4W09ml4"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.touch_of_the_deep",
+			"weight": 1,
+			"range": [18, 18],
+			"drawn": false,
+			"text": "Uplifted by the Deep",
+			"documentId": "wrEWcaShbADYenRD",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "RZMMY966QjEDg7Yc",
+			"flags": {},
+			"_key": "!tables.results!2kAdczuFLL3umZLV.RZMMY966QjEDg7Yc"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.touch_of_the_deep",
+			"weight": 1,
+			"range": [19, 19],
+			"drawn": false,
+			"text": "Losing Time",
+			"documentId": "HlI1HROCf2Qtkppd",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "dmtUT3phkmIocHVH",
+			"flags": {},
+			"_key": "!tables.results!2kAdczuFLL3umZLV.dmtUT3phkmIocHVH"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.touch_of_the_deep",
+			"weight": 1,
+			"range": [20, 24],
+			"drawn": false,
+			"text": "Deep-Touched",
+			"documentId": "BPc0vzQD42M1zUwh",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "xEq12S30KQIyFyF0",
+			"flags": {},
+			"_key": "!tables.results!2kAdczuFLL3umZLV.xEq12S30KQIyFyF0"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.touch_of_the_deep",
+			"weight": 1,
+			"range": [25, 100],
+			"drawn": false,
+			"text": "One with the Deep",
+			"documentId": "b2fG7KJMxPVWc0Tm",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "p4vvCDpF94OeMB9W",
+			"flags": {},
+			"_key": "!tables.results!2kAdczuFLL3umZLV.p4vvCDpF94OeMB9W"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.touch_of_the_deep",
+			"weight": 1,
+			"range": [15, 15],
+			"drawn": false,
+			"text": "Eldritch Vision",
+			"documentId": "1uls8S31H3EvMlxx",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "VrMCzt5n2QWYW2vK",
+			"flags": {},
+			"_key": "!tables.results!2kAdczuFLL3umZLV.VrMCzt5n2QWYW2vK"
+		}
+	],
+	"replacement": true,
+	"displayRoll": true,
+	"folder": null,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {
+		"core": {}
+	},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1734924631369,
+		"modifiedTime": 1737537636533,
+		"lastModifiedBy": "vK2n3EGHL17Ooj5h"
+	},
+	"formula": "2d6",
+	"_id": "2kAdczuFLL3umZLV",
+	"sort": 200000,
+	"_key": "!tables!2kAdczuFLL3umZLV"
+}

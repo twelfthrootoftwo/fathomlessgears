@@ -1,0 +1,15 @@
+2025/04/09-20:13:43.657171 77b6eaffd6c0 Recovering log #371
+2025/04/09-20:13:43.659414 77b6eaffd6c0 Delete type=3 #370
+2025/04/09-20:13:43.659605 77b6eaffd6c0 Delete type=0 #371
+2025/04/09-20:13:43.661542 77b6ea7fc6c0 Level-0 table #375: started
+2025/04/09-20:13:43.662209 77b6ea7fc6c0 Level-0 table #375: 4015 bytes OK
+2025/04/09-20:13:43.663013 77b6ea7fc6c0 Delete type=0 #373
+2025/04/09-20:13:43.663060 77b6ea7fc6c0 Manual compaction at level-0 from '!items!1XkiTBz1GEXHoBf0' @ 72057594037927935 : 1 .. '!items!y02ZM7DMm1zBYWhJ' @ 0 : 0; will stop at (end)
+2025/04/09-20:13:43.663081 77b6ea7fc6c0 Manual compaction at level-1 from '!items!1XkiTBz1GEXHoBf0' @ 72057594037927935 : 1 .. '!items!y02ZM7DMm1zBYWhJ' @ 0 : 0; will stop at '!items!y02ZM7DMm1zBYWhJ' @ 189 : 1
+2025/04/09-20:13:43.663084 77b6ea7fc6c0 Compacting 1@1 + 1@2 files
+2025/04/09-20:13:43.663711 77b6ea7fc6c0 Generated table #376@1: 22 keys, 4015 bytes
+2025/04/09-20:13:43.663719 77b6ea7fc6c0 Compacted 1@1 + 1@2 files => 4015 bytes
+2025/04/09-20:13:43.667842 77b6ea7fc6c0 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/04/09-20:13:43.667905 77b6ea7fc6c0 Delete type=2 #375
+2025/04/09-20:13:43.667955 77b6ea7fc6c0 Delete type=2 #347
+2025/04/09-20:13:43.668135 77b6ea7fc6c0 Manual compaction at level-1 from '!items!y02ZM7DMm1zBYWhJ' @ 189 : 1 .. '!items!y02ZM7DMm1zBYWhJ' @ 0 : 0; will stop at (end)

@@ -1,0 +1,32 @@
+{
+	"name": "Point Blank",
+	"type": "tag",
+	"_id": "8n8osBLGaRIyMmJB",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": null,
+		"roll": null,
+		"text": "<p>This FAR Weapon may make attacks against adjacent targets and does not suffer any penalties from Interference.</p>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175254197,
+		"modifiedTime": 1735175254197,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!8n8osBLGaRIyMmJB"
+}

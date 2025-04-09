@@ -1,0 +1,32 @@
+{
+	"name": "Bulky",
+	"type": "tag",
+	"_id": "ifdZBHYQkRUCrDoR",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": null,
+		"roll": null,
+		"text": "<p>This Internal may not be installed adjacent, diagonally or otherwise, to another Internal with this Tag.</p>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175373204,
+		"modifiedTime": 1735175373204,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!ifdZBHYQkRUCrDoR"
+}

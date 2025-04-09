@@ -1,5 +1,6 @@
 // import { conditions, CONDITIONS } from "../conditions/conditions";
 import {ACTOR_TYPES} from "../constants.js";
+import {actionText} from "./basic-action-data.js";
 
 export class HUDActionCollection {
 	static addHUDActions() {
@@ -153,9 +154,7 @@ export class HUDActionCollection {
 	}
 
 	textAction(speaker, actionCode) {
-		if (!game.sensitiveDataAvailable) return;
-		const actionRecord =
-			game.sensitiveActionHandler.getActionText(actionCode);
+		const actionRecord = actionText[actionCode];
 		renderTemplate(
 			"systems/fathomlessgears/templates/messages/message-outline.html",
 			{

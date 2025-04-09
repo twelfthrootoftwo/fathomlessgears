@@ -158,5 +158,10 @@
 	"ROLLDIALOG.other": "Other",
 	"ROLLDIALOG.additional": "Additional",
 	"ROLLDIALOG.total": "Total",
-	"ROLLDIALOG.trigger": "Roll it!"
+	"ROLLDIALOG.trigger": "Roll it!",
+
+	"TAG.rollLabel": "Result",
+	"TAG.rollButton": "Roll again",
+	"TAG.success": "Success",
+	"TAG.failure": "Failure"
 }

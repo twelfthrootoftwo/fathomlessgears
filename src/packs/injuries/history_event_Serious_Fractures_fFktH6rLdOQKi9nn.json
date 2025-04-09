@@ -1,0 +1,41 @@
+{
+	"name": "Serious Fractures",
+	"type": "history_event",
+	"_id": "fFktH6rLdOQKi9nn",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"attributes": {
+			"close": 0,
+			"far": 0,
+			"mental": 0,
+			"evasion": 0,
+			"willpower": 0,
+			"speed": 0,
+			"power": 0,
+			"weight": 0,
+			"baseAP": -1,
+			"sensors": 0,
+			"ballast": 0
+		},
+		"type": "injury",
+		"description": "Something breaks and tears inside you, you can feel it with every movement. Your broken bones grind against each other like sandpaper. Careful now.",
+		"mechanics": "Base AP is reduced by 1 until the end of the next Fishing Trip."
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1734844101110,
+		"modifiedTime": 1734844101110,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!fFktH6rLdOQKi9nn"
+}

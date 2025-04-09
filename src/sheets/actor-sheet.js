@@ -222,10 +222,8 @@ export class HLMActorSheet extends ActorSheet {
 			);
 		}
 
-		if (game.sensitiveDataAvailable) {
-			game.tagHandler.transformTagNameToButton($(this.element).get(0));
-			game.tagHandler.addListeners();
-		}
+		game.tagHandler.transformTagNameToButton($(this.element).get(0));
+		game.tagHandler.addListeners();
 	}
 
 	buildHistoryForDisplay(items) {

@@ -4,6 +4,7 @@ import {constructCollapsibleRollMessage} from "./collapsible-roll.js";
 import {ATTRIBUTES, ROLL_MODIFIER_TYPE, HIT_TYPE} from "../constants.js";
 import {AttackHandler} from "./attack.js";
 import {Utils} from "../utilities/utils.js";
+import {actionText} from "./basic-action-data.js";
 
 export class RollHandler {
 	isTargetedRoll(attributeKey) {
@@ -187,9 +188,7 @@ export class RollHandler {
 			case "wrangle":
 			case "push":
 			case "intimidate": {
-				const details = game.sensitiveActionHandler.getActionText(
-					rollParams.actionCode
-				);
+				const details = actionText[rollParams.actionCode];
 				heading = details.name;
 				minorText = details.text;
 				ap = details.ap;

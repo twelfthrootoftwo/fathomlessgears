@@ -18,7 +18,12 @@ export const preloadHandlebarsTemplates = async function () {
 		"systems/fathomlessgears/templates/partials/roll-element-toggle.html",
 		"systems/fathomlessgears/templates/partials/roll-modifier-list-partial.html",
 		"systems/fathomlessgears/templates/partials/history-table.html",
-		"systems/fathomlessgears/templates/partials/history-list-item.html"
+		"systems/fathomlessgears/templates/partials/history-list-item.html",
+		"systems/fathomlessgears/templates/partials/tag-tooltip.html",
+		"systems/fathomlessgears/templates/partials/tag-roll.html",
+		"systems/fathomlessgears/templates/messages/tag-message.html",
+		"systems/fathomlessgears/templates/messages/history-table-roll-message.html",
+		"systems/fathomlessgears/templates/messages/meltdown-table-roll-message.html"
 	];
 
 	// Load the template parts

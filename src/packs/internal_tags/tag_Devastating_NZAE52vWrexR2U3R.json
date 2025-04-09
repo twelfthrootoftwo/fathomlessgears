@@ -1,0 +1,35 @@
+{
+	"name": "Devastating",
+	"type": "tag",
+	"_id": "NZAE52vWrexR2U3R",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": null,
+		"roll": {
+			"formula": "1d6",
+			"success": 4
+		},
+		"text": "<p>Each time this weapon is used to attack, if it hits one or more targets, you MUST roll 1d6 before damage is applied. On a 4+ this weapon’s damage profile is increased by 1 for the duration of the attack. You must repeat this roll until you fail to roll 4+ up to a maximum of 3 additional damage.</p>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175237500,
+		"modifiedTime": 1735175237500,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!NZAE52vWrexR2U3R"
+}

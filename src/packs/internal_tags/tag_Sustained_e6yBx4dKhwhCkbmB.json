@@ -1,0 +1,32 @@
+{
+	"name": "Sustained",
+	"type": "tag",
+	"_id": "e6yBx4dKhwhCkbmB",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": null,
+		"roll": null,
+		"text": "<p>After hitting with this Internal all other attacks made with it against the same target automatically hit until the end of the turn.</p>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175270897,
+		"modifiedTime": 1735175270897,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!e6yBx4dKhwhCkbmB"
+}

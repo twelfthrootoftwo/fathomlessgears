@@ -1,0 +1,216 @@
+{
+	"name": "Meltdown",
+	"img": "icons/svg/d20-grey.svg",
+	"description": "",
+	"results": [
+		{
+			"type": 0,
+			"weight": 1,
+			"range": [2, 2],
+			"drawn": false,
+			"_id": "R7AFx8IF0RwMBnla",
+			"text": "No Way Out",
+			"documentId": null,
+			"flags": {
+				"data": {
+					"mechanics": "Your Gear loses 1 Core Integrity.",
+					"flavour": "You feel trapped, no way out of this walking coffin. You need to escape. Now. Open the hatch. GET OUT BEFORE IT'S TOO LATE!"
+				}
+			},
+			"img": "icons/svg/d20-black.svg",
+			"_key": "!tables.results!YiAW5k8zxPdx1CNI.R7AFx8IF0RwMBnla"
+		},
+		{
+			"type": 0,
+			"weight": 1,
+			"range": [3, 3],
+			"drawn": false,
+			"_id": "ITGILEcsAfyaM1my",
+			"text": "Exhausted",
+			"documentId": null,
+			"flags": {
+				"data": {
+					"mechanics": "Gain the Drained 2 Condition.",
+					"flavour": "It’s all so tiring, your limbs are heavy, how long have you been operating this Gear?"
+				}
+			},
+			"img": "icons/svg/d20-black.svg",
+			"_key": "!tables.results!YiAW5k8zxPdx1CNI.ITGILEcsAfyaM1my"
+		},
+		{
+			"type": 0,
+			"weight": 1,
+			"range": [4, 4],
+			"drawn": false,
+			"_id": "cZFHJ2csGnaF5Zsj",
+			"text": "Fumbling",
+			"documentId": null,
+			"flags": {
+				"data": {
+					"mechanics": "Gain the Jammed Condition.",
+					"flavour": "With sudden panic you realize that the controls of your Gear are alien to you, labels are marked in arcane runes and none of them make sense."
+				}
+			},
+			"img": "icons/svg/d20-black.svg",
+			"_key": "!tables.results!YiAW5k8zxPdx1CNI.cZFHJ2csGnaF5Zsj"
+		},
+		{
+			"type": 0,
+			"weight": 1,
+			"range": [5, 5],
+			"drawn": false,
+			"_id": "tCF5SfoSanmsJ9vt",
+			"text": "Terrified",
+			"documentId": null,
+			"flags": {
+				"data": {
+					"mechanics": "You gain the Drained 1 Condition. You receive the Pushed 4 Condition from a randomly determined Fish in your Line of Sight, if able.",
+					"flavour": "Weak. Not fit to pilot this Gear. You won’t make it out alive. RUN."
+				}
+			},
+			"img": "icons/svg/d20-black.svg",
+			"_key": "!tables.results!YiAW5k8zxPdx1CNI.tCF5SfoSanmsJ9vt"
+		},
+		{
+			"type": 0,
+			"weight": 1,
+			"range": [6, 6],
+			"drawn": false,
+			"_id": "d7RJXwH3xFvioYAR",
+			"text": "Tunnel Vision",
+			"documentId": null,
+			"flags": {
+				"data": {
+					"mechanics": "Gain the Blinded Condition.",
+					"flavour": "Your vision wanes and fails you, you can only focus on what's in front of you."
+				}
+			},
+			"img": "icons/svg/d20-black.svg",
+			"_key": "!tables.results!YiAW5k8zxPdx1CNI.d7RJXwH3xFvioYAR"
+		},
+		{
+			"type": 0,
+			"weight": 1,
+			"range": [7, 7],
+			"drawn": false,
+			"_id": "UUBnUCp6uBDpdmte",
+			"text": "Flinching",
+			"documentId": null,
+			"flags": {
+				"data": {
+					"mechanics": "Gain the Dazed 2 and Restrained 1 Conditions.",
+					"flavour": "Terrible visions cause you to recoil in horror."
+				}
+			},
+			"img": "icons/svg/d20-black.svg",
+			"_key": "!tables.results!YiAW5k8zxPdx1CNI.UUBnUCp6uBDpdmte"
+		},
+		{
+			"type": 0,
+			"weight": 1,
+			"range": [8, 8],
+			"drawn": false,
+			"_id": "T1PsQ4JOWGkDhtFV",
+			"text": "Sluggish",
+			"documentId": null,
+			"flags": {
+				"data": {
+					"mechanics": "You gain the Burdened 3 and Restrained 2 Conditions.",
+					"flavour": "Everything is moving so fast, you can’t keep up."
+				}
+			},
+			"img": "icons/svg/d20-black.svg",
+			"_key": "!tables.results!YiAW5k8zxPdx1CNI.T1PsQ4JOWGkDhtFV"
+		},
+		{
+			"type": 0,
+			"weight": 1,
+			"range": [9, 9],
+			"drawn": false,
+			"_id": "rZq6m99qZB3JT2Wa",
+			"text": "Frozen in Fear",
+			"documentId": null,
+			"flags": {
+				"data": {
+					"mechanics": "Gain the Slowed 3 and Restrained 3 Conditions.",
+					"flavour": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+				}
+			},
+			"img": "icons/svg/d20-black.svg",
+			"_key": "!tables.results!YiAW5k8zxPdx1CNI.rZq6m99qZB3JT2Wa"
+		},
+		{
+			"type": 0,
+			"weight": 1,
+			"range": [10, 10],
+			"drawn": false,
+			"_id": "9xgM6Eh0ImJcCGwb",
+			"text": "Frenzy",
+			"documentId": null,
+			"flags": {
+				"data": {
+					"mechanics": "Gain the Frenzied and Drained 1 Conditions.",
+					"flavour": "Fish is fish. They all look like fish. Open them up to make sure…"
+				}
+			},
+			"img": "icons/svg/d20-black.svg",
+			"_key": "!tables.results!YiAW5k8zxPdx1CNI.9xgM6Eh0ImJcCGwb"
+		},
+		{
+			"type": 0,
+			"weight": 1,
+			"range": [11, 11],
+			"drawn": false,
+			"_id": "lqe2INJgQaAnz1J7",
+			"text": "Determined",
+			"documentId": null,
+			"flags": {
+				"data": {
+					"mechanics": "Gain the Focused Condition.",
+					"flavour": "Calm now. Take a Breath. Focus."
+				}
+			},
+			"img": "icons/svg/d20-black.svg",
+			"_key": "!tables.results!YiAW5k8zxPdx1CNI.lqe2INJgQaAnz1J7"
+		},
+		{
+			"type": 0,
+			"weight": 1,
+			"range": [12, 12],
+			"drawn": false,
+			"_id": "sSOPnBuEMSC5UUAK",
+			"text": "Overcoming",
+			"documentId": null,
+			"flags": {
+				"data": {
+					"mechanics": "Gain the Wired 2 Condition.",
+					"flavour": "These terrors hold no power over you. They are fish. You are the Fisher."
+				}
+			},
+			"img": "icons/svg/d20-black.svg",
+			"_key": "!tables.results!YiAW5k8zxPdx1CNI.sSOPnBuEMSC5UUAK"
+		}
+	],
+	"replacement": true,
+	"displayRoll": true,
+	"folder": null,
+	"ownership": {
+		"default": 0,
+		"vK2n3EGHL17Ooj5h": 3
+	},
+	"flags": {
+		"core": {}
+	},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1737537388348,
+		"modifiedTime": 1737537636533,
+		"lastModifiedBy": "vK2n3EGHL17Ooj5h"
+	},
+	"formula": "2d6",
+	"_id": "YiAW5k8zxPdx1CNI",
+	"sort": 100000,
+	"_key": "!tables!YiAW5k8zxPdx1CNI"
+}

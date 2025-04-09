@@ -1,0 +1,32 @@
+{
+	"name": "Bulkhead",
+	"type": "tag",
+	"_id": "mgzkiSS4dZSv3cyD",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": null,
+		"roll": null,
+		"text": "<p>Whenever this Internal is marked with one point of damage all left-over damage from that attack or effect is lost and not marked on your Grid.</p>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175362505,
+		"modifiedTime": 1735175362505,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!mgzkiSS4dZSv3cyD"
+}

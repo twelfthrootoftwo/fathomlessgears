@@ -1,0 +1,46 @@
+{
+	"name": "Frenzied",
+	"type": "condition",
+	"_id": "cDjWGTrnkcICcdZh",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"attributes": {
+			"close": 0,
+			"far": 0,
+			"mental": 0,
+			"evasion": 0,
+			"willpower": 0,
+			"speed": 0,
+			"power": 0,
+			"weight": 0,
+			"baseAP": 0,
+			"sensors": 0,
+			"ballast": 0
+		},
+		"value": null,
+		"text": "When an actor receives the Frenzy Condition they must immediately move their full Speed towards the closest Ally by the most direct route possible, unless they are already adjacent to one, and perform a Bash action against them, if able. If multiple Allies are the same distance away, randomize the target. The Condition then Clears. If the attack is a Critical Hit the attacker may not choose where to apply the damage.",
+		"limit": false,
+		"effectName": false
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175685359,
+		"modifiedTime": 1735175685359,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!cDjWGTrnkcICcdZh"
+}
