@@ -3,7 +3,6 @@
 	"version": "#{VERSION}#",
 	"title": "Fathomless Gears",
 	"description": "A Foundry VTT system for Fathomless Gears, the mech fishing game by Ralf Ziegler",
-	"background": "systems/fathomlessgears/assets/fg-logo-simple.png",
 	"authors": [
 		{
 			"name": "Twelfth",
