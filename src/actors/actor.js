@@ -102,6 +102,7 @@ export class HLMActor extends Actor {
 
 	/** @inheritdoc */
 	async update(data, options) {
+		console.log(data);
 		for (const [key, value] of Object.entries(data)) {
 			if (key == "system.attributes") {
 				//All attributes
@@ -381,7 +382,6 @@ export class HLMActor extends Actor {
 				total += val.value;
 			});
 		}
-		console.log(total);
 
 		attr.total = total;
 		//this.applyConditions();
@@ -467,7 +467,10 @@ export class HLMActor extends Actor {
 	}
 
 	async calculateBallastAsync() {
-		this.calculateBallast();
+		const ballast = this.calculateBallastData(
+			this.system.attributes.ballast
+		);
+		this.system.attributes.ballast = ballast;
 		await this.update({
 			"system.attributes.ballast": this.system.attributes.ballast
 		});

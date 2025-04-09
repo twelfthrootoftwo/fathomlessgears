@@ -318,7 +318,7 @@ export class ItemsManager {
 			this.applyAllDeepWords();
 		}
 
-		await this.actor.calculateBallastAsync();
+		//await this.actor.calculateBallastAsync();
 
 		await this.actor.update({system: this.actor.system});
 		Hooks.callAll("internalAdded", this.actor);
