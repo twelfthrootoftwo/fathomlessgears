@@ -537,7 +537,7 @@ export class HLMActor extends Actor {
 			{
 				internal: internal,
 				minor_text: internal.getItemDescriptionText(),
-				major_text: rollOutput.text,
+				major_text_formatted: rollOutput.text,
 				showDamage: rollOutput.result != HIT_TYPE.miss,
 				damageText: game.i18n.localize("INTERNALS.damage"),
 				marbleText: game.i18n.localize("INTERNALS.marbles")

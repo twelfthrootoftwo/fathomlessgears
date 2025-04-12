@@ -16,9 +16,8 @@ export class MessageHandler {
 		this.loadTags();
 		this.addListeners();
 		this.addConditionItemListener();
-		Hooks.on("renderChatMessage", (_message, element, _meta) => {
+		Hooks.on("renderChatMessage", () => {
 			setTimeout(() => {
-				this.transformTagNameToButton($(element).get(0));
 				this.addListeners();
 			}, 50);
 		});
@@ -63,13 +62,16 @@ export class MessageHandler {
 	 * @param {User} speaker The player to attach the message to
 	 */
 	async createChatMessage(messageBody, speaker) {
-		// let formattedMessage = this.formatText(
-		// 	messageBody,
-		// 	FormatterContext.message
-		// );
+		const parser = new DOMParser();
+		const messageDoc = parser.parseFromString(messageBody, "text/html");
+
+		this.transformTagNameToButton(
+			$(messageDoc).get(0),
+			FormatterContext.message
+		);
 
 		let create = {
-			content: messageBody
+			content: messageDoc.body.innerHTML
 		};
 		if (speaker) {
 			create.speaker = ChatMessage.getSpeaker({actor: speaker});
@@ -251,13 +253,13 @@ export class MessageHandler {
 		return containsText && correctLocation;
 	}
 
-	transformTagNameToButton(node) {
+	transformTagNameToButton(node, context) {
 		if (this.checkNodeShouldBeFormatted(node)) {
 			let newText = this.formatText(
 				node.classList?.contains("tag-display")
 					? node.outerHTML
 					: node.innerText,
-				FormatterContext.sheet
+				context
 			);
 			if (node.classList?.contains("tag-display")) {
 				node.outerHTML = newText;
@@ -267,7 +269,7 @@ export class MessageHandler {
 		}
 
 		node.childNodes.forEach((node) => {
-			this.transformTagNameToButton(node);
+			this.transformTagNameToButton(node, context);
 		});
 	}
 
