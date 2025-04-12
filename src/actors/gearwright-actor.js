@@ -262,6 +262,9 @@ async function applyAdditionalFisher(importData, actor) {
 	}
 
 	const maneuvers = importData.maneuvers;
+	if (importData.mental_maneuver) {
+		maneuvers.push(importData.mental_maneuver);
+	}
 	targetCompendium = "maneuver";
 	for (const maneuverName of maneuvers) {
 		if (maneuverName) {
