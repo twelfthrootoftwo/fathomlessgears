@@ -7,12 +7,13 @@
     </div>
     {{#if internal.system.tags}}
     {{>
-        "systems/fathomlessgears/templates/partials/tag-row.html"
-        tags=internal.system.tags
+    "systems/fathomlessgears/templates/partials/tag-row.html"
+    tags=internal.system.tags
+    format=true
     }}
     {{/if}}
     {{#if minor_text}}
-    <div class="card-text font-12 lower-border-primary">{{minor_text}}</div>
+    <div class="card-text font-12 lower-border-primary format-me">{{minor_text}}</div>
     {{/if}}
     {{#if major_text}}
     <div class="message-text">

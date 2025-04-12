@@ -1,5 +1,5 @@
 <div class="tag-row flex-row">
     {{#each tags}}
-        <div class="tag-display no-listener" id="{{this.name}}">{{this.name}}{{#if this.value}} {{this.value}}{{/if}}</div>
+        <div class="tag-display no-listener {{#if ../format}}format-me{{/if}}" id="{{this.name}}">{{this.name}}{{#if this.value}} {{this.value}}{{/if}}</div>
     {{/each}}
 </div>

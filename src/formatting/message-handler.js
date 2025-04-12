@@ -16,9 +16,12 @@ export class MessageHandler {
 		this.loadTags();
 		this.addListeners();
 		this.addConditionItemListener();
-		Hooks.on("renderChatMessage", () =>
-			setTimeout(() => this.addListeners(), 50)
-		);
+		Hooks.on("renderChatMessage", (_message, element, _meta) => {
+			setTimeout(() => {
+				this.transformTagNameToButton($(element).get(0));
+				this.addListeners();
+			}, 50);
+		});
 	}
 
 	addListeners() {
@@ -60,13 +63,13 @@ export class MessageHandler {
 	 * @param {User} speaker The player to attach the message to
 	 */
 	async createChatMessage(messageBody, speaker) {
-		let formattedMessage = this.formatText(
-			messageBody,
-			FormatterContext.message
-		);
+		// let formattedMessage = this.formatText(
+		// 	messageBody,
+		// 	FormatterContext.message
+		// );
 
 		let create = {
-			content: formattedMessage
+			content: messageBody
 		};
 		if (speaker) {
 			create.speaker = ChatMessage.getSpeaker({actor: speaker});
@@ -119,7 +122,7 @@ export class MessageHandler {
 			//Convert existing tags to enriched versions
 			if (tag.system.value != null) {
 				const re = new RegExp(
-					`<div class="tag-display no-listener" id="${tag.name}">${tag.name} (\\d\\+?)</div>`,
+					`<div class="tag-display no-listener format-me" id="${tag.name}">${tag.name} (\\d\\+?)</div>`,
 					"i"
 				);
 				const result = re.exec(text);
@@ -131,7 +134,7 @@ export class MessageHandler {
 				}
 			} else {
 				const re = new RegExp(
-					`<div class="tag-display no-listener" id="${tag.name}">${tag.name}</div>`,
+					`<div class="tag-display no-listener format-me" id="${tag.name}">${tag.name}</div>`,
 					"i"
 				);
 				const result = re.exec(text);
@@ -238,7 +241,7 @@ export class MessageHandler {
 		let containsText = Boolean(node.innerText?.length > 0);
 
 		let correctLocation = false;
-		let targetClasses = ["frame-ability-text", "card-text"];
+		let targetClasses = ["format-me"];
 		targetClasses.forEach((className) => {
 			if (node.classList?.contains(className)) {
 				correctLocation = true;
@@ -249,19 +252,23 @@ export class MessageHandler {
 	}
 
 	transformTagNameToButton(node) {
-		if (!node.classList?.contains("tag-display")) {
-			if (this.checkNodeShouldBeFormatted(node)) {
-				let newText = this.formatText(
-					node.innerText,
-					FormatterContext.sheet
-				);
+		if (this.checkNodeShouldBeFormatted(node)) {
+			let newText = this.formatText(
+				node.classList?.contains("tag-display")
+					? node.outerHTML
+					: node.innerText,
+				FormatterContext.sheet
+			);
+			if (node.classList?.contains("tag-display")) {
+				node.outerHTML = newText;
+			} else {
 				node.innerHTML = newText;
 			}
-
-			node.childNodes.forEach((node) => {
-				this.transformTagNameToButton(node);
-			});
 		}
+
+		node.childNodes.forEach((node) => {
+			this.transformTagNameToButton(node);
+		});
 	}
 
 	onTagHover(event) {
