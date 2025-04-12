@@ -47,11 +47,14 @@ export class HUDActionCollection {
 	createBallastTokens() {
 		const tokens = canvas.tokens.controlled;
 
+		//One by one to make sure
+
 		const newDocuments = [];
 		tokens.forEach(async (token) => {
 			const newDocument = await token.actor.getTokenDocument({
 				x: token.document.x + canvas.grid.size * 8,
-				y: token.document.y
+				y: token.document.y,
+				flags: {fathomlessgears: {originalActor: token.actor.uuid}}
 			});
 			newDocuments.push(newDocument);
 		});
@@ -67,6 +70,7 @@ export class HUDActionCollection {
 			.createEmbeddedDocuments("Token", newDocuments)
 			.then((createdTokenList) => {
 				createdTokenList.forEach(async (createdToken) => {
+					console.log(createdToken.flags.fathomlessgears);
 					createdToken.update({height: 1, width: 1});
 					await createdToken.setFlag(
 						"fathomlessgears",
@@ -75,8 +79,8 @@ export class HUDActionCollection {
 					);
 					let originalToken = tokens.filter(
 						(token) =>
-							token.document.baseActor._id ==
-							createdToken.baseActor._id
+							token.document.actor.uuid ==
+							createdToken.flags.fathomlessgears.originalActor
 					)[0].document;
 
 					//Check if ballast condition already exists (eg for a linked actor that already had a token made)
