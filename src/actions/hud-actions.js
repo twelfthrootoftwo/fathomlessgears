@@ -47,8 +47,6 @@ export class HUDActionCollection {
 	createBallastTokens() {
 		const tokens = canvas.tokens.controlled;
 
-		//One by one to make sure
-
 		const newDocuments = [];
 		tokens.forEach(async (token) => {
 			const newDocument = await token.actor.getTokenDocument({
