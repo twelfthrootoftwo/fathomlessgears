@@ -24,7 +24,8 @@
 		"value": null,
 		"text": "This actor loses all Stat benefits of Internals with the Optics tag. Additionally their Sensors stat is reduced to 3 and can’t be increased.",
 		"limit": false,
-		"effectName": "blind"
+		"effectName": "blind",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,

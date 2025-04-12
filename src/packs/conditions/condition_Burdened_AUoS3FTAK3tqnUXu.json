@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "This actor gains X Ballast.",
 		"limit": 3,
-		"effectName": "burdened"
+		"effectName": "burdened",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,

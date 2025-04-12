@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "This actor loses X Ballast.",
 		"limit": true,
-		"effectName": "quickened"
+		"effectName": "quickened",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,

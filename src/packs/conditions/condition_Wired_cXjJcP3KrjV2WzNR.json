@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "When generating AP at the start of their turn this actor generates +XAP. The Condition then Clears.",
 		"limit": 3,
-		"effectName": "wired"
+		"effectName": "wired",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,

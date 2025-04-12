@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "The actor inflicting this Condition MUST move the affected actor X spaces or until they are adjacent. They must move them to create the smallest possible distance between both actors. If they already are or become adjacent they may move them while maintaining adjacency. The Condition then Clears. This Movement is unaffected by the Hooked Condition. This Condition’s value can be greater than 3.",
 		"limit": false,
-		"effectName": false
+		"effectName": false,
+		"turnEnd": null
 	},
 	"effects": [],
 	"folder": null,

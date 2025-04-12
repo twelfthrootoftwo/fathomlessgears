@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "When taking damage from a physical attack, after section and column are determined, this actor may choose to clear this Condition to reduce the damage by X.",
 		"limit": 3,
-		"effectName": "ironclad"
+		"effectName": "ironclad",
+		"turnEnd": "none"
 	},
 	"effects": [],
 	"folder": null,

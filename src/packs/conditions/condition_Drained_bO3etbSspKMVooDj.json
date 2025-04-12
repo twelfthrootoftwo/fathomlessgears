@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "When generating AP at the start of the turn this actor generates X less AP up to a minimum of 0. The Condition then Clears.",
 		"limit": 3,
-		"effectName": "drained"
+		"effectName": "drained",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,

@@ -24,7 +24,8 @@
 		"value": null,
 		"text": "When this actor would gain a Condition or increase one of their Conditions they may instead choose to clear this Condition.",
 		"limit": false,
-		"effectName": "stalwart"
+		"effectName": "stalwart",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,

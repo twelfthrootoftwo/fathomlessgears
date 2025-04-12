@@ -1,7 +1,15 @@
-2025/04/09-20:13:43.678595 77b6eaffd6c0 Recovering log #3
-2025/04/09-20:13:43.681156 77b6eaffd6c0 Delete type=0 #3
-2025/04/09-20:13:43.681180 77b6eaffd6c0 Delete type=3 #2
-2025/04/09-20:13:43.682446 77b6ea7fc6c0 Level-0 table #7: started
-2025/04/09-20:13:43.683383 77b6ea7fc6c0 Level-0 table #7: 4903 bytes OK
-2025/04/09-20:13:43.684256 77b6ea7fc6c0 Delete type=0 #5
-2025/04/09-20:13:43.684446 77b6ea7fc6c0 Manual compaction at level-0 from '!tables!2kAdczuFLL3umZLV' @ 72057594037927935 : 1 .. '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 0 : 0; will stop at (end)
+2025/04/12-18:41:35.970409 7c06473ff6c0 Recovering log #13
+2025/04/12-18:41:35.972796 7c06473ff6c0 Delete type=0 #13
+2025/04/12-18:41:35.972817 7c06473ff6c0 Delete type=3 #12
+2025/04/12-18:41:35.973943 7c06453fb6c0 Level-0 table #17: started
+2025/04/12-18:41:35.974620 7c06453fb6c0 Level-0 table #17: 4908 bytes OK
+2025/04/12-18:41:35.975358 7c06453fb6c0 Delete type=0 #15
+2025/04/12-18:41:35.975399 7c06453fb6c0 Manual compaction at level-0 from '!tables!2kAdczuFLL3umZLV' @ 72057594037927935 : 1 .. '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 0 : 0; will stop at (end)
+2025/04/12-18:41:35.975413 7c06453fb6c0 Manual compaction at level-1 from '!tables!2kAdczuFLL3umZLV' @ 72057594037927935 : 1 .. '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 0 : 0; will stop at '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 36 : 1
+2025/04/12-18:41:35.975415 7c06453fb6c0 Compacting 1@1 + 1@2 files
+2025/04/12-18:41:35.976031 7c06453fb6c0 Generated table #18@1: 31 keys, 4908 bytes
+2025/04/12-18:41:35.976040 7c06453fb6c0 Compacted 1@1 + 1@2 files => 4908 bytes
+2025/04/12-18:41:35.976734 7c06453fb6c0 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/04/12-18:41:35.976764 7c06453fb6c0 Delete type=2 #7
+2025/04/12-18:41:35.976801 7c06453fb6c0 Delete type=2 #17
+2025/04/12-18:41:35.976837 7c06453fb6c0 Manual compaction at level-1 from '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 36 : 1 .. '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 0 : 0; will stop at (end)

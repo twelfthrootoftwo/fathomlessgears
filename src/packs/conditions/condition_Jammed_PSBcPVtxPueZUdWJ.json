@@ -24,7 +24,8 @@
 		"value": null,
 		"text": "This actor may not Engage Weapon Internals.",
 		"limit": false,
-		"effectName": "jammed"
+		"effectName": "jammed",
+		"turnEnd": "none"
 	},
 	"effects": [],
 	"folder": null,

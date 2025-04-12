@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "This Actor’s CLOSE, FAR, MENTAL and POWER stats are reduced by X.",
 		"limit": 3,
-		"effectName": "dazed"
+		"effectName": "dazed",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,

@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "This actor’s Speed stat is reduced by X.",
 		"limit": 3,
-		"effectName": "slowed"
+		"effectName": "slowed",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,

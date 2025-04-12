@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "This actor’s Evasion stat is reduced by X.",
 		"limit": 3,
-		"effectName": "restrained"
+		"effectName": "restrained",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,

@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "This Actor’s Willpower stat is reduced by X.",
 		"limit": 3,
-		"effectName": "fatigued"
+		"effectName": "fatigued",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,

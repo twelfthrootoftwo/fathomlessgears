@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "Catch Checks against this actor receive +X.",
 		"limit": 3,
-		"effectName": "tranq"
+		"effectName": "tranq",
+		"turnEnd": "1"
 	},
 	"effects": [],
 	"folder": null,

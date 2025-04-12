@@ -24,7 +24,8 @@
 		"value": null,
 		"text": "Hovering actors are never considered to be adjacent to actors that are not Hovering and vice versa.<br>Actors that are Hovering may not attack actors with CLOSE attacks unless they are also Hovering and vice versa.<br>Hovering actors are unable to benefit from Soft or Hard Cover. Hovering actors ignore terrain when drawing Line of Sight. Actors still benefit from Soft and Hard Cover as normal against Hovering attackers. Other actors may ignore terrain when drawing Line of Sight to a Hovering actor.<br>Hovering actors can not be affected by attacks and effects with the Blast tag.<br>An actor may never clear their own Hover Condition using an Action or Internal. Actors may never clear an Ally’s Hover Condition.",
 		"limit": false,
-		"effectName": "hover"
+		"effectName": "hover",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,

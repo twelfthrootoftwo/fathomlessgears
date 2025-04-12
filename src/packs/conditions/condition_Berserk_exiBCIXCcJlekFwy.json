@@ -24,7 +24,8 @@
 		"value": null,
 		"text": "When an actor receives the Berserk Condition they must immediately move their full Speed towards the closest Hostile by the most direct route possible, unless they are already adjacent to one, and perform a Bash action against them, if able. If multiple actors are the same distance away, randomize the target. The Condition then Clears. If the attack is a Critical Hit the attacker may not choose where to apply the damage.",
 		"limit": false,
-		"effectName": false
+		"effectName": false,
+		"turnEnd": null
 	},
 	"effects": [],
 	"folder": null,

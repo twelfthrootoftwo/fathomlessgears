@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "When this actor is critically hit by a Physical Attack they take X additional damage from the attack and clear this Condition.",
 		"limit": 3,
-		"effectName": "doomed"
+		"effectName": "doomed",
+		"turnEnd": "none"
 	},
 	"effects": [],
 	"folder": null,

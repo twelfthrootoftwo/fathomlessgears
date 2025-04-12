@@ -24,7 +24,8 @@
 		"value": null,
 		"text": "This actor gains an additional d6 on its next Attack Roll or REEL CHECK, the Condition then clears.",
 		"limit": false,
-		"effectName": "focused"
+		"effectName": "focused",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,

@@ -24,7 +24,8 @@
 		"value": -1,
 		"text": "This actor gains +X to their Evasion.",
 		"limit": 3,
-		"effectName": "evasive"
+		"effectName": "evasive",
+		"turnEnd": "all"
 	},
 	"effects": [],
 	"folder": null,
