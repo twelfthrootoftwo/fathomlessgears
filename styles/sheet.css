@@ -588,19 +588,19 @@ eg messages, internal popout from grid HUD
 	padding-top: 3px;
 	flex-wrap: wrap;
 	flex-grow: 1;
+}
 
-	& .tag-display {
-		background-color: var(--color-bg-dialog-contrast);
-		padding: 2px 4px 2px 2px;
-		margin: 2px;
-		font-size: var(--font-size-11);
-		font-style: italic;
-		display: flex;
-		flex-grow: 0;
+.tag-display {
+	background-color: var(--color-bg-dialog-contrast);
+	padding: 2px 4px 2px 2px;
+	margin: 2px;
+	font-size: var(--font-size-11);
+	font-style: italic;
+	display: flex;
+	flex-grow: 0;
 
-		&.with-item-code {
-			padding: 0;
-		}
+	&.with-item-code {
+		padding: 0;
 	}
 }
 
