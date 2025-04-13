@@ -1,0 +1,47 @@
+{
+	"name": "Hooked",
+	"type": "condition",
+	"_id": "Y0GHBipQ4tUU9zXU",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"attributes": {
+			"close": 0,
+			"far": 0,
+			"mental": 0,
+			"evasion": 0,
+			"willpower": 0,
+			"speed": 0,
+			"power": 0,
+			"weight": 0,
+			"baseAP": 0,
+			"sensors": 0,
+			"ballast": 0
+		},
+		"value": -1,
+		"text": "Only Fish may receive the Hooked Condition. If multiple Fishers apply the Hooked Condition to the same Fish, its value is tracked individually for each Fisher (and each value can go up to 3).<br>Each Fisher may only have a single Fish Hooked at a time. Hooked does not end at the end of the affected Fish’s turn.<br>When a Fish with the Hooked condition moves it MUST move towards the Fisher that applied the Hooked condition to it. It may not move away from the fisher or end the movement the same distance away, otherwise it may not move. This may cause it to become unable to move if it is Hooked by multiple Fishers. The exception to this is if the Fish moves via a successful Reel Check.<br>Both sides of the Hooked Condition gain access to the 1AP Reel Action.<br>If they already have a Hooked Condition in play and apply Hooked to a new target their previous Hooked Condition clears.<br>A Fisher may choose not to apply this Condition.",
+		"limit": 3,
+		"effectName": false,
+		"turnEnd": "none"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175645103,
+		"modifiedTime": 1735175645103,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!Y0GHBipQ4tUU9zXU"
+}

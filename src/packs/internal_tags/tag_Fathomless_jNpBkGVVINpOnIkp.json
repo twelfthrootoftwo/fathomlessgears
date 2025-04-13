@@ -1,0 +1,35 @@
+{
+	"name": "Fathomless",
+	"type": "tag",
+	"_id": "jNpBkGVVINpOnIkp",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": -1,
+		"roll": {
+			"formula": "1d6",
+			"success": null
+		},
+		"text": "<p>After performing this action and completely resolving its effects you roll 1d6. You lose 1 Marble unless you roll equal to or higher than this Tag’s value.</p>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175276287,
+		"modifiedTime": 1735175276287,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!jNpBkGVVINpOnIkp"
+}

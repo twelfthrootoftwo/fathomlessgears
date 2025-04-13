@@ -1,0 +1,37 @@
+{
+	"name": "Medium",
+	"type": "grid",
+	"system": {
+		"hitLocationRoll": null,
+		"hitRegions": [
+			{
+				"location": "torso",
+				"range": [1],
+				"columns": 6,
+				"rows": 3
+			}
+		],
+		"type": "medium",
+		"bashDamage": 3,
+		"threatDisplayMarbles": 2
+	},
+	"img": "icons/svg/item-bag.svg",
+	"effects": [],
+	"folder": null,
+	"ownership": {
+		"default": 0,
+		"iS31tVzQgzLNDSIa": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1722753361660,
+		"modifiedTime": 1722753361660,
+		"lastModifiedBy": "iS31tVzQgzLNDSIa"
+	},
+	"_id": "tauCfZ0HJSztCgyJ",
+	"sort": 0,
+	"_key": "!items!tauCfZ0HJSztCgyJ"
+}

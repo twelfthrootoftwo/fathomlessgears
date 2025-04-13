@@ -1,0 +1,32 @@
+{
+	"name": "Unwieldy",
+	"type": "tag",
+	"_id": "vB6gy26KH7YVAZKw",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": null,
+		"roll": null,
+		"text": "<ul class=\"tag-pop-list\"><li>Internals with the Unwieldy Tag may not be Engaged during the first turn of an Encounter.</li><li>You may not Engage this Internal if you took the Move Action twice this turn.</li><li>Each Actor may only install a single Unwieldy Internal.</li></ul>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175347505,
+		"modifiedTime": 1735175347505,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!vB6gy26KH7YVAZKw"
+}

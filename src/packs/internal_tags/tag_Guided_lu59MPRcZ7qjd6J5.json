@@ -1,0 +1,32 @@
+{
+	"name": "Guided",
+	"type": "tag",
+	"_id": "lu59MPRcZ7qjd6J5",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": null,
+		"roll": null,
+		"text": "<p>When targeting with this Internal ignores Line of Sight (but is still limited to Sensors). When making an attack with this Internal it also ignores Cover.</p>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175242535,
+		"modifiedTime": 1735175242535,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!lu59MPRcZ7qjd6J5"
+}

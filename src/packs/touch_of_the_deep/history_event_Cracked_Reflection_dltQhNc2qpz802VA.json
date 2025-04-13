@@ -1,0 +1,41 @@
+{
+	"name": "Cracked Reflection",
+	"type": "history_event",
+	"_id": "dltQhNc2qpz802VA",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"attributes": {
+			"close": 0,
+			"far": 0,
+			"mental": 0,
+			"evasion": 0,
+			"willpower": 0,
+			"speed": 0,
+			"power": 1,
+			"weight": 0,
+			"baseAP": 0,
+			"sensors": 0,
+			"ballast": 0
+		},
+		"type": "touch",
+		"description": "You look in the mirror and sometimes it is not you that looks back, but the yawning abyss of the Deep. It is there, inside you.",
+		"mechanics": "Gain +1 to the Power stat."
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1734844224896,
+		"modifiedTime": 1734844224896,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!dltQhNc2qpz802VA"
+}

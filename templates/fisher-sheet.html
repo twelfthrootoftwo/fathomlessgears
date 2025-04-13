@@ -1,4 +1,4 @@
-<form class="flexcol {{cssClass}}" autocomplete="off">
+<form class="flexcol {{cssClass}} fisher" autocomplete="off">
 	{{!-- Sheet Header --}}
 	<header class="sheet-header">
 		<h1 class="charname flex-row">
@@ -36,6 +36,7 @@
             actor=actor
             rolled=rolled
             flat=flat
+            dark=true
         }}
         <div class="sheet-data">
             <nav class="sheet-tabs flex-row">
@@ -113,23 +114,11 @@
                                     {{/each}}
                                 </div>
                             </div>
-                            <div class="options-set">
-                                <h2 class="options-header">
-                                    Injuries
-                                </h2>
-                                Injuries coming soon<sup>TM</sup>
-                            </div>
-                            <div class="options-set">
-                                <h2 class="options-header">
-                                    Touch of the Deep
-                                </h2>
-                                Touch of the Deep coming soon<sup>TM</sup>
-                            </div>
+                            {{>
+                                "systems/fathomlessgears/templates/partials/history-table.html"
+                                history=this.history
+                            }}
                         </div>
-                        <!-- <div class="col half-col flex-col">
-                            
-                            
-                        </div> -->
                     </div>
                 </div>
 
@@ -163,7 +152,7 @@
                                             <h3 class="frame-ability-name">{{frame.system.gear_ability_name}}</h3>
                                             <div class="btn post-message" id="post-frame-ability">{{localize "SHEET.post"}}</div>
                                         </div>
-                                        <p class="frame-ability-text">{{frame.system.gear_ability}}</p>
+                                        <p class="frame-ability-text format-me">{{frame.system.gear_ability}}</p>
                                     </div>
                                 </div>
                                 <div class="btn hit-location-button" id="hit-location">{{localize "SHEET.hitlocation"}}</div>
@@ -227,7 +216,7 @@
                                 </div>
                                 <div class="spacer"></div>
                                 {{#if encore}}
-                                    <p class="activated-text">{{ encore.name }}</p>
+                                    <p class="activated-text font-12">{{ encore.name }}</p>
                                     <input class="inline-checkbox maneuver-checkbox" type="checkbox" data-selector="activated" data-id="id{{encore.id}}" {{checked encore.activated}}>
                                 {{/if}}
                                 <button class="btn btn-primary reset-button sheet-row-button">{{localize "SHEET.reset"}}</button>

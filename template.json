@@ -1,6 +1,6 @@
 {
 	"Actor": {
-		"types": ["fisher", "fish"],
+		"types": ["fish", "fisher"],
 		"htmlFields": ["biography"],
 		"templates": {
 			"attributes": {
@@ -198,6 +198,14 @@
 				}
 			}
 		},
+		"fish": {
+			"templates": ["attributes", "ballast", "internals"],
+			"grid": "systems/fathomlessgears/assets/blank-grid-fish.jpg",
+			"gridType": "",
+			"size": "",
+			"has-interactive-grid": "false",
+			"template": "Common"
+		},
 		"fisher": {
 			"templates": [
 				"attributes",
@@ -214,19 +222,12 @@
 			"pilot-portrait": "icons/svg/mystery-man.svg",
 			"grid": "systems/fathomlessgears/assets/blank-grid.jpg",
 			"has-interactive-grid": "false"
-		},
-		"fish": {
-			"templates": ["attributes", "ballast", "internals"],
-			"grid": "systems/fathomlessgears/assets/blank-grid-fish.jpg",
-			"gridType": "",
-			"size": "",
-			"has-interactive-grid": "false",
-			"template": "Common"
 		}
 	},
 	"Item": {
 		"types": [
 			"tag",
+			"condition",
 			"internal_pc",
 			"internal_npc",
 			"frame_pc",
@@ -236,7 +237,8 @@
 			"maneuver",
 			"deep_word",
 			"background",
-			"fish_template"
+			"fish_template",
+			"history_event"
 		],
 		"htmlFields": ["description"],
 		"templates": {
@@ -288,7 +290,16 @@
 			}
 		},
 		"tag": {
-			"templates": ["source", "data"]
+			"templates": ["source"],
+			"value": false,
+			"text": ""
+		},
+		"condition": {
+			"templates": ["source", "attributes"],
+			"value": false,
+			"text": "",
+			"limit": false,
+			"effectName": ""
 		},
 		"internal_pc": {
 			"templates": ["source", "attributes", "internal"],
@@ -308,6 +319,12 @@
 		},
 		"fish_template": {
 			"templates": ["attributes"]
+		},
+		"history_event": {
+			"type": "",
+			"templates": ["attributes"],
+			"description": "",
+			"mechanics": ""
 		}
 	}
 }

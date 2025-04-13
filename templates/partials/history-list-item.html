@@ -1,0 +1,10 @@
+<div class="history-item-label flex-row">
+    {{item.name}}
+    {{#ifcond item.system.type '==' 'injury'}}
+    <div class="injury-heal-label">
+        {{localize "SHEET.healedInjury"}}
+    </div>
+    <input class="inline-checkbox injury-checkbox" type="checkbox" data-selector="activated" data-id="id{{item._id}}"
+        {{checked item.system.healed}}>
+    {{/ifcond}}
+</div>

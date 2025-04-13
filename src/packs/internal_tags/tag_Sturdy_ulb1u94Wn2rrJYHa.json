@@ -1,0 +1,32 @@
+{
+	"name": "Sturdy",
+	"type": "tag",
+	"_id": "ulb1u94Wn2rrJYHa",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": null,
+		"roll": null,
+		"text": "<p>This Internal can still be Engaged and continues to provide its Stat Bonuses and Effects even while it is destroyed.</p>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175368751,
+		"modifiedTime": 1735175368751,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!ulb1u94Wn2rrJYHa"
+}

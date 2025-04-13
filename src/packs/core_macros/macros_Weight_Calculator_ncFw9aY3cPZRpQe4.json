@@ -1,0 +1,25 @@
+{
+	"name": "Weight Calculator",
+	"type": "script",
+	"_id": "ncFw9aY3cPZRpQe4",
+	"author": "iS31tVzQgzLNDSIa",
+	"img": "icons/svg/dice-target.svg",
+	"scope": "global",
+	"command": "//Originally written by VoidPhoenix, adapted with permission (thanks!)\n// For each selected token, add up its weight\nconst selectedFish=canvas.tokens.controlled.filter((token) => {\n    return token.actor.type==\"fish\";\n});\nlet totalWeight = selectedFish.reduce((total, token) => {\n    return Number(total) + Number(token?.actor?.system?.attributes.weight.total ?? 0)+Number(token?.actor?.system?.attributes.weight.values.custom ?? 0);\n}, 0);\n\nlet images_html = selectedFish.map(token => {\n    return `<img src=\"${token.actor.img}\" style=\"border:none; max-height: 30px; max-weight: 30px;\"/>`;\n}).join('');\n\n// Print the result to chat.\n\nlet message =\n`<div class=\"flex-col\" style=\"align-items: center;\">\n        <div class=\"flex-row\" style=\"align-items: center;\">\n            ${images_html}\n        </div>\n    </div>\n    <div style=\"font-size: 16px; font-weight: bold;\">${game.i18n.localize(\"MESSAGE.totalweight\")}: ${totalWeight}</div>\n</div>`;\n\n// Send to chat\n\nChatMessage.create({\n    speaker: ChatMessage.getSpeaker(),\n    content: message\n});",
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"iS31tVzQgzLNDSIa": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1723267348414,
+		"modifiedTime": 1723267354384,
+		"lastModifiedBy": "iS31tVzQgzLNDSIa"
+	},
+	"_key": "!macros!ncFw9aY3cPZRpQe4"
+}

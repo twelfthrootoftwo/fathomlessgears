@@ -1,0 +1,41 @@
+{
+	"name": "The Deep Speaks",
+	"type": "history_event",
+	"_id": "1PC9VUkd1yHg2QrQ",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"attributes": {
+			"close": 0,
+			"far": 0,
+			"mental": 1,
+			"evasion": 0,
+			"willpower": 0,
+			"speed": 0,
+			"power": 0,
+			"weight": 0,
+			"baseAP": 0,
+			"sensors": 0,
+			"ballast": 0
+		},
+		"type": "touch",
+		"description": "You glimpse the Deep for a brief moment, it speaks to you but when you come to you can’t remember more than a word or two.",
+		"mechanics": "Gain +1 to the MENTAL stat."
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1734844234036,
+		"modifiedTime": 1734844234036,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!1PC9VUkd1yHg2QrQ"
+}

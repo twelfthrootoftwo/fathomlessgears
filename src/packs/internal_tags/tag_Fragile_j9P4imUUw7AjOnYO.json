@@ -1,0 +1,32 @@
+{
+	"name": "Fragile",
+	"type": "tag",
+	"_id": "j9P4imUUw7AjOnYO",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": null,
+		"roll": null,
+		"text": "<p>If a single Hardpoint of this Internal is marked with damage all its other Hardpoints are marked as well, after all current damage from the attack or effect has been marked. This Internal counts as destroyed if it has a single point of damage marked on it.</p>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175317923,
+		"modifiedTime": 1735175317923,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!j9P4imUUw7AjOnYO"
+}

@@ -4,7 +4,9 @@
 	"description": "Fathomless Gears base system",
 	"main": "gulpfile.js",
 	"scripts": {
-		"lint": "eslint . --fix"
+		"lint": "eslint . --fix",
+		"pull-packs": "node ./scripts/LDBtoJSON.mjs",
+		"push-packs": "node ./scripts/JSONtoLDB.mjs"
 	},
 	"repository": {
 		"type": "git",
@@ -21,6 +23,7 @@
 	"homepage": "https://github.com/twelfthrootoftwo/fathomlessgears#readme",
 	"devDependencies": {
 		"@eslint/js": "^9.16.0",
+		"@foundryvtt/foundryvtt-cli": "^1.0.3",
 		"eslint": "^9.16.0",
 		"globals": "^15.13.0",
 		"prettier": "^3.4.2"

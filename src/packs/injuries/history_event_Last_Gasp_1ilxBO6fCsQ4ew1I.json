@@ -1,0 +1,41 @@
+{
+	"name": "Last Gasp",
+	"type": "history_event",
+	"_id": "1ilxBO6fCsQ4ew1I",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"attributes": {
+			"close": 0,
+			"far": 0,
+			"mental": 0,
+			"evasion": 0,
+			"willpower": 0,
+			"speed": 0,
+			"power": 0,
+			"weight": 0,
+			"baseAP": 0,
+			"sensors": 0,
+			"ballast": 0
+		},
+		"type": "injury",
+		"description": "Your Gear miraculously sputters back to life with a groan of protesting metal.",
+		"mechanics": "Regain 1 Core Integrity and remove 1d6 marked damage from anywhere on your Damage Grid. All Conditions affecting you are removed. Your Token is placed back on the battlefield in its previous position or as close as possible."
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1734844058459,
+		"modifiedTime": 1734844058459,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!1ilxBO6fCsQ4ew1I"
+}

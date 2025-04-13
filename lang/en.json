@@ -48,6 +48,7 @@
 	"SHEET.initmanual": "Create manually",
 	"SHEET.activated": "Activated",
 	"SHEET.reset": "Reset",
+	"SHEET.healedInjury": "Healed",
 
 	"MANAGER.init": "Initialising",
 	"MANAGER.datafile": "Data file",
@@ -150,12 +151,17 @@
 
 	"GRIDHUD.lockON": "_KEY_ - Lock Grid",
 	"GRIDHUD.lockOFF": "_KEY_ - Unlock Grid",
-	"GRID.remainingHP": "HP remaining",
+	"GRID.remainingHP": "Required catch check",
 
 	"ROLLDIALOG.attribute": "Attribute modifiers",
 	"ROLLDIALOG.bonus": "Roll modifiers",
 	"ROLLDIALOG.other": "Other",
 	"ROLLDIALOG.additional": "Additional",
 	"ROLLDIALOG.total": "Total",
-	"ROLLDIALOG.trigger": "Roll it!"
+	"ROLLDIALOG.trigger": "Roll it!",
+
+	"TAG.rollLabel": "Result",
+	"TAG.rollButton": "Roll again",
+	"TAG.success": "Success",
+	"TAG.failure": "Failure"
 }
