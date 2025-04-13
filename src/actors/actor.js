@@ -125,6 +125,20 @@ export class HLMActor extends Actor {
 				value.values.standard.additions = filtered;
 				const attrData = this.calculateAttributeData(value);
 				data[key] = attrData;
+			} else if (key == "system") {
+				//Generic system object
+				let attrObject = value.attributes;
+				for (let [attrKey, attrData] of Object.entries(attrObject)) {
+					let modifiers = attrData.values.standard.additions;
+					let filtered = modifiers.filter(
+						(mod) => mod.type != "condition"
+					);
+					attrData.values.standard.additions = filtered;
+					attrData = this.calculateAttributeData(attrData);
+					attrObject[attrKey] = attrData;
+				}
+				value.attributes = attrObject;
+				data[key] = value;
 			}
 		}
 		await super.update(data, options);
