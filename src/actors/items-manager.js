@@ -192,11 +192,11 @@ export class ItemsManager {
 			const oldSize = this.actor.items.get(this.actor.system.size);
 			oldSize?.delete();
 		}
-		this.actor.update({system: this.actor.system});
+		await this.actor.update({system: this.actor.system});
 		//Create new size item
 		const item = await Item.create(size, {parent: this.actor});
 		this.actor.system.size = item._id;
-		this.actor.update({system: this.actor.system});
+		await this.actor.update({system: this.actor.system});
 
 		//Apply grid
 		const newGrid = await Utils.getGridFromSize(size.name);
@@ -836,6 +836,24 @@ export class ItemsManager {
 	}
 
 	async clearConditions() {
+		Object.values(this.actor.attributesWithConditions).forEach(
+			(attribute) => {
+				let delIndex = -1;
+				let index = 0;
+				attribute.values.standard.additions.forEach((modifier) => {
+					if (modifier.type === "condition") {
+						delIndex = index;
+					}
+					index += 1;
+				});
+				if (delIndex >= 0) {
+					attribute.values.standard.additions.splice(delIndex, 1);
+					this.actor.attributesWithConditions[attribute.key] =
+						this.actor.calculateAttributeData(attribute);
+				}
+			}
+		);
+
 		for (const effect of this.actor.effects) {
 			if (effect.statuses.has("ballast")) continue;
 			await effect.delete();
