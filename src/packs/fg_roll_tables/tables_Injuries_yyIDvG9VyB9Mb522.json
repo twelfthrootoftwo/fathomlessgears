@@ -1,0 +1,120 @@
+{
+	"name": "Injuries",
+	"img": "icons/svg/d20-grey.svg",
+	"description": "",
+	"results": [
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.injuries",
+			"weight": 1,
+			"range": [2, 2],
+			"drawn": false,
+			"text": "Killed in Action",
+			"documentId": "r4xhFSALEvNzPS9r",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "pun41UPM27Vwfh2U",
+			"flags": {},
+			"_key": "!tables.results!yyIDvG9VyB9Mb522.pun41UPM27Vwfh2U"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.injuries",
+			"weight": 1,
+			"range": [12, 12],
+			"drawn": false,
+			"text": "Last Gasp",
+			"documentId": "1ilxBO6fCsQ4ew1I",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "aP0jXNi3RwWTvJRp",
+			"flags": {},
+			"_key": "!tables.results!yyIDvG9VyB9Mb522.aP0jXNi3RwWTvJRp"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.injuries",
+			"weight": 1,
+			"range": [7, 11],
+			"drawn": false,
+			"text": "Lucky Break",
+			"documentId": "6yk6IaZXKaP6992T",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "8CeOU9hmzhWGfQPa",
+			"flags": {},
+			"_key": "!tables.results!yyIDvG9VyB9Mb522.8CeOU9hmzhWGfQPa"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.injuries",
+			"weight": 1,
+			"range": [5, 5],
+			"drawn": false,
+			"text": "Major Concussion",
+			"documentId": "nVAY5gDfwrZtn51l",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "vrIc82PfCNeLyGNg",
+			"flags": {},
+			"_key": "!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.injuries",
+			"weight": 1,
+			"range": [6, 6],
+			"drawn": false,
+			"text": "Minor Concussion",
+			"documentId": "JdzngvpPE8aqMCHh",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "go9Ix93KFXBbV8Vw",
+			"flags": {},
+			"_key": "!tables.results!yyIDvG9VyB9Mb522.go9Ix93KFXBbV8Vw"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.injuries",
+			"weight": 1,
+			"range": [4, 4],
+			"drawn": false,
+			"text": "Serious Fractures",
+			"documentId": "fFktH6rLdOQKi9nn",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "UTWwMIbehEsGCW55",
+			"flags": {},
+			"_key": "!tables.results!yyIDvG9VyB9Mb522.UTWwMIbehEsGCW55"
+		},
+		{
+			"type": 2,
+			"documentCollection": "fathomlessgears.injuries",
+			"weight": 1,
+			"range": [3, 3],
+			"drawn": false,
+			"text": "Serious Impairment",
+			"documentId": "a7OmDP1IcK0jFbmo",
+			"img": "icons/svg/item-bag.svg",
+			"_id": "BUO3VwN1dyadiNJg",
+			"flags": {},
+			"_key": "!tables.results!yyIDvG9VyB9Mb522.BUO3VwN1dyadiNJg"
+		}
+	],
+	"replacement": true,
+	"displayRoll": true,
+	"folder": null,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {
+		"core": {}
+	},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1734842855212,
+		"modifiedTime": 1737537636533,
+		"lastModifiedBy": "vK2n3EGHL17Ooj5h"
+	},
+	"formula": "2d6",
+	"_id": "yyIDvG9VyB9Mb522",
+	"sort": 300000,
+	"_key": "!tables!yyIDvG9VyB9Mb522"
+}

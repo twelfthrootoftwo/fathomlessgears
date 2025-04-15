@@ -192,11 +192,11 @@ export class ItemsManager {
 			const oldSize = this.actor.items.get(this.actor.system.size);
 			oldSize?.delete();
 		}
-		this.actor.update({system: this.actor.system});
+		await this.actor.update({system: this.actor.system});
 		//Create new size item
 		const item = await Item.create(size, {parent: this.actor});
 		this.actor.system.size = item._id;
-		this.actor.update({system: this.actor.system});
+		await this.actor.update({system: this.actor.system});
 
 		//Apply grid
 		const newGrid = await Utils.getGridFromSize(size.name);
@@ -240,7 +240,7 @@ export class ItemsManager {
 		//Create new size item
 		const item = await Item.create(frame, {parent: this.actor});
 		this.actor.system.frame = item._id;
-		this.actor.calculateBallast(true);
+		await this.actor.calculateBallastAsync();
 
 		//Resize token if needed
 		if (item.name == "Jolly Roger") {
@@ -318,7 +318,7 @@ export class ItemsManager {
 			this.applyAllDeepWords();
 		}
 
-		this.actor.calculateBallast(true);
+		//await this.actor.calculateBallastAsync();
 
 		await this.actor.update({system: this.actor.system});
 		Hooks.callAll("internalAdded", this.actor);
@@ -336,24 +336,27 @@ export class ItemsManager {
 		//Apply attribute changes
 		const isBroken = await internal.isBroken();
 		console.log("Toggling internal to broken state " + isBroken);
-		Object.keys(internal.system.attributes).forEach((key) => {
-			if (
-				key != ATTRIBUTES.weight &&
-				internal.system.attributes[key] != 0
-			) {
-				if (isBroken) {
-					this.actor.removeAttributeModifier(key, uuid);
-				} else {
-					const modifier = new AttributeElement(
-						internal.system.attributes[key],
-						internal._id,
-						"internal",
-						internal.name
-					);
-					this.actor.addAttributeModifier(key, modifier);
+		if (!internal.isSturdy()) {
+			Object.keys(internal.system.attributes).forEach((key) => {
+				if (
+					key != ATTRIBUTES.weight &&
+					internal.system.attributes[key] != 0
+				) {
+					if (isBroken) {
+						this.actor.removeAttributeModifier(key, uuid);
+					} else {
+						const modifier = new AttributeElement(
+							internal.system.attributes[key],
+							internal._id,
+							"internal",
+							internal.name
+						);
+						this.actor.addAttributeModifier(key, modifier);
+					}
 				}
-			}
-		});
+			});
+		}
+
 		await this.actor.update({system: this.actor.system});
 		this.actor.breakInternalMessage(internal);
 
@@ -459,7 +462,7 @@ export class ItemsManager {
 		if (item.system.repair_kits) {
 			this.actor.modifyResourceValue("repair", item.system.repair_kits);
 		}
-		this.actor.calculateBallast(true);
+		await this.actor.calculateBallast(true);
 
 		await this.actor.update({system: this.actor.system});
 		return item._id;
@@ -654,9 +657,7 @@ export class ItemsManager {
 			});
 		} else {
 			if (condition.system.effectName) {
-				console.log("Starting effect creation");
 				tokens.forEach(async (token) => {
-					console.log("Creating new effect instance");
 					await this.addNewTokenEffect(token, condition);
 				});
 			}
@@ -688,10 +689,13 @@ export class ItemsManager {
 	 * @param {Item} condition The existing condition, updated with the new value
 	 */
 	async updateCondition(condition) {
+		console.log("Update condition");
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
 				let found = false;
-				this.actor.system.attributes[
+
+				//Look for an existing modifier to update
+				this.actor.attributesWithConditions[
 					key
 				].values.standard.additions.forEach((modifier) => {
 					if (modifier.source == condition._id) {
@@ -710,8 +714,9 @@ export class ItemsManager {
 						found = true;
 					}
 				});
+
+				//Create a new modifier if none exists
 				if (!found) {
-					console.log("Applying new mod");
 					const modifier = new AttributeElement(
 						condition.system.attributes[key] *
 							condition.system.value,
@@ -719,8 +724,22 @@ export class ItemsManager {
 						"condition",
 						condition.name
 					);
-					this.actor.addAttributeModifier(key, modifier);
-					console.log(this.actor);
+					this.actor.attributesWithConditions[
+						key
+					].values.standard.additions.push(modifier);
+				}
+
+				//Recalculate totals
+				if (key == "ballast") {
+					this.actor.attributesWithConditions.ballast =
+						this.actor.calculateBallastData(
+							this.actor.attributesWithConditions.ballast
+						);
+				} else {
+					this.actor.attributesWithConditions[key] =
+						this.actor.calculateAttributeData(
+							this.actor.attributesWithConditions[key]
+						);
 				}
 			}
 		});
@@ -741,11 +760,10 @@ export class ItemsManager {
 		const effect = token.actor.appliedEffects.filter((appliedEffect) =>
 			appliedEffect.statuses.has(condition.system.effectName)
 		)[0];
-		setTimeout(
-			async () =>
-				await quickCreateCounter(effect, condition.system.value),
-			100
-		);
+		setTimeout(async () => {
+			console.log("Creating new counter");
+			await quickCreateCounter(effect, condition.system.value);
+		}, 100);
 	}
 
 	async dropHistory(history, event) {
@@ -818,6 +836,24 @@ export class ItemsManager {
 	}
 
 	async clearConditions() {
+		Object.values(this.actor.attributesWithConditions).forEach(
+			(attribute) => {
+				let delIndex = -1;
+				let index = 0;
+				attribute.values.standard.additions.forEach((modifier) => {
+					if (modifier.type === "condition") {
+						delIndex = index;
+					}
+					index += 1;
+				});
+				if (delIndex >= 0) {
+					attribute.values.standard.additions.splice(delIndex, 1);
+					this.actor.attributesWithConditions[attribute.key] =
+						this.actor.calculateAttributeData(attribute);
+				}
+			}
+		);
+
 		for (const effect of this.actor.effects) {
 			if (effect.statuses.has("ballast")) continue;
 			await effect.delete();

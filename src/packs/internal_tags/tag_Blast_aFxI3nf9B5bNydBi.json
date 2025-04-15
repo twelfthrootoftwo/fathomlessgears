@@ -1,0 +1,32 @@
+{
+	"name": "Blast",
+	"type": "tag",
+	"_id": "aFxI3nf9B5bNydBi",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"value": -1,
+		"roll": null,
+		"text": "<p>When taking this action you may target any space in your Sensors, Line of Sight and range. It then targets all actors within Range X of that space, determining Line of Sight from that space. This is regardless of your Sensors and Line of Sight. If the action is an attack you roll only one Attack Roll. Resulting damage and effects are applied to all actors that were hit by the initial attack roll.</p><p>Blast Attacks:</p><ul class=\"tag-pop-list\"><li>Are unable to affect Actors with the Hover Condition.</li><li>May not be performed if the Blast area would include yourself or an Ally unless they have the Hover Condition.</li><li>Blast FAR attacks are unable to affect adjacent targets unless the attack also has the Point Blank tag.</li></ul>"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175218743,
+		"modifiedTime": 1735175218743,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!aFxI3nf9B5bNydBi"
+}

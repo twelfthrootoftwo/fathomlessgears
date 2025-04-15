@@ -109,6 +109,19 @@ export class HLMItem extends Item {
 		return result;
 	}
 
+	isSturdy() {
+		let result = false;
+		if (this.isInternal()) {
+			this.system.tags.forEach((tag) => {
+				if (tag.name.toLowerCase() == "sturdy") {
+					result = true;
+				}
+			});
+		}
+
+		return result;
+	}
+
 	postToChat(actor) {
 		switch (this.type) {
 			case ITEM_TYPES.frame_pc:

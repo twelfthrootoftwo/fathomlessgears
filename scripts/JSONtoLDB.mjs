@@ -6,7 +6,7 @@ const yaml = false;
 
 const packs = await fs.readdir('./src/packs');
 for (const pack of packs) {
-  if (pack === '.gitattributes') continue;
+  if (pack === '.gitattributes' || pack === 'LICENSE.txt') continue;
   console.log('Packing ' + pack);
   await compilePack(
     `${MODULE_ID}/src/packs/${pack}`,

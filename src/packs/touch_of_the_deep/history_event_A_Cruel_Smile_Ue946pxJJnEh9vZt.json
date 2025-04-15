@@ -1,0 +1,41 @@
+{
+	"name": "A Cruel Smile",
+	"type": "history_event",
+	"_id": "Ue946pxJJnEh9vZt",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"attributes": {
+			"close": 1,
+			"far": 0,
+			"mental": 0,
+			"evasion": 0,
+			"willpower": 0,
+			"speed": 0,
+			"power": 0,
+			"weight": 0,
+			"baseAP": 0,
+			"sensors": 0,
+			"ballast": 0
+		},
+		"type": "touch",
+		"description": "You become more irritable and dead fish occupy your mind. People start looking like fish, too.",
+		"mechanics": "Gain +1 to your CLOSE stat."
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1734844254384,
+		"modifiedTime": 1734844254384,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!Ue946pxJJnEh9vZt"
+}

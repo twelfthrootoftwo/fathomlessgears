@@ -1,0 +1,47 @@
+{
+	"name": "Hovering",
+	"type": "condition",
+	"_id": "Sya1y68SF8Z0q3pD",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"source": {
+			"filename": "FG Sensitive",
+			"version": "#{VERSION}#"
+		},
+		"attributes": {
+			"close": 0,
+			"far": 0,
+			"mental": 0,
+			"evasion": 0,
+			"willpower": 0,
+			"speed": 0,
+			"power": 0,
+			"weight": 0,
+			"baseAP": 0,
+			"sensors": 0,
+			"ballast": 0
+		},
+		"value": null,
+		"text": "Hovering actors are never considered to be adjacent to actors that are not Hovering and vice versa.<br>Actors that are Hovering may not attack actors with CLOSE attacks unless they are also Hovering and vice versa.<br>Hovering actors are unable to benefit from Soft or Hard Cover. Hovering actors ignore terrain when drawing Line of Sight. Actors still benefit from Soft and Hard Cover as normal against Hovering attackers. Other actors may ignore terrain when drawing Line of Sight to a Hovering actor.<br>Hovering actors can not be affected by attacks and effects with the Blast tag.<br>An actor may never clear their own Hover Condition using an Action or Internal. Actors may never clear an Ally’s Hover Condition.",
+		"limit": false,
+		"effectName": "hover",
+		"turnEnd": "all"
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1735175708705,
+		"modifiedTime": 1735175708705,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!Sya1y68SF8Z0q3pD"
+}

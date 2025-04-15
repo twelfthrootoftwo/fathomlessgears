@@ -16,6 +16,3 @@ foundry/
 *.fsh
 storage/
 storage_backup/
-
-# Binaries
-/packs/

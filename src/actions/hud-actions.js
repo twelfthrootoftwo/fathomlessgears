@@ -1,5 +1,6 @@
 // import { conditions, CONDITIONS } from "../conditions/conditions";
 import {ACTOR_TYPES} from "../constants.js";
+import {actionText} from "./basic-action-data.js";
 
 export class HUDActionCollection {
 	static addHUDActions() {
@@ -50,7 +51,8 @@ export class HUDActionCollection {
 		tokens.forEach(async (token) => {
 			const newDocument = await token.actor.getTokenDocument({
 				x: token.document.x + canvas.grid.size * 8,
-				y: token.document.y
+				y: token.document.y,
+				flags: {fathomlessgears: {originalActor: token.actor.uuid}}
 			});
 			newDocuments.push(newDocument);
 		});
@@ -66,6 +68,7 @@ export class HUDActionCollection {
 			.createEmbeddedDocuments("Token", newDocuments)
 			.then((createdTokenList) => {
 				createdTokenList.forEach(async (createdToken) => {
+					console.log(createdToken.flags.fathomlessgears);
 					createdToken.update({height: 1, width: 1});
 					await createdToken.setFlag(
 						"fathomlessgears",
@@ -74,8 +77,8 @@ export class HUDActionCollection {
 					);
 					let originalToken = tokens.filter(
 						(token) =>
-							token.document.baseActor._id ==
-							createdToken.baseActor._id
+							token.document.actor.uuid ==
+							createdToken.flags.fathomlessgears.originalActor
 					)[0].document;
 
 					//Check if ballast condition already exists (eg for a linked actor that already had a token made)
@@ -93,20 +96,11 @@ export class HUDActionCollection {
 							return effect.statuses.has("ballast");
 						}
 					)[0];
-					let effectCounter = foundry.utils.getProperty(
-						effect,
-						"flags.statuscounter.counter"
+					let effectCounter = new ActiveEffectCounter(
+						createdToken.actor.system.attributes.ballast.total,
+						effect.icon,
+						effect
 					);
-					if (!effectCounter) {
-						effectCounter = new ActiveEffectCounter(
-							createdToken.actor.system.attributes.ballast.total,
-							effect.icon,
-							effect
-						);
-					} else {
-						effectCounter.value =
-							createdToken.actor.system.attributes.ballast.total;
-					}
 					await effect.setFlag(
 						"statuscounter",
 						"counter",
@@ -124,13 +118,13 @@ export class HUDActionCollection {
 							"ballastActorReference",
 							createdToken.actor.uuid
 						);
-					} else {
-						let createdTokenDrawn = canvas.tokens.placeables.filter(
-							(token) => token.document.id == createdToken.id
-						)[0];
-						createdTokenDrawn.drawEffects();
-						//createdToken.update({});
 					}
+					let createdTokenDrawn = canvas.tokens.placeables.filter(
+						(token) => token.document.id == createdToken.id
+					)[0];
+					setTimeout(() => {
+						createdTokenDrawn.drawEffects();
+					}, 500);
 				});
 			});
 	}
@@ -162,9 +156,7 @@ export class HUDActionCollection {
 	}
 
 	textAction(speaker, actionCode) {
-		if (!game.sensitiveDataAvailable) return;
-		const actionRecord =
-			game.sensitiveActionHandler.getActionText(actionCode);
+		const actionRecord = actionText[actionCode];
 		renderTemplate(
 			"systems/fathomlessgears/templates/messages/message-outline.html",
 			{

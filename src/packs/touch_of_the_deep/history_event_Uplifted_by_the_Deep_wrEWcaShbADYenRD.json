@@ -1,0 +1,41 @@
+{
+	"name": "Uplifted by the Deep",
+	"type": "history_event",
+	"_id": "wrEWcaShbADYenRD",
+	"img": "icons/svg/item-bag.svg",
+	"system": {
+		"attributes": {
+			"close": 0,
+			"far": 0,
+			"mental": 0,
+			"evasion": 0,
+			"willpower": 0,
+			"speed": 0,
+			"power": 0,
+			"weight": 0,
+			"baseAP": 0,
+			"sensors": 0,
+			"ballast": 0
+		},
+		"type": "touch",
+		"description": "Your Gear feels lighter and moves more freely, as if it is becoming a part of you. You begin losing yourself.",
+		"mechanics": "Your Gear gains +2 Weight Cap."
+	},
+	"effects": [],
+	"folder": null,
+	"sort": 0,
+	"ownership": {
+		"default": 0,
+		"Z70QWDl1bY0su5ht": 3
+	},
+	"flags": {},
+	"_stats": {
+		"systemId": "fathomlessgears",
+		"systemVersion": "#{VERSION}#",
+		"coreVersion": "11.315",
+		"createdTime": 1734844285113,
+		"modifiedTime": 1734844285113,
+		"lastModifiedBy": "Z70QWDl1bY0su5ht"
+	},
+	"_key": "!items!wrEWcaShbADYenRD"
+}

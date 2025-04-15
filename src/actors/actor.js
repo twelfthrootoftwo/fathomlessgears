@@ -63,8 +63,8 @@ export class HLMActor extends Actor {
 			}, 2000);
 		});
 
-		this.applyConditions();
 		this.calculateBallast();
+		this.applyConditions();
 	}
 
 	/** @inheritdoc */
@@ -102,6 +102,7 @@ export class HLMActor extends Actor {
 
 	/** @inheritdoc */
 	async update(data, options) {
+		console.log(data);
 		for (const [key, value] of Object.entries(data)) {
 			if (key == "system.attributes") {
 				//All attributes
@@ -124,10 +125,24 @@ export class HLMActor extends Actor {
 				value.values.standard.additions = filtered;
 				const attrData = this.calculateAttributeData(value);
 				data[key] = attrData;
+			} else if (key == "system") {
+				//Generic system object
+				let attrObject = value.attributes;
+				for (let [attrKey, attrData] of Object.entries(attrObject)) {
+					let modifiers = attrData.values.standard.additions;
+					let filtered = modifiers.filter(
+						(mod) => mod.type != "condition"
+					);
+					attrData.values.standard.additions = filtered;
+					attrData = this.calculateAttributeData(attrData);
+					attrObject[attrKey] = attrData;
+				}
+				value.attributes = attrObject;
+				data[key] = value;
 			}
 		}
 		await super.update(data, options);
-		this.applyConditions();
+		await this.applyConditions();
 	}
 
 	async transferEffects() {
@@ -232,6 +247,8 @@ export class HLMActor extends Actor {
 
 		if (!this.updatingConditions && game.availableConditionItems) {
 			this.updatingConditions = true;
+			this.attributesWithConditions =
+				foundry.utils.deepClone(this).system.attributes;
 			try {
 				const conditionNames = [];
 				let effectArray = this.effects.contents;
@@ -245,8 +262,11 @@ export class HLMActor extends Actor {
 						NUMBERED_CONDITIONS.includes(conditionName) &&
 						!activeEffect.flags.statuscounter
 					) {
-						await timeout(200);
-						activeEffect = await fromUuid(activeEffect.uuid);
+						//Wait for the value to be saved
+						await new Promise((resolve) =>
+							setTimeout(resolve, 500)
+						);
+						activeEffect = fromUuidSync(activeEffect.uuid);
 					}
 					if (
 						Array.from(
@@ -260,7 +280,7 @@ export class HLMActor extends Actor {
 				this.updatingConditions = false;
 				if (this.queueApply) {
 					this.queueApply = false;
-					this.applyConditions();
+					await this.applyConditions();
 				}
 			} catch {
 				this.updatingConditions = false;
@@ -268,7 +288,6 @@ export class HLMActor extends Actor {
 		} else {
 			this.queueApply = true;
 		}
-		//}
 	}
 
 	async applySingleActiveEffect(activeEffect) {
@@ -280,10 +299,10 @@ export class HLMActor extends Actor {
 		const counterValue = effectCounter.value
 			? effectCounter.value
 			: await this.getPairedTokenValue(activeEffect);
-		const statusName = activeEffect.statuses.values().next().value;
 
 		const effectValue = Math.max(Math.min(counterValue, 3), -3);
 
+		const statusName = activeEffect.statuses.values().next().value;
 		const templateCondition = await findConditionFromStatus(statusName);
 		templateCondition.system.value = effectValue;
 		await this.itemsManager.updateCondition(templateCondition);
@@ -329,6 +348,7 @@ export class HLMActor extends Actor {
 		Object.keys(this.system.attributes).forEach((key) => {
 			updateData[key] = this.calculateSingleAttribute(key);
 		});
+		await this.applyConditions();
 		if (this._id && updateSource) {
 			await this.update({"system.attributes": updateData});
 		}
@@ -341,12 +361,17 @@ export class HLMActor extends Actor {
 	 */
 	calculateSingleAttribute(key) {
 		if (key == "ballast") {
-			return this.calculateBallast();
+			let result = this.calculateBallast();
+			return result;
 		}
 		return this.calculateAttributeData(this.system.attributes[key]);
 	}
 
 	calculateAttributeData(attr) {
+		if (attr.label == "Ballast") {
+			return this.calculateBallastData(attr);
+		}
+
 		let total = 0;
 		total = attr.values.standard.base;
 		attr.values.standard.additions.forEach((val) => {
@@ -373,6 +398,7 @@ export class HLMActor extends Actor {
 		}
 
 		attr.total = total;
+		//this.applyConditions();
 		return attr;
 	}
 
@@ -440,16 +466,32 @@ export class HLMActor extends Actor {
 			this.system.resources[resourceKey].value = 0;
 		if (this.system.resources[resourceKey].max < 0)
 			this.system.resources[resourceKey].max = 0;
-		console.log("In modify:");
-		console.log(this.system.resources[resourceKey]);
 		return true;
 	}
 
 	/**
 	 * Compute the actor's ballast value
 	 */
-	calculateBallast(update = false) {
-		const ballast = this.system.attributes.ballast;
+	calculateBallast() {
+		const ballast = this.calculateBallastData(
+			this.system.attributes.ballast
+		);
+		this.applyConditions();
+		return ballast;
+	}
+
+	async calculateBallastAsync() {
+		const ballast = this.calculateBallastData(
+			this.system.attributes.ballast
+		);
+		this.system.attributes.ballast = ballast;
+		await this.update({
+			"system.attributes.ballast": this.system.attributes.ballast
+		});
+		await this.applyConditions();
+	}
+
+	calculateBallastData(ballast) {
 		const weight = this.system.attributes.weight;
 
 		//Calculate ballast weight from standard values only
@@ -473,13 +515,6 @@ export class HLMActor extends Actor {
 
 		if (ballast.total < BALLAST_MIN) ballast.total = BALLAST_MIN;
 		if (ballast.total > BALLAST_MAX) ballast.total = BALLAST_MAX;
-
-		if (update) {
-			this.update({
-				"system.attributes.ballast": this.system.attributes.ballast
-			});
-		}
-
 		return ballast;
 	}
 
@@ -516,7 +551,7 @@ export class HLMActor extends Actor {
 			{
 				internal: internal,
 				minor_text: internal.getItemDescriptionText(),
-				major_text: rollOutput.text,
+				major_text_formatted: rollOutput.text,
 				showDamage: rollOutput.result != HIT_TYPE.miss,
 				damageText: game.i18n.localize("INTERNALS.damage"),
 				marbleText: game.i18n.localize("INTERNALS.marbles")
@@ -596,7 +631,9 @@ export class HLMActor extends Actor {
 		const isBroken = await internal.isBroken();
 		ChatMessage.create({
 			whisper: await this.getObservers(),
-			content: `${this.name}'s ${internal.name} ${isBroken ? "breaks!" : "is repaired"}`
+			content: `${this.name}'s ${internal.name} ${
+				isBroken ? "breaks!" : "is repaired"
+			}`
 		});
 	}
 
@@ -655,7 +692,10 @@ export class HLMActor extends Actor {
 			return false;
 		} else {
 			const target = targetSet.values().next().value;
-			const content = `<p class="message-text-only">${game.i18n.localize("MESSAGE.scantarget").replace("_ACTOR_NAME_", this.name).replace("_TARGET_NAME_", target.name)}</p>`;
+			const content = `<p class="message-text-only">${game.i18n
+				.localize("MESSAGE.scantarget")
+				.replace("_ACTOR_NAME_", this.name)
+				.replace("_TARGET_NAME_", target.name)}</p>`;
 			game.tagHandler.createChatMessage(content, this);
 		}
 	}

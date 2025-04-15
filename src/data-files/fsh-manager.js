@@ -107,7 +107,7 @@ export class FshManager extends HLMApplication {
 	}
 
 	static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
+		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["fathomlessgears"],
 			template: "systems/fathomlessgears/templates/fsh-manager.html",
 			title: ".FSH Manager",

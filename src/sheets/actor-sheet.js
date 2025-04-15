@@ -64,7 +64,7 @@ export class HLMActorSheet extends ActorSheet {
 		context.rolled = {};
 		context.flat = {};
 		for (const [key, value] of Object.entries(
-			context.actor.system.attributes
+			context.actor.attributesWithConditions
 		)) {
 			if (key == "ballast") {
 				context.ballast = value;
@@ -144,6 +144,7 @@ export class HLMActorSheet extends ActorSheet {
 				rerender = true;
 			}
 		});
+		console.log("Triggering calculate ballast");
 		this.actor.calculateBallast();
 		this.actor.calculateAttributeTotals();
 		if (rerender) {
@@ -179,9 +180,9 @@ export class HLMActorSheet extends ActorSheet {
 			)
 		) {
 			Utils.activateButtons(html);
-			html.find(".internal-body").each(function () {
-				this.classList.add("interactable");
-			});
+			// html.find(".card-body").each(function () {
+			// 	this.classList.add("interactable");
+			// });
 			html.find(".grid-base").each(function () {
 				this.classList.add("interactable");
 			});
@@ -191,7 +192,7 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".rollable").click(this._onRoll.bind(this));
 		html.find(".break-button").click(this.breakInternal.bind(this));
 		html.find(".post-button").click(this.postItem.bind(this));
-		html.find(".delete-item").click(this.deleteItem.bind(this));
+		//html.find(".delete-item").click(this.deleteItem.bind(this));
 		html.find(".reset-button").click(this.resetManeuvers.bind(this));
 		html.find("#hit-location").click(this.locationHitMessage.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
@@ -221,10 +222,8 @@ export class HLMActorSheet extends ActorSheet {
 			);
 		}
 
-		if (game.sensitiveDataAvailable) {
-			game.tagHandler.transformTagNameToButton($(this.element).get(0));
-			game.tagHandler.addListeners();
-		}
+		game.tagHandler.transformTagNameToButton($(this.element).get(0));
+		game.tagHandler.addListeners();
 	}
 
 	buildHistoryForDisplay(items) {
@@ -327,7 +326,7 @@ export class HLMActorSheet extends ActorSheet {
 
 	toggleInternalBrokenDisplay(uuid) {
 		document
-			.querySelector(`[data-id=id${uuid}]`, ".internal-box")
+			.querySelector(`[data-id=id${uuid}]`, ".card")
 			.classList.toggle("broken");
 		document
 			.querySelector(`[data-id=id${uuid}]`, ".break-button")

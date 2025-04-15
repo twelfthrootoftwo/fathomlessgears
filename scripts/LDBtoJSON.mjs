@@ -7,7 +7,7 @@ const yaml = false;
 
 const packs = await fs.readdir("./packs");
 for (const pack of packs) {
-  if (pack === ".gitattributes") continue;
+  if (pack === ".gitattributes" || pack === 'LICENSE.txt') continue;
   console.log("Unpacking " + pack);
   const directory = `./src/packs/${pack}`;
   try {
