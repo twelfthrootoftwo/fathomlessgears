@@ -620,7 +620,7 @@ export class ItemsManager {
 	async dropCondition(condition, dataset) {
 		if (dataset.value) {
 			condition.system.value = parseInt(dataset.value);
-		} else if (condition.system.value === true) {
+		} else if (condition.system.value === -1) {
 			condition.system.value = 1;
 		}
 
@@ -751,7 +751,7 @@ export class ItemsManager {
 	 * @param {Item} condition Condition item that triggers this effect
 	 */
 	async addNewTokenEffect(token, condition) {
-		if (condition.system.value === true) {
+		if (condition.system.value === -1) {
 			condition.system.value = 1;
 		}
 		await token.toggleActiveEffect(

@@ -1,3 +1,24 @@
-2025/04/13-16:13:39.455905 700e87ffc6c0 Recovering log #20
-2025/04/13-16:13:39.457754 700e87ffc6c0 Delete type=0 #20
-2025/04/13-16:13:39.457784 700e87ffc6c0 Delete type=3 #19
+2025/04/15-11:49:01.460790 7c23337fe6c0 Recovering log #7
+2025/04/15-11:49:01.460840 7c23337fe6c0 Level-0 table #9: started
+2025/04/15-11:49:01.461632 7c23337fe6c0 Level-0 table #9: 6211 bytes OK
+2025/04/15-11:49:01.463379 7c23337fe6c0 Delete type=3 #6
+2025/04/15-11:49:01.463425 7c23337fe6c0 Delete type=0 #7
+2025/04/15-11:49:01.464400 7c2332ffd6c0 Level-0 table #12: started
+2025/04/15-11:49:01.465664 7c2332ffd6c0 Level-0 table #12: 6002 bytes OK
+2025/04/15-11:49:01.466555 7c2332ffd6c0 Delete type=0 #10
+2025/04/15-11:49:01.466618 7c2332ffd6c0 Manual compaction at level-0 from '!items!04k8NWQ4JitCzuU2' @ 72057594037927935 : 1 .. '!items!zvYMgJUcIBOHHPck' @ 0 : 0; will stop at '!items!zvYMgJUcIBOHHPck' @ 44 : 1
+2025/04/15-11:49:01.466622 7c2332ffd6c0 Compacting 2@0 + 0@1 files
+2025/04/15-11:49:01.467263 7c2332ffd6c0 Generated table #13@0: 22 keys, 6002 bytes
+2025/04/15-11:49:01.467270 7c2332ffd6c0 Compacted 2@0 + 0@1 files => 6002 bytes
+2025/04/15-11:49:01.467963 7c2332ffd6c0 compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/04/15-11:49:01.468040 7c2332ffd6c0 Delete type=2 #12
+2025/04/15-11:49:01.468107 7c2332ffd6c0 Delete type=2 #9
+2025/04/15-11:49:01.468180 7c2332ffd6c0 Manual compaction at level-0 from '!items!zvYMgJUcIBOHHPck' @ 44 : 1 .. '!items!zvYMgJUcIBOHHPck' @ 0 : 0; will stop at (end)
+2025/04/15-11:49:01.468207 7c2332ffd6c0 Manual compaction at level-1 from '!items!04k8NWQ4JitCzuU2' @ 72057594037927935 : 1 .. '!items!zvYMgJUcIBOHHPck' @ 0 : 0; will stop at '!items!zvYMgJUcIBOHHPck' @ 48 : 1
+2025/04/15-11:49:01.468211 7c2332ffd6c0 Compacting 1@1 + 1@2 files
+2025/04/15-11:49:01.468987 7c2332ffd6c0 Generated table #14@1: 22 keys, 6002 bytes
+2025/04/15-11:49:01.469001 7c2332ffd6c0 Compacted 1@1 + 1@2 files => 6002 bytes
+2025/04/15-11:49:01.470612 7c2332ffd6c0 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/04/15-11:49:01.470672 7c2332ffd6c0 Delete type=2 #5
+2025/04/15-11:49:01.470727 7c2332ffd6c0 Delete type=2 #13
+2025/04/15-11:49:01.470778 7c2332ffd6c0 Manual compaction at level-1 from '!items!zvYMgJUcIBOHHPck' @ 48 : 1 .. '!items!zvYMgJUcIBOHHPck' @ 0 : 0; will stop at (end)

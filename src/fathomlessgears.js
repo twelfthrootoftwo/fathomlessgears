@@ -15,6 +15,19 @@ import {RollHandler} from "./actions/roll-handler.js";
 import {MessageHandler} from "./formatting/message-handler.js";
 import {HUDActionCollection} from "./actions/hud-actions.js";
 import {addRollableTables} from "./actions/roll-table.js";
+import HLMFishModel from "./actors/fish-schema.js";
+import HLMFisherModel from "./actors/fisher-schema.js";
+import {
+	HLMConditionModel,
+	HLMInternalNPCModel,
+	HLMInternalPCModel,
+	HLMTagModel,
+	HLMFrameModel,
+	HLMSizeModel,
+	HLMGridModel,
+	HLMFishTemplateModel,
+	HLMHistoryModel
+} from "./items/base-item-schema.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -33,7 +46,22 @@ Hooks.once("init", async function () {
 
 	// Define custom Document classes
 	CONFIG.Actor.documentClass = HLMActor;
+	CONFIG.Actor.dataModels = {
+		fisher: HLMFisherModel,
+		fish: HLMFishModel
+	};
 	CONFIG.Item.documentClass = HLMItem;
+	CONFIG.Item.dataModels = {
+		tag: HLMTagModel,
+		condition: HLMConditionModel,
+		internal_pc: HLMInternalPCModel,
+		internal_npc: HLMInternalNPCModel,
+		frame: HLMFrameModel,
+		size: HLMSizeModel,
+		grid: HLMGridModel,
+		template: HLMFishTemplateModel,
+		history: HLMHistoryModel
+	};
 	CONFIG.Token.documentClass = HLMTokenDocument;
 	CONFIG.Token.objectClass = HLMToken;
 	CONFIG.ActiveEffect.documentClass = HLMActiveEffect;
