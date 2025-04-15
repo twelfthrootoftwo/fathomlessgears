@@ -111,7 +111,7 @@ async function applyFrame(importData, actor, gridObject) {
 		unlocks.push(...frame.system.default_unlocks);
 		gridObject.applyUnlocksById(unlocks);
 	} else {
-		ui.notifications.alert(
+		ui.notifications.warn(
 			`Could not find frame ${importData.frame}, skipping`
 		);
 	}
@@ -126,7 +126,7 @@ async function applySize(importData, actor) {
 	if (size) {
 		await actor.itemsManager.applySize(size);
 	} else {
-		ui.notifications.alert(
+		ui.notifications.warn(
 			`Could not find size ${importData.size}, skipping`
 		);
 	}
@@ -173,7 +173,7 @@ async function applyInternals(importData, actor, gridObject) {
 						);
 					});
 				} else {
-					ui.notifications.alert(
+					ui.notifications.warn(
 						`Could not find internal ${internalIdentifier.internal_name}, skipping`
 					);
 				}
@@ -212,7 +212,7 @@ async function applyBackground(importData, actor) {
 	);
 
 	if (!backgroundBase) {
-		ui.notifications.alert(
+		ui.notifications.warn(
 			`Could not find background ${importData.background}, skipping`
 		);
 		return;
@@ -254,7 +254,7 @@ async function applyAdditionalFisher(importData, actor) {
 			if (development) {
 				await actor.itemsManager.applyDevelopment(development);
 			} else {
-				ui.notifications.alert(
+				ui.notifications.warn(
 					`Could not find development ${developmentName}, skipping`
 				);
 			}
@@ -275,7 +275,7 @@ async function applyAdditionalFisher(importData, actor) {
 			if (maneuver) {
 				await actor.itemsManager.applyManeuver(maneuver);
 			} else {
-				ui.notifications.alert(
+				ui.notifications.warn(
 					`Could not find maneuver ${maneuverName}, skipping`
 				);
 			}
@@ -293,7 +293,7 @@ async function applyAdditionalFisher(importData, actor) {
 			if (word) {
 				await actor.itemsManager.applyDeepWord(word);
 			} else {
-				ui.notifications.alert(
+				ui.notifications.warn(
 					`Could not find deep word ${wordName}, skipping`
 				);
 			}

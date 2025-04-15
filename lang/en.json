@@ -107,6 +107,16 @@
 	"ITEMTYPE.deep_word": "Deep Word",
 	"ITEMTYPE.background": "Background",
 
+	"ITEMTYPE.size_imported": "Fish Size Category (imported)",
+	"ITEMTYPE.grid_type_imported": "Grid Type (imported)",
+	"ITEMTYPE.frame_pc_imported": "Gear Frame (imported)",
+	"ITEMTYPE.internal_pc_imported": "Gear Internal (imported)",
+	"ITEMTYPE.internal_npc_imported": "Fish Internal (imported)",
+	"ITEMTYPE.development_imported": "Development (imported)",
+	"ITEMTYPE.maneuver_imported": "Maneuver (imported)",
+	"ITEMTYPE.deep_word_imported": "Deep Word (imported)",
+	"ITEMTYPE.background_imported": "Background (imported)",
+
 	"COVERSTATE.none": "No cover",
 	"COVERSTATE.soft": "Soft cover",
 	"COVERSTATE.hard": "Hard cover",

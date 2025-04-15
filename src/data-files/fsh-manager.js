@@ -3,7 +3,7 @@ import {FileUploader} from "./uploader.js";
 import {
 	FileRecord,
 	getExtension,
-	getTargetCompendium,
+	getTargetCompendiumForImport,
 	isItemFromFileSource
 } from "./file-utils.js";
 import {Utils} from "../utilities/utils.js";
@@ -397,7 +397,7 @@ async function saveToCompendium(
 ) {
 	for (let type of dataTypes) {
 		const relevantData = extractRelevantData(preparedData, type);
-		const targetCompendium = await getTargetCompendium(type);
+		const targetCompendium = await getTargetCompendiumForImport(type);
 		await targetCompendium.configure({locked: false});
 		await writeNewCompendiumItems(
 			relevantData,

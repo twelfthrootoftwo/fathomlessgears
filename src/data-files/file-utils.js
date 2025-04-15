@@ -32,28 +32,28 @@ export function removeExtension(fileName) {
  * @param {CONTENT_TYPES} dataType Type of compendium to get
  * @returns a Compendium
  */
-export function getTargetCompendium(dataType) {
+export function getTargetCompendiumForImport(dataType) {
 	switch (dataType) {
 		case ITEM_TYPES.tag:
 			return retrieveOrCreateCompendium("tag");
 		case ITEM_TYPES.internal_pc:
-			return retrieveOrCreateCompendium("internal_pc");
+			return retrieveOrCreateCompendium("internal_pc_imported");
 		case ITEM_TYPES.internal_npc:
-			return retrieveOrCreateCompendium("internal_npc");
+			return retrieveOrCreateCompendium("internal_npc_imported");
 		case ITEM_TYPES.frame_pc:
-			return retrieveOrCreateCompendium("frame_pc");
+			return retrieveOrCreateCompendium("frame_pc_imported");
 		case ITEM_TYPES.size:
-			return retrieveOrCreateCompendium("size");
+			return retrieveOrCreateCompendium("size_imported");
 		case ITEM_TYPES.grid:
-			return retrieveOrCreateCompendium("grid_type");
+			return retrieveOrCreateCompendium("grid_type_imported");
 		case ITEM_TYPES.development:
-			return retrieveOrCreateCompendium("development");
+			return retrieveOrCreateCompendium("development_imported");
 		case ITEM_TYPES.maneuver:
-			return retrieveOrCreateCompendium("maneuver");
+			return retrieveOrCreateCompendium("maneuver_imported");
 		case ITEM_TYPES.deep_word:
-			return retrieveOrCreateCompendium("deep_word");
+			return retrieveOrCreateCompendium("deep_word_imported");
 		case ITEM_TYPES.background:
-			return retrieveOrCreateCompendium("background");
+			return retrieveOrCreateCompendium("background_imported");
 	}
 	return null;
 }
