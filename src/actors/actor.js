@@ -64,7 +64,7 @@ export class HLMActor extends Actor {
 		});
 
 		this.calculateBallast();
-		this.applyConditions();
+		//this.applyConditions();
 	}
 
 	/** @inheritdoc */
@@ -191,6 +191,7 @@ export class HLMActor extends Actor {
 					);
 				} else if (
 					effect.getFlag("statuscounter", "counter") &&
+					effect.getFlag("statuscounter", "counter")?.value &&
 					effect.getFlag("statuscounter", "counter")?.value !=
 						matchingEffect.getFlag("statuscounter", "counter")
 							?.value
