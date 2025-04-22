@@ -19,11 +19,6 @@
 	"RESOURCES.core": "Core",
 	"RESOURCES.backlash": "Backlash",
 
-	"DOWNTIME.physical": "Physical",
-	"DOWNTIME.social": "Social",
-	"DOWNTIME.engineering": "Engineering",
-	"DOWNTIME.enlightenment": "Enlightenment",
-
 	"INTERNALS.weapons": "Weapons",
 	"INTERNALS.active": "Active Internals",
 	"INTERNALS.passive": "Passive internals",
@@ -117,6 +112,9 @@
 	"MESSAGE.crit": "On crit, choose hit location",
 	"MESSAGE.scannotarget": "Set a target before scanning",
 	"MESSAGE.scantarget": "_ACTOR_NAME_ scans _TARGET_NAME_",
+	"MESSAGE.hardpoints": "Hardpoints",
+	"MESSAGE.resupply": "Rearm & Resupply",
+	"MESSAGE.repairCost": "_ACTOR_NAME_'s repair costs",
 
 	"INTRO.title": "No .FSH Detected",
 	"INTRO.main": "A .fsh datafile is required for the module to function. Upload .fsh files from the .FSH manager.",
@@ -159,6 +157,9 @@
 	"ROLLDIALOG.additional": "Additional",
 	"ROLLDIALOG.total": "Total",
 	"ROLLDIALOG.trigger": "Roll it!",
+
+	"RESERVEDIALOG.name": "Reserve AP",
+	"RESERVEDIALOG.confirm": "Confirm",
 
 	"TAG.rollLabel": "Result",
 	"TAG.rollButton": "Roll again",

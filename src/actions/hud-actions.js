@@ -1,6 +1,7 @@
 // import { conditions, CONDITIONS } from "../conditions/conditions";
 import {ACTOR_TYPES} from "../constants.js";
 import {actionText} from "./basic-action-data.js";
+import {ReserveApDialog} from "./reserve-ap-dialog.js";
 
 export class HUDActionCollection {
 	static addHUDActions() {
@@ -191,5 +192,9 @@ export class HUDActionCollection {
 		).then((messageText) => {
 			game.tagHandler.createChatMessage(messageText, speaker);
 		});
+	}
+
+	holdAp(actor) {
+		new ReserveApDialog(actor);
 	}
 }
