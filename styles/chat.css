@@ -140,3 +140,20 @@ ul.tag-pop-list {
 .message-button-row {
 	padding: 4px 32px;
 }
+
+.repair-cost-message {
+	font-size: var(--font-size-16);
+
+	& .total-repairs {
+		border-top: 1px solid var(--color-border-light-secondary);
+	}
+
+	& .repair-left {
+		margin-left: 4px;
+		flex: 1 0 75px;
+	}
+
+	& .repair-right {
+		flex: 0 0 75px;
+	}
+}

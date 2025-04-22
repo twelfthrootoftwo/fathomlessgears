@@ -776,4 +776,16 @@ export class HLMActor extends Actor {
 			token.toggleActiveEffect(effectId);
 		}
 	}
+
+	getRepairRequirements() {
+		if (this.type == ACTOR_TYPES.fish) return null;
+		const spaces = this.grid.calculateDamaged();
+		const repair =
+			this.system.resources.repair.max -
+			this.system.resources.repair.value;
+		return {
+			damagedSpaces: spaces,
+			missingRepairKits: repair
+		};
+	}
 }

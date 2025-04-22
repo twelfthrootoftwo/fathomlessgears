@@ -168,4 +168,28 @@ export class HUDActionCollection {
 			game.tagHandler.createChatMessage(messageText, speaker);
 		});
 	}
+
+	calculateRepairCost(speaker) {
+		if (speaker.type == ACTOR_TYPES.fish) return false;
+		const requirements = speaker.getRepairRequirements();
+		const spacesCost = Math.round(requirements.damagedSpaces / 2);
+		const repairCost = requirements.missingRepairKits * 2;
+		const resupply = 10;
+		const total = spacesCost + repairCost + resupply;
+
+		renderTemplate(
+			"systems/fathomlessgears/templates/messages/repair-costs.html",
+			{
+				heading: game.i18n
+					.localize("MESSAGE.repairCost")
+					.replace("_ACTOR_NAME_", speaker.name),
+				spacesCost: spacesCost,
+				repairKitsCost: repairCost,
+				resupplyCost: resupply,
+				total: total
+			}
+		).then((messageText) => {
+			game.tagHandler.createChatMessage(messageText, speaker);
+		});
+	}
 }
