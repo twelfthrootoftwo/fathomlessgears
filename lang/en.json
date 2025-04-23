@@ -116,8 +116,13 @@
 	"MESSAGE.resupply": "Rearm & Resupply",
 	"MESSAGE.repairCost": "_ACTOR_NAME_'s repair costs",
 
-	"INTRO.title": "No .FSH Detected",
-	"INTRO.main": "A .fsh datafile is required for the module to function. Upload .fsh files from the .FSH manager.",
+	"INTRO.title": "Fathomess Foundry",
+	"INTRO.header": "Welcome to Fathomess Foundry!",
+	"INTRO.main": "This Foundry system is designed to integrate with Gearwright's .fsh data files. If you have purchased a copy of the game, you can upload NPC data from the .FSH Manager.",
+	"INTRO.second": "Player data is available immediately - try building and uploading a fisher!",
+	"INTRO.dontshowagain": "Don't show again",
+	"INTRO.skip": "Skip for now",
+	"INTRO.open": "Open .FSH Manager",
 
 	"CONDITIONS.blind": "Blinded",
 	"CONDITIONS.burdened": "Burdened",

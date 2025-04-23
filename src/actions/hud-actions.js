@@ -1,7 +1,7 @@
 // import { conditions, CONDITIONS } from "../conditions/conditions";
 import {ACTOR_TYPES} from "../constants.js";
 import {actionText} from "./basic-action-data.js";
-import {ReserveApDialog} from "./reserve-ap-dialog.js";
+import {ReserveApDialog} from "../dialogs/reserve-ap-dialog.js";
 
 export class HUDActionCollection {
 	static addHUDActions() {

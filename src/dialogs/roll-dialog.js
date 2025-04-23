@@ -8,7 +8,7 @@ import {
 } from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 import {CONDITIONS} from "../conditions/conditions.js";
-import {RollParameters} from "./roll-params.js";
+import {RollParameters} from "../actions/roll-params.js";
 
 export class RollElement {
 	value;
