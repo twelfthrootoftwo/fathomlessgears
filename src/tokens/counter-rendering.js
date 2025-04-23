@@ -1,9 +1,11 @@
 import {findEffectByImage} from "../conditions/conditions.js";
 
 /**
- * These functions are taken from Status Icon Counters by WoodenTavern.
+ * These functions are taken from Status Icon Counters by WoodenTavern: https://gitlab.com/woodentavern/status-icon-counters/
  * While Status Icon Counters is set as a system requirement, the override to Token.drawEffects prevents the counters from being drawn.
  * So the draw function is duplicated and called here
+ *
+ * The contents of this file are licenced under LGPL v3
  */
 
 const fontCache = new Map();
