@@ -41,6 +41,7 @@
 	"SHEET.scanfalse": "Scan",
 	"SHEET.initgearwright": "Import from Gearwright",
 	"SHEET.initmanual": "Create manually",
+	"SHEET.initnogrid": "(no interactive grid)",
 	"SHEET.activated": "Activated",
 	"SHEET.reset": "Reset",
 	"SHEET.healedInjury": "Healed",
