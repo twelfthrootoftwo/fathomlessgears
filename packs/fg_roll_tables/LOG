@@ -1,3 +1,22 @@
-2025/04/25-14:37:59.747659 795f785ee6c0 Recovering log #69
-2025/04/25-14:37:59.749414 795f785ee6c0 Delete type=0 #69
-2025/04/25-14:37:59.749434 795f785ee6c0 Delete type=3 #68
+2025/04/26-09:39:14.950518 713a727fc6c0 Recovering log #19
+2025/04/26-09:39:14.955523 713a727fc6c0 Delete type=0 #19
+2025/04/26-09:39:14.955558 713a727fc6c0 Delete type=3 #17
+2025/04/26-09:39:14.957630 713a70ff96c0 Level-0 table #23: started
+2025/04/26-09:39:14.958352 713a70ff96c0 Level-0 table #23: 4914 bytes OK
+2025/04/26-09:39:14.959119 713a70ff96c0 Delete type=0 #21
+2025/04/26-09:39:14.959172 713a70ff96c0 Manual compaction at level-0 from '!tables!2kAdczuFLL3umZLV' @ 72057594037927935 : 1 .. '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 0 : 0; will stop at '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 120 : 1
+2025/04/26-09:39:14.959175 713a70ff96c0 Compacting 2@0 + 0@1 files
+2025/04/26-09:39:14.959792 713a70ff96c0 Generated table #24@0: 31 keys, 4914 bytes
+2025/04/26-09:39:14.959799 713a70ff96c0 Compacted 2@0 + 0@1 files => 4914 bytes
+2025/04/26-09:39:14.960577 713a70ff96c0 compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/04/26-09:39:14.960625 713a70ff96c0 Delete type=2 #23
+2025/04/26-09:39:14.960666 713a70ff96c0 Delete type=2 #18
+2025/04/26-09:39:14.960709 713a70ff96c0 Manual compaction at level-0 from '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 120 : 1 .. '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 0 : 0; will stop at (end)
+2025/04/26-09:39:14.960727 713a70ff96c0 Manual compaction at level-1 from '!tables!2kAdczuFLL3umZLV' @ 72057594037927935 : 1 .. '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 0 : 0; will stop at '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 129 : 1
+2025/04/26-09:39:14.960730 713a70ff96c0 Compacting 1@1 + 1@2 files
+2025/04/26-09:39:14.961349 713a70ff96c0 Generated table #25@1: 31 keys, 4914 bytes
+2025/04/26-09:39:14.961354 713a70ff96c0 Compacted 1@1 + 1@2 files => 4914 bytes
+2025/04/26-09:39:14.962052 713a70ff96c0 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/04/26-09:39:14.962088 713a70ff96c0 Delete type=2 #24
+2025/04/26-09:39:14.962125 713a70ff96c0 Delete type=2 #14
+2025/04/26-09:39:14.962168 713a70ff96c0 Manual compaction at level-1 from '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 129 : 1 .. '!tables.results!yyIDvG9VyB9Mb522.vrIc82PfCNeLyGNg' @ 0 : 0; will stop at (end)
