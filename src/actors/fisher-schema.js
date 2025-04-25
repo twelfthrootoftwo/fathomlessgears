@@ -75,7 +75,7 @@ export default class HLMFisherModel extends HLMActorModel {
 		});
 		schema.pilot_portrait = new fields.StringField({
 			required: true,
-			blank: true
+			initial: "icons/svg/mystery-man.svg"
 		});
 		schema.grid = new fields.StringField({
 			required: true,

@@ -427,6 +427,8 @@
 
 					& .profile-img {
 						background-color: #eee;
+						width: 180px;
+						max-height: 200px;
 					}
 
 					& .history-table {
