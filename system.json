@@ -68,6 +68,48 @@
 			"system": "fathomlessgears",
 			"path": "./packs/fg_roll_tables.db",
 			"type": "RollTable"
+		},
+		{
+			"name": "internal_pc",
+			"label": "FG Fisher Internals",
+			"system": "fathomlessgears",
+			"path": "./packs/internal_pc.db",
+			"type": "Item"
+		},
+		{
+			"name": "frame_pc",
+			"label": "FG Fisher Frames",
+			"system": "fathomlessgears",
+			"path": "./packs/frame_pc.db",
+			"type": "Item"
+		},
+		{
+			"name": "development",
+			"label": "FG Fisher Developments",
+			"system": "fathomlessgears",
+			"path": "./packs/development.db",
+			"type": "Item"
+		},
+		{
+			"name": "maneuver",
+			"label": "FG Fisher Maneuvers",
+			"system": "fathomlessgears",
+			"path": "./packs/maneuver.db",
+			"type": "Item"
+		},
+		{
+			"name": "deep_word",
+			"label": "FG Deep Words",
+			"system": "fathomlessgears",
+			"path": "./packs/deep_word.db",
+			"type": "Item"
+		},
+		{
+			"name": "background",
+			"label": "FG Fisher Backgrounds",
+			"system": "fathomlessgears",
+			"path": "./packs/background.db",
+			"type": "Item"
 		}
 	],
 	"languages": [
