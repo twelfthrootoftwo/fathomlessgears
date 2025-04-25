@@ -36,9 +36,13 @@ export class ReserveApDialog extends HLMApplication {
 		html.find('[data-selector="quickened"]').change(async (evt) => {
 			this.quickened = evt.target.checked;
 		});
+		html.find('[data-selector="ap"]').change(async (evt) => {
+			this.ap = evt.target.valueAsNumber;
+		});
 	}
 
 	async triggerAction() {
+		console.log(this.ap);
 		const quickened = await findConditionFromStatus(CONDITIONS.quickened);
 		const evasive = await findConditionFromStatus(CONDITIONS.evasive);
 
