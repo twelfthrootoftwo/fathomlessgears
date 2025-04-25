@@ -54,7 +54,7 @@ export class ReserveApDialog extends HLMApplication {
 						this.actor.itemsManager.dropCondition(quickened, {
 							value: this.ap
 						});
-					}, 300);
+					}, 600);
 				}
 			});
 		this.close();
