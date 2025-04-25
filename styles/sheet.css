@@ -93,19 +93,40 @@
 			align-items: center;
 			background-color: #00000088;
 
-			& .initialise-button-base {
+			& .initialise-button-large {
 				width: 150px;
 				height: 75px;
 				background-color: var(--color-bg-dialog-contrast);
+				font-size: var(--font-size-16);
+				margin: 15px;
+			}
+
+			& .initialise-button-small {
+				width: 120px;
+				height: 32px;
+				background-color: var(--color-bg-dialog-contrast);
+				font-size: var(--font-size-12);
+				font-style: italic;
 				margin: 15px;
 
-				& .btn.initialise-button {
-					width: 150px;
-					height: 75px;
-					font-size: var(--font-size-16);
-					padding: 15px;
+				& .initialise-extra-text {
+					width: 100%;
 					text-align: center;
+					color: var(--color-text-light-heading);
+					display: none;
+					margin: auto;
 				}
+
+				&:hover .initialise-extra-text {
+					display: block;
+				}
+			}
+
+			& .btn.initialise-button {
+				width: 100%;
+				height: 100%;
+				padding: 15px;
+				text-align: center;
 			}
 		}
 
@@ -406,6 +427,8 @@
 
 					& .profile-img {
 						background-color: #eee;
+						width: 180px;
+						max-height: 200px;
 					}
 
 					& .history-table {

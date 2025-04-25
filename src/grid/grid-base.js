@@ -316,6 +316,20 @@ export class Grid {
 		});
 		return hp;
 	}
+
+	calculateDamaged() {
+		let hp = 0;
+		this.gridRegions.forEach((region) => {
+			if (region) {
+				region.gridSpaces.forEach((row) => {
+					row.forEach((space) => {
+						if (space.state == GRID_SPACE_STATE.broken) hp = hp + 1;
+					});
+				});
+			}
+		});
+		return hp;
+	}
 }
 
 class GridRegion {

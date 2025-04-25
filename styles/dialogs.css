@@ -208,3 +208,10 @@ input:checked + .slider:before {
 	justify-content: center;
 	align-items: center;
 }
+.dialog-btn-row {
+	& .dialog-btn {
+		width: 40%;
+		padding: 2px 4px;
+		flex-grow: 1;
+	}
+}

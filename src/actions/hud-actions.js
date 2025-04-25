@@ -1,6 +1,7 @@
 // import { conditions, CONDITIONS } from "../conditions/conditions";
 import {ACTOR_TYPES} from "../constants.js";
 import {actionText} from "./basic-action-data.js";
+import {ReserveApDialog} from "../dialogs/reserve-ap-dialog.js";
 
 export class HUDActionCollection {
 	static addHUDActions() {
@@ -68,7 +69,6 @@ export class HUDActionCollection {
 			.createEmbeddedDocuments("Token", newDocuments)
 			.then((createdTokenList) => {
 				createdTokenList.forEach(async (createdToken) => {
-					console.log(createdToken.flags.fathomlessgears);
 					createdToken.update({height: 1, width: 1});
 					await createdToken.setFlag(
 						"fathomlessgears",
@@ -167,5 +167,33 @@ export class HUDActionCollection {
 		).then((messageText) => {
 			game.tagHandler.createChatMessage(messageText, speaker);
 		});
+	}
+
+	calculateRepairCost(speaker) {
+		if (speaker.type == ACTOR_TYPES.fish) return false;
+		const requirements = speaker.getRepairRequirements();
+		const spacesCost = Math.round(requirements.damagedSpaces / 2);
+		const repairCost = requirements.missingRepairKits * 2;
+		const resupply = 10;
+		const total = spacesCost + repairCost + resupply;
+
+		renderTemplate(
+			"systems/fathomlessgears/templates/messages/repair-costs.html",
+			{
+				heading: game.i18n
+					.localize("MESSAGE.repairCost")
+					.replace("_ACTOR_NAME_", speaker.name),
+				spacesCost: spacesCost,
+				repairKitsCost: repairCost,
+				resupplyCost: resupply,
+				total: total
+			}
+		).then((messageText) => {
+			game.tagHandler.createChatMessage(messageText, speaker);
+		});
+	}
+
+	holdAp(actor) {
+		new ReserveApDialog(actor);
 	}
 }

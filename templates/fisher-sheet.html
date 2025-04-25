@@ -20,16 +20,11 @@
 	</header>
     <div class="sheet-contents flex-row">
         {{#if showCover}}
-        <div class="initialiser flex-row">
-            {{#if showInitialiseButtons}}
-            <div class="initialise-button-base">
-                <div id="initialise-import" class="btn initialise-button">{{localize "SHEET.initgearwright"}}</div>
-            </div>
-            <div class="initialise-button-base">
-                <div id="initialise-manual" class="btn initialise-button">{{localize "SHEET.initmanual"}}</div>
-            </div>
-            {{/if}}
-        </div>
+        {{>
+            "systems/fathomlessgears/templates/partials/initialise-cover.html"
+            actor=actor
+            showInitialiseButtons = showInitialiseButtons
+        }}
         {{/if}}
         {{>
             "systems/fathomlessgears/templates/partials/attribute-sidebar.html"
@@ -52,22 +47,19 @@
                     <div class="tab-content flex-row">
                         <div class="col">
                             <div class="flex-row">
-                                <div class="sheet-col">
+                                <div class="sheet-col profile-img">
                                     <img
-                                        class="profile-img"
-                                        src="{{actor.system.pilot-portrait}}"
-                                        data-edit="system.pilot-portrait"
+                                        src="{{actor.system.pilot_portrait}}"
+                                        data-edit="system.pilot_portrait"
                                         title="{{actor.system.pilot-name}}"
-                                        max-height="200"
-                                        width="180"
                                     />
                                 </div>
                                 <div class="sheet-col flex-col flex-1">
                                     <div class="flex-row full-width">
                                         <input
                                             class="pilot-name sheet-input"
-                                            value="{{actor.system.fisher_history.character-name}}"
-                                            name="system.fisher_history.character-name"
+                                            value="{{actor.system.fisher_history.character_name}}"
+                                            name="system.fisher_history.character_name"
                                             type="text"
                                             placeholder="Pilot name"
                                         />

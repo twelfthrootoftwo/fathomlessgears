@@ -13,16 +13,11 @@
 	</header>
     <div class="sheet-contents flex-row">
         {{#if showCover}}
-        <div class="initialiser flex-row">
-            {{#if showInitialiseButtons}}
-            <div class="initialise-button-base">
-                <div id="initialise-import" class="btn initialise-button">{{localize "SHEET.initgearwright"}}</div>
-            </div>
-            <div class="initialise-button-base">
-                <div id="initialise-manual" class="btn initialise-button">{{localize "SHEET.initmanual"}}</div>
-            </div>
-            {{/if}}
-        </div>
+        {{>
+            "systems/fathomlessgears/templates/partials/initialise-cover.html"
+            actor=actor
+            showInitialiseButtons = showInitialiseButtons
+        }}
         {{/if}}
         {{>
             "systems/fathomlessgears/templates/partials/attribute-sidebar.html"

@@ -286,7 +286,6 @@ export class ItemsManager {
 	 * @param {Item} internal
 	 */
 	async applyInternal(internal) {
-		console.log("Applying internal");
 		const item = await Item.create(internal, {parent: this.actor});
 		item.setFlag("fathomlessgears", "broken", false);
 		this.actor.system.internals.push(item._id);
@@ -335,7 +334,6 @@ export class ItemsManager {
 
 		//Apply attribute changes
 		const isBroken = await internal.isBroken();
-		console.log("Toggling internal to broken state " + isBroken);
 		if (!internal.isSturdy()) {
 			Object.keys(internal.system.attributes).forEach((key) => {
 				if (
@@ -376,7 +374,6 @@ export class ItemsManager {
 		const isInternal =
 			item.type == ITEM_TYPES.internal_npc ||
 			item.type == ITEM_TYPES.internal_pc;
-		console.log("Clearing attributes");
 		let attributeChanged = false;
 		if (item.system.attributes) {
 			Object.keys(item.system.attributes).forEach((key) => {
@@ -388,7 +385,6 @@ export class ItemsManager {
 			});
 		}
 
-		console.log("Clearing resources");
 		if (this.actor.system.resources) {
 			if (item.system.repair_kits)
 				attributeChanged =
@@ -405,7 +401,6 @@ export class ItemsManager {
 		}
 
 		if (attributeChanged) {
-			console.log("Updating");
 			this.actor.calculateBallast();
 			await this.actor.update({system: this.actor.system});
 		}
@@ -414,7 +409,6 @@ export class ItemsManager {
 		const itemCheck = this.actor.items.get(uuid);
 		if (itemCheck) {
 			setTimeout(async () => {
-				console.log("Deleting item");
 				await item.delete();
 			}, 100);
 		}
@@ -439,7 +433,6 @@ export class ItemsManager {
 	}
 
 	async applyDevelopment(development) {
-		console.log("Applying development");
 		const item = await Item.create(development, {parent: this.actor});
 
 		//Special logic for Encore, since it's an activated development
@@ -469,7 +462,6 @@ export class ItemsManager {
 	}
 
 	async applyManeuver(maneuver) {
-		console.log("Applying maneuver");
 		const item = await Item.create(maneuver, {parent: this.actor});
 
 		item.setFlag("fathomlessgears", "activated", false);
@@ -479,7 +471,6 @@ export class ItemsManager {
 	}
 
 	async applyDeepWord(word) {
-		console.log("Applying deep word");
 		const item = await Item.create(word, {parent: this.actor});
 
 		item.setFlag("fathomlessgears", "activated", false);
@@ -689,7 +680,6 @@ export class ItemsManager {
 	 * @param {Item} condition The existing condition, updated with the new value
 	 */
 	async updateCondition(condition) {
-		console.log("Update condition");
 		Object.keys(condition.system.attributes).forEach((key) => {
 			if (condition.system.attributes[key] != 0) {
 				let found = false;
@@ -699,7 +689,6 @@ export class ItemsManager {
 					key
 				].values.standard.additions.forEach((modifier) => {
 					if (modifier.source == condition._id) {
-						console.log("Updating existing mod");
 						if (
 							modifier.value !=
 							condition.system.attributes[key] *
@@ -761,7 +750,6 @@ export class ItemsManager {
 			appliedEffect.statuses.has(condition.system.effectName)
 		)[0];
 		setTimeout(async () => {
-			console.log("Creating new counter");
 			await quickCreateCounter(effect, condition.system.value);
 		}, 100);
 	}

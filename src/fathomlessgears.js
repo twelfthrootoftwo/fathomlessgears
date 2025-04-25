@@ -6,7 +6,7 @@ import {HLMActiveEffect} from "./conditions/active-effect.js";
 import {HLMToken, HLMTokenDocument, TokenDropHandler} from "./tokens/token.js";
 import {preloadHandlebarsTemplates} from "./utilities/templates.js";
 import {initialiseHelpers} from "./utilities/handlebars.js";
-import {FshManager, addFshManager} from "./data-files/fsh-manager.js";
+import {addFshManager} from "./data-files/fsh-manager.js";
 import {HLMItemSheet} from "./sheets/item-sheet.js";
 import {conditions, discoverConditions} from "./conditions/conditions.js";
 import {GridHoverHUD} from "./tokens/grid-hover.js";
@@ -28,6 +28,7 @@ import {
 	HLMFishTemplateModel,
 	HLMHistoryModel
 } from "./items/base-item-schema.js";
+import {IntroDialog} from "./dialogs/intro-dialog.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -37,7 +38,7 @@ import {
  * Init hook.
  */
 Hooks.once("init", async function () {
-	console.log(`Initializing Hook, Line & Mecha System`);
+	console.log(`Initializing Fathomless Gears System`);
 
 	game.fathomlessgears = {
 		HLMActor,
@@ -160,25 +161,22 @@ export const system_ready = new Promise((success) => {
 		});
 		const dataFiles = game.settings.get("fathomlessgears", "datafiles");
 
-		if (dataFiles.length == 0) {
-			new Dialog({
-				title: game.i18n.localize("INTRO.title"),
-				content: "<p>" + game.i18n.localize("INTRO.main") + "</p>",
-				buttons: {
-					cancel: {
-						label: "Skip for now"
-					},
-					confirm: {
-						label: "Open .FSH Manager",
-						callback: async () => {
-							if (!FshManager.isOpen) {
-								new FshManager();
-							}
-						}
-					}
-				},
-				default: "confirm"
-			}).render(true);
+		game.settings.register("fathomlessgears", "introComplete", {
+			name: "Has viewed & checked intro dialog",
+			hint: "Stores the datafile sources for frames, internals, sizes, etc",
+			scope: "world",
+			config: false,
+			type: Boolean,
+			default: false,
+			requiresReload: false
+		});
+		const introComplete = game.settings.get(
+			"fathomlessgears",
+			"introComplete"
+		);
+
+		if (dataFiles.length == 0 && !introComplete) {
+			new IntroDialog();
 		}
 
 		CONFIG.statusEffects = foundry.utils.duplicate(conditions);

@@ -257,9 +257,6 @@ export function createHLMItemData(record, data, source) {
 export function createHLMItemSystem(itemType, data, source) {
 	let system = {};
 	switch (itemType) {
-		case ITEM_TYPES.tag:
-			console.log("Tags not implemented yet");
-			return null;
 		case ITEM_TYPES.size:
 			console.log("Constructing size...");
 			if (!testFieldsExist(data, "size"))

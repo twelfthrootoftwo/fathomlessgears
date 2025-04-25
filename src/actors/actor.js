@@ -64,7 +64,7 @@ export class HLMActor extends Actor {
 		});
 
 		this.calculateBallast();
-		this.applyConditions();
+		//this.applyConditions();
 	}
 
 	/** @inheritdoc */
@@ -102,7 +102,6 @@ export class HLMActor extends Actor {
 
 	/** @inheritdoc */
 	async update(data, options) {
-		console.log(data);
 		for (const [key, value] of Object.entries(data)) {
 			if (key == "system.attributes") {
 				//All attributes
@@ -191,6 +190,7 @@ export class HLMActor extends Actor {
 					);
 				} else if (
 					effect.getFlag("statuscounter", "counter") &&
+					effect.getFlag("statuscounter", "counter")?.value &&
 					effect.getFlag("statuscounter", "counter")?.value !=
 						matchingEffect.getFlag("statuscounter", "counter")
 							?.value
@@ -214,8 +214,6 @@ export class HLMActor extends Actor {
 				}
 			}
 			this.isTransferring = false;
-		} else {
-			console.log("Not first owner");
 		}
 	}
 
@@ -774,5 +772,17 @@ export class HLMActor extends Actor {
 			let effectId = findConditionEffect(CONDITIONS.focused);
 			token.toggleActiveEffect(effectId);
 		}
+	}
+
+	getRepairRequirements() {
+		if (this.type == ACTOR_TYPES.fish) return null;
+		const spaces = this.grid.calculateDamaged();
+		const repair =
+			this.system.resources.repair.max -
+			this.system.resources.repair.value;
+		return {
+			damagedSpaces: spaces,
+			missingRepairKits: repair
+		};
 	}
 }

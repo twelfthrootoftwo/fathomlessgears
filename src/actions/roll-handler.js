@@ -1,4 +1,4 @@
-import {RollElement, RollDialog} from "./roll-dialog.js";
+import {RollElement, RollDialog} from "../dialogs/roll-dialog.js";
 import {ReelHandler} from "./reel.js";
 import {constructCollapsibleRollMessage} from "./collapsible-roll.js";
 import {ATTRIBUTES, ROLL_MODIFIER_TYPE, HIT_TYPE} from "../constants.js";

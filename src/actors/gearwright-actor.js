@@ -120,7 +120,6 @@ async function applyFrame(importData, actor, gridObject) {
 async function applySize(importData, actor) {
 	let size = await Utils.findCompendiumItemFromName("size", importData.size);
 	if (!size && importData.size == "siltstalker leviathan") {
-		console.log("Trying alternative spelling");
 		size = await Utils.findCompendiumItemFromName("size", "siltstalker");
 	}
 	if (size) {
@@ -146,7 +145,6 @@ async function applyInternals(importData, actor, gridObject) {
 	for (const [key, internals] of Object.entries(internalsData)) {
 		let targetRegion =
 			gridObject.gridRegions[await getRegionIndexFromKey(key, actor)];
-		console.log(`Region ${key}`);
 
 		for (const internalIdentifier of internals) {
 			if (internalIdentifier.internal_name) {

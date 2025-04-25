@@ -1,0 +1,4 @@
+https://github.com/Larkinabout/fvtt-token-action-hud-template
+
+Originally released under CC BY 4.0
+Adapted for use with the Fathomless Gears system

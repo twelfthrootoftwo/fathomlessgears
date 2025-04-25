@@ -1,0 +1,22 @@
+<div class="message-body">
+    <div class="message-subheader flex-row">
+        <div>{{{heading}}}</div>
+    </div>
+    <div class="message-text col repair-cost-message">
+        <div class="flex-row">
+            <div class="repair-left">{{localize "MESSAGE.hardpoints"}}:</div><div class="repair-right">{{spacesCost}}</div>
+        </div>
+        <div class="flex-row">
+            <div class="repair-left">{{localize "RESOURCES.repair"}}:</div>
+            <div class="repair-right">{{repairKitsCost}}</div>
+        </div>
+        <div class="flex-row">
+            <div class="repair-left">{{localize "MESSAGE.resupply"}}:</div>
+            <div class="repair-right">{{resupplyCost}}</div>
+        </div>
+        <div class="flex-row total-repairs">
+            <div class="repair-left">{{localize "ROLLDIALOG.total"}}:</div>
+            <div class="repair-right">{{total}} Novok</div>
+        </div>
+    </div>
+</div>
