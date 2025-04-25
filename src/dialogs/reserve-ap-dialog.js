@@ -42,7 +42,6 @@ export class ReserveApDialog extends HLMApplication {
 	}
 
 	async triggerAction() {
-		console.log(this.ap);
 		const quickened = await findConditionFromStatus(CONDITIONS.quickened);
 		const evasive = await findConditionFromStatus(CONDITIONS.evasive);
 

@@ -144,7 +144,6 @@ export class HLMActorSheet extends ActorSheet {
 				rerender = true;
 			}
 		});
-		console.log("Triggering calculate ballast");
 		this.actor.calculateBallast();
 		this.actor.calculateAttributeTotals();
 		if (rerender) {

@@ -38,7 +38,7 @@ import {IntroDialog} from "./dialogs/intro-dialog.js";
  * Init hook.
  */
 Hooks.once("init", async function () {
-	console.log(`Initializing Hook, Line & Mecha System`);
+	console.log(`Initializing Fathomless Gears System`);
 
 	game.fathomlessgears = {
 		HLMActor,

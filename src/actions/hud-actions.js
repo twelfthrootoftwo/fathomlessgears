@@ -69,7 +69,6 @@ export class HUDActionCollection {
 			.createEmbeddedDocuments("Token", newDocuments)
 			.then((createdTokenList) => {
 				createdTokenList.forEach(async (createdToken) => {
-					console.log(createdToken.flags.fathomlessgears);
 					createdToken.update({height: 1, width: 1});
 					await createdToken.setFlag(
 						"fathomlessgears",

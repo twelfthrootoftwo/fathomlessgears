@@ -29,7 +29,6 @@ export class IntroDialog extends HLMApplication {
 	}
 
 	skip() {
-		console.log("Skip");
 		if (this.dontshow) {
 			this.saveDontShow();
 		}

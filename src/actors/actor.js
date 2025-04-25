@@ -102,7 +102,6 @@ export class HLMActor extends Actor {
 
 	/** @inheritdoc */
 	async update(data, options) {
-		console.log(data);
 		for (const [key, value] of Object.entries(data)) {
 			if (key == "system.attributes") {
 				//All attributes
@@ -215,8 +214,6 @@ export class HLMActor extends Actor {
 				}
 			}
 			this.isTransferring = false;
-		} else {
-			console.log("Not first owner");
 		}
 	}
 
