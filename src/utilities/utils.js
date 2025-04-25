@@ -113,7 +113,10 @@ export class Utils {
 	}
 
 	static isItem(itemType) {
-		return Object.keys(ITEM_TYPES).includes(itemType);
+		return (
+			Object.keys(ITEM_TYPES).includes(itemType) ||
+			Object.keys(ITEM_TYPES).includes(itemType.replace("_imported", ""))
+		);
 	}
 
 	static identifyAttackKey(internalType) {
@@ -245,10 +248,20 @@ export class Utils {
 				Utils.fromLowerHyphen(itemName.toLowerCase())
 		);
 		if (record.length < 1) {
-			ui.notifications.warn(
-				`Could not identify item ${itemName} in collection ${compendiumName}`
+			let alternateCompendium = await game.packs.get(
+				COMPENDIUMS[`${compendiumName}_imported`]
 			);
-			return false;
+			if (alternateCompendium) {
+				return await this.findCompendiumItemFromName(
+					`${compendiumName}_imported`,
+					itemName
+				);
+			} else {
+				ui.notifications.warn(
+					`Could not identify item ${itemName} in collection ${compendiumName}`
+				);
+				return false;
+			}
 		}
 		const item = await collection.getDocument(record[0]._id);
 		return item;

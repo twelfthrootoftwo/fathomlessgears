@@ -1,24 +1,3 @@
-2025/04/15-11:49:01.380181 7c2348ffe6c0 Recovering log #7
-2025/04/15-11:49:01.380278 7c2348ffe6c0 Level-0 table #9: started
-2025/04/15-11:49:01.388986 7c2348ffe6c0 Level-0 table #9: 7709 bytes OK
-2025/04/15-11:49:01.391081 7c2348ffe6c0 Delete type=3 #6
-2025/04/15-11:49:01.391132 7c2348ffe6c0 Delete type=0 #7
-2025/04/15-11:49:01.396413 7c2332ffd6c0 Level-0 table #12: started
-2025/04/15-11:49:01.397575 7c2332ffd6c0 Level-0 table #12: 7475 bytes OK
-2025/04/15-11:49:01.398319 7c2332ffd6c0 Delete type=0 #10
-2025/04/15-11:49:01.398389 7c2332ffd6c0 Manual compaction at level-0 from '!items!1XkiTBz1GEXHoBf0' @ 72057594037927935 : 1 .. '!items!y02ZM7DMm1zBYWhJ' @ 0 : 0; will stop at '!items!y02ZM7DMm1zBYWhJ' @ 44 : 1
-2025/04/15-11:49:01.398393 7c2332ffd6c0 Compacting 2@0 + 0@1 files
-2025/04/15-11:49:01.399063 7c2332ffd6c0 Generated table #13@0: 22 keys, 7475 bytes
-2025/04/15-11:49:01.399074 7c2332ffd6c0 Compacted 2@0 + 0@1 files => 7475 bytes
-2025/04/15-11:49:01.399765 7c2332ffd6c0 compacted to: files[ 0 1 1 0 0 0 0 ]
-2025/04/15-11:49:01.399814 7c2332ffd6c0 Delete type=2 #12
-2025/04/15-11:49:01.399863 7c2332ffd6c0 Delete type=2 #9
-2025/04/15-11:49:01.399917 7c2332ffd6c0 Manual compaction at level-0 from '!items!y02ZM7DMm1zBYWhJ' @ 44 : 1 .. '!items!y02ZM7DMm1zBYWhJ' @ 0 : 0; will stop at (end)
-2025/04/15-11:49:01.399939 7c2332ffd6c0 Manual compaction at level-1 from '!items!1XkiTBz1GEXHoBf0' @ 72057594037927935 : 1 .. '!items!y02ZM7DMm1zBYWhJ' @ 0 : 0; will stop at '!items!y02ZM7DMm1zBYWhJ' @ 57 : 1
-2025/04/15-11:49:01.399943 7c2332ffd6c0 Compacting 1@1 + 1@2 files
-2025/04/15-11:49:01.400660 7c2332ffd6c0 Generated table #14@1: 22 keys, 7475 bytes
-2025/04/15-11:49:01.400668 7c2332ffd6c0 Compacted 1@1 + 1@2 files => 7475 bytes
-2025/04/15-11:49:01.401390 7c2332ffd6c0 compacted to: files[ 0 0 1 0 0 0 0 ]
-2025/04/15-11:49:01.401424 7c2332ffd6c0 Delete type=2 #5
-2025/04/15-11:49:01.401467 7c2332ffd6c0 Delete type=2 #13
-2025/04/15-11:49:01.401503 7c2332ffd6c0 Manual compaction at level-1 from '!items!y02ZM7DMm1zBYWhJ' @ 57 : 1 .. '!items!y02ZM7DMm1zBYWhJ' @ 0 : 0; will stop at (end)
+2025/04/25-14:26:54.837174 701c4d3ed6c0 Recovering log #67
+2025/04/25-14:26:54.838843 701c4d3ed6c0 Delete type=0 #67
+2025/04/25-14:26:54.838860 701c4d3ed6c0 Delete type=3 #66
