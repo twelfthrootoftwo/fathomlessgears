@@ -121,7 +121,8 @@
 	],
 	"compatibility": {
 		"minimum": "11",
-		"verified": "11.315"
+		"verified": "11.315",
+		"maximum": "12.331"
 	},
 	"relationships": {
 		"requires": [
@@ -129,23 +130,19 @@
 				"id": "token-action-hud-FG",
 				"type": "module",
 				"manifest": "https://github.com/twelfthrootoftwo/fvtt-token-action-hud-FG/releases/latest/download/module.json",
-				"compatibility": [
-					{
-						"minimum": "0.5.1",
-						"verified": "0.5.1"
-					}
-				]
+				"compatibility": {
+					"minimum": "0.5.2",
+					"verified": "0.5.2"
+				}
 			},
 			{
 				"id": "token-action-hud-core",
 				"type": "module",
-				"compatibility": [
-					{
-						"minimum": "1.5.0",
-						"maximum": "1.5",
-						"verified": "1.5.0"
-					}
-				]
+				"compatibility": {
+					"minimum": "1.5.0",
+					"maximum": "1.5.7",
+					"verified": "1.5.7"
+				}
 			},
 			{
 				"id": "socketlib"
@@ -153,12 +150,11 @@
 			{
 				"id": "statuscounter",
 				"type": "module",
-				"compatibility": [
-					{
-						"minimum": "2.1.1",
-						"verified": "2.1.1"
-					}
-				]
+				"compatibility": {
+					"minimum": "2.1.1",
+					"verified": "2.1.1",
+					"maximum": "2.1.3"
+				}
 			}
 		]
 	},

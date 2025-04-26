@@ -697,9 +697,7 @@ export class ItemsManager {
 							modifier.value =
 								condition.system.attributes[key] *
 								condition.system.value;
-							changes = true;
 						}
-
 						found = true;
 					}
 				});

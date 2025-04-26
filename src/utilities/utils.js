@@ -238,7 +238,18 @@ export class Utils {
 	 * @returns the HLMItem from the compendium (null if not found)
 	 */
 	static async findCompendiumItemFromName(compendiumName, itemName) {
-		const collection = await game.packs.get(COMPENDIUMS[compendiumName]);
+		const compendiumAddress = COMPENDIUMS[compendiumName];
+		if (!compendiumAddress) {
+			console.error(`Invalid compendium request: ${compendiumName}`);
+			return;
+		}
+		const collection = await game.packs.get(compendiumAddress);
+		if (!collection) {
+			ui.notifications.error(
+				`Could not find compendium ${compendiumName} (have you uploaded your .fsh?)`
+			);
+			return;
+		}
 		if (!collection.indexed) {
 			await collection.getIndex();
 		}

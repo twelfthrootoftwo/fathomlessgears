@@ -280,7 +280,8 @@ export class HLMActor extends Actor {
 					this.queueApply = false;
 					await this.applyConditions();
 				}
-			} catch {
+			} catch (error) {
+				console.error(error);
 				this.updatingConditions = false;
 			}
 		} else {
