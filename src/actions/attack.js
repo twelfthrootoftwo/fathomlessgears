@@ -11,7 +11,7 @@ export class AttackHandler {
 		await attackRoll.evaluate();
 		const hitResult = AttackHandler.determineHitMargin(
 			attackRoll,
-			defender.system.attributes[rollParams.defenceKey],
+			defender.attributesWithConditions[rollParams.defenceKey],
 			AttackHandler.canCrit(rollParams.actor, rollParams.attribute),
 			rollParams.cover
 		);
@@ -40,6 +40,7 @@ export class AttackHandler {
 	}
 
 	static determineHitMargin(attackRoll, defenceAttr, canCrit, cover) {
+		console.log(defenceAttr);
 		const defenceVal = defenceAttr.total + defenceAttr.values.custom;
 		const modifiedDefence = AttackHandler.applyCover(defenceVal, cover);
 		const hitMargin = attackRoll.total - modifiedDefence;
