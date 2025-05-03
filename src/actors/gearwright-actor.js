@@ -118,10 +118,18 @@ async function applyFrame(importData, actor, gridObject) {
 }
 
 async function applySize(importData, actor) {
-	let size = await Utils.findCompendiumItemFromName("size", importData.size);
-	if (!size && importData.size == "siltstalker leviathan") {
-		size = await Utils.findCompendiumItemFromName("size", "siltstalker");
+	let size = null;
+	try {
+		size = await Utils.findCompendiumItemFromName("size", importData.size);
+	} catch (_e) {
+		if (mportData.size == "siltstalker leviathan") {
+			size = await Utils.findCompendiumItemFromName(
+				"size",
+				"siltstalker"
+			);
+		}
 	}
+
 	if (size) {
 		await actor.itemsManager.applySize(size);
 	} else {
