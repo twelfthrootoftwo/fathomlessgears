@@ -99,6 +99,7 @@ export class HUDActionCollection {
 					await effect.setCounterValue(
 						createdToken.actor.system.attributes.ballast.total
 					);
+					await effect.setCounterVisibility();
 
 					if (!originalToken.isLinked) {
 						createdToken.actor.setFlag(
