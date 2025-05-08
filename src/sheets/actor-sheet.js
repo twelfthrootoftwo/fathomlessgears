@@ -253,8 +253,8 @@ export class HLMActorSheet extends ActorSheet {
 
 	getLabels(actor) {
 		//Attributes
-		for (const attributeKey in actor.system.attributes) {
-			const attribute = actor.system.attributes[attributeKey];
+		for (const attributeKey in actor.attributesWithConditions) {
+			const attribute = actor.attributesWithConditions[attributeKey];
 			attribute.label = Utils.getLocalisedAttributeLabel(attributeKey);
 		}
 

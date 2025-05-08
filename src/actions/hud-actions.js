@@ -96,15 +96,8 @@ export class HUDActionCollection {
 							return effect.statuses.has("ballast");
 						}
 					)[0];
-					let effectCounter = new ActiveEffectCounter(
-						createdToken.actor.system.attributes.ballast.total,
-						effect.icon,
-						effect
-					);
-					await effect.setFlag(
-						"statuscounter",
-						"counter",
-						effectCounter
+					await effect.setCounterValue(
+						createdToken.actor.system.attributes.ballast.total
 					);
 
 					if (!originalToken.isLinked) {

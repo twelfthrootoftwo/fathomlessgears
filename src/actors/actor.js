@@ -168,6 +168,7 @@ export class HLMActor extends Actor {
 			this.isTransferring = true;
 			for (let effect of thisEffects) {
 				if (effect.statuses.has("ballast")) continue;
+				console.log(`In  transfer loop: ${effect.getCounterValue()}`);
 				let matchingEffect = pairedEffects.find(
 					(pairedEffect) => pairedEffect.name == effect.name
 				);
@@ -180,24 +181,25 @@ export class HLMActor extends Actor {
 							(appliedEffect) =>
 								appliedEffect.statuses.has(statusKey)
 						)[0];
-					setTimeout(
-						async () =>
-							await quickCreateCounter(
-								createdEffect,
-								effect.getFlag("statuscounter", "counter").value
-							),
-						100
-					);
+					setTimeout(async () => {
+						console.log(
+							`Transfer setting effect to ${effect.getCounterValue()}`
+						);
+						await quickCreateCounter(
+							createdEffect,
+							effect.getCounterValue()
+						);
+					}, 500);
 				} else if (
-					effect.getFlag("statuscounter", "counter") &&
-					effect.getFlag("statuscounter", "counter")?.value &&
-					effect.getFlag("statuscounter", "counter")?.value !=
-						matchingEffect.getFlag("statuscounter", "counter")
-							?.value
+					effect.getCounterValue() &&
+					effect.getCounterValue() != matchingEffect.getCounterValue()
 				) {
+					console.log(
+						`Updating counter to ${effect.getCounterValue()}`
+					);
 					await quickCreateCounter(
 						matchingEffect,
-						effect.getFlag("statuscounter", "counter").value
+						effect.getCounterValue()
 					);
 				}
 			}
@@ -231,7 +233,7 @@ export class HLMActor extends Actor {
 			(effect) => effect.name == targetEffect.name
 		);
 		if (!matchingEffect) return;
-		return matchingEffect.getFlag("statuscounter", "counter")?.value;
+		return matchingEffect.getCounterValue();
 	}
 
 	async applyConditions() {
@@ -245,8 +247,16 @@ export class HLMActor extends Actor {
 
 		if (!this.updatingConditions && game.availableConditionItems) {
 			this.updatingConditions = true;
-			this.attributesWithConditions =
-				foundry.utils.deepClone(this).system.attributes;
+			this.attributesWithConditions = null;
+			if (foundry.utils.isNewerVersion(game.version, 12)) {
+				let attrs = this.toObject().system.attributes;
+				this.attributesWithConditions = attrs;
+			} else {
+				this.attributesWithConditions = foundry.utils.deepClone(
+					this.system.attributes
+				);
+			}
+
 			try {
 				const conditionNames = [];
 				let effectArray = this.effects.contents;
@@ -258,7 +268,7 @@ export class HLMActor extends Actor {
 
 					if (
 						NUMBERED_CONDITIONS.includes(conditionName) &&
-						!activeEffect.flags.statuscounter
+						!activeEffect.hasCounterFlag()
 					) {
 						//Wait for the value to be saved
 						await new Promise((resolve) =>
@@ -291,12 +301,8 @@ export class HLMActor extends Actor {
 
 	async applySingleActiveEffect(activeEffect) {
 		if (this.queuedEffects.includes(activeEffect.name)) return;
-		let effectCounter = foundry.utils.getProperty(
-			activeEffect,
-			"flags.statuscounter.counter"
-		);
-		const counterValue = effectCounter.value
-			? effectCounter.value
+		const counterValue = activeEffect.getCounterValue()
+			? activeEffect.getCounterValue()
 			: await this.getPairedTokenValue(activeEffect);
 
 		const effectValue = Math.max(Math.min(counterValue, 3), -3);
@@ -317,7 +323,7 @@ export class HLMActor extends Actor {
 			game.i18n.localize(`CONDITIONS.${conditionName}`)
 		);
 		if (!condition) return 0;
-		return condition.flags.statuscounter.counter.value || 0;
+		return condition.getCounterValue() || 0;
 	}
 
 	getConditionItem(conditionName) {

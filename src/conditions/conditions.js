@@ -1,6 +1,5 @@
 //import {AttributeElement} from "../actors/items-manager.js";
 import {ITEM_TYPES} from "../constants.js";
-import {ActiveEffectCounter} from "../../../../modules/statuscounter/module/api.js";
 
 export const CONDITIONS = {
 	blind: "blind",
@@ -232,27 +231,8 @@ export const BALLAST_TOKEN_CONDITIONS = [
 ];
 
 export async function quickCreateCounter(activeEffect, value) {
-	let effectCounter = foundry.utils.getProperty(
-		activeEffect,
-		"flags.statuscounter.counter"
-	);
-	if (!effectCounter) {
-		effectCounter = new ActiveEffectCounter(
-			value || 1,
-			activeEffect.icon,
-			activeEffect
-		);
-	}
-	if (value) {
-		effectCounter.value = value;
-	} else {
-		effectCounter.value = 1;
-	}
-	effectCounter.visible = NUMBERED_CONDITIONS.includes(
-		activeEffect.statuses.values().next().value
-	);
-	await activeEffect.setFlag("statuscounter", "counter", effectCounter);
-	return effectCounter;
+	activeEffect.setCounterValue(value || 1);
+	activeEffect.setCounterVisibility();
 }
 
 /**

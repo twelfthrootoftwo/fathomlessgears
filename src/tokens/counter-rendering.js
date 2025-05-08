@@ -42,7 +42,7 @@ export function drawEffectCounters(token) {
 
 		const duplicates = imgCount.get(sprite.name) ?? 0;
 		const counter = findEffectByImage(token.actor, sprite.name, duplicates)
-			?.flags.statuscounter?.counter;
+			?.flags.statuscounter;
 		imgCount.set(sprite.name, duplicates + 1);
 		if (!counter) {
 			continue;

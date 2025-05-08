@@ -9,7 +9,6 @@ import {
 import {ConfirmDialog} from "../utilities/confirm-dialog.js";
 import {
 	BALLAST_TOKEN_CONDITIONS,
-	findConditionEffect,
 	quickCreateCounter
 } from "../conditions/conditions.js";
 
@@ -631,14 +630,11 @@ export class ItemsManager {
 					(appliedEffect) =>
 						appliedEffect.statuses.has(condition.system.effectName)
 				)[0];
-				let effectCounter = foundry.utils.getProperty(
-					existingEffect,
-					"flags.statuscounter.counter"
-				);
+				let effectCounter = existingEffect.getCounterValue();
 				let targetValue = Math.max(
 					Math.min(
 						effectCounter
-							? condition.system.value + effectCounter.value
+							? condition.system.value + effectCounter
 							: condition.system.value,
 						3
 					),
@@ -653,26 +649,6 @@ export class ItemsManager {
 				});
 			}
 		}
-	}
-
-	applyCondition(condition) {
-		//Apply attributes
-		Object.keys(condition.system.attributes).forEach((key) => {
-			if (
-				Utils.isAttribute(key) &&
-				condition.system.attributes[key] != 0
-			) {
-				const modifier = new AttributeElement(
-					condition.system.attributes[key] * condition.system.value,
-					condition._id,
-					"condition",
-					condition.name
-				);
-				this.actor.addAttributeModifier(key, modifier);
-			}
-		});
-
-		this.actor.calculateBallast();
 	}
 
 	/**
@@ -741,14 +717,19 @@ export class ItemsManager {
 		if (condition.system.value === -1) {
 			condition.system.value = 1;
 		}
-		await token.toggleActiveEffect(
-			findConditionEffect(condition.system.effectName)
-		);
+		let value = condition.system.value;
+		console.log(`Before: ${value}`);
+		// await token.toggleActiveEffect(
+		// 	findConditionEffect(condition.system.effectName)
+		// );
+		await token.actor.toggleStatusEffect(condition.system.effectName);
+		console.log(`After: ${value}`);
 		const effect = token.actor.appliedEffects.filter((appliedEffect) =>
 			appliedEffect.statuses.has(condition.system.effectName)
 		)[0];
 		setTimeout(async () => {
-			await quickCreateCounter(effect, condition.system.value);
+			await quickCreateCounter(effect, value);
+			console.log(`Set counter to ${value}`);
 		}, 100);
 	}
 
