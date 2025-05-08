@@ -1,1 +1,0 @@
-The contents of the `counter-rendering.js` file come from the Status Icon Counters by WoodenTavern: https://gitlab.com/woodentavern/status-icon-counters/ and are released under the LGPL v3 licence.
