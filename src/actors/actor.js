@@ -168,28 +168,23 @@ export class HLMActor extends Actor {
 			this.isTransferring = true;
 			for (let effect of thisEffects) {
 				if (effect.statuses.has("ballast")) continue;
-				console.log(`In  transfer loop: ${effect.getCounterValue()}`);
 				let matchingEffect = pairedEffects.find(
 					(pairedEffect) => pairedEffect.name == effect.name
 				);
 				if (!matchingEffect) {
 					const statusKey = effect.statuses.values().next().value;
-					const newEffect = await findConditionEffect(statusKey);
-					await pairedTokens[0].toggleActiveEffect(newEffect);
+					await pairedTokens[0].actor.toggleStatusEffect(statusKey);
 					const createdEffect =
 						pairedTokens[0].actor.appliedEffects.filter(
 							(appliedEffect) =>
 								appliedEffect.statuses.has(statusKey)
 						)[0];
 					setTimeout(async () => {
-						console.log(
-							`Transfer setting effect to ${effect.getCounterValue()}`
-						);
 						await quickCreateCounter(
 							createdEffect,
 							effect.getCounterValue()
 						);
-					}, 500);
+					}, 200);
 				} else if (
 					effect.getCounterValue() &&
 					effect.getCounterValue() != matchingEffect.getCounterValue()
@@ -211,8 +206,7 @@ export class HLMActor extends Actor {
 				);
 				if (!matchingEffect) {
 					const statusKey = effect.statuses.values().next().value;
-					const effectId = findConditionEffect(statusKey);
-					await pairedTokens[0].toggleActiveEffect(effectId);
+					await pairedTokens[0].actor.toggleStatusEffect(statusKey);
 				}
 			}
 			this.isTransferring = false;

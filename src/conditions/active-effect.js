@@ -12,9 +12,7 @@ export class HLMActiveEffect extends ActiveEffect {
 	}
 
 	_onUpdate(...args) {
-		console.log("Transfer on update");
 		this.parent.transferEffects();
-		console.log("Transfer complete");
 		super._onUpdate(...args);
 	}
 
@@ -31,9 +29,6 @@ export class HLMActiveEffect extends ActiveEffect {
 	}
 
 	async setCounterValue(value) {
-		console.log(`Setting value ${value}`);
-		// let counter = new ActiveEffectCounter(value, this.icon, this);
-		// await this.setFlag("statuscounter", "counter", counter);
 		await this.setFlag("statuscounter", "value", value);
 	}
 
