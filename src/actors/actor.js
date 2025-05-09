@@ -63,7 +63,7 @@ export class HLMActor extends Actor {
 			}, 2000);
 		});
 
-		this.calculateBallast();
+		this.system.attributes.ballast = this.calculateBallast();
 		//this.applyConditions();
 	}
 
@@ -189,9 +189,6 @@ export class HLMActor extends Actor {
 					effect.getCounterValue() &&
 					effect.getCounterValue() != matchingEffect.getCounterValue()
 				) {
-					console.log(
-						`Updating counter to ${effect.getCounterValue()}`
-					);
 					await quickCreateCounter(
 						matchingEffect,
 						effect.getCounterValue()
@@ -367,8 +364,9 @@ export class HLMActor extends Actor {
 	}
 
 	calculateAttributeData(attr) {
-		if (attr.label == "Ballast") {
-			return this.calculateBallastData(attr);
+		if (attr.key == "ballast") {
+			let result = this.calculateBallastData(attr);
+			return result;
 		}
 
 		let total = 0;
@@ -475,7 +473,12 @@ export class HLMActor extends Actor {
 		const ballast = this.calculateBallastData(
 			this.system.attributes.ballast
 		);
-		this.applyConditions();
+		this.system.attributes.ballast = ballast;
+		this.update({
+			"system.attributes.ballast": this.system.attributes.ballast
+		}).then(() => {
+			this.applyConditions();
+		});
 		return ballast;
 	}
 
