@@ -718,18 +718,12 @@ export class ItemsManager {
 			condition.system.value = 1;
 		}
 		let value = condition.system.value;
-		console.log(`Before: ${value}`);
-		// await token.toggleActiveEffect(
-		// 	findConditionEffect(condition.system.effectName)
-		// );
 		await token.actor.toggleStatusEffect(condition.system.effectName);
-		console.log(`After: ${value}`);
 		const effect = token.actor.appliedEffects.filter((appliedEffect) =>
 			appliedEffect.statuses.has(condition.system.effectName)
 		)[0];
 		setTimeout(async () => {
 			await quickCreateCounter(effect, value);
-			console.log(`Set counter to ${value}`);
 		}, 100);
 	}
 
