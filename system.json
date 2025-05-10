@@ -120,9 +120,8 @@
 		}
 	],
 	"compatibility": {
-		"minimum": "11",
-		"verified": "11.315",
-		"maximum": "12.331"
+		"minimum": "12",
+		"verified": "12.343"
 	},
 	"relationships": {
 		"requires": [
@@ -131,8 +130,8 @@
 				"type": "module",
 				"manifest": "https://github.com/twelfthrootoftwo/fvtt-token-action-hud-FG/releases/latest/download/module.json",
 				"compatibility": {
-					"minimum": "0.5.2",
-					"verified": "0.5.2"
+					"minimum": "0.6.0",
+					"verified": "0.6.0"
 				}
 			},
 			{
