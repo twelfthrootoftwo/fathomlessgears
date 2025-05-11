@@ -17,7 +17,7 @@ export class RollHandler {
 
 	startRollDialog(actor, attributeKey, internalId, actionCode) {
 		const modifiers = [];
-		const attribute = actor.system.attributes[attributeKey];
+		const attribute = actor.attributesWithConditions[attributeKey];
 		modifiers.push(
 			new RollElement(
 				attribute.values.standard.base,

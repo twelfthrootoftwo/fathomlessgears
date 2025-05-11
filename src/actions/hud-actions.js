@@ -108,16 +108,18 @@ export class HUDActionCollection {
 					);
 
 					if (!originalToken.isLinked) {
-						createdToken.actor.setFlag(
-							"fathomlessgears",
-							"originalActorReference",
-							originalToken.actor.uuid
-						);
-						originalToken.actor.setFlag(
-							"fathomlessgears",
-							"ballastActorReference",
-							createdToken.actor.uuid
-						);
+						setTimeout(() => {
+							createdToken.actor.setFlag(
+								"fathomlessgears",
+								"originalActorReference",
+								originalToken.actor.uuid
+							);
+							originalToken.actor.setFlag(
+								"fathomlessgears",
+								"ballastActorReference",
+								createdToken.actor.uuid
+							);
+						}, 50);
 					}
 					let createdTokenDrawn = canvas.tokens.placeables.filter(
 						(token) => token.document.id == createdToken.id

@@ -11,8 +11,8 @@ export class AttackHandler {
 		await attackRoll.evaluate();
 		const hitResult = AttackHandler.determineHitMargin(
 			attackRoll,
-			defender.system.attributes[rollParams.defenceKey],
-			AttackHandler.canCrit(rollParams.actor, rollParams.attribute),
+			defender.attributesWithConditions[rollParams.defenceKey],
+			AttackHandler.canCrit(rollParams.attribute),
 			rollParams.cover
 		);
 
@@ -139,10 +139,8 @@ export class AttackHandler {
 		return displayString.join("");
 	}
 
-	static canCrit(actor, attackKey) {
-		return (
-			actor.type === ACTOR_TYPES.fisher && attackKey != ATTRIBUTES.mental
-		);
+	static canCrit(attackKey) {
+		return attackKey != ATTRIBUTES.mental;
 	}
 
 	static async rollHitLocation(defender) {
@@ -235,9 +233,17 @@ export class AttackHandler {
 		if (rollParams.hideHitLocation) return false;
 		if (rollParams.attribute == ATTRIBUTES.mental) return false;
 		if (hitResult.upgraded) {
-			return hitResult.upgraded === HIT_TYPE.hit;
+			return (
+				hitResult.upgraded === HIT_TYPE.hit ||
+				(hitResult.upgraded === HIT_TYPE.crit &&
+					rollParams.actor.type === ACTOR_TYPES.fish)
+			);
 		} else {
-			return hitResult.original === HIT_TYPE.hit;
+			return (
+				hitResult.original === HIT_TYPE.hit ||
+				(hitResult.original === HIT_TYPE.crit &&
+					rollParams.actor.type === ACTOR_TYPES.fish)
+			);
 		}
 	}
 

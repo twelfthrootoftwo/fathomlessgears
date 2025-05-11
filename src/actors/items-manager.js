@@ -655,26 +655,6 @@ export class ItemsManager {
 		}
 	}
 
-	applyCondition(condition) {
-		//Apply attributes
-		Object.keys(condition.system.attributes).forEach((key) => {
-			if (
-				Utils.isAttribute(key) &&
-				condition.system.attributes[key] != 0
-			) {
-				const modifier = new AttributeElement(
-					condition.system.attributes[key] * condition.system.value,
-					condition._id,
-					"condition",
-					condition.name
-				);
-				this.actor.addAttributeModifier(key, modifier);
-			}
-		});
-
-		this.actor.calculateBallast();
-	}
-
 	/**
 	 * Changes the attribute modifiers associated with a condition
 	 * @param {Item} condition The existing condition, updated with the new value
