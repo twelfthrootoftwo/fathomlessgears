@@ -292,9 +292,12 @@ async function applyAdditionalFisher(importData, actor) {
 	targetCompendium = "deep_word";
 	for (const wordName of words) {
 		if (wordName) {
+			const wordId = DEEPWORD_NAME_MAP[wordName]
+				? DEEPWORD_NAME_MAP[wordName]
+				: wordName;
 			const word = await Utils.findCompendiumItemFromName(
 				targetCompendium,
-				DEEPWORD_NAME_MAP[wordName]
+				wordId
 			);
 			if (word) {
 				await actor.itemsManager.applyDeepWord(word);
