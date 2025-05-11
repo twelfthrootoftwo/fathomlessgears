@@ -118,10 +118,18 @@ async function applyFrame(importData, actor, gridObject) {
 }
 
 async function applySize(importData, actor) {
-	let size = await Utils.findCompendiumItemFromName("size", importData.size);
-	if (!size && importData.size == "siltstalker leviathan") {
-		size = await Utils.findCompendiumItemFromName("size", "siltstalker");
+	let size = null;
+	try {
+		size = await Utils.findCompendiumItemFromName("size", importData.size);
+	} catch (_e) {
+		if (mportData.size == "siltstalker leviathan") {
+			size = await Utils.findCompendiumItemFromName(
+				"size",
+				"siltstalker"
+			);
+		}
 	}
+
 	if (size) {
 		await actor.itemsManager.applySize(size);
 	} else {
@@ -284,9 +292,12 @@ async function applyAdditionalFisher(importData, actor) {
 	targetCompendium = "deep_word";
 	for (const wordName of words) {
 		if (wordName) {
+			const wordId = DEEPWORD_NAME_MAP[wordName]
+				? DEEPWORD_NAME_MAP[wordName]
+				: wordName;
 			const word = await Utils.findCompendiumItemFromName(
 				targetCompendium,
-				DEEPWORD_NAME_MAP[wordName]
+				wordId
 			);
 			if (word) {
 				await actor.itemsManager.applyDeepWord(word);

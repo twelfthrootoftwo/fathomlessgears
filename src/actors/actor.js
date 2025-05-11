@@ -509,14 +509,12 @@ export class HLMActor extends Actor {
 		ballast.values.standard.additions.forEach((element) => {
 			ballastMods += element.value;
 		});
-		ballast.total =
-			ballast.values.standard.base +
-			weightBallast +
-			ballastMods +
-			ballast.values.custom;
+		ballast.total = ballast.values.standard.base + weightBallast;
 
 		if (ballast.total < BALLAST_MIN) ballast.total = BALLAST_MIN;
 		if (ballast.total > BALLAST_MAX) ballast.total = BALLAST_MAX;
+
+		ballast.total = ballast.total + ballastMods + ballast.values.custom;
 		return ballast;
 	}
 
