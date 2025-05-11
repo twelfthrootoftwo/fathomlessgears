@@ -1,5 +1,4 @@
 import {BALLAST_TOKEN_CONDITIONS} from "../conditions/conditions.js";
-import {drawEffectCounters} from "./counter-rendering.js";
 
 /**
  * Extend the base TokenDocument to support resource type attributes.
@@ -25,57 +24,41 @@ export class HLMToken extends Token {
 	 * A copy of a core function with a small modification to filter non-aplicable effects
 	 * @override
 	 */
-	async drawEffects() {
-		const wasVisible = this.effects.visible;
-		this.effects.visible = false;
+	async _drawEffects() {
+		this.effects.renderable = false;
+
+		// Clear Effects Container
 		this.effects.removeChildren().forEach((c) => c.destroy());
 		this.effects.bg = this.effects.addChild(new PIXI.Graphics());
-		this.effects.bg.visible = false;
+		this.effects.bg.zIndex = -1;
 		this.effects.overlay = null;
 
 		// Categorize new effects
-		const tokenEffects = this.document.effects;
-		let actorEffects = this.actor?.temporaryEffects || [];
-		actorEffects = this.filterEffectList(actorEffects);
-		let overlay = {
-			src: this.document.overlayEffect,
-			tint: null
-		};
-
-		// Draw status effects
-		if (tokenEffects.length || actorEffects.length) {
-			const promises = [];
-
-			// Draw actor effects first
-			for (let f of actorEffects) {
-				if (!f.icon) continue;
-				const tint = Color.from(f.tint ?? null);
-				if (f.getFlag("core", "overlay")) {
-					if (overlay)
-						promises.push(
-							this._drawEffect(overlay.src, overlay.tint)
-						);
-					overlay = {src: f.icon, tint};
-					continue;
-				}
-				promises.push(this._drawEffect(f.icon, tint));
-			}
-
-			// Next draw token effects
-			for (let f of tokenEffects) {
-				promises.push(this._drawEffect(f, null));
-			}
-			await Promise.all(promises);
-		}
-
-		// Draw overlay effect
-		this.effects.overlay = await this._drawOverlay(
-			overlay.src,
-			overlay.tint
+		let activeEffects = this.actor?.temporaryEffects || [];
+		activeEffects = this.filterEffectList(activeEffects);
+		const overlayEffect = activeEffects.findLast(
+			(e) => e.img && e.getFlag("core", "overlay")
 		);
-		this.effects.bg.visible = true;
-		this.effects.visible = wasVisible;
-		this._refreshEffects();
+
+		// Draw effects
+		const promises = [];
+		for (const [i, effect] of activeEffects.entries()) {
+			if (!effect.img) continue;
+			const promise =
+				effect === overlayEffect
+					? this._drawOverlay(effect.img, effect.tint)
+					: this._drawEffect(effect.img, effect.tint);
+			promises.push(
+				promise.then((e) => {
+					if (e) e.zIndex = i;
+				})
+			);
+		}
+		await Promise.allSettled(promises);
+
+		this.effects.sortChildren();
+		this.effects.renderable = true;
+		this.renderFlags.set({refreshEffects: true});
 	}
 
 	filterEffectList(actorEffects) {
@@ -89,17 +72,6 @@ export class HLMToken extends Token {
 			}
 			return result;
 		});
-	}
-
-	_refreshEffects() {
-		super._refreshEffects();
-		drawEffectCounters(this);
-	}
-
-	async _drawEffect(src, tint) {
-		const icon = await super._drawEffect(src, tint);
-		if (icon) icon.name = src;
-		return icon;
 	}
 }
 

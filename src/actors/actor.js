@@ -63,7 +63,7 @@ export class HLMActor extends Actor {
 			}, 2000);
 		});
 
-		this.calculateBallast();
+		this.system.attributes.ballast = this.calculateBallast();
 		//this.applyConditions();
 	}
 
@@ -173,31 +173,25 @@ export class HLMActor extends Actor {
 				);
 				if (!matchingEffect) {
 					const statusKey = effect.statuses.values().next().value;
-					const newEffect = await findConditionEffect(statusKey);
-					await pairedTokens[0].toggleActiveEffect(newEffect);
+					await pairedTokens[0].actor.toggleStatusEffect(statusKey);
 					const createdEffect =
 						pairedTokens[0].actor.appliedEffects.filter(
 							(appliedEffect) =>
 								appliedEffect.statuses.has(statusKey)
 						)[0];
-					setTimeout(
-						async () =>
-							await quickCreateCounter(
-								createdEffect,
-								effect.getFlag("statuscounter", "counter").value
-							),
-						100
-					);
+					setTimeout(async () => {
+						await quickCreateCounter(
+							createdEffect,
+							effect.getCounterValue()
+						);
+					}, 200);
 				} else if (
-					effect.getFlag("statuscounter", "counter") &&
-					effect.getFlag("statuscounter", "counter")?.value &&
-					effect.getFlag("statuscounter", "counter")?.value !=
-						matchingEffect.getFlag("statuscounter", "counter")
-							?.value
+					effect.getCounterValue() &&
+					effect.getCounterValue() != matchingEffect.getCounterValue()
 				) {
 					await quickCreateCounter(
 						matchingEffect,
-						effect.getFlag("statuscounter", "counter").value
+						effect.getCounterValue()
 					);
 				}
 			}
@@ -209,8 +203,7 @@ export class HLMActor extends Actor {
 				);
 				if (!matchingEffect) {
 					const statusKey = effect.statuses.values().next().value;
-					const effectId = findConditionEffect(statusKey);
-					await pairedTokens[0].toggleActiveEffect(effectId);
+					await pairedTokens[0].actor.toggleStatusEffect(statusKey);
 				}
 			}
 			this.isTransferring = false;
@@ -231,7 +224,7 @@ export class HLMActor extends Actor {
 			(effect) => effect.name == targetEffect.name
 		);
 		if (!matchingEffect) return;
-		return matchingEffect.getFlag("statuscounter", "counter")?.value;
+		return matchingEffect.getCounterValue();
 	}
 
 	async applyConditions() {
@@ -245,8 +238,16 @@ export class HLMActor extends Actor {
 
 		if (!this.updatingConditions && game.availableConditionItems) {
 			this.updatingConditions = true;
-			this.attributesWithConditions =
-				foundry.utils.deepClone(this).system.attributes;
+			this.attributesWithConditions = null;
+			if (foundry.utils.isNewerVersion(game.version, 12)) {
+				let attrs = this.toObject().system.attributes;
+				this.attributesWithConditions = attrs;
+			} else {
+				this.attributesWithConditions = foundry.utils.deepClone(
+					this.system.attributes
+				);
+			}
+
 			try {
 				const conditionNames = [];
 				let effectArray = this.effects.contents;
@@ -258,7 +259,7 @@ export class HLMActor extends Actor {
 
 					if (
 						NUMBERED_CONDITIONS.includes(conditionName) &&
-						!activeEffect.flags.statuscounter
+						!activeEffect.hasCounterFlag()
 					) {
 						//Wait for the value to be saved
 						await new Promise((resolve) =>
@@ -291,12 +292,8 @@ export class HLMActor extends Actor {
 
 	async applySingleActiveEffect(activeEffect) {
 		if (this.queuedEffects.includes(activeEffect.name)) return;
-		let effectCounter = foundry.utils.getProperty(
-			activeEffect,
-			"flags.statuscounter.counter"
-		);
-		const counterValue = effectCounter.value
-			? effectCounter.value
+		const counterValue = activeEffect.getCounterValue()
+			? activeEffect.getCounterValue()
 			: await this.getPairedTokenValue(activeEffect);
 
 		const effectValue = Math.max(Math.min(counterValue, 3), -3);
@@ -317,7 +314,7 @@ export class HLMActor extends Actor {
 			game.i18n.localize(`CONDITIONS.${conditionName}`)
 		);
 		if (!condition) return 0;
-		return condition.flags.statuscounter.counter.value || 0;
+		return condition.getCounterValue() || 0;
 	}
 
 	getConditionItem(conditionName) {
@@ -367,8 +364,9 @@ export class HLMActor extends Actor {
 	}
 
 	calculateAttributeData(attr) {
-		if (attr.label == "Ballast") {
-			return this.calculateBallastData(attr);
+		if (attr.key == "ballast") {
+			let result = this.calculateBallastData(attr);
+			return result;
 		}
 
 		let total = 0;
@@ -475,7 +473,12 @@ export class HLMActor extends Actor {
 		const ballast = this.calculateBallastData(
 			this.system.attributes.ballast
 		);
-		this.applyConditions();
+		this.system.attributes.ballast = ballast;
+		this.update({
+			"system.attributes.ballast": this.system.attributes.ballast
+		}).then(() => {
+			this.applyConditions();
+		});
 		return ballast;
 	}
 

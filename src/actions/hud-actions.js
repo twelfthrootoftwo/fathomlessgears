@@ -58,13 +58,6 @@ export class HUDActionCollection {
 			newDocuments.push(newDocument);
 		});
 
-		const ballastConditionId = {
-			id: "ballast",
-			name: "CONDITIONS.ballast",
-			icon: "systems/fathomlessgears/assets/icons/Ballast.png",
-			statuses: []
-		};
-
 		canvas.scene
 			.createEmbeddedDocuments("Token", newDocuments)
 			.then((createdTokenList) => {
@@ -87,25 +80,17 @@ export class HUDActionCollection {
 							return effect.statuses.has("ballast");
 						});
 					if (ballastEffectList.length == 0) {
-						await createdToken.toggleActiveEffect(
-							ballastConditionId
-						);
+						await createdToken.actor.toggleStatusEffect("ballast");
 					}
 					const effect = createdToken.actor.appliedEffects.filter(
 						(effect) => {
 							return effect.statuses.has("ballast");
 						}
 					)[0];
-					let effectCounter = new ActiveEffectCounter(
-						createdToken.actor.system.attributes.ballast.total,
-						effect.icon,
-						effect
+					await effect.setCounterValue(
+						createdToken.actor.system.attributes.ballast.total
 					);
-					await effect.setFlag(
-						"statuscounter",
-						"counter",
-						effectCounter
-					);
+					await effect.setCounterVisibility();
 
 					if (!originalToken.isLinked) {
 						setTimeout(() => {
