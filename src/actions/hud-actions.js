@@ -50,11 +50,14 @@ export class HUDActionCollection {
 
 		const newDocuments = [];
 		tokens.forEach(async (token) => {
+			console.log(token);
 			const newDocument = await token.actor.getTokenDocument({
 				x: token.document.x + canvas.grid.size * 8,
 				y: token.document.y,
+				name: token.document.name,
 				flags: {fathomlessgears: {originalActor: token.actor.uuid}}
 			});
+			console.log(newDocument);
 			newDocuments.push(newDocument);
 		});
 
