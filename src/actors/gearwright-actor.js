@@ -48,6 +48,12 @@ export async function populateActorFromGearwright(actor, data) {
 }
 
 async function buildFisher(actor, data) {
+	if (data.callsign) {
+		actor.update({
+			name: data.callsign,
+			"prototypeToken.name": data.callsign
+		});
+	}
 	const gridObject = await constructGrid(actor);
 	await constructFisherData(data, actor);
 	await applyFrame(data, actor, gridObject);
