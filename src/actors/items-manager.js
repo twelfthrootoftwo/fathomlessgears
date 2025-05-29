@@ -630,7 +630,7 @@ export class ItemsManager {
 					(appliedEffect) =>
 						appliedEffect.statuses.has(condition.system.effectName)
 				)[0];
-				let effectCounter = existingEffect.getCounterValue();
+				let effectCounter = existingEffect?.getCounterValue();
 				let targetValue = Math.max(
 					Math.min(
 						effectCounter
