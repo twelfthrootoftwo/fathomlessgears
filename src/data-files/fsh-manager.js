@@ -155,9 +155,9 @@ export class FshManager extends HLMApplication {
 	 * @param {string} fileName Name of the uploaded file
 	 * @param {FileRecord} oldFile The file record to overwrite, if any (null if this is a new file)
 	 */
-	async onFileLoaded(ev, fileName, oldFile) {
+	async onFileLoaded(ev, fileName, options) {
 		const fileRecord = await constructFileRecord(ev, fileName);
-		await this.checkFileRecordExists(fileRecord, ev, oldFile);
+		await this.checkFileRecordExists(fileRecord, ev, options?.targetFile);
 	}
 
 	/**
@@ -289,7 +289,7 @@ export class FshManager extends HLMApplication {
 			ev.target.attributes.filename.value,
 			ev.target.attributes.version.value
 		);
-		new FileUploader(this, targetRecord);
+		new FileUploader(this, {targetFile: targetRecord});
 	}
 }
 

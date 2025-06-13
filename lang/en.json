@@ -180,5 +180,8 @@
 	"TAG.rollLabel": "Result",
 	"TAG.rollButton": "Roll again",
 	"TAG.success": "Success",
-	"TAG.failure": "Failure"
+	"TAG.failure": "Failure",
+
+	"IMPORT.import": "Import",
+	"IMPORT.useName": "Use imported actor name"
 }

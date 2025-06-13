@@ -18,7 +18,7 @@ import {
  * @param {HLMActor} actor The actor to populate
  * @param {Object} data JSON import of Gearwright save
  */
-export async function populateActorFromGearwright(actor, data) {
+export async function populateActorFromGearwright(actor, data, importName) {
 	if (
 		!testFieldsExist(data, actor.type) ||
 		!compatibleGearwrightVersion(data)
@@ -34,10 +34,10 @@ export async function populateActorFromGearwright(actor, data) {
 	await actor.itemsManager.removeItems();
 	switch (actor.type) {
 		case ACTOR_TYPES.fisher:
-			await buildFisher(actor, data);
+			await buildFisher(actor, data, importName);
 			break;
 		case ACTOR_TYPES.fish:
-			await buildFish(actor, data);
+			await buildFish(actor, data, importName);
 			break;
 	}
 	await actor.setFlag("fathomlessgears", "initialised", true);
@@ -47,8 +47,8 @@ export async function populateActorFromGearwright(actor, data) {
 	actor.isImporting = false;
 }
 
-async function buildFisher(actor, data) {
-	if (data.callsign) {
+async function buildFisher(actor, data, importName) {
+	if (data.callsign && importName) {
 		actor.update({
 			name: data.callsign,
 			"prototypeToken.name": data.callsign
@@ -67,8 +67,8 @@ async function buildFisher(actor, data) {
 	await actor.assignInteractiveGrid(gridObject);
 }
 
-async function buildFish(actor, data) {
-	if (data.name) {
+async function buildFish(actor, data, importName) {
+	if (data.name && importName) {
 		actor.update({name: data.name, "prototypeToken.name": data.name});
 	}
 	if (data.template)

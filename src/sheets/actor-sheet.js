@@ -401,15 +401,20 @@ export class HLMActorSheet extends ActorSheet {
 		if (!this.testOwnership()) {
 			return false;
 		}
-		new FileUploader(this);
+		new FileUploader(this, {importNameOption: true});
 	}
 
-	async onFileLoaded(fileData, _fileName) {
+	async onFileLoaded(fileData, _fileName, options) {
 		//process gearwright json
 		this.loading = true;
 		this.render();
 		const preparedData = JSON.parse(fileData);
-		populateActorFromGearwright(this.actor, preparedData).then(() => {
+		console.log(options);
+		populateActorFromGearwright(
+			this.actor,
+			preparedData,
+			options?.importNameFlag
+		).then(() => {
 			this.loading = false;
 			//Small delay to allow for the sheet to load post updates
 			setTimeout(() => {
