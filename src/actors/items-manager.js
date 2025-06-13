@@ -4,7 +4,8 @@ import {
 	ATTRIBUTES,
 	ITEM_TYPES,
 	GRID_TYPE,
-	TEMPLATE_WEIGHT
+	TEMPLATE_WEIGHT,
+	COMPENDIUMS
 } from "../constants.js";
 import {ConfirmDialog} from "../utilities/confirm-dialog.js";
 import {
@@ -479,14 +480,25 @@ export class ItemsManager {
 	}
 
 	async applyAllDeepWords() {
-		const collection = await game.packs.get(`world.deep_word`);
-		const records = collection.index.filter(
+		let collection = await game.packs.get(COMPENDIUMS.deep_word);
+		let records = collection.index.filter(
 			(p) => p.name != "Serenity, A Promise Kept"
 		);
 		records.forEach(async (record) => {
 			const item = await collection.getDocument(record._id);
 			this.applyDeepWord(item);
 		});
+
+		collection = await game.packs.get(COMPENDIUMS.deep_word_imported);
+		if (collection) {
+			records = collection.index.filter(
+				(p) => p.name != "Serenity, A Promise Kept"
+			);
+			records.forEach(async (record) => {
+				const item = await collection.getDocument(record._id);
+				this.applyDeepWord(item);
+			});
+		}
 	}
 
 	async applyBackground(background) {
