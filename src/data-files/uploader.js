@@ -50,7 +50,6 @@ export class FileUploader extends Application {
 			});
 		if (this.uploaderOptions.importNameOption) {
 			html.find(".import-name-checkbox").change(async (_evt) => {
-				console.log("Flipping flag");
 				this.uploaderOptions.importNameFlag =
 					!this.uploaderOptions.importNameFlag;
 			});
