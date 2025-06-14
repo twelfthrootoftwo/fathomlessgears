@@ -409,7 +409,6 @@ export class HLMActorSheet extends ActorSheet {
 		this.loading = true;
 		this.render();
 		const preparedData = JSON.parse(fileData);
-		console.log(options);
 		populateActorFromGearwright(
 			this.actor,
 			preparedData,

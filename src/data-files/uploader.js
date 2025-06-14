@@ -29,12 +29,10 @@ export class FileUploader extends Application {
 	async getData(options) {
 		const context = await super.getData(options);
 		context.importName = this.uploaderOptions?.importNameOption;
-		console.log(context);
 		return context;
 	}
 
 	activateListeners(html) {
-		console.log("Activating listeners");
 		super.activateListeners(html);
 		Utils.activateButtons(html);
 		let fileInput = document.getElementById("fsh-file-select");
