@@ -5,10 +5,14 @@ export class FileUploader extends Application {
 	manager;
 	newFile;
 
-	constructor(manager, targetFile = null) {
+	constructor(manager, options = null) {
 		super();
-		this.targetFile = targetFile;
+		this.uploaderOptions = options;
 		this.manager = manager;
+
+		if (this.uploaderOptions?.importNameOption) {
+			this.uploaderOptions.importNameFlag = true;
+		}
 		this.render(true);
 	}
 
@@ -18,8 +22,14 @@ export class FileUploader extends Application {
 			template: "systems/fathomlessgears/templates/uploader.html",
 			title: "File Upload",
 			width: 400,
-			height: 100
+			height: 115
 		});
+	}
+
+	async getData(options) {
+		const context = await super.getData(options);
+		context.importName = this.uploaderOptions?.importNameOption;
+		return context;
 	}
 
 	activateListeners(html) {
@@ -36,6 +46,12 @@ export class FileUploader extends Application {
 			?.addEventListener("click", () => {
 				this._onUploadButtonClick().then();
 			});
+		if (this.uploaderOptions.importNameOption) {
+			html.find(".import-name-checkbox").change(async (_evt) => {
+				this.uploaderOptions.importNameFlag =
+					!this.uploaderOptions.importNameFlag;
+			});
+		}
 	}
 
 	/**
@@ -59,7 +75,7 @@ export class FileUploader extends Application {
 				.onFileLoaded(
 					ev.target.result,
 					this.newFile.name,
-					this.targetFile
+					this.uploaderOptions
 				)
 				.then();
 			this.close();

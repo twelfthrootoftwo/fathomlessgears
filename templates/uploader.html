@@ -1,11 +1,17 @@
 <form autocomplete="off">
     <div class="col">
-        <div>Import .fsh</div>
+        <div>{{localize "IMPORT.import"}} .fsh</div>
         <div class="import-row">
             <input id="fsh-file-select" type="file" name="fsh-file-select" class="file-upload" accept=".json, .fsh">
             <div class="file-upload-button btn" title="Import" tabindex="-1">
-                <label>Import</label>
+                <label>{{localize "IMPORT.import"}}</label>
             </div>
         </div>
+        {{#if importName}}
+            <div class="flex-row">
+                <input class="inline-checkbox import-name-checkbox" type="checkbox" checked>
+                <p class="activated-text font-12">{{localize "IMPORT.useName"}}</p>
+            </div>
+        {{/if}}
     </div>
 </form>

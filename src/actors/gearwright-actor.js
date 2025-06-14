@@ -18,12 +18,19 @@ import {
  * @param {HLMActor} actor The actor to populate
  * @param {Object} data JSON import of Gearwright save
  */
-export async function populateActorFromGearwright(actor, data) {
+export async function populateActorFromGearwright(actor, data, importName) {
 	if (
 		!testFieldsExist(data, actor.type) ||
 		!compatibleGearwrightVersion(data)
 	) {
 		ui.notifications.error("Invalid Gearwright save data");
+		let otherType =
+			actor.type == ACTOR_TYPES.fisher
+				? ACTOR_TYPES.fish
+				: ACTOR_TYPES.fisher;
+		if (testFieldsExist(data, otherType)) {
+			ui.notifications.warn(`Did you mean to create a ${otherType}?`);
+		}
 		return false;
 	}
 	console.log("Importing actor from gearwright");
@@ -34,10 +41,10 @@ export async function populateActorFromGearwright(actor, data) {
 	await actor.itemsManager.removeItems();
 	switch (actor.type) {
 		case ACTOR_TYPES.fisher:
-			await buildFisher(actor, data);
+			await buildFisher(actor, data, importName);
 			break;
 		case ACTOR_TYPES.fish:
-			await buildFish(actor, data);
+			await buildFish(actor, data, importName);
 			break;
 	}
 	await actor.setFlag("fathomlessgears", "initialised", true);
@@ -47,7 +54,13 @@ export async function populateActorFromGearwright(actor, data) {
 	actor.isImporting = false;
 }
 
-async function buildFisher(actor, data) {
+async function buildFisher(actor, data, importName) {
+	if (data.callsign && importName) {
+		actor.update({
+			name: data.callsign,
+			"prototypeToken.name": data.callsign
+		});
+	}
 	const gridObject = await constructGrid(actor);
 	await constructFisherData(data, actor);
 	await applyFrame(data, actor, gridObject);
@@ -61,8 +74,8 @@ async function buildFisher(actor, data) {
 	await actor.assignInteractiveGrid(gridObject);
 }
 
-async function buildFish(actor, data) {
-	if (data.name) {
+async function buildFish(actor, data, importName) {
+	if (data.name && importName) {
 		actor.update({name: data.name, "prototypeToken.name": data.name});
 	}
 	if (data.template)
