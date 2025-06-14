@@ -24,6 +24,13 @@ export async function populateActorFromGearwright(actor, data, importName) {
 		!compatibleGearwrightVersion(data)
 	) {
 		ui.notifications.error("Invalid Gearwright save data");
+		let otherType =
+			actor.type == ACTOR_TYPES.fisher
+				? ACTOR_TYPES.fish
+				: ACTOR_TYPES.fisher;
+		if (testFieldsExist(data, otherType)) {
+			ui.notifications.warn(`Did you mean to create a ${otherType}?`);
+		}
 		return false;
 	}
 	console.log("Importing actor from gearwright");
