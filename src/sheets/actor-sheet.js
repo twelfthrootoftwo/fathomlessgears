@@ -42,7 +42,7 @@ export class HLMActorSheet extends ActorSheet {
 				async: true
 			}
 		);
-		this.getLabels(context.actor);
+		this.getResourceLabels(context.actor);
 		context.scan_text = await context.actor.getScanText();
 		context.template =
 			context.actor.itemTypes.fish_template.length > 0
@@ -66,6 +66,7 @@ export class HLMActorSheet extends ActorSheet {
 		for (const [key, value] of Object.entries(
 			context.actor.attributesWithConditions
 		)) {
+			value.label = Utils.getLocalisedAttributeLabel(key);
 			if (key == "ballast") {
 				context.ballast = value;
 			} else {
@@ -251,13 +252,7 @@ export class HLMActorSheet extends ActorSheet {
 		return this.actor.testUserPermission(game.user, "OWNER");
 	}
 
-	getLabels(actor) {
-		//Attributes
-		for (const attributeKey in actor.attributesWithConditions) {
-			const attribute = actor.attributesWithConditions[attributeKey];
-			attribute.label = Utils.getLocalisedAttributeLabel(attributeKey);
-		}
-
+	getResourceLabels(actor) {
 		//Resources
 		if (actor.system.resources) {
 			for (const resourceKey in actor.system.resources) {
