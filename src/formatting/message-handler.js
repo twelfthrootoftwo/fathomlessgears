@@ -99,10 +99,15 @@ export class MessageHandler {
 	}
 
 	formatText(text, context) {
+		console.log("formatText called");
 		this.tagItems.forEach((tag) => {
+			let alternateText = tag.system.alternateName || "NULL";
 			//Convert plaintext items into tags
 			if (tag.system.value != null) {
-				const re = new RegExp(` ${tag.name} (\\d\\+?)`, "i");
+				const re = new RegExp(
+					` (${tag.name}|${alternateText}) (\\d\\+?)`,
+					"i"
+				);
 				const result = re.exec(text);
 				if (result) {
 					text = text.replace(
@@ -111,8 +116,9 @@ export class MessageHandler {
 					);
 				}
 			} else {
-				const re = new RegExp(` ${tag.name}`, "i");
-				const result = re.exec(text);
+				let re = new RegExp(` (${tag.name}|${alternateText})`, "i");
+				let result = re.exec(text);
+
 				if (result) {
 					text = text.replace(
 						re,
@@ -124,7 +130,7 @@ export class MessageHandler {
 			//Convert existing tags to enriched versions
 			if (tag.system.value != null) {
 				const re = new RegExp(
-					`<div class="tag-display no-listener format-me" id="${tag.name}">${tag.name} (\\d\\+?)</div>`,
+					`<div class="tag-display no-listener format-me" id="${tag.name}">(${tag.name}|${alternateText}) (\\d\\+?)</div>`,
 					"i"
 				);
 				const result = re.exec(text);
@@ -136,7 +142,7 @@ export class MessageHandler {
 				}
 			} else {
 				const re = new RegExp(
-					`<div class="tag-display no-listener format-me" id="${tag.name}">${tag.name}</div>`,
+					`<div class="tag-display no-listener format-me" id="${tag.name}">(${tag.name}|${alternateText})</div>`,
 					"i"
 				);
 				const result = re.exec(text);
@@ -164,6 +170,7 @@ export class MessageHandler {
 	}
 
 	conditionToDisplay(condition, value, context) {
+		console.log("Formatting condition");
 		let valueText = "";
 		let valueHTMLTag = "";
 		if (value) {
