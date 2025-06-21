@@ -78,6 +78,10 @@ export class HLMConditionModel extends foundry.abstract.TypeDataModel {
 			required: true,
 			blank: true
 		});
+		schema.alternateName = new fields.StringField({
+			required: false,
+			blank: false
+		});
 		return schema;
 	}
 }

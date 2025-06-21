@@ -4,6 +4,7 @@
 	"_id": "Sya1y68SF8Z0q3pD",
 	"img": "icons/svg/item-bag.svg",
 	"system": {
+		"alternateName": "Hover",
 		"source": {
 			"filename": "FG Sensitive",
 			"version": "#{VERSION}#"

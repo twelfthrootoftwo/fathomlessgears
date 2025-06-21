@@ -4,6 +4,7 @@
 	"_id": "sDftHq9o39yOxBiw",
 	"img": "icons/svg/item-bag.svg",
 	"system": {
+		"alternateName": "Blind",
 		"source": {
 			"filename": "FG Sensitive",
 			"version": "#{VERSION}#"
