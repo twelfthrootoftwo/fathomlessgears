@@ -222,7 +222,6 @@ export class HLMActorSheet extends ActorSheet {
 			);
 		}
 
-		console.log("Applying formatter");
 		game.tagHandler.transformTagNameToButton($(this.element).get(0));
 		game.tagHandler.addListeners();
 	}

@@ -99,7 +99,6 @@ export class MessageHandler {
 	}
 
 	formatText(text, context) {
-		console.log("formatText called");
 		this.tagItems.forEach((tag) => {
 			let alternateText = tag.system.alternateName || "NULL";
 			//Convert plaintext items into tags
@@ -135,7 +134,6 @@ export class MessageHandler {
 				);
 				const result = re.exec(text);
 				if (result) {
-					console.log(result);
 					text = text.replace(
 						re,
 						this.formatTagItem(tag, result[1], context)
@@ -171,11 +169,9 @@ export class MessageHandler {
 	}
 
 	conditionToDisplay(condition, value, context) {
-		console.log("Formatting condition");
 		let valueText = "";
 		let valueHTMLTag = "";
 		if (value) {
-			console.log(value);
 			valueText = ` ${value}`;
 			valueHTMLTag = ` data-value=${value}`;
 		}
@@ -187,7 +183,6 @@ export class MessageHandler {
 		} else {
 			itemText = `${condition.name}${valueText}`;
 		}
-		console.log(itemText);
 		return `<div class="tag-display${withCode} inline-block no-listener"${valueHTMLTag} data-tagItemId="${condition.uuid}">${itemText}</div>`;
 	}
 
@@ -255,7 +250,6 @@ export class MessageHandler {
 		let targetClasses = ["format-me"];
 		targetClasses.forEach((className) => {
 			if (node.classList?.contains(className)) {
-				console.log("Found correct class");
 				correctLocation = true;
 			}
 		});
