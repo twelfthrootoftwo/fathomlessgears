@@ -105,7 +105,7 @@ export class MessageHandler {
 			//Convert plaintext items into tags
 			if (tag.system.value != null) {
 				const re = new RegExp(
-					` (${tag.name}|${alternateText}) (\\d\\+?)`,
+					` (?:${tag.name}|${alternateText}) (\\d\\+?)`,
 					"i"
 				);
 				const result = re.exec(text);
@@ -116,7 +116,7 @@ export class MessageHandler {
 					);
 				}
 			} else {
-				let re = new RegExp(` (${tag.name}|${alternateText})`, "i");
+				let re = new RegExp(` (?:${tag.name}|${alternateText})`, "i");
 				let result = re.exec(text);
 
 				if (result) {
@@ -130,11 +130,12 @@ export class MessageHandler {
 			//Convert existing tags to enriched versions
 			if (tag.system.value != null) {
 				const re = new RegExp(
-					`<div class="tag-display no-listener format-me" id="${tag.name}">(${tag.name}|${alternateText}) (\\d\\+?)</div>`,
+					`<div class="tag-display no-listener format-me" id="${tag.name}">(?:${tag.name}|${alternateText}) (\\d\\+?)</div>`,
 					"i"
 				);
 				const result = re.exec(text);
 				if (result) {
+					console.log(result);
 					text = text.replace(
 						re,
 						this.formatTagItem(tag, result[1], context)
@@ -142,7 +143,7 @@ export class MessageHandler {
 				}
 			} else {
 				const re = new RegExp(
-					`<div class="tag-display no-listener format-me" id="${tag.name}">(${tag.name}|${alternateText})</div>`,
+					`<div class="tag-display no-listener format-me" id="${tag.name}">(?:${tag.name}|${alternateText})</div>`,
 					"i"
 				);
 				const result = re.exec(text);
@@ -174,6 +175,7 @@ export class MessageHandler {
 		let valueText = "";
 		let valueHTMLTag = "";
 		if (value) {
+			console.log(value);
 			valueText = ` ${value}`;
 			valueHTMLTag = ` data-value=${value}`;
 		}
@@ -185,7 +187,7 @@ export class MessageHandler {
 		} else {
 			itemText = `${condition.name}${valueText}`;
 		}
-
+		console.log(itemText);
 		return `<div class="tag-display${withCode} inline-block no-listener"${valueHTMLTag} data-tagItemId="${condition.uuid}">${itemText}</div>`;
 	}
 
@@ -253,6 +255,7 @@ export class MessageHandler {
 		let targetClasses = ["format-me"];
 		targetClasses.forEach((className) => {
 			if (node.classList?.contains(className)) {
+				console.log("Found correct class");
 				correctLocation = true;
 			}
 		});
