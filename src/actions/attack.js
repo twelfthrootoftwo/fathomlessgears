@@ -1,6 +1,5 @@
 import {Utils} from "../utilities/utils.js";
 import {ACTOR_TYPES, ATTRIBUTES, HIT_TYPE, COVER_STATES} from "../constants.js";
-import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js";
 
 export class AttackHandler {
 	static async rollToHit(rollParams, defender) {
@@ -94,7 +93,6 @@ export class AttackHandler {
 
 	static async hitRollText(
 		attackRoll,
-		attackAttrLabel,
 		hitResult,
 		locationResult,
 		modifierStack
@@ -112,18 +110,20 @@ export class AttackHandler {
 			hitResultText = game.i18n.localize("HIT." + hitResult.original);
 		}
 
+		let collapsibleRollInfo = {
+			parts: attackRoll.dice.map((d) => d.getTooltipData()),
+			formula: attackRoll.formula,
+			total: attackRoll.total
+		};
 		const hitRollDisplay = await renderTemplate(
-			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
+			"systems/fathomlessgears/templates/partials/to-hit-partial.html",
 			{
-				label_left: game.i18n
-					.localize("ROLLTEXT.attackIntro")
-					.replace("_ATTRIBUTE_NAME_", attackAttrLabel),
-				total: await constructCollapsibleRollMessage(attackRoll),
-				outcome: hitResultText,
-				preformat: true,
-				modifiers: modifierStack
+				modifiers: modifierStack,
+				collapsibleRollInfo: collapsibleRollInfo,
+				outcome: hitResultText
 			}
 		);
+
 		displayString.push(hitRollDisplay);
 
 		if (locationResult != null) {
@@ -178,14 +178,23 @@ export class AttackHandler {
 	static async generateLocationDisplay(locationResult) {
 		const locationDisplayParts = [];
 		if (locationResult.locationRoll.formula !== "1") {
+			let collapsibleRollData = {
+				parts: locationResult.locationRoll.dice.map((d) =>
+					d.getTooltipData()
+				),
+				formula: locationResult.locationRoll.formula,
+				total: locationResult.locationRoll.total
+			};
+			let total = await renderTemplate(
+				"systems/fathomlessgears/templates/partials/collapsible-roll.html",
+				collapsibleRollData
+			);
 			let hitZone = await renderTemplate(
 				"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
 				{
 					label_left: game.i18n.localize("ROLLTEXT.hitZone"),
 					tooltip: `${locationResult.locationRoll.formula}:  ${locationResult.locationRoll.result}`,
-					total: await constructCollapsibleRollMessage(
-						locationResult.locationRoll
-					),
+					total: total,
 					outcome: Utils.getLocalisedHitZone(
 						locationResult.hitZone.location
 					),
@@ -194,14 +203,22 @@ export class AttackHandler {
 			);
 			locationDisplayParts.push(hitZone);
 		}
+		let total = await renderTemplate(
+			"systems/fathomlessgears/templates/partials/collapsible-roll.html",
+			{
+				parts: locationResult.columnRoll.dice.map((d) =>
+					d.getTooltipData()
+				),
+				formula: locationResult.columnRoll.formula,
+				total: locationResult.columnRoll.total
+			}
+		);
 		const column = await renderTemplate(
 			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
 			{
 				label_left: game.i18n.localize("ROLLTEXT.hitColumn"),
 				tooltip: locationResult.columnRoll.formula,
-				total: await constructCollapsibleRollMessage(
-					locationResult.columnRoll
-				),
+				total: total,
 				preformat: true
 			}
 		);

@@ -8,6 +8,7 @@ export const preloadHandlebarsTemplates = async function () {
 		"systems/fathomlessgears/templates/partials/attack-info.html",
 		"systems/fathomlessgears/templates/partials/attribute-box.html",
 		"systems/fathomlessgears/templates/partials/attribute-sidebar.html",
+		"systems/fathomlessgears/templates/partials/collapsible-roll.html",
 		"systems/fathomlessgears/templates/partials/development-partial.html",
 		"systems/fathomlessgears/templates/partials/grid-box.html",
 		"systems/fathomlessgears/templates/partials/grid-region.html",

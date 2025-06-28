@@ -1,0 +1,24 @@
+{{#if modifiers}}
+<div class="modifier-info flex-row">
+    {{#each modifiers}}
+    {{>
+    "systems/fathomlessgears/templates/partials/roll-modifier-list-partial.html"
+    modifier=this
+    }}
+    {{/each}}
+</div>
+{{/if}}
+{{log collapsibleRollInfo}}
+<div class="new-hit-result flex-row">
+    <div class="hit-roll">
+        {{>
+            "systems/fathomlessgears/templates/partials/collapsible-roll.html"
+            parts = collapsibleRollInfo.parts
+            formula = collapsibleRollInfo.formula
+            total = collapsibleRollInfo.total
+        }}
+    </div>
+    <div class="hit-roll-label">
+        <div class="roll-outcome-text">{{{outcome}}}</div>
+    </div>
+</div>
