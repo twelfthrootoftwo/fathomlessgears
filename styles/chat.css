@@ -107,6 +107,20 @@
 		}
 	}
 }
+.rollable-tag-row {
+	padding: 4px;
+
+	& .rollable-tag-holder {
+		margin: 0px 2px;
+		flex: 1 0 100px;
+
+		& .tag-roll-btn {
+			padding: 2px;
+			font-size: var(--font-size-13);
+			font-style: italic;
+		}
+	}
+}
 
 .dice-tooltip .roll-formula-display {
 	text-align: center;

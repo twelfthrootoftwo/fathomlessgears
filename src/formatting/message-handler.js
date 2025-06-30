@@ -326,4 +326,8 @@ export class MessageHandler {
 			});
 		});
 	}
+
+	getTags() {
+		return foundry.utils.deepClone(this.tagItems);
+	}
 }

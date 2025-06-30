@@ -546,7 +546,7 @@ export class HLMActor extends Actor {
 	async triggerRolledItem(rollParams) {
 		const internal = this.items.get(rollParams.internalId);
 		const rollOutput = await game.rollHandler.rollTargeted(rollParams);
-		const displayString = await renderTemplate(
+		let displayString = await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: internal,
@@ -557,6 +557,20 @@ export class HLMActor extends Actor {
 				marbleText: game.i18n.localize("INTERNALS.marbles")
 			}
 		);
+
+		let tags = internal.getRollableTags();
+		if (tags.length > 0) {
+			tags.forEach((tag) => {
+				tag.rollspecs = JSON.stringify(tag.system.roll);
+			});
+			let tagButtonHtml = await renderTemplate(
+				"systems/fathomlessgears/templates/partials/tag-buttons.html",
+				{
+					tags: tags
+				}
+			);
+			displayString = displayString.concat(tagButtonHtml);
+		}
 		game.tagHandler.createChatMessage(displayString, this);
 	}
 
