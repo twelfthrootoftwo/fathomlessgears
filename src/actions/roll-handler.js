@@ -155,11 +155,11 @@ export class RollHandler {
 						rollParams.actor.system.gridType
 					);
 					const damageText = await renderTemplate(
-						"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
+						"systems/fathomlessgears/templates/partials/damage-partial.html",
 						{
-							label_left: game.i18n.localize("INTERNALS.damage"),
-							total: actorGrid.system.bashDamage,
-							outcome: ""
+							text: game.i18n.localize("INTERNALS.damage"),
+							damageVal: actorGrid.system.bashDamage,
+							damageType: "damage"
 						}
 					);
 					rollText = rollText.concat(damageText);
@@ -174,11 +174,11 @@ export class RollHandler {
 						rollParams.actor.system.gridType
 					);
 					const damageText = await renderTemplate(
-						"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
+						"systems/fathomlessgears/templates/partials/damage-partial.html",
 						{
-							label_left: game.i18n.localize("INTERNALS.marbles"),
-							total: actorGrid.system.threatDisplayMarbles,
-							outcome: ""
+							text: game.i18n.localize("INTERNALS.marbles"),
+							damageVal: actorGrid.system.threatDisplayMarbles,
+							damageType: "marbles"
 						}
 					);
 					rollText = rollText.concat(damageText);
