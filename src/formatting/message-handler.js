@@ -42,13 +42,17 @@ export class MessageHandler {
 			tagElement.classList.add("btn-active");
 		});
 
-		const tagRollButtons = document.querySelectorAll(".tag-roll-btn");
+		const tagRollButtons = document.querySelectorAll(
+			".tag-roll-btn.no-listener"
+		);
 		tagRollButtons.forEach((button) => {
 			button.addEventListener(
 				"click",
 				(ev) => this.onTagReroll(ev),
 				true
 			);
+			button.classList.remove("no-listener");
+			button.classList.add("btn-active");
 		});
 	}
 
