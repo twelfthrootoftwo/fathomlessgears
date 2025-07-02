@@ -227,6 +227,7 @@ export class MessageHandler {
 		await roll.evaluate();
 
 		let success = roll.total >= tagRoll.success;
+		let rollSpecs = JSON.stringify(tagRoll);
 
 		let html = await renderTemplate(
 			"systems/fathomlessgears/templates/partials/tag-roll.html",
@@ -235,7 +236,8 @@ export class MessageHandler {
 				outcome: success
 					? game.i18n.localize("TAG.success")
 					: game.i18n.localize("TAG.failure"),
-				rollspecs: JSON.stringify(tagRoll)
+				rollspecs: rollSpecs,
+				tagName: tagRoll.name
 			}
 		);
 		return html;
@@ -314,6 +316,8 @@ export class MessageHandler {
 				if (tagData.system.roll.success === null) {
 					tagData.system.roll.success = event.target.dataset.value;
 				}
+				let rollSpecs = foundry.utils.deepClone(tagData.system.roll);
+				rollSpecs.name = tagData.name;
 				roll = await this.getTagRollDisplay(tagData.system.roll);
 			}
 

@@ -569,10 +569,11 @@ export class HLMActor extends Actor {
 							Utils.toLowerHyphen(internalTag.name) ==
 							Utils.toLowerHyphen(tag.name)
 					);
-					console.log(matchingTag);
 					newTag.system.roll.success = matchingTag.value;
 				}
+				newTag.system.roll.name = newTag.name;
 				newTag.rollspecs = JSON.stringify(newTag.system.roll);
+				tagsCopy.push(newTag);
 			});
 			let tagButtonHtml = await renderTemplate(
 				"systems/fathomlessgears/templates/partials/tag-buttons.html",
