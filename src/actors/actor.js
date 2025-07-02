@@ -781,7 +781,7 @@ export class HLMActor extends Actor {
 
 	removeFocused() {
 		let tokens = this.getNonBallastTokens();
-		if (tokens && tokens.length() > 0) {
+		if (tokens && tokens.length > 0) {
 			let token = tokens[0];
 			const currentFocus = this.effects.find((effect) =>
 				effect.statuses.has(CONDITIONS.focused)
