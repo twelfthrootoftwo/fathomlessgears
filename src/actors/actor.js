@@ -559,14 +559,25 @@ export class HLMActor extends Actor {
 		);
 
 		let tags = internal.getRollableTags();
+		let tagsCopy = [];
 		if (tags.length > 0) {
 			tags.forEach((tag) => {
-				tag.rollspecs = JSON.stringify(tag.system.roll);
+				let newTag = tag.toObject();
+				if (tag.system.roll.success === null) {
+					const matchingTag = internal.system.tags.find(
+						(internalTag) =>
+							Utils.toLowerHyphen(internalTag.name) ==
+							Utils.toLowerHyphen(tag.name)
+					);
+					console.log(matchingTag);
+					newTag.system.roll.success = matchingTag.value;
+				}
+				newTag.rollspecs = JSON.stringify(newTag.system.roll);
 			});
 			let tagButtonHtml = await renderTemplate(
 				"systems/fathomlessgears/templates/partials/tag-buttons.html",
 				{
-					tags: tags
+					tags: tagsCopy
 				}
 			);
 			displayString = displayString.concat(tagButtonHtml);

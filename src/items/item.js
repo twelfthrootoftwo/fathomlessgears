@@ -250,12 +250,6 @@ export class HLMItem extends Item {
 	getRollableTags() {
 		const tags = game.tagHandler.getTags().filter((tag) => {
 			return this.system.tags.some((itemTag) => {
-				console.log(tag);
-				console.log(
-					Utils.toLowerHyphen(itemTag.name) ===
-						Utils.toLowerHyphen(tag.name)
-				);
-				console.log(Boolean(tag.system.roll));
 				return (
 					Utils.toLowerHyphen(itemTag.name) ===
 						Utils.toLowerHyphen(tag.name) &&
