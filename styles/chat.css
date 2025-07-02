@@ -89,12 +89,13 @@
 .location-roll-row {
 	display: flex;
 	flex-direction: row;
+	justify-content: center;
 
 	& .location-roll-box {
 		padding: 4px;
 		margin: 2px;
 		border: 1px solid var(--color-border-light-2);
-		flex: 1 0 100px;
+		flex: 0 1 50%;
 
 		& .location-roll-header {
 			text-align: center;
@@ -109,10 +110,14 @@
 }
 .rollable-tag-row {
 	padding: 4px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
 
 	& .rollable-tag-holder {
 		margin: 0px 2px;
-		flex: 1 0 100px;
+		flex: 0 1 45%;
 
 		& .tag-roll-btn {
 			padding: 2px;
