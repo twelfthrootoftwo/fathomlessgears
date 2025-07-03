@@ -80,8 +80,7 @@
 			box-shadow: 0 0 2px #fff inset;
 
 			&.marbles {
-				background-color: var(--color-marbles);
-				color: var(--color-text-light-heading);
+				box-shadow: 0 0 4px 2px var(--color-marbles) inset;
 			}
 		}
 	}
