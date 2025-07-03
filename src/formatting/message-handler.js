@@ -313,14 +313,13 @@ export class MessageHandler {
 		fromUuid(uuid).then(async (tagData) => {
 			let roll = null;
 			if (tagData.system.roll) {
-				if (tagData.system.roll.success === null) {
-					tagData.system.roll.success = event.target.dataset.value;
-				}
 				let rollSpecs = foundry.utils.deepClone(tagData.system.roll);
+				if (tagData.system.roll.success === null) {
+					rollSpecs.success = event.target.dataset.value;
+				}
 				rollSpecs.name = tagData.name;
-				roll = await this.getTagRollDisplay(tagData.system.roll);
+				roll = await this.getTagRollDisplay(rollSpecs);
 			}
-
 			renderTemplate(
 				"systems/fathomlessgears/templates/messages/tag-message.html",
 				{
