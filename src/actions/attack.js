@@ -1,6 +1,5 @@
 import {Utils} from "../utilities/utils.js";
 import {ACTOR_TYPES, ATTRIBUTES, HIT_TYPE, COVER_STATES} from "../constants.js";
-import {constructCollapsibleRollMessage} from "../actions/collapsible-roll.js";
 
 export class AttackHandler {
 	static async rollToHit(rollParams, defender) {
@@ -21,15 +20,11 @@ export class AttackHandler {
 			locationResult = await AttackHandler.rollHitLocation(defender);
 		}
 
-		const attackAttrLabel = game.i18n.localize(
-			Utils.getLocalisedAttributeLabel(rollParams.attribute)
-		);
 		const rollOutput = {};
 		rollOutput.text = await AttackHandler.createHitRollMessage(
 			rollParams,
 			attackRoll,
 			defender,
-			attackAttrLabel,
 			hitResult,
 			locationResult
 		);
@@ -67,7 +62,6 @@ export class AttackHandler {
 		rollParams,
 		attackRoll,
 		defender,
-		attackAttrLabel,
 		hitResult,
 		locationResult
 	) {
@@ -83,7 +77,6 @@ export class AttackHandler {
 
 		const hitRollMessage = await AttackHandler.hitRollText(
 			attackRoll,
-			attackAttrLabel,
 			hitResult,
 			locationResult,
 			rollParams.getDisplayModifierStack()
@@ -94,7 +87,6 @@ export class AttackHandler {
 
 	static async hitRollText(
 		attackRoll,
-		attackAttrLabel,
 		hitResult,
 		locationResult,
 		modifierStack
@@ -112,18 +104,20 @@ export class AttackHandler {
 			hitResultText = game.i18n.localize("HIT." + hitResult.original);
 		}
 
+		let collapsibleRollInfo = {
+			parts: attackRoll.dice.map((d) => d.getTooltipData()),
+			formula: attackRoll.formula,
+			total: attackRoll.total
+		};
 		const hitRollDisplay = await renderTemplate(
-			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
+			"systems/fathomlessgears/templates/partials/to-hit-partial.html",
 			{
-				label_left: game.i18n
-					.localize("ROLLTEXT.attackIntro")
-					.replace("_ATTRIBUTE_NAME_", attackAttrLabel),
-				total: await constructCollapsibleRollMessage(attackRoll),
-				outcome: hitResultText,
-				preformat: true,
-				modifiers: modifierStack
+				modifiers: modifierStack,
+				collapsibleRollInfo: collapsibleRollInfo,
+				outcome: hitResultText
 			}
 		);
+
 		displayString.push(hitRollDisplay);
 
 		if (locationResult != null) {
@@ -176,37 +170,39 @@ export class AttackHandler {
 	}
 
 	static async generateLocationDisplay(locationResult) {
-		const locationDisplayParts = [];
+		let zoneRoll = null;
 		if (locationResult.locationRoll.formula !== "1") {
-			let hitZone = await renderTemplate(
-				"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
-				{
-					label_left: game.i18n.localize("ROLLTEXT.hitZone"),
-					tooltip: `${locationResult.locationRoll.formula}:  ${locationResult.locationRoll.result}`,
-					total: await constructCollapsibleRollMessage(
-						locationResult.locationRoll
-					),
-					outcome: Utils.getLocalisedHitZone(
-						locationResult.hitZone.location
-					),
-					preformat: true
-				}
-			);
-			locationDisplayParts.push(hitZone);
-		}
-		const column = await renderTemplate(
-			"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
-			{
-				label_left: game.i18n.localize("ROLLTEXT.hitColumn"),
-				tooltip: locationResult.columnRoll.formula,
-				total: await constructCollapsibleRollMessage(
-					locationResult.columnRoll
+			zoneRoll = {};
+			zoneRoll.roll = {
+				parts: locationResult.locationRoll.dice.map((d) =>
+					d.getTooltipData()
 				),
-				preformat: true
+				formula: locationResult.locationRoll.formula,
+				total: locationResult.locationRoll.total
+			};
+			zoneRoll.label = game.i18n.localize("ROLLTEXT.hitZone");
+			zoneRoll.name = Utils.getLocalisedHitZone(
+				locationResult.hitZone.location
+			);
+		}
+		const columnRoll = {
+			roll: {
+				parts: locationResult.columnRoll.dice.map((d) =>
+					d.getTooltipData()
+				),
+				formula: locationResult.columnRoll.formula,
+				total: locationResult.columnRoll.total
+			},
+			label: game.i18n.localize("ROLLTEXT.hitColumn")
+		};
+		const result = await renderTemplate(
+			"systems/fathomlessgears/templates/partials/location-roll.html",
+			{
+				zoneRoll: zoneRoll,
+				columnRoll: columnRoll
 			}
 		);
-		locationDisplayParts.push(column);
-		return locationDisplayParts.join("");
+		return result;
 	}
 
 	static upgradeRoll(rollResult) {

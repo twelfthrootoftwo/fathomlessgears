@@ -546,7 +546,7 @@ export class HLMActor extends Actor {
 	async triggerRolledItem(rollParams) {
 		const internal = this.items.get(rollParams.internalId);
 		const rollOutput = await game.rollHandler.rollTargeted(rollParams);
-		const displayString = await renderTemplate(
+		let displayString = await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: internal,
@@ -557,6 +557,32 @@ export class HLMActor extends Actor {
 				marbleText: game.i18n.localize("INTERNALS.marbles")
 			}
 		);
+
+		let tags = internal.getRollableTags();
+		let tagsCopy = [];
+		if (tags.length > 0) {
+			tags.forEach((tag) => {
+				let newTag = tag.toObject();
+				if (tag.system.roll.success === null) {
+					const matchingTag = internal.system.tags.find(
+						(internalTag) =>
+							Utils.toLowerHyphen(internalTag.name) ==
+							Utils.toLowerHyphen(tag.name)
+					);
+					newTag.system.roll.success = matchingTag.value;
+				}
+				newTag.system.roll.name = newTag.name;
+				newTag.rollspecs = JSON.stringify(newTag.system.roll);
+				tagsCopy.push(newTag);
+			});
+			let tagButtonHtml = await renderTemplate(
+				"systems/fathomlessgears/templates/partials/tag-buttons.html",
+				{
+					tags: tagsCopy
+				}
+			);
+			displayString = displayString.concat(tagButtonHtml);
+		}
 		game.tagHandler.createChatMessage(displayString, this);
 	}
 
@@ -767,7 +793,7 @@ export class HLMActor extends Actor {
 
 	removeFocused() {
 		let tokens = this.getNonBallastTokens();
-		if (tokens && tokens.length() > 0) {
+		if (tokens && tokens.length > 0) {
 			let token = tokens[0];
 			const currentFocus = this.effects.find((effect) =>
 				effect.statuses.has(CONDITIONS.focused)

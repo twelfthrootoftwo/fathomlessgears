@@ -1,0 +1,9 @@
+<div class="rollable-tag-row flex-row">
+    {{#each tags}}
+    <div class="rollable-tag-holder">
+        <div class="btn tag-roll-btn no-listener" data-rollspecs="{{this.rollspecs}}">
+            {{localize "ROLL"}} {{this.name}}
+        </div>
+    </div>
+    {{/each}}
+</div>

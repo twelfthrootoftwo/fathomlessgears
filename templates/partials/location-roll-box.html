@@ -1,0 +1,16 @@
+<div class="location-roll-box">
+    <div class="location-roll-header">
+        {{label}}
+    </div>
+    {{>
+        "systems/fathomlessgears/templates/partials/collapsible-roll.html"
+        parts = collapsibleRollInfo.parts
+        formula = collapsibleRollInfo.formula
+        total = collapsibleRollInfo.total
+    }}
+    {{#if name}}
+    <div class="location-roll-name">
+        {{name}}
+    </div>
+    {{/if}}
+</div>

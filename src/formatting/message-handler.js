@@ -42,13 +42,17 @@ export class MessageHandler {
 			tagElement.classList.add("btn-active");
 		});
 
-		const tagRollButtons = document.querySelectorAll(".tag-roll-btn");
+		const tagRollButtons = document.querySelectorAll(
+			".tag-roll-btn.no-listener"
+		);
 		tagRollButtons.forEach((button) => {
 			button.addEventListener(
 				"click",
 				(ev) => this.onTagReroll(ev),
 				true
 			);
+			button.classList.remove("no-listener");
+			button.classList.add("btn-active");
 		});
 	}
 
@@ -223,6 +227,7 @@ export class MessageHandler {
 		await roll.evaluate();
 
 		let success = roll.total >= tagRoll.success;
+		let rollSpecs = JSON.stringify(tagRoll);
 
 		let html = await renderTemplate(
 			"systems/fathomlessgears/templates/partials/tag-roll.html",
@@ -231,7 +236,8 @@ export class MessageHandler {
 				outcome: success
 					? game.i18n.localize("TAG.success")
 					: game.i18n.localize("TAG.failure"),
-				rollspecs: JSON.stringify(tagRoll)
+				rollspecs: rollSpecs,
+				tagName: tagRoll.name
 			}
 		);
 		return html;
@@ -307,12 +313,13 @@ export class MessageHandler {
 		fromUuid(uuid).then(async (tagData) => {
 			let roll = null;
 			if (tagData.system.roll) {
+				let rollSpecs = foundry.utils.deepClone(tagData.system.roll);
 				if (tagData.system.roll.success === null) {
-					tagData.system.roll.success = event.target.dataset.value;
+					rollSpecs.success = event.target.dataset.value;
 				}
-				roll = await this.getTagRollDisplay(tagData.system.roll);
+				rollSpecs.name = tagData.name;
+				roll = await this.getTagRollDisplay(rollSpecs);
 			}
-
 			renderTemplate(
 				"systems/fathomlessgears/templates/messages/tag-message.html",
 				{
@@ -325,5 +332,9 @@ export class MessageHandler {
 				});
 			});
 		});
+	}
+
+	getTags() {
+		return foundry.utils.deepClone(this.tagItems);
 	}
 }

@@ -237,6 +237,28 @@ export class HLMItem extends Item {
 		}
 		return this.system.attack.damage;
 	}
+
+	getTags() {
+		const tags = game.tagHandler.getTags().filter((tag) => {
+			this.system.tags.includes((itemTag) => {
+				return Utils.toLowerHyphen(itemTag.name) === tag.name;
+			});
+		});
+		return tags;
+	}
+
+	getRollableTags() {
+		const tags = game.tagHandler.getTags().filter((tag) => {
+			return this.system.tags.some((itemTag) => {
+				return (
+					Utils.toLowerHyphen(itemTag.name) ===
+						Utils.toLowerHyphen(tag.name) &&
+					Boolean(tag.system.roll)
+				);
+			});
+		});
+		return tags;
+	}
 }
 
 /**

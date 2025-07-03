@@ -1,0 +1,16 @@
+<div class="location-roll-row">
+    {{#if zoneRoll}}
+        {{>
+            "systems/fathomlessgears/templates/partials/location-roll-box.html"
+            label=zoneRoll.label
+            collapsibleRollInfo=zoneRoll.roll
+            name=zoneRoll.name
+        }}
+    {{/if}}
+    {{>
+        "systems/fathomlessgears/templates/partials/location-roll-box.html"
+        label=columnRoll.label
+        collapsibleRollInfo=columnRoll.roll
+        name=columnRoll.name
+    }}
+</div>
