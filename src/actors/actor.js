@@ -96,6 +96,9 @@ export class HLMActor extends Actor {
 				let ownership = foundry.utils.deepClone(this.ownership);
 				ownership["default"] = 2;
 				this.update({ownership});
+
+				//Set token to Linked
+				this.update({"prototypeToken.actorLink": true});
 			}
 		}
 	}
