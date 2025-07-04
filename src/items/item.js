@@ -169,7 +169,7 @@ export class HLMItem extends Item {
 	}
 
 	async postFlatItem(actor) {
-		const displayMessage = await renderTemplate(
+		let displayString = await renderTemplate(
 			"systems/fathomlessgears/templates/messages/internal.html",
 			{
 				internal: this,
@@ -177,7 +177,35 @@ export class HLMItem extends Item {
 				minor_text: false
 			}
 		);
-		game.tagHandler.createChatMessage(displayMessage, actor);
+		let tags = this.getRollableTags();
+		if (tags) {
+			let tagsCopy = [];
+			if (tags.length > 0) {
+				tags.forEach((tag) => {
+					let newTag = tag.toObject();
+					if (tag.system.roll.success === null) {
+						const matchingTag = this.system.tags.find(
+							(internalTag) =>
+								Utils.toLowerHyphen(internalTag.name) ==
+								Utils.toLowerHyphen(tag.name)
+						);
+						newTag.system.roll.success = matchingTag.value;
+					}
+					newTag.system.roll.name = newTag.name;
+					newTag.rollspecs = JSON.stringify(newTag.system.roll);
+					tagsCopy.push(newTag);
+				});
+				let tagButtonHtml = await renderTemplate(
+					"systems/fathomlessgears/templates/partials/tag-buttons.html",
+					{
+						tags: tagsCopy
+					}
+				);
+				displayString = displayString.concat(tagButtonHtml);
+			}
+		}
+
+		game.tagHandler.createChatMessage(displayString, actor);
 	}
 
 	getItemDescriptionText() {
@@ -239,6 +267,7 @@ export class HLMItem extends Item {
 	}
 
 	getTags() {
+		if (!this.system.tags) return false;
 		const tags = game.tagHandler.getTags().filter((tag) => {
 			this.system.tags.includes((itemTag) => {
 				return Utils.toLowerHyphen(itemTag.name) === tag.name;
@@ -248,6 +277,7 @@ export class HLMItem extends Item {
 	}
 
 	getRollableTags() {
+		if (!this.system.tags) return false;
 		const tags = game.tagHandler.getTags().filter((tag) => {
 			return this.system.tags.some((itemTag) => {
 				return (
