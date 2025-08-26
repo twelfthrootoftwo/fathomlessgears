@@ -17,7 +17,7 @@ export class GridSpace {
 		if (json == null) {
 			this.state = GRID_SPACE_STATE.locked;
 			this.setInternal(null, null);
-			this.colour = "";
+			this.colour = "empty";
 		} else {
 			this.state = json.state;
 			this.setInternal(json.internal, json.colour);
@@ -56,6 +56,8 @@ export class GridSpace {
 		this.internal = uuid;
 		if (uuid) {
 			this.colour = type;
+		} else {
+			this.colour = "empty";
 		}
 	}
 
