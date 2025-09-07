@@ -118,7 +118,7 @@ export class HLMActor extends Actor {
 					value[attrKey] = attrData;
 				}
 				data[key] = value;
-			} else if (key.indexOf("system.attributes" > -1) && value.values) {
+			} else if (key.indexOf("system.attributes") > -1 && value.values) {
 				//One attribute
 				let modifiers = value.values.standard.additions;
 				let filtered = modifiers.filter(

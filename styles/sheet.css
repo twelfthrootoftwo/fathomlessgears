@@ -430,8 +430,25 @@
 						width: 180px;
 					}
 
+					& .labels {
+						flex: 1 0 100px;
+
+						& .label-row {
+							flex-wrap: wrap;
+
+							& .label-box {
+								background-color: #00000033;
+								padding: 2px;
+								margin-left: 2px;
+								margin-right: 2px;
+								font-size: var(--font-size-12);
+								align-items: baseline;
+							}
+						}
+					}
+
 					& .history-table {
-						width: 100%;
+						flex: 1 0 100px;
 						border-collapse: collapse;
 
 						& td {
@@ -444,7 +461,7 @@
 						}
 
 						& .item-column {
-							width: 45%;
+							width: 42%;
 
 							& .history-row {
 								flex-wrap: wrap;
