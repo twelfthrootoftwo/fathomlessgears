@@ -2,10 +2,10 @@
     <div class="flex-row label-row">
         {{#each labels}}
             <div class="label-box flex-row" data-id = "id{{this.name}}">
-                {{this.name}}
-                <input class="inline-checkbox label-checkbox" type="checkbox" data-selector="labelActive" data-id="id{{item._id}}">
+                <div class="label-text">{{this.name}}</div>
+                <input class="inline-checkbox label-checkbox" type="checkbox" data-selector="labelActive">
             </div>
         {{/each}}
     </div>
-    <div class="btn narrative-button">Roll narrative check</div>
+    <div class="btn narrative-btn">Roll narrative check</div>
 </div>

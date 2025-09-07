@@ -435,14 +435,19 @@
 
 						& .label-row {
 							flex-wrap: wrap;
+							padding: 2px;
 
 							& .label-box {
+								width: 100px;
 								background-color: #00000033;
 								padding: 2px;
-								margin-left: 2px;
-								margin-right: 2px;
+								margin: 2px;
 								font-size: var(--font-size-12);
 								align-items: baseline;
+
+								& .label-text {
+									flex-grow: 1;
+								}
 							}
 						}
 					}
