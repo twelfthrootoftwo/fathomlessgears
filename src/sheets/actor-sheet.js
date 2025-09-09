@@ -459,6 +459,13 @@ export class HLMActorSheet extends ActorSheet {
 
 	rollNarrativeCheck(_event) {
 		console.log(`Roll narrative check with ${this.labelCount} labels`);
+
+		//TODO Open dialog to add additional labels
+
+		this.document.querySelectorAll("label-checkbox").forEach((element) => {
+			element.checked = false;
+		});
+		this.labelCount = 0;
 	}
 }
 function safeIdClean(safeId) {
