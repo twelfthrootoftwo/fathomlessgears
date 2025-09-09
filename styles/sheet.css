@@ -441,19 +441,31 @@
 								width: 100px;
 								background-color: #00000033;
 								padding: 2px;
-								margin: 2px;
+								padding-left: 4px;
+								margin: 2px 3px;
 								font-size: var(--font-size-12);
-								align-items: baseline;
+								align-items: center;
+								border-radius: 2px;
 
 								& .label-text {
 									flex-grow: 1;
 								}
+
+								& .inline-checkbox {
+									margin: 2px 4px;
+								}
 							}
+						}
+
+						& .narrative-btn {
+							margin: auto;
+							width: 200px;
 						}
 					}
 
 					& .history-table {
 						flex: 1 0 100px;
+						padding: 4px 8px;
 						border-collapse: collapse;
 
 						& td {
