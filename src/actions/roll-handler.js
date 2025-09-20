@@ -211,7 +211,7 @@ export class RollHandler {
 
 	async rollNarrative(rollParams) {
 		console.log(
-			`Rolling narrative with ${rollParams.modifierStack.length} labels`
+			`Rolling narrative with ${rollParams.modifierStack.length} labels (${rollParams.dieTotal} dice)`
 		);
 	}
 }

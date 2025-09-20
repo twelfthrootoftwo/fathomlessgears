@@ -1,5 +1,5 @@
 import {HLMApplication} from "../sheets/application.js";
-import {_NARRATIVE_DIFFICULTY} from "../constants.js";
+import {NARRATIVE_DIFFICULTY} from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 import {LabelRollParameters} from "../actions/roll-params.js";
 
@@ -13,6 +13,48 @@ export class LabelRollElement {
 		this.active = false;
 		this.id = "id" + foundry.utils.randomID();
 	}
+}
+
+function getGoodEnoughThreshold(difficulty) {
+	let value = "-";
+	switch (difficulty) {
+		case NARRATIVE_DIFFICULTY.easy:
+			value = "1&plus;";
+			break;
+		case NARRATIVE_DIFFICULTY.challenging:
+			value = "2&plus;";
+			break;
+		case NARRATIVE_DIFFICULTY.hard:
+			value = "3&plus;";
+			break;
+		case NARRATIVE_DIFFICULTY.impossible:
+			value = "5&plus;";
+			break;
+		default:
+			break;
+	}
+	return value;
+}
+
+function getFullSuccessThreshold(difficulty) {
+	let value = "-";
+	switch (difficulty) {
+		case NARRATIVE_DIFFICULTY.easy:
+			value = "2&plus;";
+			break;
+		case NARRATIVE_DIFFICULTY.challenging:
+			value = "3&plus;";
+			break;
+		case NARRATIVE_DIFFICULTY.hard:
+			value = "5&plus;";
+			break;
+		case NARRATIVE_DIFFICULTY.impossible:
+			value = "7&plus;";
+			break;
+		default:
+			break;
+	}
+	return value;
 }
 
 export class NarrativeRollDialog extends HLMApplication {
@@ -30,7 +72,7 @@ export class NarrativeRollDialog extends HLMApplication {
 		});
 		this.actor = actor;
 		this.additionalLabels = 0;
-		this.difficulty = null;
+		this.difficulty = NARRATIVE_DIFFICULTY.none;
 		this.render(true);
 	}
 
@@ -39,7 +81,7 @@ export class NarrativeRollDialog extends HLMApplication {
 			classes: ["fathomlessgears"],
 			template: "systems/fathomlessgears/templates/narrative-dialog.html",
 			title: "Roll Inputs",
-			width: 300
+			width: 500
 		});
 	}
 
@@ -48,6 +90,15 @@ export class NarrativeRollDialog extends HLMApplication {
 		context.modifiers = this.modifiers;
 		context.additional = this.additional;
 		context.totalString = this.calculateDieTotal().toString() + "d6";
+		context.checkDifficulties = [];
+		Object.keys(NARRATIVE_DIFFICULTY).forEach((difficulty) => {
+			let item = {};
+			item.id = difficulty;
+			item.name = game.i18n.localize("NARRATIVE." + difficulty);
+			context.checkDifficulties.push(item);
+		});
+		context.goodEnoughString = getGoodEnoughThreshold(this.difficulty);
+		context.fullSuccessString = getFullSuccessThreshold(this.difficulty);
 		return context;
 	}
 
@@ -62,16 +113,33 @@ export class NarrativeRollDialog extends HLMApplication {
 		html.find(".element-checkbox").change(async (_evt) => {
 			this.toggleModifier(_evt);
 		});
-		this.modifiers.forEach((modifier) => {
-			if (modifier.active) {
-				html.find(`[data-id=${modifier.id}]`).click();
-			}
+		html.find('[name="difficulty"]').change(async (_evt) => {
+			this.updateDifficulty(_evt.target.value);
 		});
+		html.find(`[id="${this.difficulty}"]`).click();
 	}
 
 	calculateDieTotal() {
-		if (this.focused) return 3;
-		return 2;
+		let labelCount = 0;
+		this.modifiers.forEach((modifier) => {
+			if (modifier.active) {
+				labelCount += 1;
+			}
+		});
+		if (parseInt(this.additional)) {
+			labelCount += parseInt(this.additional);
+		}
+		let dice = 2;
+		if (labelCount >= 7) {
+			dice += 4;
+		} else if (labelCount >= 4) {
+			dice += 3;
+		} else if (labelCount >= 2) {
+			dice += 2;
+		} else if (labelCount >= 1) {
+			dice += 1;
+		}
+		return dice;
 	}
 
 	async triggerRoll() {
@@ -112,6 +180,19 @@ export class NarrativeRollDialog extends HLMApplication {
 		totalElement.innerHTML = totalString;
 	}
 
+	updateGoodEnoughString() {
+		const string = getGoodEnoughThreshold(this.difficulty);
+		const goodEnoughElement = document.getElementById("goodenough-string");
+		goodEnoughElement.innerHTML = string;
+	}
+
+	updateFullSuccessString() {
+		const string = getFullSuccessThreshold(this.difficulty);
+		const fullSuccessElement =
+			document.getElementById("fullsuccess-string");
+		fullSuccessElement.innerHTML = string;
+	}
+
 	toggleModifier(evt) {
 		const modifier = this.findMatchingModifier(
 			evt.currentTarget.dataset.id
@@ -120,5 +201,11 @@ export class NarrativeRollDialog extends HLMApplication {
 			modifier.active = evt.currentTarget.checked;
 		}
 		this.updateTotalString();
+	}
+
+	updateDifficulty(newDifficulty) {
+		this.difficulty = newDifficulty;
+		this.updateGoodEnoughString();
+		this.updateFullSuccessString();
 	}
 }
