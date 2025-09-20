@@ -208,4 +208,10 @@ export class RollHandler {
 
 		game.tagHandler.createChatMessage(messageText, rollParams.actor);
 	}
+
+	async rollNarrative(rollParams) {
+		console.log(
+			`Rolling narrative with ${rollParams.modifierStack.length} labels`
+		);
+	}
 }

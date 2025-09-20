@@ -2,6 +2,7 @@ import {ATTRIBUTES, ACTOR_TYPES, TEMPLATE} from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 import {FileUploader} from "../data-files/uploader.js";
 import {populateActorFromGearwright} from "../actors/gearwright-actor.js";
+import {NarrativeRollDialog} from "../dialogs/narrative-dialog.js";
 
 /**
  * @extends {ActorSheet}
@@ -458,14 +459,7 @@ export class HLMActorSheet extends ActorSheet {
 	}
 
 	rollNarrativeCheck(_event) {
-		console.log(`Roll narrative check with ${this.labelCount} labels`);
-
-		//TODO Open dialog to add additional labels
-
-		this.document.querySelectorAll("label-checkbox").forEach((element) => {
-			element.checked = false;
-		});
-		this.labelCount = 0;
+		new NarrativeRollDialog(this.actor.system.downtime.labels, this.actor);
 	}
 }
 function safeIdClean(safeId) {

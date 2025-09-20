@@ -20,6 +20,7 @@ export const preloadHandlebarsTemplates = async function () {
 		"systems/fathomlessgears/templates/partials/internal-partial.html",
 		"systems/fathomlessgears/templates/partials/labelled-roll-partial.html",
 		"systems/fathomlessgears/templates/partials/labels.html",
+		"systems/fathomlessgears/templates/partials/label-toggle.html",
 		"systems/fathomlessgears/templates/partials/location-roll.html",
 		"systems/fathomlessgears/templates/partials/location-roll-box.html",
 		"systems/fathomlessgears/templates/partials/maneuver-partial.html",

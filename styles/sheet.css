@@ -444,6 +444,7 @@
 								padding-left: 4px;
 								margin: 2px 3px;
 								font-size: var(--font-size-12);
+								justify-content: center;
 								align-items: center;
 								border-radius: 2px;
 

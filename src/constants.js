@@ -220,3 +220,11 @@ export const COMPENDIUMS = {
 	internal_npc: "world.internal_npc_imported",
 	size: "world.size_imported"
 };
+
+export const NARRATIVE_DIFFICULTY = {
+	easy: "easy",
+	challenging: "challenging",
+	hard: "hard",
+	impossible: "impossible",
+	none: "none"
+};

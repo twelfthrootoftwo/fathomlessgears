@@ -1,0 +1,28 @@
+<form autocomplete="off">
+    <div class="col">
+        <div class="roll-component-box">
+            <p class="roll-component-header">{{localize "ROLLDIALOG.bonus"}}</p>
+            <ol class="roll-components">
+                {{#each modifiers}}
+                {{>
+                "systems/fathomlessgears/templates/partials/label-toggle.html"
+                label = this
+                }}
+                {{/each}}
+                <li class="roll-component-item">
+                    <p class="roll-component-description">{{localize "ROLLDIALOG.other"}}</p>
+                    <input class="roll-component-value additional-value" type="number" data-selector="additional"
+                        value="{{additional}}">
+                </li>
+            </ol>
+        </div>
+        <div class="roll-component-box">
+            
+            <div class="flex-row justify-centre total-row">
+                <p>{{localize "ROLLDIALOG.total"}}:&nbsp;</p>
+                <p id="total-string">{{totalString}}</p>
+            </div>
+        </div>
+        <div class="btn">{{localize "ROLLDIALOG.trigger"}}</div>
+    </div>
+</form>
