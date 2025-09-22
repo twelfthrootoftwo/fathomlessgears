@@ -106,7 +106,6 @@ export class HLMActorSheet extends ActorSheet {
 					break;
 			}
 		});
-		console.log(this.actor.system.downtime);
 		if (this.actor.type === ACTOR_TYPES.fisher) {
 			context.history = this.buildHistoryForDisplay(items);
 			context.labels = this.actor.system.downtime.labels;

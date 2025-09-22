@@ -1,7 +1,13 @@
 import {RollElement, RollDialog} from "../dialogs/roll-dialog.js";
 import {ReelHandler} from "./reel.js";
 import {constructCollapsibleRollMessage} from "./collapsible-roll.js";
-import {ATTRIBUTES, ROLL_MODIFIER_TYPE, HIT_TYPE} from "../constants.js";
+import {
+	ATTRIBUTES,
+	ROLL_MODIFIER_TYPE,
+	HIT_TYPE,
+	NARRATIVE_DIFFICULTY,
+	NARRATIVE_STATE
+} from "../constants.js";
 import {AttackHandler} from "./attack.js";
 import {Utils} from "../utilities/utils.js";
 import {actionText} from "./basic-action-data.js";
@@ -209,9 +215,121 @@ export class RollHandler {
 		game.tagHandler.createChatMessage(messageText, rollParams.actor);
 	}
 
-	async rollNarrative(rollParams) {
+	goodEnoughThreshold(difficulty) {
+		let value = false;
+		switch (difficulty) {
+			case NARRATIVE_DIFFICULTY.easy:
+				value = 1;
+				break;
+			case NARRATIVE_DIFFICULTY.challenging:
+				value = 2;
+				break;
+			case NARRATIVE_DIFFICULTY.hard:
+				value = 3;
+				break;
+			case NARRATIVE_DIFFICULTY.impossible:
+				value = 5;
+				break;
+			default:
+				break;
+		}
+		return value;
+	}
+
+	fullSuccessThreshold(difficulty) {
+		let value = false;
+		switch (difficulty) {
+			case NARRATIVE_DIFFICULTY.easy:
+				value = 2;
+				break;
+			case NARRATIVE_DIFFICULTY.challenging:
+				value = 3;
+				break;
+			case NARRATIVE_DIFFICULTY.hard:
+				value = 5;
+				break;
+			case NARRATIVE_DIFFICULTY.impossible:
+				value = 7;
+				break;
+			default:
+				break;
+		}
+		return value;
+	}
+
+	getNarrativeSuccess(dieResult) {
+		if (dieResult == 1) {
+			return -1;
+		} else if (dieResult == 6) {
+			return 2;
+		} else if (dieResult >= 4) {
+			return 1;
+		}
+		return 0;
+	}
+
+	countNarrativeSuccesses(roll) {
+		let successes = 0;
+		roll.dice[0].results.forEach((die) => {
+			successes += this.getNarrativeSuccess(die.result);
+		});
+		return successes;
+	}
+
+	async rollNarrative(rollParams, reroll) {
 		console.log(
 			`Rolling narrative with ${rollParams.modifierStack.length} labels (${rollParams.dieTotal} dice)`
 		);
+		let roll = Utils.getRoller(rollParams.dieTotal, 0);
+		await roll.evaluate();
+		const successes = this.countNarrativeSuccesses(roll);
+		let state = null;
+		if (rollParams.difficulty != NARRATIVE_DIFFICULTY.none) {
+			if (successes > this.fullSuccessThreshold(rollParams.difficulty)) {
+				state = NARRATIVE_STATE.full_success;
+			} else if (
+				successes > this.goodEnoughThreshold(rollParams.difficulty)
+			) {
+				state = NARRATIVE_STATE.good_enough;
+			} else {
+				state = NARRATIVE_STATE.failure;
+			}
+		}
+
+		const displayString = [];
+
+		const introductionMessage = game.i18n
+			.localize("ROLLTEXT.narrativeHeader")
+			.replace("_FISHER_NAME_", rollParams.actor.name);
+		const introductionHtml = `<div class="attack-target">${introductionMessage}</div>`;
+		displayString.push(introductionHtml);
+		console.log(roll.dice[0]);
+		const diceDisplay = await renderTemplate(
+			"systems/fathomlessgears/templates/partials/narrative-dice-partial.html",
+			{
+				dice: roll.dice[0]
+			}
+		);
+		displayString.push(diceDisplay);
+
+		const resultDisplay = await renderTemplate(
+			"systems/fathomlessgears/templates/partials/narrative-result-partial.html",
+			{
+				result: state,
+				rerollStatus: reroll
+			}
+		);
+		displayString.push(resultDisplay);
+
+		displayString.join("");
+
+		const messageText = await renderTemplate(
+			"systems/fathomlessgears/templates/messages/message-outline.html",
+			{
+				body: displayString
+			}
+		);
+
+		game.tagHandler.createChatMessage(messageText, rollParams.actor);
 	}
 }

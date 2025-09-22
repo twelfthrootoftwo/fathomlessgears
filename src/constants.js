@@ -228,3 +228,9 @@ export const NARRATIVE_DIFFICULTY = {
 	impossible: "impossible",
 	none: "none"
 };
+
+export const NARRATIVE_STATE = {
+	failure: "failure",
+	good_enough: "good_enough",
+	full_success: "full_success"
+};

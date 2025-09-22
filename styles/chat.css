@@ -247,3 +247,33 @@ ul.tag-pop-list {
 		flex: 0 0 75px;
 	}
 }
+
+.narrative-dice-holder {
+	& .narrative-dice-row {
+		& .die {
+			background-image: url(../../../../icons/svg/d6-grey.svg);
+			position: relative;
+			min-width: 50px;
+			line-height: 50px;
+			float: left;
+			margin-right: 1px;
+			background-repeat: no-repeat;
+			background-size: 50px 50px;
+			font-size: var(--font-size-32);
+			color: #000;
+			font-weight: bold;
+			text-align: center;
+			& .lock-icon {
+				display: none;
+			}
+
+			&.locked {
+				color: #333333;
+				border: 2px var(--color-border-dark-primary);
+				& .lock-icon {
+					display: block;
+				}
+			}
+		}
+	}
+}

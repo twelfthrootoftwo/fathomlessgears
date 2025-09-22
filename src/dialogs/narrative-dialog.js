@@ -17,42 +17,20 @@ export class LabelRollElement {
 
 function getGoodEnoughThreshold(difficulty) {
 	let value = "-";
-	switch (difficulty) {
-		case NARRATIVE_DIFFICULTY.easy:
-			value = "1&plus;";
-			break;
-		case NARRATIVE_DIFFICULTY.challenging:
-			value = "2&plus;";
-			break;
-		case NARRATIVE_DIFFICULTY.hard:
-			value = "3&plus;";
-			break;
-		case NARRATIVE_DIFFICULTY.impossible:
-			value = "5&plus;";
-			break;
-		default:
-			break;
+	if (game.rollHandler.goodEnoughThreshold(difficulty)) {
+		value =
+			game.rollHandler.goodEnoughThreshold(difficulty).toString() +
+			"&plus;";
 	}
 	return value;
 }
 
 function getFullSuccessThreshold(difficulty) {
 	let value = "-";
-	switch (difficulty) {
-		case NARRATIVE_DIFFICULTY.easy:
-			value = "2&plus;";
-			break;
-		case NARRATIVE_DIFFICULTY.challenging:
-			value = "3&plus;";
-			break;
-		case NARRATIVE_DIFFICULTY.hard:
-			value = "5&plus;";
-			break;
-		case NARRATIVE_DIFFICULTY.impossible:
-			value = "7&plus;";
-			break;
-		default:
-			break;
+	if (game.rollHandler.fullSuccessThreshold(difficulty)) {
+		value =
+			game.rollHandler.fullSuccessThreshold(difficulty).toString() +
+			"&plus;";
 	}
 	return value;
 }
