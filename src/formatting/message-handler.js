@@ -368,13 +368,15 @@ export class MessageHandler {
 		narrativeMessage.classList.remove("no-listeners");
 	}
 
-	onDieHover(_event) {
-		console.log("Mouse in");
+	onDieHover(event) {
+		event.target.closest(".narrative-die").classList.add("show-lock");
 	}
-	onDieEndHover(_event) {
-		console.log("Mouse out");
+	onDieEndHover(event) {
+		event.target.closest(".narrative-die").classList.remove("show-lock");
 	}
-	onDieClick(_event) {
+	onDieClick(event) {
 		console.log("Click");
+		event.target.closest(".narrative-die").classList.toggle("locked");
+		event.target.closest(".narrative-die").classList.toggle("unlocked");
 	}
 }

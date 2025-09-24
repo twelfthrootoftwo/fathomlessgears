@@ -250,29 +250,49 @@ ul.tag-pop-list {
 
 .narrative-dice-holder {
 	& .narrative-dice-row {
-		& .die {
-			background-image: url(../../../../icons/svg/d6-grey.svg);
-			position: relative;
-			min-width: 50px;
-			line-height: 50px;
-			float: left;
-			margin-right: 1px;
-			background-repeat: no-repeat;
-			background-size: 50px 50px;
-			font-size: var(--font-size-32);
-			color: #000;
-			font-weight: bold;
-			text-align: center;
-			& .lock-icon {
-				display: none;
+		& .narrative-die {
+			& .lock-box {
+				height: 10px;
+				justify-content: center;
+				align-items: center;
+				& .lock-icon {
+					display: none;
+					font-size: 8pt;
+				}
 			}
 
-			&.locked {
-				color: #333333;
-				border: 2px var(--color-border-dark-primary);
-				& .lock-icon {
-					display: block;
+			&.show-lock {
+				&.unlocked {
+					& .lock-icon.unlocked {
+						display: block;
+					}
 				}
+
+				&.locked {
+					& .lock-icon.locked {
+						display: block;
+					}
+				}
+			}
+
+			& .die {
+				background-image: url(../../../../icons/svg/d6-grey.svg);
+				position: relative;
+				min-width: 50px;
+				line-height: 50px;
+				float: left;
+				margin-right: 1px;
+				background-repeat: no-repeat;
+				background-size: 50px 50px;
+				font-size: var(--font-size-32);
+				color: #000;
+				font-weight: bold;
+				text-align: center;
+			}
+
+			&.locked .die {
+				color: #555555;
+				border: 2px var(--color-border-dark-primary);
 			}
 		}
 	}
