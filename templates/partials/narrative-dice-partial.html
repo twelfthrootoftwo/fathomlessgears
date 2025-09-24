@@ -3,7 +3,11 @@
     <div class="narrative-dice-row flex-row">
         {{#each dice.results}}
         {{log this}}
-        <div class="die">{{this.result}}</div>
+        <div class="narrative-die">
+            <div class="lock-symbol"></div>
+            <div class="die">{{this.result}}</div>
+        </div>
+        
         {{/each}}
     </div>
 </div>

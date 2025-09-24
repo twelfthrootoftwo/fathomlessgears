@@ -24,6 +24,7 @@ export class MessageHandler {
 	}
 
 	addListeners() {
+		//Tags
 		const tagItems = document.querySelectorAll(".tag-display.no-listener");
 		tagItems.forEach((tagElement) => {
 			tagElement.addEventListener("mouseenter", (ev) =>
@@ -42,6 +43,7 @@ export class MessageHandler {
 			tagElement.classList.add("btn-active");
 		});
 
+		//Rollable tag buttons
 		const tagRollButtons = document.querySelectorAll(
 			".tag-roll-btn.no-listener"
 		);
@@ -54,6 +56,14 @@ export class MessageHandler {
 			button.classList.remove("no-listener");
 			button.classList.add("btn-active");
 		});
+
+		//Narrative dice
+		const narrativeRollMessage = document.querySelector(
+			".narrative-roll-message.no-listeners"
+		);
+		if (narrativeRollMessage) {
+			this.addNarrativeListeners(narrativeRollMessage);
+		}
 	}
 
 	loadItemTypes() {
@@ -336,5 +346,35 @@ export class MessageHandler {
 
 	getTags() {
 		return foundry.utils.deepClone(this.tagItems);
+	}
+
+	addNarrativeListeners(narrativeMessage) {
+		const diceElements =
+			narrativeMessage.getElementsByClassName("narrative-die");
+		console.log(diceElements);
+		for (let dieElement of diceElements) {
+			dieElement.addEventListener("mouseenter", (ev) =>
+				this.onDieHover(ev)
+			);
+			dieElement.addEventListener("mouseleave", (ev) =>
+				this.onDieEndHover(ev)
+			);
+			dieElement.addEventListener(
+				"click",
+				(ev) => this.onDieClick(ev),
+				true
+			);
+		}
+		narrativeMessage.classList.remove("no-listeners");
+	}
+
+	onDieHover(_event) {
+		console.log("Mouse in");
+	}
+	onDieEndHover(_event) {
+		console.log("Mouse out");
+	}
+	onDieClick(_event) {
+		console.log("Click");
 	}
 }

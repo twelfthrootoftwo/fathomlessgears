@@ -297,13 +297,14 @@ export class RollHandler {
 		}
 
 		const displayString = [];
+		displayString.push(`<div class="narrative-roll-message no-listeners">`);
 
 		const introductionMessage = game.i18n
 			.localize("ROLLTEXT.narrativeHeader")
 			.replace("_FISHER_NAME_", rollParams.actor.name);
 		const introductionHtml = `<div class="attack-target">${introductionMessage}</div>`;
 		displayString.push(introductionHtml);
-		console.log(roll.dice[0]);
+
 		const diceDisplay = await renderTemplate(
 			"systems/fathomlessgears/templates/partials/narrative-dice-partial.html",
 			{
@@ -320,6 +321,7 @@ export class RollHandler {
 			}
 		);
 		displayString.push(resultDisplay);
+		displayString.push("</div>");
 
 		displayString.join("");
 
