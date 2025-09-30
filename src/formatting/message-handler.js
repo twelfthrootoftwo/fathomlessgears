@@ -58,12 +58,12 @@ export class MessageHandler {
 		});
 
 		//Narrative dice
-		const narrativeRollMessage = document.querySelector(
+		const narrativeRollMessages = document.querySelectorAll(
 			".narrative-roll-message.no-listeners"
 		);
-		if (narrativeRollMessage) {
+		narrativeRollMessages.forEach((narrativeRollMessage) => {
 			this.addNarrativeListeners(narrativeRollMessage);
-		}
+		});
 	}
 
 	loadItemTypes() {

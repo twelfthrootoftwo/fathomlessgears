@@ -276,12 +276,13 @@ ul.tag-pop-list {
 			}
 
 			& .die {
-				background-image: url(../../../../icons/svg/d6-grey.svg);
+				background-color: #aaaaaa;
+				border-radius: 5px;
 				position: relative;
 				min-width: 50px;
 				line-height: 50px;
 				float: left;
-				margin-right: 1px;
+				margin: 4px;
 				background-repeat: no-repeat;
 				background-size: 50px 50px;
 				font-size: var(--font-size-32);
@@ -292,7 +293,8 @@ ul.tag-pop-list {
 
 			&.locked .die {
 				color: #555555;
-				border: 2px var(--color-border-dark-primary);
+				border: 2px solid var(--color-border-dark-primary);
+				line-height: 46px;
 			}
 		}
 	}
