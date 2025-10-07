@@ -295,12 +295,23 @@ export class RollHandler {
 				state = NARRATIVE_STATE.failure;
 			}
 		}
+		const narrativeResult = {
+			successes: successes,
+			difficulty: game.i18n.localize(
+				`NARRATIVE.${rollParams.difficulty}`
+			),
+			result: state
+		};
 
 		const displayString = [];
 		displayString.push(`<div class="narrative-roll-message no-listeners">`);
 
 		const introductionMessage = game.i18n
 			.localize("ROLLTEXT.narrativeHeader")
+			.replace(
+				"_DIFFICULTY_",
+				game.i18n.localize(`NARRATIVE.${rollParams.difficulty}`)
+			)
 			.replace("_FISHER_NAME_", rollParams.actor.name);
 		const introductionHtml = `<div class="attack-target">${introductionMessage}</div>`;
 		displayString.push(introductionHtml);
@@ -316,19 +327,19 @@ export class RollHandler {
 		const resultDisplay = await renderTemplate(
 			"systems/fathomlessgears/templates/partials/narrative-result-partial.html",
 			{
-				result: state,
+				result: narrativeResult,
 				rerollStatus: reroll
 			}
 		);
 		displayString.push(resultDisplay);
 		displayString.push("</div>");
-
-		displayString.join("");
+		console.log(displayString);
+		const displayHtml = displayString.join("");
 
 		const messageText = await renderTemplate(
 			"systems/fathomlessgears/templates/messages/message-outline.html",
 			{
-				body: displayString
+				body: displayHtml
 			}
 		);
 
