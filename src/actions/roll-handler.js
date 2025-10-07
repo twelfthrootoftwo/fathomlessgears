@@ -302,6 +302,7 @@ export class RollHandler {
 			),
 			result: state
 		};
+		const actor = await fromUuid(rollParams.actorUuid);
 
 		const displayString = [];
 		displayString.push(`<div class="narrative-roll-message no-listeners">`);
@@ -312,7 +313,7 @@ export class RollHandler {
 				"_DIFFICULTY_",
 				game.i18n.localize(`NARRATIVE.${rollParams.difficulty}`)
 			)
-			.replace("_FISHER_NAME_", rollParams.actor.name);
+			.replace("_FISHER_NAME_", actor.name);
 		const introductionHtml = `<div class="attack-target">${introductionMessage}</div>`;
 		displayString.push(introductionHtml);
 
@@ -328,12 +329,12 @@ export class RollHandler {
 			"systems/fathomlessgears/templates/partials/narrative-result-partial.html",
 			{
 				result: narrativeResult,
-				rerollStatus: reroll
+				rerollStatus: reroll,
+				params: JSON.stringify(rollParams)
 			}
 		);
 		displayString.push(resultDisplay);
 		displayString.push("</div>");
-		console.log(displayString);
 		const displayHtml = displayString.join("");
 
 		const messageText = await renderTemplate(

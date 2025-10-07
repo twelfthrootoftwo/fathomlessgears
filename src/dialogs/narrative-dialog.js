@@ -125,7 +125,7 @@ export class NarrativeRollDialog extends HLMApplication {
 			Boolean(element.active)
 		);
 		const rollParams = new LabelRollParameters(
-			this.actor,
+			this.actor.uuid,
 			this.calculateDieTotal(),
 			modifierStack,
 			this.difficulty

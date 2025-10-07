@@ -49,8 +49,8 @@ export class RollParameters {
 }
 
 export class LabelRollParameters {
-	constructor(actor, dieTotal, modifierStack, difficulty) {
-		this.actor = actor;
+	constructor(uuid, dieTotal, modifierStack, difficulty) {
+		this.actorUuid = uuid;
 		this.dieTotal = dieTotal;
 		this.modifierStack = modifierStack;
 		this.difficulty = difficulty;
