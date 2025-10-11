@@ -388,7 +388,7 @@ export class MessageHandler {
 	onNarrativeRerollClick(event) {
 		const message = event.target.closest(".narrative-roll-message");
 		const dice = extractNarrativeDiceSet(
-			message.querySelector(".narrative-dice-row")
+			message.querySelectorAll(".narrative-dice-row")
 		);
 		console.log(event.target);
 		const params = JSON.parse(event.target.dataset.params);
@@ -396,17 +396,19 @@ export class MessageHandler {
 	}
 }
 
-function extractNarrativeDiceSet(diceHolderElement) {
+function extractNarrativeDiceSet(diceHolderElements) {
 	const rolls = [];
-	const diceElements =
-		diceHolderElement.getElementsByClassName("narrative-die");
-	for (let dieElement of diceElements) {
-		const innerDie = dieElement.querySelector(".die");
-		const dieState = {
-			locked: dieElement.classList.contains("locked"),
-			value: parseInt(innerDie.innerHTML)
-		};
-		rolls.push(dieState);
+	for (let holder of diceHolderElements) {
+		const diceElements = holder.getElementsByClassName("narrative-die");
+		for (let dieElement of diceElements) {
+			const innerDie = dieElement.querySelector(".die");
+			const dieState = {
+				locked: dieElement.classList.contains("locked"),
+				value: parseInt(innerDie.innerHTML)
+			};
+			rolls.push(dieState);
+		}
 	}
+	console.log(rolls);
 	return rolls;
 }
