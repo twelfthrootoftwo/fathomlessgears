@@ -268,11 +268,16 @@ export class RollHandler {
 		return 0;
 	}
 
-	countNarrativeSuccesses(roll) {
+	countNarrativeSuccesses(roll, lockedDice) {
 		let successes = 0;
 		roll.dice[0].results.forEach((die) => {
 			successes += this.getNarrativeSuccess(die.result);
 		});
+		if (lockedDice) {
+			lockedDice.forEach((value) => {
+				successes += this.getNarrativeSuccess(value);
+			});
+		}
 		return successes;
 	}
 
@@ -292,7 +297,7 @@ export class RollHandler {
 		);
 		let roll = Utils.getRoller(rollParams.dieTotal - numLockedDice, 0);
 		await roll.evaluate();
-		const successes = this.countNarrativeSuccesses(roll);
+		const successes = this.countNarrativeSuccesses(roll, lockedDiceValues);
 		let state = null;
 		if (rollParams.difficulty != NARRATIVE_DIFFICULTY.none) {
 			if (successes > this.fullSuccessThreshold(rollParams.difficulty)) {

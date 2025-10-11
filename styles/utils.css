@@ -36,6 +36,9 @@ input.sheet-input {
 .align-center {
 	align-items: center;
 }
+.align-baseline {
+	align-items: baseline;
+}
 .flex-0 {
 	flex-grow: 0;
 }

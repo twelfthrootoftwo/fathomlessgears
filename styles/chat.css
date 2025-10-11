@@ -250,6 +250,8 @@ ul.tag-pop-list {
 
 .narrative-dice-holder {
 	& .narrative-dice-row {
+		flex-wrap: wrap;
+
 		& .narrative-die {
 			& .lock-box {
 				height: 10px;
@@ -304,7 +306,10 @@ ul.tag-pop-list {
 	}
 }
 .narrative-success-count {
+	width: 20px;
 	padding: 2px;
+	margin: 2px;
+	text-align: center;
 	background-color: var(--color-bg-dialog-contrast);
 	font-size: var(--font-size-16);
 }
