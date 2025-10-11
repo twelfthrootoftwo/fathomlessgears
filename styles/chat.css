@@ -270,11 +270,11 @@ ul.tag-pop-list {
 						display: block;
 					}
 				}
+			}
 
-				&.locked {
-					& .lock-icon.locked {
-						display: block;
-					}
+			&.locked {
+				& .lock-icon.locked {
+					display: block;
 				}
 			}
 
@@ -314,6 +314,11 @@ ul.tag-pop-list {
 		}
 
 		&.were-locked {
+			background-image: url("../assets/Chain.png");
+			background-position: calc(50% + 3px) calc(50% + 5px);
+			background-size: 90% 50%;
+			background-repeat: no-repeat;
+
 			& .narrative-die {
 				& .die {
 					min-width: 40px;
@@ -346,9 +351,10 @@ ul.tag-pop-list {
 }
 .narrative-reroll-button-holder {
 	& .narrative-reroll-button {
-		width: 70px;
+		width: 150px;
 		padding: 2px;
 		font-size: var(--font-size-14);
+		margin: 4px;
 
 		& .reroll-marble-count {
 			font-size: var(--font-size-11);

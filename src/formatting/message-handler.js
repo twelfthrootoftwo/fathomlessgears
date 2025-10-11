@@ -382,15 +382,20 @@ export class MessageHandler {
 		event.target.closest(".narrative-die").classList.remove("show-lock");
 	}
 	onDieClick(event) {
+		const _locking = event.target
+			.closest(".narrative-die")
+			.classList.contains("unlocked");
 		event.target.closest(".narrative-die").classList.toggle("locked");
 		event.target.closest(".narrative-die").classList.toggle("unlocked");
+
+		const message = event.target.closest(".narrative-roll-message");
+		const _rerollButton = message.querySelector(".reroll-marble-count");
 	}
 	onNarrativeRerollClick(event) {
 		const message = event.target.closest(".narrative-roll-message");
 		const dice = extractNarrativeDiceSet(
 			message.querySelectorAll(".narrative-dice-row")
 		);
-		console.log(event.target);
 		const params = JSON.parse(event.target.dataset.params);
 		game.rollHandler.rollNarrative(params, dice, 1);
 	}
@@ -409,6 +414,5 @@ function extractNarrativeDiceSet(diceHolderElements) {
 			rolls.push(dieState);
 		}
 	}
-	console.log(rolls);
 	return rolls;
 }
