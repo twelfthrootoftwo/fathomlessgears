@@ -8,7 +8,15 @@
             </div>
             <div class="die">{{this.result}}</div>
         </div>
-        
+        {{/each}}
+        {{#each lockedPreviously}}
+        <div class="narrative-die unlocked">
+            <div class="lock-box flex-row">
+                <i class="lock-icon locked fa-solid fa-lock"></i>
+                <i class="lock-icon unlocked fa-solid fa-unlock-alt"></i>
+            </div>
+            <div class="die from-lock">{{this}}</div>
+        </div>
         {{/each}}
     </div>
 </div>

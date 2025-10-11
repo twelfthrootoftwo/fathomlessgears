@@ -77,6 +77,7 @@
 	"ROLLTEXT.target": "against _TARGET_NAME_",
 	"ROLLTEXT.softcover": " with soft cover",
 	"ROLLTEXT.hardcover": " with hard cover",
+	"ROLLTEXT.narrativeHeader": "_FISHER_NAME_ makes a _DIFFICULTY_ narrative roll!",
 
 	"HIT.miss": "Miss",
 	"HIT.hit": "Hit",
@@ -118,6 +119,18 @@
 	"COVERSTATE.none": "No cover",
 	"COVERSTATE.soft": "Soft cover",
 	"COVERSTATE.hard": "Hard cover",
+
+	"NARRATIVE.easy": "Easy",
+	"NARRATIVE.challenging": "Challenging",
+	"NARRATIVE.hard": "Hard",
+	"NARRATIVE.impossible": "Impossible",
+	"NARRATIVE.none": "No Difficulty",
+	"NARRATIVE.failure": "Failure",
+	"NARRATIVE.good_enough": "Good Enough",
+	"NARRATIVE.full_success": "Full Success",
+	"NARRATIVE.successes": "successes",
+	"NARRATIVE.marble": "marble",
+	"NARRATIVE.reroll": "Reroll",
 
 	"MESSAGE.totalweight": "Total Weight",
 	"MESSAGE.reelPC": "Reel 'em in!",

@@ -276,11 +276,21 @@ export class RollHandler {
 		return successes;
 	}
 
-	async rollNarrative(rollParams, reroll) {
+	async rollNarrative(rollParams, diceState, reroll) {
+		const lockedDiceValues = [];
+		let numLockedDice = 0;
+		if (diceState) {
+			diceState.forEach((dieState) => {
+				if (dieState.locked) {
+					numLockedDice = numLockedDice + 1;
+					lockedDiceValues.push(dieState.value);
+				}
+			});
+		}
 		console.log(
 			`Rolling narrative with ${rollParams.modifierStack.length} labels (${rollParams.dieTotal} dice)`
 		);
-		let roll = Utils.getRoller(rollParams.dieTotal, 0);
+		let roll = Utils.getRoller(rollParams.dieTotal - numLockedDice, 0);
 		await roll.evaluate();
 		const successes = this.countNarrativeSuccesses(roll);
 		let state = null;
@@ -320,7 +330,8 @@ export class RollHandler {
 		const diceDisplay = await renderTemplate(
 			"systems/fathomlessgears/templates/partials/narrative-dice-partial.html",
 			{
-				dice: roll.dice[0]
+				dice: roll.dice[0],
+				lockedPreviously: lockedDiceValues
 			}
 		);
 		displayString.push(diceDisplay);

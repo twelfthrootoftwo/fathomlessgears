@@ -351,7 +351,6 @@ export class MessageHandler {
 	addNarrativeListeners(narrativeMessage) {
 		const diceElements =
 			narrativeMessage.getElementsByClassName("narrative-die");
-		console.log(diceElements);
 		for (let dieElement of diceElements) {
 			dieElement.addEventListener("mouseenter", (ev) =>
 				this.onDieHover(ev)
@@ -365,6 +364,14 @@ export class MessageHandler {
 				true
 			);
 		}
+		const rerollButtons = narrativeMessage.getElementsByClassName(
+			"narrative-reroll-button"
+		);
+		for (let rerollButton of rerollButtons) {
+			rerollButton.addEventListener("click", (ev) =>
+				this.onNarrativeRerollClick(ev)
+			);
+		}
 		narrativeMessage.classList.remove("no-listeners");
 	}
 
@@ -375,8 +382,31 @@ export class MessageHandler {
 		event.target.closest(".narrative-die").classList.remove("show-lock");
 	}
 	onDieClick(event) {
-		console.log("Click");
 		event.target.closest(".narrative-die").classList.toggle("locked");
 		event.target.closest(".narrative-die").classList.toggle("unlocked");
 	}
+	onNarrativeRerollClick(event) {
+		const message = event.target.closest(".narrative-roll-message");
+		const dice = extractNarrativeDiceSet(
+			message.querySelector(".narrative-dice-row")
+		);
+		console.log(event.target);
+		const params = JSON.parse(event.target.dataset.params);
+		game.rollHandler.rollNarrative(params, dice, 1);
+	}
+}
+
+function extractNarrativeDiceSet(diceHolderElement) {
+	const rolls = [];
+	const diceElements =
+		diceHolderElement.getElementsByClassName("narrative-die");
+	for (let dieElement of diceElements) {
+		const innerDie = dieElement.querySelector(".die");
+		const dieState = {
+			locked: dieElement.classList.contains("locked"),
+			value: parseInt(innerDie.innerHTML)
+		};
+		rolls.push(dieState);
+	}
+	return rolls;
 }

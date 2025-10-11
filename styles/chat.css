@@ -289,6 +289,10 @@ ul.tag-pop-list {
 				color: #000;
 				font-weight: bold;
 				text-align: center;
+
+				&.from-lock {
+					font-style: italic;
+				}
 			}
 
 			&.locked .die {
