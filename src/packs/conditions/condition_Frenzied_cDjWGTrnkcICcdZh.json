@@ -4,6 +4,7 @@
 	"_id": "cDjWGTrnkcICcdZh",
 	"img": "icons/svg/item-bag.svg",
 	"system": {
+		"alternateName": "Frenzy",
 		"source": {
 			"filename": "FG Sensitive",
 			"version": "#{VERSION}#"
