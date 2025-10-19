@@ -520,7 +520,7 @@
 		align-items: baseline;
 		padding: 2px 5px 0px;
 
-		& input.resource-input {
+		& input.sheet-resource-input {
 			flex: 0 0 16px;
 			height: 17px;
 			min-width: 16px;
@@ -532,7 +532,7 @@
 			}
 		}
 
-		& .label.resource-input {
+		& .label.sheet-resource-input {
 			flex: 1 0 40px;
 		}
 	}
