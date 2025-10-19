@@ -114,7 +114,6 @@ export class MessageHandler {
 
 	formatText(text, context) {
 		this.tagItems.forEach((tag) => {
-			console.log(`Checking ${tag.name}`);
 			let alternateText = tag.system.alternateName || "NULL";
 			//Convert plaintext items into tags
 			if (tag.system.value != null) {
