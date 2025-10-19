@@ -2,6 +2,7 @@
 import {ACTOR_TYPES} from "../constants.js";
 import {actionText} from "./basic-action-data.js";
 import {ReserveApDialog} from "../dialogs/reserve-ap-dialog.js";
+import {NarrativeRollDialog} from "../dialogs/narrative-dialog.js";
 
 export class HUDActionCollection {
 	static addHUDActions() {
@@ -183,5 +184,9 @@ export class HUDActionCollection {
 
 	holdAp(actor) {
 		new ReserveApDialog(actor);
+	}
+
+	rollNarrative(actor) {
+		new NarrativeRollDialog(actor.system.downtime.labels, actor);
 	}
 }

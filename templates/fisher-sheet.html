@@ -82,7 +82,16 @@
                                 <h2 class="options-header">
                                     Shore Leave
                                 </h2>
-                                Shore leave coming soon<sup>TM</sup>
+                                <div class="flex-row">
+                                    {{>
+                                        "systems/fathomlessgears/templates/partials/labels.html"
+                                        labels=labels
+                                    }}
+                                    {{>
+                                        "systems/fathomlessgears/templates/partials/history-table.html"
+                                        history=history
+                                    }}
+                                </div>
                                 <div class="flex-row">
                                     <p class="novok">Novok</p>
                                     <input
@@ -106,10 +115,6 @@
                                     {{/each}}
                                 </div>
                             </div>
-                            {{>
-                                "systems/fathomlessgears/templates/partials/history-table.html"
-                                history=this.history
-                            }}
                         </div>
                     </div>
                 </div>

@@ -247,3 +247,118 @@ ul.tag-pop-list {
 		flex: 0 0 75px;
 	}
 }
+
+.narrative-dice-holder {
+	& .narrative-dice-row {
+		justify-content: center;
+		flex-wrap: wrap;
+
+		& .narrative-die {
+			& .lock-box {
+				height: 10px;
+				justify-content: center;
+				align-items: center;
+				& .lock-icon {
+					display: none;
+					font-size: 8pt;
+				}
+			}
+
+			&.show-lock {
+				&.unlocked {
+					& .lock-icon.unlocked {
+						display: block;
+					}
+				}
+			}
+
+			&.locked {
+				& .lock-icon.locked {
+					display: block;
+				}
+			}
+
+			& .die {
+				background-color: #aaaaaa;
+				border-radius: 5px;
+				position: relative;
+				min-width: 50px;
+				line-height: 50px;
+				float: left;
+				margin: 4px;
+				background-repeat: no-repeat;
+				background-size: 50px 50px;
+				font-size: var(--font-size-32);
+				color: #000;
+				font-weight: bold;
+				text-align: center;
+
+				&.from-lock {
+					font-style: italic;
+				}
+
+				&.val-1 {
+					color: #e60000;
+				}
+
+				&.val-6 {
+					color: #248f24;
+				}
+			}
+
+			&.locked .die {
+				color: #555555;
+				border: 2px solid var(--color-border-dark-primary);
+				line-height: 46px;
+			}
+		}
+
+		&.were-locked {
+			background-image: url("../assets/Chain.png");
+			background-position: calc(50% + 3px) calc(50% + 5px);
+			background-size: 90% 50%;
+			background-repeat: no-repeat;
+
+			& .narrative-die {
+				& .die {
+					min-width: 40px;
+					line-height: 40px;
+					font-size: var(--font-size-28);
+					text-align: left;
+					padding-left: 11px;
+				}
+
+				&.locked .die {
+					line-height: 36px;
+					padding-left: 9px;
+				}
+			}
+		}
+	}
+}
+.narrative-success-count {
+	width: 20px;
+	padding: 2px;
+	margin: 2px;
+	text-align: center;
+	background-color: var(--color-bg-dialog-contrast);
+	font-size: var(--font-size-16);
+}
+.narrative-success-label {
+	margin: auto;
+	font-size: var(--font-size-11);
+	font-style: italic;
+}
+.narrative-reroll-button-holder {
+	& .narrative-reroll-button {
+		width: 150px;
+		padding: 2px;
+		font-size: var(--font-size-14);
+		margin: 4px;
+
+		& .reroll-marble-count {
+			font-size: var(--font-size-11);
+			font-style: italic;
+		}
+	}
+}

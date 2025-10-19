@@ -1,7 +1,13 @@
 import {RollElement, RollDialog} from "../dialogs/roll-dialog.js";
 import {ReelHandler} from "./reel.js";
 import {constructCollapsibleRollMessage} from "./collapsible-roll.js";
-import {ATTRIBUTES, ROLL_MODIFIER_TYPE, HIT_TYPE} from "../constants.js";
+import {
+	ATTRIBUTES,
+	ROLL_MODIFIER_TYPE,
+	HIT_TYPE,
+	NARRATIVE_DIFFICULTY,
+	NARRATIVE_STATE
+} from "../constants.js";
 import {AttackHandler} from "./attack.js";
 import {Utils} from "../utilities/utils.js";
 import {actionText} from "./basic-action-data.js";
@@ -203,6 +209,159 @@ export class RollHandler {
 				minor_text: minorText,
 				body: rollText,
 				ap: ap
+			}
+		);
+
+		game.tagHandler.createChatMessage(messageText, rollParams.actor);
+	}
+
+	goodEnoughThreshold(difficulty) {
+		let value = false;
+		switch (difficulty) {
+			case NARRATIVE_DIFFICULTY.easy:
+				value = 1;
+				break;
+			case NARRATIVE_DIFFICULTY.challenging:
+				value = 2;
+				break;
+			case NARRATIVE_DIFFICULTY.hard:
+				value = 3;
+				break;
+			case NARRATIVE_DIFFICULTY.impossible:
+				value = 5;
+				break;
+			default:
+				break;
+		}
+		return value;
+	}
+
+	fullSuccessThreshold(difficulty) {
+		let value = false;
+		switch (difficulty) {
+			case NARRATIVE_DIFFICULTY.easy:
+				value = 2;
+				break;
+			case NARRATIVE_DIFFICULTY.challenging:
+				value = 3;
+				break;
+			case NARRATIVE_DIFFICULTY.hard:
+				value = 5;
+				break;
+			case NARRATIVE_DIFFICULTY.impossible:
+				value = 7;
+				break;
+			default:
+				break;
+		}
+		return value;
+	}
+
+	getNarrativeSuccess(dieResult) {
+		if (dieResult == 1) {
+			return -1;
+		} else if (dieResult == 6) {
+			return 2;
+		} else if (dieResult >= 4) {
+			return 1;
+		}
+		return 0;
+	}
+
+	countNarrativeSuccesses(roll, lockedDice) {
+		let successes = 0;
+		roll.dice[0].results.forEach((die) => {
+			successes += this.getNarrativeSuccess(die.result);
+		});
+		if (lockedDice) {
+			lockedDice.forEach((value) => {
+				successes += this.getNarrativeSuccess(value);
+			});
+		}
+		return successes;
+	}
+
+	evaluateNarrativeRoll(successes, difficulty) {
+		let state = null;
+		if (difficulty != NARRATIVE_DIFFICULTY.none) {
+			if (successes >= this.fullSuccessThreshold(difficulty)) {
+				state = NARRATIVE_STATE.full_success;
+			} else if (successes >= this.goodEnoughThreshold(difficulty)) {
+				state = NARRATIVE_STATE.good_enough;
+			} else {
+				state = NARRATIVE_STATE.failure;
+			}
+		}
+		return state;
+	}
+
+	async rollNarrative(rollParams, diceState, reroll) {
+		const lockedDiceValues = [];
+		let numLockedDice = 0;
+		if (diceState) {
+			diceState.forEach((dieState) => {
+				if (dieState.locked) {
+					numLockedDice = numLockedDice + 1;
+					lockedDiceValues.push(dieState.value);
+				}
+			});
+		}
+		console.log(
+			`Rolling narrative with ${rollParams.modifierStack.length} labels (${rollParams.dieTotal} dice)`
+		);
+		let roll = Utils.getRoller(rollParams.dieTotal - numLockedDice, 0);
+		await roll.evaluate();
+		const successes = this.countNarrativeSuccesses(roll, lockedDiceValues);
+		const narrativeResult = {
+			successes: successes,
+			difficulty: game.i18n.localize(
+				`NARRATIVE.${rollParams.difficulty}`
+			),
+			result: this.evaluateNarrativeRoll(successes, rollParams.difficulty)
+		};
+		const actor = await fromUuid(rollParams.actorUuid);
+
+		const displayString = [];
+		displayString.push(`<div class="narrative-roll-message no-listeners">`);
+
+		const introductionMessage = game.i18n
+			.localize("ROLLTEXT.narrativeHeader")
+			.replace(
+				"_DIFFICULTY_",
+				game.i18n.localize(`NARRATIVE.${rollParams.difficulty}`)
+			)
+			.replace("_FISHER_NAME_", actor.name);
+		const introductionHtml = `<div class="attack-target">${introductionMessage}</div>`;
+		displayString.push(introductionHtml);
+
+		const diceDisplay = await renderTemplate(
+			"systems/fathomlessgears/templates/partials/narrative-dice-partial.html",
+			{
+				dice: roll.dice[0],
+				lockedPreviously: lockedDiceValues
+			}
+		);
+		displayString.push(diceDisplay);
+
+		const resultDisplay = await renderTemplate(
+			"systems/fathomlessgears/templates/partials/narrative-result-partial.html",
+			{
+				result: narrativeResult,
+				rerollStatus: reroll,
+				successString: narrativeResult.result
+					? game.i18n.localize(`NARRATIVE.${narrativeResult.result}`)
+					: null,
+				params: JSON.stringify(rollParams)
+			}
+		);
+		displayString.push(resultDisplay);
+		displayString.push("</div>");
+		const displayHtml = displayString.join("");
+
+		const messageText = await renderTemplate(
+			"systems/fathomlessgears/templates/messages/message-outline.html",
+			{
+				body: displayHtml
 			}
 		);
 

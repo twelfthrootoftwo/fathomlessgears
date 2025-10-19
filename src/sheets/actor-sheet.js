@@ -2,6 +2,7 @@ import {ATTRIBUTES, ACTOR_TYPES, TEMPLATE} from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 import {FileUploader} from "../data-files/uploader.js";
 import {populateActorFromGearwright} from "../actors/gearwright-actor.js";
+import {NarrativeRollDialog} from "../dialogs/narrative-dialog.js";
 
 /**
  * @extends {ActorSheet}
@@ -98,9 +99,9 @@ export class HLMActorSheet extends ActorSheet {
 					break;
 			}
 		});
-
 		if (this.actor.type === ACTOR_TYPES.fisher) {
 			context.history = this.buildHistoryForDisplay(items);
+			context.labels = this.actor.system.downtime.labels;
 		}
 
 		//Other items
@@ -219,6 +220,9 @@ export class HLMActorSheet extends ActorSheet {
 			);
 			html.find(".injury-checkbox").click(
 				this.toggleInjuryHealed.bind(this)
+			);
+			html.find(".narrative-btn").click(
+				this.rollNarrativeCheck.bind(this)
 			);
 		}
 
@@ -433,6 +437,10 @@ export class HLMActorSheet extends ActorSheet {
 		this.actor.itemsManager.toggleInjuryHealed(
 			safeIdClean(event.target.dataset.id)
 		);
+	}
+
+	rollNarrativeCheck(_event) {
+		new NarrativeRollDialog(this.actor.system.downtime.labels, this.actor);
 	}
 }
 function safeIdClean(safeId) {

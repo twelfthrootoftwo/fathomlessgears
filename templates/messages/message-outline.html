@@ -1,8 +1,12 @@
 <div class="message-body">
+    {{#if heading}}
     <div class="message-subheader flex-row">
         <div>{{{heading}}}</div>
+        {{#if ap}}
         <div>{{ap}} AP</div>
+        {{/if}}
     </div>
+    {{/if}}
     {{#if minor_text}}
     <div class="minor-text font-12 lower-border-primary format-me">
         {{{minor_text}}}

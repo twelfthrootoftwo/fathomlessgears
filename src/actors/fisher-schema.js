@@ -9,6 +9,16 @@ export default class HLMFisherModel extends HLMActorModel {
 			nullable: false,
 			integer: true
 		};
+		const labelSchema = new fields.SchemaField({
+			name: new fields.StringField({
+				required: true,
+				initial: "New Label"
+			}),
+			description: new fields.StringField({
+				required: true,
+				initial: ""
+			})
+		});
 		const schema = super.defineSchema();
 
 		schema.resources = new fields.SchemaField(
@@ -58,7 +68,8 @@ export default class HLMFisherModel extends HLMActorModel {
 			novok: new fields.NumberField({
 				...requiredInteger,
 				initial: 0
-			})
+			}),
+			labels: new fields.ArrayField(labelSchema)
 		});
 
 		schema.biography = new fields.StringField({
