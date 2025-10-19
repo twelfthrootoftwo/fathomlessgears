@@ -144,6 +144,13 @@ export class RollHandler {
 	}
 
 	async basicAction(rollParams) {
+		if (rollParams.actionCode == "reelCheck") {
+			const targetSet = game.user.targets;
+			const target = targetSet.values().next().value;
+			const message = await ReelHandler.reel(rollParams, target);
+			game.tagHandler.createChatMessage(message, rollParams.actor);
+			return;
+		}
 		if (rollParams.actionCode != "bash") {
 			rollParams.hideHitLocation = true;
 		}
