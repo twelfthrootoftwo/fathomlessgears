@@ -81,7 +81,7 @@ Hooks.once("init", async function () {
 	//Load templates
 	await preloadHandlebarsTemplates();
 	CONFIG.Combat.initiative = {
-		formula: "20-@ballast.total.value + 0.1*@attributes.speed.value",
+		formula: "20-@attributes.ballast.total + 0.1*@attributes.speed.total",
 		decimals: 1
 	};
 	Hooks.on("renderSidebarTab", async (app, html) => {
