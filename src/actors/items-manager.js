@@ -614,6 +614,23 @@ export class ItemsManager {
 		item.setFlag("fathomlessgears", "activated", !currentState);
 	}
 
+	calculateConditionValue(condition, effectCounter) {
+		let value = condition.system.value + effectCounter;
+		if (condition.system.limit) {
+			value = Math.max(
+				Math.min(
+					effectCounter
+						? condition.system.value + effectCounter
+						: condition.system.value,
+					3
+				),
+				-3
+			);
+		}
+
+		return value;
+	}
+
 	/**
 	 * Adds a condition to this actor by dropping the condition item on it
 	 * Will both create the condition item and set the active effect on tokens
@@ -643,14 +660,9 @@ export class ItemsManager {
 						appliedEffect.statuses.has(condition.system.effectName)
 				)[0];
 				let effectCounter = existingEffect?.getCounterValue();
-				let targetValue = Math.max(
-					Math.min(
-						effectCounter
-							? condition.system.value + effectCounter
-							: condition.system.value,
-						3
-					),
-					-3
+				let targetValue = this.calculateConditionValue(
+					condition,
+					effectCounter
 				);
 				await quickCreateCounter(existingEffect, targetValue);
 			});

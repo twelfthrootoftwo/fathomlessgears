@@ -19,7 +19,7 @@ export class ReelHandler {
 			{
 				label_left: game.i18n
 					.localize("ROLLTEXT.reel")
-					.replace("_TARGET_NAME_", target.name),
+					.replace(" _TARGET_NAME_", target ? ` ${target.name}` : ""),
 				total: await constructCollapsibleRollMessage(powerRoll),
 				preformat: true,
 				outcome: "",
@@ -30,6 +30,7 @@ export class ReelHandler {
             <img src="${rollParams.actor.img}" style="border:none; max-height: 150px;"/>
             <div style="font-size: 16px; font-weight: bold;">${reelMessage}</div>
             ${rollString}
+			<div class="catchcounter-helper format-me">Apply Catch Counter 1?</div>
         </div>`;
 		return displayString;
 	}

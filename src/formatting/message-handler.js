@@ -114,6 +114,7 @@ export class MessageHandler {
 
 	formatText(text, context) {
 		this.tagItems.forEach((tag) => {
+			console.log(`Checking ${tag.name}`);
 			let alternateText = tag.system.alternateName || "NULL";
 			//Convert plaintext items into tags
 			if (tag.system.value != null) {
@@ -275,6 +276,7 @@ export class MessageHandler {
 
 	transformTagNameToButton(node, context) {
 		if (this.checkNodeShouldBeFormatted(node)) {
+			console.log("Format this node");
 			let newText = this.formatText(
 				node.classList?.contains("tag-display")
 					? node.outerHTML
