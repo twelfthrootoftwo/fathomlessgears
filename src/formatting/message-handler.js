@@ -399,7 +399,6 @@ export class MessageHandler {
 		);
 		const params = JSON.parse(event.target.dataset.params);
 		const rerollFlag = event.target.classList.contains("reroll-1");
-		console.log(`Reroll flag: ${rerollFlag}`);
 		game.rollHandler.rollNarrative(params, dice, rerollFlag ? 2 : 1);
 	}
 }
