@@ -281,6 +281,20 @@ export class RollHandler {
 		return successes;
 	}
 
+	evaluateNarrativeRoll(successes, difficulty) {
+		let state = null;
+		if (difficulty != NARRATIVE_DIFFICULTY.none) {
+			if (successes >= this.fullSuccessThreshold(difficulty)) {
+				state = NARRATIVE_STATE.full_success;
+			} else if (successes >= this.goodEnoughThreshold(difficulty)) {
+				state = NARRATIVE_STATE.good_enough;
+			} else {
+				state = NARRATIVE_STATE.failure;
+			}
+		}
+		return state;
+	}
+
 	async rollNarrative(rollParams, diceState, reroll) {
 		const lockedDiceValues = [];
 		let numLockedDice = 0;
@@ -298,24 +312,12 @@ export class RollHandler {
 		let roll = Utils.getRoller(rollParams.dieTotal - numLockedDice, 0);
 		await roll.evaluate();
 		const successes = this.countNarrativeSuccesses(roll, lockedDiceValues);
-		let state = null;
-		if (rollParams.difficulty != NARRATIVE_DIFFICULTY.none) {
-			if (successes >= this.fullSuccessThreshold(rollParams.difficulty)) {
-				state = NARRATIVE_STATE.full_success;
-			} else if (
-				successes >= this.goodEnoughThreshold(rollParams.difficulty)
-			) {
-				state = NARRATIVE_STATE.good_enough;
-			} else {
-				state = NARRATIVE_STATE.failure;
-			}
-		}
 		const narrativeResult = {
 			successes: successes,
 			difficulty: game.i18n.localize(
 				`NARRATIVE.${rollParams.difficulty}`
 			),
-			result: state
+			result: this.evaluateNarrativeRoll(successes, rollParams.difficulty)
 		};
 		const actor = await fromUuid(rollParams.actorUuid);
 
