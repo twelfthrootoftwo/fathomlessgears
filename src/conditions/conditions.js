@@ -2,7 +2,6 @@
 import {ITEM_TYPES} from "../constants.js";
 
 export const CONDITIONS = {
-	berserk: "berserk",
 	blind: "blind",
 	burdened: "burdened",
 	catchcounter: "catchcounter",
@@ -30,12 +29,6 @@ export const conditions = [
 		name: "CONDITIONS.ballast",
 		img: "systems/fathomlessgears/assets/icons/Ballast.png",
 		statuses: []
-	},
-	{
-		id: CONDITIONS.berserk,
-		name: "CONDITIONS.berserk",
-		img: "systems/fathomlessgears/assets/icons/Berserk.png",
-		statuses: ["berserk"]
 	},
 	{
 		id: CONDITIONS.blind,
