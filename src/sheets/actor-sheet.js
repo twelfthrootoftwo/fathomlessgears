@@ -8,13 +8,6 @@ import {NarrativeRollDialog} from "../dialogs/narrative-dialog.js";
  * @extends {ActorSheet}
  */
 export class HLMActorSheet extends ActorSheet {
-	labelCount = 0;
-
-	constructor(args) {
-		super(args);
-		this.labelCount = 0;
-	}
-
 	/** @inheritdoc */
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
@@ -227,9 +220,6 @@ export class HLMActorSheet extends ActorSheet {
 			);
 			html.find(".injury-checkbox").click(
 				this.toggleInjuryHealed.bind(this)
-			);
-			html.find(".label-checkbox").click(
-				this.toggleLabelActive.bind(this)
 			);
 			html.find(".narrative-btn").click(
 				this.rollNarrativeCheck.bind(this)
@@ -447,14 +437,6 @@ export class HLMActorSheet extends ActorSheet {
 		this.actor.itemsManager.toggleInjuryHealed(
 			safeIdClean(event.target.dataset.id)
 		);
-	}
-
-	toggleLabelActive(event) {
-		if (event.target.checked === true) {
-			this.labelCount += 1;
-		} else {
-			this.labelCount -= 1;
-		}
 	}
 
 	rollNarrativeCheck(_event) {
