@@ -341,6 +341,7 @@ export class RollHandler {
 		);
 		displayString.push(diceDisplay);
 
+		console.log(reroll);
 		const resultDisplay = await renderTemplate(
 			"systems/fathomlessgears/templates/partials/narrative-result-partial.html",
 			{

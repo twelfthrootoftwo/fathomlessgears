@@ -398,7 +398,9 @@ export class MessageHandler {
 			message.querySelectorAll(".narrative-dice-row")
 		);
 		const params = JSON.parse(event.target.dataset.params);
-		game.rollHandler.rollNarrative(params, dice, 1);
+		const rerollFlag = event.target.classList.contains("reroll-1");
+		console.log(`Reroll flag: ${rerollFlag}`);
+		game.rollHandler.rollNarrative(params, dice, rerollFlag ? 2 : 1);
 	}
 }
 
@@ -419,10 +421,7 @@ function extractNarrativeDiceSet(diceHolderElements) {
 }
 
 function adjustMarbleCost(marbleCostElement, isLocking) {
-	console.log(marbleCostElement.innerHTML);
-	console.log(isLocking);
 	let currentVal = parseInt(marbleCostElement.innerHTML);
 	currentVal = currentVal + (isLocking ? 1 : -1);
-	console.log(`Setting marble cost to ${currentVal}`);
 	marbleCostElement.innerHTML = currentVal;
 }

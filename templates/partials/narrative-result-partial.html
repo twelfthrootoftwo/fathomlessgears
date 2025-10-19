@@ -1,3 +1,4 @@
+{{log rerollStatus}}
 <div class="flex-row justify-centre align-baseline">
     <div class="narrative-success-count">{{result.successes}}</div> {{localize "NARRATIVE.successes"}}
 </div>
@@ -5,8 +6,16 @@
     {{difficulty}}
 </div>
 <div class="narrative-reroll-button-holder flex-row justify-centre">
-    <div class="btn narrative-reroll-button no-listeners flex-col justify-centre" data-params="{{params}}">
+    {{#ifcond rerollStatus "!=" 2}}
+    <div class="btn narrative-reroll-button no-listeners flex-col justify-centre reroll-{{rerollStatus}}" data-params="{{params}}">
         {{localize "NARRATIVE.reroll"}}
+        {{#ifcond rerollStatus "==" 1}}
+        <div class="flex-row justify-center reroll-marble-count">({{localize "NARRATIVE.injury"}} & -<div class=marble-reroll-cost>0</div>&nbsp;{{localize
+            "NARRATIVE.marble"}})</div>
+        {{/ifcond}}
+        {{#ifcond rerollStatus "==" 0}}
         <div class="flex-row justify-center reroll-marble-count">(-<div class=marble-reroll-cost>1</div>&nbsp;{{localize "NARRATIVE.marble"}})</div>
+        {{/ifcond}}
     </div>
+    {{/ifcond}}
 </div>

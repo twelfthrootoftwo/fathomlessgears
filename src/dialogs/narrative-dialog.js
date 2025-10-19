@@ -140,7 +140,7 @@ export class NarrativeRollDialog extends HLMApplication {
 			);
 		}
 
-		await game.rollHandler.rollNarrative(rollParams);
+		await game.rollHandler.rollNarrative(rollParams, null, 0);
 		this.close();
 	}
 
