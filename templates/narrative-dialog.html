@@ -1,0 +1,59 @@
+<form autocomplete="off">
+    <div class="flex-row">
+        <div class="col narrative-dialog-col">
+            <div class="roll-component-box full-height">
+                <p class="roll-component-header">{{localize "ROLLDIALOG.bonus"}}</p>
+                <ol class="roll-components">
+                    {{#each modifiers}}
+                    {{>
+                    "systems/fathomlessgears/templates/partials/label-toggle.html"
+                    label = this
+                    }}
+                    {{/each}}
+                    <li class="roll-component-item">
+                        <p class="roll-component-description">{{localize "ROLLDIALOG.other"}}</p>
+                        <input class="roll-component-value additional-value" type="number" data-selector="additional"
+                            value="{{additional}}">
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div class="col narrative-dialog-col">
+            <div class="roll-component-box full-height">
+                <p class="roll-component-header">Difficulty</p>
+                <div class="narrative-difficulty-toggle-box flex-col">
+                    {{#each checkDifficulties}}
+                    <div class="difficulty-radio">
+                        <input class="difficulty-radio-button" type="radio" id="{{this.id}}" name="difficulty"
+                            value="{{this.id}}">
+                        <label for="{{this.id}}">{{this.name}}</label>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row">
+        <div class="col narrative-dialog-col full-height">
+            <div class="roll-component-box full-height">
+                <div class="flex-row justify-centre align-center total-row">
+                    <p>{{localize "ROLLDIALOG.total"}}:&nbsp;</p>
+                    <p id="total-string">{{totalString}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col narrative-dialog-col">
+            <div class="roll-component-box full-height">
+                <div class="flex-row align-center">
+                    <p>{{localize "NARRATIVE.good_enough"}}:&nbsp;</p>
+                    <p id="goodenough-string">{{goodEnoughString}}&plus;</p>
+                </div>
+                <div class="flex-row align-center">
+                    <p>{{localize "NARRATIVE.full_success"}}:&nbsp;</p>
+                    <p id="fullsuccess-string">{{fullSuccessString}}&plus;</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btn">{{localize "ROLLDIALOG.trigger"}}</div>
+</form>

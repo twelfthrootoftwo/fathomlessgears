@@ -215,3 +215,15 @@ input:checked + .slider:before {
 		flex-grow: 1;
 	}
 }
+.narrative-dialog-col {
+	flex: 1 0 200px;
+	padding: 2px 4px;
+
+	& .difficulty-radio {
+		padding: 2px;
+
+		& .difficulty-radio-button {
+			margin-right: 4px;
+		}
+	}
+}

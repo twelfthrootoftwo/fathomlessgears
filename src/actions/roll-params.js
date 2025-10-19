@@ -47,3 +47,12 @@ export class RollParameters {
 		else return this.modifierStack;
 	}
 }
+
+export class LabelRollParameters {
+	constructor(uuid, dieTotal, modifierStack, difficulty) {
+		this.actorUuid = uuid;
+		this.dieTotal = dieTotal;
+		this.modifierStack = modifierStack;
+		this.difficulty = difficulty;
+	}
+}

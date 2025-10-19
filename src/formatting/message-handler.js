@@ -24,6 +24,7 @@ export class MessageHandler {
 	}
 
 	addListeners() {
+		//Tags
 		const tagItems = document.querySelectorAll(".tag-display.no-listener");
 		tagItems.forEach((tagElement) => {
 			tagElement.addEventListener("mouseenter", (ev) =>
@@ -42,6 +43,7 @@ export class MessageHandler {
 			tagElement.classList.add("btn-active");
 		});
 
+		//Rollable tag buttons
 		const tagRollButtons = document.querySelectorAll(
 			".tag-roll-btn.no-listener"
 		);
@@ -53,6 +55,14 @@ export class MessageHandler {
 			);
 			button.classList.remove("no-listener");
 			button.classList.add("btn-active");
+		});
+
+		//Narrative dice
+		const narrativeRollMessages = document.querySelectorAll(
+			".narrative-roll-message.no-listeners"
+		);
+		narrativeRollMessages.forEach((narrativeRollMessage) => {
+			this.addNarrativeListeners(narrativeRollMessage);
 		});
 	}
 
@@ -337,4 +347,80 @@ export class MessageHandler {
 	getTags() {
 		return foundry.utils.deepClone(this.tagItems);
 	}
+
+	addNarrativeListeners(narrativeMessage) {
+		const diceElements =
+			narrativeMessage.getElementsByClassName("narrative-die");
+		for (let dieElement of diceElements) {
+			dieElement.addEventListener("mouseenter", (ev) =>
+				this.onDieHover(ev)
+			);
+			dieElement.addEventListener("mouseleave", (ev) =>
+				this.onDieEndHover(ev)
+			);
+			dieElement.addEventListener(
+				"click",
+				(ev) => this.onDieClick(ev),
+				true
+			);
+		}
+		const rerollButtons = narrativeMessage.getElementsByClassName(
+			"narrative-reroll-button"
+		);
+		for (let rerollButton of rerollButtons) {
+			rerollButton.addEventListener("click", (ev) =>
+				this.onNarrativeRerollClick(ev)
+			);
+		}
+		narrativeMessage.classList.remove("no-listeners");
+	}
+
+	onDieHover(event) {
+		event.target.closest(".narrative-die").classList.add("show-lock");
+	}
+	onDieEndHover(event) {
+		event.target.closest(".narrative-die").classList.remove("show-lock");
+	}
+	onDieClick(event) {
+		const locking = event.target
+			.closest(".narrative-die")
+			.classList.contains("unlocked");
+		event.target.closest(".narrative-die").classList.toggle("locked");
+		event.target.closest(".narrative-die").classList.toggle("unlocked");
+
+		const message = event.target.closest(".narrative-roll-message");
+		const marbleCost = message.querySelector(".marble-reroll-cost");
+		adjustMarbleCost(marbleCost, locking);
+	}
+	onNarrativeRerollClick(event) {
+		const message = event.target.closest(".narrative-roll-message");
+		const dice = extractNarrativeDiceSet(
+			message.querySelectorAll(".narrative-dice-row")
+		);
+		const params = JSON.parse(event.target.dataset.params);
+		const rerollFlag = event.target.classList.contains("reroll-1");
+		game.rollHandler.rollNarrative(params, dice, rerollFlag ? 2 : 1);
+	}
+}
+
+function extractNarrativeDiceSet(diceHolderElements) {
+	const rolls = [];
+	for (let holder of diceHolderElements) {
+		const diceElements = holder.getElementsByClassName("narrative-die");
+		for (let dieElement of diceElements) {
+			const innerDie = dieElement.querySelector(".die");
+			const dieState = {
+				locked: dieElement.classList.contains("locked"),
+				value: parseInt(innerDie.innerHTML)
+			};
+			rolls.push(dieState);
+		}
+	}
+	return rolls;
+}
+
+function adjustMarbleCost(marbleCostElement, isLocking) {
+	let currentVal = parseInt(marbleCostElement.innerHTML);
+	currentVal = currentVal + (isLocking ? 1 : -1);
+	marbleCostElement.innerHTML = currentVal;
 }

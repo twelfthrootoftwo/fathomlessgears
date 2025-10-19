@@ -66,6 +66,7 @@ async function buildFisher(actor, data, importName) {
 	await applyFrame(data, actor, gridObject);
 	gridObject.applyUnlocksByCoords(data.unlocks);
 	await applyBackground(data, actor);
+	await applyLabels(data, actor);
 	await applyAdditionalFisher(data, actor);
 	await applyInternals(data, actor, gridObject);
 	if (actor.getFlag("fathomlessgears", "interactiveGrid")) {
@@ -259,6 +260,28 @@ async function applyBackground(importData, actor) {
 		});
 	}
 	await actor.itemsManager.applyBackgroundSystem(background);
+}
+
+async function applyLabels(importData, actor) {
+	let newLabels = [];
+	let newLabel = null;
+	importData.labels.forEach((label) => {
+		newLabel = {
+			name: Utils.capitaliseWords(Utils.fromLowerHyphen(label)),
+			description: ""
+		};
+		newLabels.push(newLabel);
+	});
+	Object.values(importData.custom_label_info).forEach((label) => {
+		newLabel = {
+			name: label.name,
+			description: label.description
+		};
+
+		newLabels.push(newLabel);
+	});
+
+	await actor.update({"system.downtime.labels": newLabels});
 }
 
 async function applyAdditionalFisher(importData, actor) {
