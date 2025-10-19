@@ -382,14 +382,15 @@ export class MessageHandler {
 		event.target.closest(".narrative-die").classList.remove("show-lock");
 	}
 	onDieClick(event) {
-		const _locking = event.target
+		const locking = event.target
 			.closest(".narrative-die")
 			.classList.contains("unlocked");
 		event.target.closest(".narrative-die").classList.toggle("locked");
 		event.target.closest(".narrative-die").classList.toggle("unlocked");
 
 		const message = event.target.closest(".narrative-roll-message");
-		const _rerollButton = message.querySelector(".reroll-marble-count");
+		const marbleCost = message.querySelector(".marble-reroll-cost");
+		adjustMarbleCost(marbleCost, locking);
 	}
 	onNarrativeRerollClick(event) {
 		const message = event.target.closest(".narrative-roll-message");
@@ -415,4 +416,13 @@ function extractNarrativeDiceSet(diceHolderElements) {
 		}
 	}
 	return rolls;
+}
+
+function adjustMarbleCost(marbleCostElement, isLocking) {
+	console.log(marbleCostElement.innerHTML);
+	console.log(isLocking);
+	let currentVal = parseInt(marbleCostElement.innerHTML);
+	currentVal = currentVal + (isLocking ? 1 : -1);
+	console.log(`Setting marble cost to ${currentVal}`);
+	marbleCostElement.innerHTML = currentVal;
 }
