@@ -1,6 +1,5 @@
-{{log rerollStatus}}
 <div class="flex-row justify-centre align-baseline">
-    <div class="narrative-success-count">{{result.successes}}</div> {{localize "NARRATIVE.successes"}}
+    <div class="narrative-success-count">{{result.successes}}</div> {{localize "NARRATIVE.successes"}}{{#if successString}}&nbsp;- {{successString}}!{{/if}}
 </div>
 <div class="flex-row narrative-success-label">
     {{difficulty}}

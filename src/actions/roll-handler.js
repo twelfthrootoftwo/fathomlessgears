@@ -300,10 +300,10 @@ export class RollHandler {
 		const successes = this.countNarrativeSuccesses(roll, lockedDiceValues);
 		let state = null;
 		if (rollParams.difficulty != NARRATIVE_DIFFICULTY.none) {
-			if (successes > this.fullSuccessThreshold(rollParams.difficulty)) {
+			if (successes >= this.fullSuccessThreshold(rollParams.difficulty)) {
 				state = NARRATIVE_STATE.full_success;
 			} else if (
-				successes > this.goodEnoughThreshold(rollParams.difficulty)
+				successes >= this.goodEnoughThreshold(rollParams.difficulty)
 			) {
 				state = NARRATIVE_STATE.good_enough;
 			} else {
@@ -341,12 +341,14 @@ export class RollHandler {
 		);
 		displayString.push(diceDisplay);
 
-		console.log(reroll);
 		const resultDisplay = await renderTemplate(
 			"systems/fathomlessgears/templates/partials/narrative-result-partial.html",
 			{
 				result: narrativeResult,
 				rerollStatus: reroll,
+				successString: narrativeResult.result
+					? game.i18n.localize(`NARRATIVE.${narrativeResult.result}`)
+					: null,
 				params: JSON.stringify(rollParams)
 			}
 		);
