@@ -22,25 +22,22 @@ export class GridHoverHUD extends HLMApplication {
 
 	getData() {
 		const data = super.getData();
-		const tokenObject = this.object;
-		let grid = tokenObject?.actor?.grid; // Character art
+		const actor = this.object;
+		if (!actor) return;
+		let grid = actor.grid; // Character art
 
 		data.grid = grid;
 		data.lockPrompt = this.getLockPrompt();
-		data.interactive = tokenObject?.actor?.testUserPermission(
+		data.interactive = actor.testUserPermission(
 			game.user,
 			CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER
 		);
 		data.position = game.settings.get("fathomlessgears", "gridHUDPosition");
 
-		if (tokenObject?.actor?.type == ACTOR_TYPES.fish) {
+		if (actor.type == ACTOR_TYPES.fish) {
 			const hp = grid.calculateHP();
-			const tranq = Math.min(
-				tokenObject.actor.getConditionValue("tranq"),
-				3
-			);
-			const catchCounters =
-				tokenObject.actor.getConditionValue("catchcounter");
+			const tranq = Math.min(actor.getConditionValue("tranq"), 3);
+			const catchCounters = actor.getConditionValue("catchcounter");
 			const effectiveHP = Math.max(hp - tranq - catchCounters, 0);
 			data.hp = `${game.i18n.localize("GRID.remainingHP")}: ${effectiveHP}`;
 			data.hpBreakdown = `(${hp} HP`;
@@ -63,37 +60,23 @@ export class GridHoverHUD extends HLMApplication {
 	/**
 	 * check requirements then show character art
 	 */
-	checkShowGridRequirements() {
-		/**
-		 * Hide art when dragging a token.
-		 */
-		if (event && event.buttons > 0) return;
-
-		if (canvas.activeLayer.name == "TokenLayer") {
-			const token = game.gridHover.hoveredToken;
-			// Show token image if hovered, otherwise don't
-			setTimeout(function () {
-				if (
-					token == canvas.tokens.hover &&
-					token.actor.grid == canvas.tokens.hover.actor.grid &&
-					token.actor.getFlag("fathomlessgears", "interactiveGrid") &&
-					token.actor.testUserPermission(
-						game.user,
-						CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER
-					)
-				) {
-					game.gridHover.assignToken(token);
-				} else {
-					if (!this.lock) {
-						game.gridHover.clear();
-					}
+	checkShowGridRequirements(actor) {
+		// Show token image if hovered, otherwise don't
+		setTimeout(function () {
+			if (
+				actor.getFlag("fathomlessgears", "interactiveGrid") &&
+				actor.testUserPermission(
+					game.user,
+					CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER
+				)
+			) {
+				game.gridHover.assignActor(actor);
+			} else {
+				if (!this.lock) {
+					game.gridHover.clear();
 				}
-			}, 0);
-		} else {
-			if (!this.lock) {
-				this.clear();
 			}
-		}
+		}, 0);
 	}
 
 	/**
@@ -101,15 +84,15 @@ export class GridHoverHUD extends HLMApplication {
 	 * @param {HTML} html The HTML document
 	 */
 	activateListeners(html) {
-		this.object.actor.grid.activateListeners(html);
+		this.object.grid.activateListeners(html);
 	}
 
 	/**
-	 * Activates a token grid HUD
-	 * @param {HLMToken} token The token being hovered
+	 * Activates a grid HUD
+	 * @param {HLMActor} actor The actor being hovered (fom token or sidebar)
 	 */
-	assignToken(token) {
-		this.object = token;
+	assignActor(actor) {
+		this.object = actor;
 		if (this.closing) {
 			this.awaitingRefresh = true;
 		} else {
@@ -139,14 +122,19 @@ export class GridHoverHUD extends HLMApplication {
 		);
 		if (this.lock) {
 			this.lock = false;
-			if (!this.hovering || !showOnHover) {
+			if (!(this.hovering || this.hoveredSidebar) || !showOnHover) {
 				this.clear();
 			}
 		} else {
 			if (this.hovering) {
 				this.lock = true;
 				if (!showOnHover) {
-					this.checkShowGridRequirements();
+					this.checkShowGridRequirements(this.hoveredToken.actor);
+				}
+			} else if (this.hoveringSidebar) {
+				this.lock = true;
+				if (!showOnHover) {
+					this.checkShowGridRequirements(this.hoveredSidebarActor);
 				}
 			}
 		}
@@ -174,7 +162,7 @@ export class GridHoverHUD extends HLMApplication {
 				"fathomlessgears",
 				"gridHUDOnHover"
 			);
-			if (showOnHover) {
+			if (showOnHover && canvas.activeLayer.name == "TokenLayer") {
 				if (game.gridHover.lock) {
 					return;
 				}
@@ -182,7 +170,7 @@ export class GridHoverHUD extends HLMApplication {
 					game.gridHover.clear();
 					return;
 				}
-				game.gridHover.checkShowGridRequirements();
+				game.gridHover.checkShowGridRequirements(token.actor);
 			}
 		});
 
@@ -228,7 +216,7 @@ export class GridHoverHUD extends HLMApplication {
 
 	refresh() {
 		if (this.rendered) {
-			refreshGrid(this.object.actor);
+			refreshGrid(this.object);
 		}
 	}
 }
@@ -257,4 +245,36 @@ function refreshGrid(actor) {
 			game.gridHover.render(true);
 		}, 20);
 	}
+}
+
+export function addGridHudToSidebar(_app, html) {
+	const compendium = html[0].classList?.contains("actors-sidebar")
+		? html[0]
+		: html.siblings().filter(`.actors-sidebar`)[0];
+	const actors = compendium.getElementsByClassName(
+		"directory-item document actor"
+	);
+	for (let actorEntry of actors) {
+		const actorId = actorEntry.dataset.documentId;
+		actorEntry.addEventListener("mouseenter", (_ev) => {
+			const showOnHover = game.settings.get(
+				"fathomlessgears",
+				"gridHUDOnSidebarHover"
+			);
+			const actor = game.actors.get(actorId);
+			game.gridHover.hoveredSidebarActor = actor;
+			game.gridHover.hoveringSidebar = true;
+			if (showOnHover) {
+				if (game.gridHover.lock) {
+					return;
+				}
+				game.gridHover.checkShowGridRequirements(actor);
+			}
+		});
+	}
+	compendium.addEventListener("mouseleave", (_ev) => {
+		game.gridHover.hoveredSidebarActor = null;
+		game.gridHover.hoveringSidebar = false;
+		clearGrid();
+	});
 }
