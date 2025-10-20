@@ -120,9 +120,16 @@ export class GridHoverHUD extends HLMApplication {
 			"fathomlessgears",
 			"gridHUDOnHover"
 		);
+		const showOnSidebarHover = game.settings.get(
+			"fathomlessgears",
+			"gridHUDOnSidebarHover"
+		);
 		if (this.lock) {
 			this.lock = false;
-			if (!(this.hovering || this.hoveredSidebar) || !showOnHover) {
+			if (
+				(!this.hovering || !showOnHover) &&
+				(!this.hoveringSidebar || !showOnSidebarHover)
+			) {
 				this.clear();
 			}
 		} else {
@@ -133,7 +140,7 @@ export class GridHoverHUD extends HLMApplication {
 				}
 			} else if (this.hoveringSidebar) {
 				this.lock = true;
-				if (!showOnHover) {
+				if (!showOnSidebarHover) {
 					this.checkShowGridRequirements(this.hoveredSidebarActor);
 				}
 			}
