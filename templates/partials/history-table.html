@@ -1,27 +1,39 @@
-<table class="history-table">
-    {{#each history}}
-    <tr class="history-table-row" data-el="{{this.el}}">
-        <td class="el-column">EL {{this.el}}</td>
-        <td class="item-column">
-            <div class="history-row flex-row">
-                {{#each this.injuries}}
-                {{>
-                    "systems/fathomlessgears/templates/partials/history-list-item.html"
-                    item = this
-                }}
-                {{/each}}
-            </div>
-        </td>
-        <td class="item-column">
-            <div class="history-row flex-row">
-                {{#each this.touches}}
-                {{>
-                    "systems/fathomlessgears/templates/partials/history-list-item.html"
-                    item = this
-                }}
-                {{/each}}
-            </div>
-        </td>
-    </tr>
-    {{/each}}
-</table>
+<div class="history-table-holder flex-row justify-centre">
+    <table class="history-table">
+        <tr class="history-table-row history-header">
+            <th colspan="3">
+                Fisher History
+            </th>
+        </tr>
+        {{#each history}}
+        <tr class="history-table-row" data-el="{{this.el}}">
+            <td class="el-column">EL {{this.el}}</td>
+            <td class="item-column">
+                <div class="history-row flex-row">
+                    {{#each this.injuries}}
+                    {{>
+                        "systems/fathomlessgears/templates/partials/history-list-item.html"
+                        item = this
+                    }}
+                    {{/each}}
+                </div>
+            </td>
+            <td class="item-column">
+                <div class="history-row flex-row">
+                    {{#each this.touches}}
+                    {{>
+                        "systems/fathomlessgears/templates/partials/history-list-item.html"
+                        item = this
+                    }}
+                    {{/each}}
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+    </table>
+    <div class="history-edit-holder">
+        <button class="btn history-edit-btn">
+            <i class="fa-solid fa-pen-to-square history-edit-icon"></i>
+        </button>
+    </div>
+</div>

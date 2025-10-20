@@ -464,9 +464,33 @@
 						}
 					}
 
+					& .history-table-holder {
+						flex: 1 0 100px;
+
+						& .history-edit-holder {
+							width: 30px;
+							margin-left: -30px;
+							margin-top: 3px;
+							display: none;
+							& .history-edit-btn {
+								width: 100%;
+								border-radius: 4px;
+								& .history-edit-icon {
+									margin: auto;
+									padding-left: 2px;
+								}
+							}
+						}
+
+						&:hover .history-edit-holder {
+							display: block;
+						}
+					}
+
 					& .history-table {
 						flex: 1 0 100px;
 						padding: 4px 8px;
+						margin: 0;
 						border-collapse: collapse;
 
 						& td {

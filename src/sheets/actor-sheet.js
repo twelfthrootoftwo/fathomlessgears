@@ -13,7 +13,7 @@ export class HLMActorSheet extends ActorSheet {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["fathomlessgears", "sheet", "actor"],
 			template: "systems/fathomlessgears/templates/fisher-sheet.html",
-			width: 730,
+			width: 750,
 			height: 650,
 			tabs: [
 				{
@@ -223,6 +223,9 @@ export class HLMActorSheet extends ActorSheet {
 			);
 			html.find(".narrative-btn").click(
 				this.rollNarrativeCheck.bind(this)
+			);
+			html.find(".history-edit-btn").click(
+				this.triggerHistoryEdit.bind(this)
 			);
 		}
 
@@ -441,6 +444,10 @@ export class HLMActorSheet extends ActorSheet {
 
 	rollNarrativeCheck(_event) {
 		new NarrativeRollDialog(this.actor.system.downtime.labels, this.actor);
+	}
+
+	triggerHistoryEdit(_event) {
+		console.log("Trigger edit history table");
 	}
 }
 function safeIdClean(safeId) {
