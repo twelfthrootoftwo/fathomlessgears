@@ -9,7 +9,7 @@ import {initialiseHelpers} from "./utilities/handlebars.js";
 import {addFshManager} from "./data-files/fsh-manager.js";
 import {HLMItemSheet} from "./sheets/item-sheet.js";
 import {conditions, discoverConditions} from "./conditions/conditions.js";
-import {GridHoverHUD} from "./tokens/grid-hover.js";
+import {GridHoverHUD, addGridHudToSidebar} from "./tokens/grid-hover.js";
 import {GRID_HUD_LOCATION} from "./constants.js";
 import {RollHandler} from "./actions/roll-handler.js";
 import {MessageHandler} from "./formatting/message-handler.js";
@@ -86,6 +86,7 @@ Hooks.once("init", async function () {
 	};
 	Hooks.on("renderSidebarTab", async (app, html) => {
 		addFshManager(app, html);
+		addGridHudToSidebar(app, html);
 	});
 
 	initialiseHelpers();
@@ -141,7 +142,15 @@ export const system_ready = new Promise((success) => {
 			}
 		});
 		game.settings.register("fathomlessgears", "gridHUDOnHover", {
-			name: "Show grid HUD on hover",
+			name: "Show grid HUD on token hover",
+			hint: "If disabled, the grid HUD will only be visible via the lock hotkey",
+			scope: "client",
+			config: true,
+			type: Boolean,
+			default: true
+		});
+		game.settings.register("fathomlessgears", "gridHUDOnSidebarHover", {
+			name: "Show grid HUD on actor sidebar hover",
 			hint: "If disabled, the grid HUD will only be visible via the lock hotkey",
 			scope: "client",
 			config: true,
