@@ -16,7 +16,7 @@ export class GridHoverHUD extends HLMApplication {
 			width: 500,
 			height: 380,
 			template:
-				"systems/fathomlessgears/templates/grid-hover-template.html" // HTML template
+				"systems/fathomlessgears/templates/grid-hover-template.html"
 		});
 	}
 
@@ -24,7 +24,7 @@ export class GridHoverHUD extends HLMApplication {
 		const data = super.getData();
 		const actor = this.object;
 		if (!actor) return;
-		let grid = actor.grid; // Character art
+		let grid = actor.grid;
 
 		data.grid = grid;
 		data.lockPrompt = this.getLockPrompt();
@@ -58,10 +58,9 @@ export class GridHoverHUD extends HLMApplication {
 	}
 
 	/**
-	 * check requirements then show character art
+	 * check requirements then show grid
 	 */
 	checkShowGridRequirements(actor) {
-		// Show token image if hovered, otherwise don't
 		setTimeout(function () {
 			if (
 				actor.getFlag("fathomlessgears", "interactiveGrid") &&
@@ -157,7 +156,7 @@ export class GridHoverHUD extends HLMApplication {
 
 	initialiseHooks() {
 		/**
-		 * Display image when user hovers mouse over a actor
+		 * Display grid when user hovers mouse over a actor
 		 * Must be used on the token layer and have relevant actor permissions (configurable settings by the game master)
 		 * @param {*} token passed in token
 		 * @param {Boolean} hovered if token is mouseovered
@@ -181,15 +180,8 @@ export class GridHoverHUD extends HLMApplication {
 			}
 		});
 
-		/**
-		 * Remove character art when deleting/dragging token (Hover hook doesn't trigger while token movement animation is on).
-		 */
 		Hooks.on("preUpdateToken", () => clearGrid());
 		Hooks.on("deleteToken", () => clearGrid());
-
-		/**
-		 * Occasions to remove character art from screen due to weird hover hook interaction.
-		 */
 		Hooks.on("closeActorSheet", () => clearGrid());
 		Hooks.on("closeSettingsConfig", () => clearGrid());
 		Hooks.on("closeApplication", () => clearGrid());
@@ -229,7 +221,7 @@ export class GridHoverHUD extends HLMApplication {
 }
 
 /**
- * Clear art unless GM is showing users art.
+ * Clear grid
  */
 function clearGrid() {
 	if (game.gridHover) {
