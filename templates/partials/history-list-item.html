@@ -1,4 +1,19 @@
 <div class="history-item-label flex-row">
+    <div class="history-item-cover flex-row align-center">
+        <div class="history-cover-button-holder flex-col">
+            <div class="history-cover-button history-arrow history-arrow-up flex-row justify-centre align-center">
+                <i class="fa-solid fa-chevron-up"></i>
+            </div>
+            <div class="history-cover-button history-arrow history-arrow-down flex-row justify-centre align-center">
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+        </div>
+        <div class="history-cover-button-holder">
+            <div class="history-cover-button history-delete flex-row justify-centre align-center">
+                <i class="fa-solid fa-trash"></i>
+            </div>
+        </div>
+    </div>
     {{item.name}}
     {{#ifcond item.system.type '==' 'injury'}}
     <div class="injury-heal-label">

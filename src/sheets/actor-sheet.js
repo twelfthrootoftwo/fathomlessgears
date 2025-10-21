@@ -446,8 +446,11 @@ export class HLMActorSheet extends ActorSheet {
 		new NarrativeRollDialog(this.actor.system.downtime.labels, this.actor);
 	}
 
-	triggerHistoryEdit(_event) {
+	triggerHistoryEdit(event) {
 		console.log("Trigger edit history table");
+		event.target
+			.closest(".history-table-holder")
+			.classList.toggle("editing");
 	}
 }
 function safeIdClean(safeId) {

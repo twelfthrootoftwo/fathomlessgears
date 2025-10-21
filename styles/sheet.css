@@ -465,7 +465,7 @@
 					}
 
 					& .history-table-holder {
-						flex: 1 0 100px;
+						flex: 2 0 100px;
 
 						& .history-edit-holder {
 							width: 30px;
@@ -478,6 +478,14 @@
 								& .history-edit-icon {
 									margin: auto;
 									padding-left: 2px;
+
+									&.start-editing {
+										display: block;
+									}
+
+									&.stop-editing {
+										display: none;
+									}
 								}
 							}
 						}
@@ -485,54 +493,129 @@
 						&:hover .history-edit-holder {
 							display: block;
 						}
-					}
 
-					& .history-table {
-						flex: 1 0 100px;
-						padding: 4px 8px;
-						margin: 0;
-						border-collapse: collapse;
+						& .history-table {
+							flex: 1 0 100px;
+							padding: 4px 8px;
+							margin: 0;
+							border-collapse: collapse;
 
-						& td {
-							padding: 4px;
-						}
+							& td {
+								padding: 4px;
+							}
 
-						& .el-column {
-							width: 30px;
-							text-align: center;
-						}
+							& .el-column {
+								width: 30px;
+								text-align: center;
+							}
 
-						& .item-column {
-							width: 42%;
+							& .item-column {
+								width: 42%;
 
-							& .history-row {
-								flex-wrap: wrap;
-								justify-content: flex-start;
+								& .history-row {
+									flex-wrap: wrap;
+									justify-content: flex-start;
 
-								& .history-item-label {
-									background-color: #00000033;
-									padding: 2px;
-									margin-left: 2px;
-									margin-right: 2px;
-									font-size: var(--font-size-12);
-									align-items: baseline;
+									& .history-item-label {
+										background-color: #00000033;
+										padding: 4px;
+										margin-left: 2px;
+										margin-right: 2px;
+										font-size: var(--font-size-12);
+										align-items: center;
+										position: relative;
 
-									& .injury-heal-label {
-										font-size: var(--font-size-11);
-										font-style: italic;
-										margin: 0px 2px;
-									}
+										& .history-item-cover {
+											width: 100%;
+											height: 100%;
+											background-color: #ffffff44;
+											position: absolute;
+											top: 0;
+											left: 0;
+											display: none;
+											justify-content: right;
 
-									& .inline-checkbox {
-										height: 10px;
-										margin: 0px 2px;
+											& .history-cover-button-holder {
+												width: 40px;
+												height: 40px;
+												padding: 2px;
+												margin-right: 2px;
+
+												& .history-cover-button {
+													border-radius: 4px;
+													border: 2px groove
+														var(
+															--color-border-light-primary
+														);
+													background-color: #00000044;
+													cursor: pointer;
+												}
+
+												& .history-arrow {
+													margin: 1px 2px;
+													width: 32px;
+													height: 16px;
+												}
+
+												& .history-delete {
+													margin: 3px 4px;
+													width: 32px;
+													height: 32px;
+												}
+											}
+										}
+
+										& .injury-heal-label {
+											font-size: var(--font-size-11);
+											font-style: italic;
+											margin: 0px 2px;
+										}
+
+										& .inline-checkbox {
+											height: 10px;
+											margin: 0px 2px;
+										}
 									}
 								}
 							}
+
+							& .valid-drop-hover {
+								background-color: #ffffff66;
+							}
 						}
 
-						& .valid-drop-hover {
-							background-color: #ffffff66;
+						&.editing {
+							& .history-edit-holder {
+								display: block;
+								& .history-edit-btn {
+									& .history-edit-icon {
+										&.start-editing {
+											display: none;
+										}
+
+										&.stop-editing {
+											display: block;
+										}
+									}
+								}
+							}
+
+							& .history-table {
+								& .item-column {
+									width: 42%;
+
+									& .history-row {
+										flex-wrap: wrap;
+										justify-content: flex-start;
+
+										& .history-item-label {
+											& .history-item-cover {
+												display: flex;
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
