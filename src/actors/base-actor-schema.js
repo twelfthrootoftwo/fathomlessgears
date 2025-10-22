@@ -1,37 +1,41 @@
 import {ATTRIBUTES} from "../constants.js";
 
+const fields = foundry.data.fields;
+const requiredInteger = {
+	required: true,
+	nullable: false,
+	integer: true
+};
+
+function newAttributeElement() {
+	return new fields.SchemaField({
+		value: new fields.NumberField({
+			...requiredInteger
+		}),
+		source: new fields.StringField({
+			required: true,
+			blank: false
+		}),
+		type: new fields.StringField({
+			required: true,
+			blank: false,
+			choices: [
+				"internal",
+				"development",
+				"template",
+				"condition",
+				"history"
+			]
+		}),
+		label: new fields.StringField({
+			required: true,
+			blank: false
+		})
+	});
+}
+
 export default class HLMActorModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
-		const fields = foundry.data.fields;
-		const requiredInteger = {
-			required: true,
-			nullable: false,
-			integer: true
-		};
-		const attributeElement = new fields.SchemaField({
-			value: new fields.NumberField({
-				...requiredInteger
-			}),
-			source: new fields.StringField({
-				required: true,
-				blank: false
-			}),
-			type: new fields.StringField({
-				required: true,
-				blank: false,
-				choices: [
-					"internal",
-					"development",
-					"template",
-					"condition",
-					"history"
-				]
-			}),
-			label: new fields.StringField({
-				required: true,
-				blank: false
-			})
-		});
 		const schema = {};
 
 		schema.attributes = new fields.SchemaField(
@@ -49,7 +53,7 @@ export default class HLMActorModel extends foundry.abstract.TypeDataModel {
 									initial: 0
 								}),
 								additions: new fields.ArrayField(
-									attributeElement
+									newAttributeElement()
 								)
 							}),
 							custom: new fields.NumberField({
@@ -76,10 +80,10 @@ export default class HLMActorModel extends foundry.abstract.TypeDataModel {
 									initial: 0
 								}),
 								additions: new fields.ArrayField(
-									attributeElement
+									newAttributeElement()
 								)
 							}),
-							bonus: new fields.ArrayField(attributeElement),
+							bonus: new fields.ArrayField(newAttributeElement()),
 							custom: new fields.NumberField({
 								...requiredInteger,
 								initial: 0
