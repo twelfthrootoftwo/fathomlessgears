@@ -8,12 +8,22 @@ import {NarrativeRollDialog} from "../dialogs/narrative-dialog.js";
  * @extends {ActorSheet}
  */
 export class HLMActorSheet extends ActorSheet {
+	constructor(...args) {
+		super(...args);
+		this.editingHistory = false;
+	}
+
+	close(...args) {
+		this.editingHistory = false;
+		super.close(...args);
+	}
+
 	/** @inheritdoc */
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ["fathomlessgears", "sheet", "actor"],
 			template: "systems/fathomlessgears/templates/fisher-sheet.html",
-			width: 730,
+			width: 750,
 			height: 650,
 			tabs: [
 				{
@@ -102,6 +112,7 @@ export class HLMActorSheet extends ActorSheet {
 		if (this.actor.type === ACTOR_TYPES.fisher) {
 			context.history = this.buildHistoryForDisplay(items);
 			context.labels = this.actor.system.downtime.labels;
+			context.editingHistory = this.editingHistory;
 		}
 
 		//Other items
@@ -195,7 +206,10 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".post-button").click(this.postItem.bind(this));
 		//html.find(".delete-item").click(this.deleteItem.bind(this));
 		html.find(".reset-button").click(this.resetManeuvers.bind(this));
-		html.find("#hit-location").click(this.locationHitMessage.bind(this));
+		html.find(".hit-location-button").click(
+			this.locationHitMessage.bind(this)
+		);
+		html.find(".meltdown-button").click(this.rollMeltdown.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
 		html.find("#initialise-import").click(this.selectImport.bind(this));
 		html.find("#import-button").click(this.selectImport.bind(this));
@@ -223,6 +237,19 @@ export class HLMActorSheet extends ActorSheet {
 			);
 			html.find(".narrative-btn").click(
 				this.rollNarrativeCheck.bind(this)
+			);
+			html.find(".history-edit-btn").click(
+				this.triggerHistoryEdit.bind(this)
+			);
+			html.find(".history-arrow-up").click(this.historyItemUp.bind(this));
+			html.find(".history-arrow-down").click(
+				this.historyItemDown.bind(this)
+			);
+			html.find(".history-delete").click(this.historyDelete.bind(this));
+			html.find(".injury-button").click(this.rollInjury.bind(this));
+			html.find(".touch-button").click(this.rollTouch.bind(this));
+			html.find(".repairs-button").click(
+				this.calculateRepairs.bind(this)
 			);
 		}
 
@@ -441,6 +468,59 @@ export class HLMActorSheet extends ActorSheet {
 
 	rollNarrativeCheck(_event) {
 		new NarrativeRollDialog(this.actor.system.downtime.labels, this.actor);
+	}
+
+	triggerHistoryEdit(event) {
+		if (!this.testOwnership()) {
+			return false;
+		}
+		this.editingHistory = !this.editingHistory;
+		event.target
+			.closest(".history-table-holder")
+			.classList.toggle("editing");
+	}
+
+	historyItemUp(event) {
+		const button = event.target.closest(".history-cover-button");
+		const item = this.actor.items.get(safeIdClean(button.dataset.id));
+		let el = parseInt(item.system.obtainedAt);
+		if (el > 1) {
+			el = el - 1;
+		}
+		item.update({"system.obtainedAt": el.toString()});
+	}
+
+	historyItemDown(event) {
+		const button = event.target.closest(".history-cover-button");
+		const item = this.actor.items.get(safeIdClean(button.dataset.id));
+		let el = parseInt(item.system.obtainedAt);
+		if (el < this.actor.system.fisher_history.el) {
+			el = el + 1;
+		}
+		item.update({"system.obtainedAt": el.toString()});
+	}
+
+	historyDelete(event) {
+		const button = event.target.closest(".history-cover-button");
+		this.actor.itemsManager.removeItemCallback(
+			safeIdClean(button.dataset.id)
+		);
+	}
+
+	rollInjury(_event) {
+		game.rollTables.rollInjury(this.actor);
+	}
+
+	rollTouch(_event) {
+		game.rollTables.rollTouch(this.actor);
+	}
+
+	rollMeltdown(_event) {
+		game.rollTables.rollMeltdown(this.actor);
+	}
+
+	calculateRepairs(_event) {
+		game.hudActions.calculateRepairCost(this.actor);
 	}
 }
 function safeIdClean(safeId) {

@@ -90,6 +90,7 @@
                                     {{>
                                         "systems/fathomlessgears/templates/partials/history-table.html"
                                         history=history
+                                        editingHistory = editingHistory
                                     }}
                                 </div>
                                 <div class="flex-row">
@@ -152,7 +153,7 @@
                                         <p class="frame-ability-text format-me">{{frame.system.gear_ability}}</p>
                                     </div>
                                 </div>
-                                <div class="btn hit-location-button" id="hit-location">{{localize "SHEET.hitlocation"}}</div>
+                                <div class="btn repairs-button">{{localize "SHEET.calculateRepairs"}}</div>
                             </div>
                             <div class="flex-col">
                                 {{#if interactiveGrid}}
