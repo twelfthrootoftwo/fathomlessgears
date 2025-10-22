@@ -243,6 +243,8 @@ export class HLMActorSheet extends ActorSheet {
 				this.historyItemDown.bind(this)
 			);
 			html.find(".history-delete").click(this.historyDelete.bind(this));
+			html.find(".injury-button").click(this.rollInjury.bind(this));
+			html.find(".touch-button").click(this.rollTouch.bind(this));
 		}
 
 		game.tagHandler.transformTagNameToButton($(this.element).get(0));
@@ -497,6 +499,14 @@ export class HLMActorSheet extends ActorSheet {
 		this.actor.itemsManager.removeItemCallback(
 			safeIdClean(button.dataset.id)
 		);
+	}
+
+	rollInjury(_event) {
+		game.rollTables.rollInjury(this.actor);
+	}
+
+	rollTouch(_event) {
+		game.rollTables.rollTouch(this.actor);
 	}
 }
 function safeIdClean(safeId) {
