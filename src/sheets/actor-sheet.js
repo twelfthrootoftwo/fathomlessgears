@@ -206,7 +206,10 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".post-button").click(this.postItem.bind(this));
 		//html.find(".delete-item").click(this.deleteItem.bind(this));
 		html.find(".reset-button").click(this.resetManeuvers.bind(this));
-		html.find("#hit-location").click(this.locationHitMessage.bind(this));
+		html.find(".hit-location-button").click(
+			this.locationHitMessage.bind(this)
+		);
+		html.find(".meltdown-button").click(this.rollMeltdown.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
 		html.find("#initialise-import").click(this.selectImport.bind(this));
 		html.find("#import-button").click(this.selectImport.bind(this));
@@ -245,6 +248,9 @@ export class HLMActorSheet extends ActorSheet {
 			html.find(".history-delete").click(this.historyDelete.bind(this));
 			html.find(".injury-button").click(this.rollInjury.bind(this));
 			html.find(".touch-button").click(this.rollTouch.bind(this));
+			html.find(".repairs-button").click(
+				this.calculateRepairs.bind(this)
+			);
 		}
 
 		game.tagHandler.transformTagNameToButton($(this.element).get(0));
@@ -507,6 +513,14 @@ export class HLMActorSheet extends ActorSheet {
 
 	rollTouch(_event) {
 		game.rollTables.rollTouch(this.actor);
+	}
+
+	rollMeltdown(_event) {
+		game.rollTables.rollMeltdown(this.actor);
+	}
+
+	calculateRepairs(_event) {
+		game.hudActions.calculateRepairCost(this.actor);
 	}
 }
 function safeIdClean(safeId) {

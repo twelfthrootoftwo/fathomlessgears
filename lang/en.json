@@ -38,7 +38,8 @@
 	"SHEET.internalfix": "Repair",
 	"SHEET.post": "Post",
 	"SHEET.delete": "Remove",
-	"SHEET.hitlocation": "Hit location",
+	"SHEET.hitLocation": "Hit Location",
+	"SHEET.meltdown": "Meltdown",
 	"SHEET.scantrue": "Revoke scan",
 	"SHEET.scanfalse": "Scan",
 	"SHEET.initgearwright": "Import from Gearwright",
@@ -49,6 +50,7 @@
 	"SHEET.healedInjury": "Healed",
 	"SHEET.rollInjury": "Roll Injury",
 	"SHEET.rollTouch": "Roll Touch of the Deep",
+	"SHEET.calculateRepairs": "Calculate Repair Cost",
 
 	"MANAGER.init": "Initialising",
 	"MANAGER.datafile": "Data file",
