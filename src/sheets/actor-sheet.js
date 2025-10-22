@@ -8,6 +8,16 @@ import {NarrativeRollDialog} from "../dialogs/narrative-dialog.js";
  * @extends {ActorSheet}
  */
 export class HLMActorSheet extends ActorSheet {
+	constructor(...args) {
+		super(...args);
+		this.editingHistory = false;
+	}
+
+	close(...args) {
+		this.editingHistory = false;
+		super.close(...args);
+	}
+
 	/** @inheritdoc */
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
@@ -102,6 +112,7 @@ export class HLMActorSheet extends ActorSheet {
 		if (this.actor.type === ACTOR_TYPES.fisher) {
 			context.history = this.buildHistoryForDisplay(items);
 			context.labels = this.actor.system.downtime.labels;
+			context.editingHistory = this.editingHistory;
 		}
 
 		//Other items
@@ -227,6 +238,11 @@ export class HLMActorSheet extends ActorSheet {
 			html.find(".history-edit-btn").click(
 				this.triggerHistoryEdit.bind(this)
 			);
+			html.find(".history-arrow-up").click(this.historyItemUp.bind(this));
+			html.find(".history-arrow-down").click(
+				this.historyItemDown.bind(this)
+			);
+			html.find(".history-delete").click(this.historyDelete.bind(this));
 		}
 
 		game.tagHandler.transformTagNameToButton($(this.element).get(0));
@@ -447,10 +463,40 @@ export class HLMActorSheet extends ActorSheet {
 	}
 
 	triggerHistoryEdit(event) {
-		console.log("Trigger edit history table");
+		if (!this.testOwnership()) {
+			return false;
+		}
+		this.editingHistory = !this.editingHistory;
 		event.target
 			.closest(".history-table-holder")
 			.classList.toggle("editing");
+	}
+
+	historyItemUp(event) {
+		const button = event.target.closest(".history-cover-button");
+		const item = this.actor.items.get(safeIdClean(button.dataset.id));
+		let el = parseInt(item.system.obtainedAt);
+		if (el > 1) {
+			el = el - 1;
+		}
+		item.update({"system.obtainedAt": el.toString()});
+	}
+
+	historyItemDown(event) {
+		const button = event.target.closest(".history-cover-button");
+		const item = this.actor.items.get(safeIdClean(button.dataset.id));
+		let el = parseInt(item.system.obtainedAt);
+		if (el < this.actor.system.fisher_history.el) {
+			el = el + 1;
+		}
+		item.update({"system.obtainedAt": el.toString()});
+	}
+
+	historyDelete(event) {
+		const button = event.target.closest(".history-cover-button");
+		this.actor.itemsManager.removeItemCallback(
+			safeIdClean(button.dataset.id)
+		);
 	}
 }
 function safeIdClean(safeId) {
