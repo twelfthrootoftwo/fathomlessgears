@@ -84,8 +84,10 @@ Hooks.once("init", async function () {
 		formula: "20-@attributes.ballast.total + 0.1*@attributes.speed.total",
 		decimals: 1
 	};
-	Hooks.on("renderSidebarTab", async (app, html) => {
+	Hooks.on("renderCompendiumDirectory", async (app, html) => {
 		addFshManager(app, html);
+	});
+	Hooks.on("renderActorDirectory", async (app, html) => {
 		addGridHudToSidebar(app, html);
 	});
 
