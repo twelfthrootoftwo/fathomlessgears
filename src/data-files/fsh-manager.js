@@ -17,16 +17,12 @@ import {createHLMItemData} from "../items/item.js";
  * @param {*} html
  */
 export function addFshManager(_app, html) {
-	const compendium = html[0].classList?.contains("compendium-sidebar")
-		? html
-		: html.siblings().filter(`.compendium-sidebar`);
-	const presetManager = $(compendium).find(`.fsh-content-manager`);
-	if (presetManager.length == 0) {
-		const buttons = $(compendium).find(`.header-actions`);
+	const presetManager = html.querySelector(`.fsh-content-manager`);
+	if (presetManager == null) {
+		const buttons = html.querySelector(`.header-actions`);
 		let button = document.createElement("button");
-		button.setAttribute("style", "flex-basis: 100%; margin-top: 5px;");
-		button.innerHTML =
-			"<i class='fsh-content-manager i--s'></i> FSH Manager";
+		button.setAttribute("style", "width: 50%; margin: auto;");
+		button.innerHTML = "<i class='fa-solid fa-fish i--s'></i> FSH Manager";
 		button.addEventListener("click", () => {
 			if (!FshManager.isOpen) {
 				new FshManager();
@@ -102,7 +98,7 @@ export class FshManager extends HLMApplication {
 		this.dialogConfirm = false;
 		this.loading = false;
 		FshManager.isOpen = true;
-		ui.sidebar.activateTab("compendium");
+		ui.sidebar.changeTab("compendium-sidebar", "compendium");
 		this.render(true);
 	}
 
