@@ -46,7 +46,7 @@ export class FileUploader extends Application {
 			?.addEventListener("click", () => {
 				this._onUploadButtonClick().then();
 			});
-		if (this.uploaderOptions.importNameOption) {
+		if (this.uploaderOptions?.importNameOption) {
 			html.find(".import-name-checkbox").change(async (_evt) => {
 				this.uploaderOptions.importNameFlag =
 					!this.uploaderOptions.importNameFlag;

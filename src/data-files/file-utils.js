@@ -63,13 +63,16 @@ async function retrieveOrCreateCompendium(compendiumName) {
 		(p) => p.metadata.name === compendiumName
 	);
 	if (!targetCompendium) {
-		targetCompendium = await CompendiumCollection.createCompendium({
-			name: compendiumName,
-			label: Utils.getLocalisedItemType(compendiumName),
-			system: "fathomlessgears",
-			path: ["packs/", compendiumName].join(),
-			type: "Item"
-		});
+		targetCompendium =
+			await foundry.documents.collections.CompendiumCollection.createCompendium(
+				{
+					name: compendiumName,
+					label: Utils.getLocalisedItemType(compendiumName),
+					system: "fathomlessgears",
+					path: ["packs/", compendiumName].join(),
+					type: "Item"
+				}
+			);
 	}
 	return targetCompendium;
 }
