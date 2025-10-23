@@ -247,12 +247,7 @@ function refreshGrid(actor) {
 }
 
 export function addGridHudToSidebar(_app, html) {
-	const compendium = html[0].classList?.contains("actors-sidebar")
-		? html[0]
-		: html.siblings().filter(`.actors-sidebar`)[0];
-	const actors = compendium.getElementsByClassName(
-		"directory-item document actor"
-	);
+	const actors = html.getElementsByClassName("directory-item document actor");
 	for (let actorEntry of actors) {
 		const actorId = actorEntry.dataset.documentId;
 		actorEntry.addEventListener("mouseenter", (_ev) => {
