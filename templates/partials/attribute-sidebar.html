@@ -110,4 +110,12 @@
         <div class="btn sidebar-roll-table-button meltdown-button">{{localize "SHEET.meltdown"}}</div>
     </div>
     {{/ifcond}}
+    {{#ifcond actor.type "==" 'fish'}}
+    <div class="sidebar-roll-table-holder">
+        <div class="btn sidebar-roll-table-button hit-location-button">{{localize "SHEET.hitLocation"}}</div>
+    </div>
+    <div class="sidebar-roll-table-holder">
+        <div class="btn sidebar-roll-table-button meltdown-button" id="scan">{{scan_text}}</div>
+    </div>
+    {{/ifcond}}
 </div>
