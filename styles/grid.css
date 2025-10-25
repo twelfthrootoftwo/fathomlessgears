@@ -156,7 +156,7 @@
 }
 .grid-hud-attributes {
 	width: 100px;
-	padding-top: 50px;
+	padding-top: 30px;
 }
 .grid-font-light {
 	font-size: var(--font-size-12);

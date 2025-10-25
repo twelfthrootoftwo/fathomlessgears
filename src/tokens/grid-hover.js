@@ -236,10 +236,7 @@ function clearGrid() {
  * @param {HLMActor} actor The actor that has been updated
  */
 function refreshGrid(actor) {
-	if (
-		game.gridHover?.rendered &&
-		game.gridHover.object.actor._id == actor.id
-	) {
+	if (game.gridHover?.rendered && game.gridHover.object._id == actor.id) {
 		setTimeout(() => {
 			game.gridHover.render(true);
 		}, 20);
