@@ -259,14 +259,14 @@ export class MessageHandler {
 	async onTagReroll(ev) {
 		let rollSpecs = JSON.parse(ev.target.dataset.rollspecs);
 		let rollDisplay = await this.getTagRollDisplay(rollSpecs);
-		ChatMessage.create({
+		const create = {
 			content: rollDisplay
-		}).then((message) => {
-			ChatMessage.applyRollMode(
-				message,
-				game.settings.get("core", "rollMode")
-			);
-		});
+		};
+		ChatMessage.applyRollMode(
+			create,
+			game.settings.get("core", "rollMode")
+		);
+		ChatMessage.create(create);
 	}
 
 	checkNodeShouldBeFormatted(node) {
@@ -347,14 +347,14 @@ export class MessageHandler {
 					roll: roll
 				}
 			).then((html) => {
-				ChatMessage.create({
+				const create = {
 					content: html
-				}).then((message) => {
-					ChatMessage.applyRollMode(
-						message,
-						game.settings.get("core", "rollMode")
-					);
-				});
+				};
+				ChatMessage.applyRollMode(
+					create,
+					game.settings.get("core", "rollMode")
+				);
+				ChatMessage.create(create);
 			});
 		});
 	}
