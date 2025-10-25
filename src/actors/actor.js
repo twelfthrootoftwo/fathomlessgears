@@ -477,11 +477,14 @@ export class HLMActor extends Actor {
 			this.system.attributes.ballast
 		);
 		this.system.attributes.ballast = ballast;
-		this.update({
-			"system.attributes.ballast": this.system.attributes.ballast
-		}).then(() => {
-			this.applyConditions();
-		});
+		if (this.isOwner) {
+			this.update({
+				"system.attributes.ballast": this.system.attributes.ballast
+			}).then(() => {
+				this.applyConditions();
+			});
+		}
+
 		return ballast;
 	}
 
