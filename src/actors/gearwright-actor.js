@@ -79,15 +79,20 @@ async function buildFish(actor, data, importName) {
 	if (data.name && importName) {
 		actor.update({name: data.name, "prototypeToken.name": data.name});
 	}
-	if (data.template)
+	if (data.template) {
 		actor.update({
 			"system.template": Utils.capitaliseWords(
 				Utils.fromLowerHyphen(data.template)
 			)
 		});
+	}
+	console.log("Size");
 	await applySize(data, actor);
+	console.log("Template");
 	await applyTemplate(data, actor);
+	console.log("Grid");
 	const gridObject = await constructGrid(actor);
+	console.log("Internals");
 	await applyInternals(data, actor, gridObject);
 	gridObject.setAllToIntact();
 	await actor.assignInteractiveGrid(gridObject);
@@ -136,7 +141,7 @@ async function applySize(importData, actor) {
 	try {
 		size = await Utils.findCompendiumItemFromName("size", importData.size);
 	} catch (_e) {
-		if (mportData.size == "siltstalker leviathan") {
+		if (importData.size == "siltstalker leviathan") {
 			size = await Utils.findCompendiumItemFromName(
 				"size",
 				"siltstalker"
@@ -145,6 +150,7 @@ async function applySize(importData, actor) {
 	}
 
 	if (size) {
+		console.log("Found size");
 		await actor.itemsManager.applySize(size);
 	} else {
 		ui.notifications.warn(

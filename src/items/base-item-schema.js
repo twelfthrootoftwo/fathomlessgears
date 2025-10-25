@@ -7,16 +7,7 @@ const requiredInteger = {
 	integer: true
 };
 function getSourceSchema() {
-	return new fields.SchemaField({
-		filename: new fields.StringField({
-			required: true,
-			blank: true
-		}),
-		version: new fields.StringField({
-			required: true,
-			blank: true
-		})
-	});
+	return new fields.ObjectField();
 }
 
 function getAttributeSchema() {
@@ -101,61 +92,20 @@ export class HLMInternalNPCModel extends foundry.abstract.TypeDataModel {
 			integer: true,
 			initial: 0
 		});
-		schema.attack = new fields.SchemaField(
-			{
-				type: new fields.StringField(),
-				attribute: new fields.StringField({
-					choices: Object.values(ATTRIBUTES)
-				}),
-				damage: new fields.NumberField({
-					...requiredInteger,
-					initial: 0
-				}),
-				marbles: new fields.NumberField({
-					...requiredInteger,
-					initial: 0
-				}),
-				range: new fields.NumberField({
-					...requiredInteger,
-					initial: 0
-				})
-			},
-			{nullable: true}
-		);
+		schema.attack = new fields.ObjectField({
+			nullable: true,
+			required: false
+		});
 		schema.repair_kits = new fields.NumberField({
 			...requiredInteger,
 			initial: 0
 		});
-		schema.tags = new fields.ArrayField(
-			new fields.SchemaField({
-				name: new fields.StringField({
-					required: true,
-					blank: true
-				}),
-				value: new fields.NumberField({
-					required: true,
-					integer: true,
-					nullable: true,
-					initial: 0
-				})
-			})
-		);
+		schema.tags = new fields.ArrayField(new fields.ObjectField());
 		schema.type = new fields.StringField({
 			required: true,
 			blank: true
 		});
-		schema.grid_coords = new fields.ArrayField(
-			new fields.SchemaField({
-				x: new fields.NumberField({
-					...requiredInteger,
-					initial: 0
-				}),
-				y: new fields.NumberField({
-					...requiredInteger,
-					initial: 0
-				})
-			})
-		);
+		schema.grid_coords = new fields.ArrayField(new fields.ObjectField());
 		return schema;
 	}
 }

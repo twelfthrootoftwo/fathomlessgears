@@ -355,6 +355,7 @@ export function createHLMItemSystem(itemType, data, source) {
 			break;
 	}
 	system.source = source;
+	system = JSON.parse(JSON.stringify(system));
 	return system;
 }
 
@@ -448,7 +449,13 @@ function constructInternalNPCData(data) {
 	}
 
 	system.ap_cost = getAPCost(data);
-	system.attack = constructAttack(data);
+	const attack = constructAttack(data);
+	if (attack) {
+		const {...tempAttack} = attack;
+		system.attack = tempAttack;
+	} else {
+		system.attack = attack;
+	}
 	system.ballast = data.ballast;
 	system.tags = separateTags(data.tags);
 	system.type = data.type;

@@ -427,6 +427,9 @@ async function createItem(itemName, jsonData, itemType, sourceId, compendium) {
 		name: name,
 		type: itemType
 	};
+	if (name == "Marrow Bulkhead") {
+		console.log("Making bulkhead");
+	}
 	let item = null;
 	try {
 		const itemData = createHLMItemData(record, jsonData, sourceId);

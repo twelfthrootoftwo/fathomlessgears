@@ -115,6 +115,7 @@ export class HLMActor extends Actor {
 					);
 					attrData.values.standard.additions = filtered;
 					attrData = this.calculateAttributeData(attrData);
+					attrData = this.attributeToUpdate(attrData);
 					value[attrKey] = attrData;
 				}
 				data[key] = value;
@@ -125,7 +126,8 @@ export class HLMActor extends Actor {
 					(mod) => mod.type != "condition"
 				);
 				value.values.standard.additions = filtered;
-				const attrData = this.calculateAttributeData(value);
+				let attrData = this.calculateAttributeData(value);
+				attrData = this.attributeToUpdate(attrData);
 				data[key] = attrData;
 			} else if (key == "system") {
 				//Generic system object
@@ -137,13 +139,16 @@ export class HLMActor extends Actor {
 					);
 					attrData.values.standard.additions = filtered;
 					attrData = this.calculateAttributeData(attrData);
+					attrData = this.attributeToUpdate(attrData);
 					attrObject[attrKey] = attrData;
 				}
 				value.attributes = attrObject;
 				data[key] = value;
 			}
 		}
+		console.log(JSON.parse(JSON.stringify(data)));
 		await super.update(data, options);
+		console.log(this);
 		await this.applyConditions();
 	}
 
@@ -366,11 +371,35 @@ export class HLMActor extends Actor {
 		return this.calculateAttributeData(this.system.attributes[key]);
 	}
 
+	attributeToUpdate(attr) {
+		const attrClone = foundry.utils.deepClone(attr);
+		console.log(attrClone);
+
+		const newAdditions = [];
+		attrClone.values.standard.additions.forEach((addition) => {
+			const {...newAddition} = foundry.utils.deepClone(addition);
+			newAdditions.push(foundry.utils.deepClone(newAddition));
+		});
+		attrClone.values.standard.additions = newAdditions;
+
+		if (attrClone.values.bonus) {
+			const newBonuses = [];
+			attrClone.values.bonus.forEach((bonus) => {
+				const {...newBonus} = foundry.utils.deepClone(bonus);
+				newBonuses.push(foundry.utils.deepClone(newBonus));
+			});
+			attrClone.values.bonus = newBonuses;
+		}
+		console.log(attrClone);
+		return attrClone;
+	}
+
 	calculateAttributeData(attr) {
 		if (attr.key == "ballast") {
 			let result = this.calculateBallastData(attr);
 			return result;
 		}
+		console.log(`Calculating key ${attr.key}`);
 
 		let total = 0;
 		total = attr.values.standard.base;
@@ -398,6 +427,7 @@ export class HLMActor extends Actor {
 		}
 
 		attr.total = total;
+		console.log(attr);
 		//this.applyConditions();
 		return attr;
 	}
@@ -410,6 +440,7 @@ export class HLMActor extends Actor {
 	 */
 	setBaseAttributeValue(attributeKey, value) {
 		if (!Utils.isAttribute(attributeKey)) return false;
+		console.log(`Setting base ${attributeKey} to ${value}`);
 		const targetAttribute = this.system.attributes[attributeKey];
 		targetAttribute.values.standard.base = value;
 		this.calculateSingleAttribute(attributeKey);
@@ -422,8 +453,11 @@ export class HLMActor extends Actor {
 	 * @param {AttributeElement} modifier The modifier to add
 	 */
 	addAttributeModifier(key, modifier) {
+		console.log("Adding attribute modifier");
 		const targetAttribute = this.system.attributes[key];
-		targetAttribute.values.standard.additions.push(modifier);
+		targetAttribute.values.standard.additions.push(
+			JSON.parse(JSON.stringify(modifier))
+		);
 		this.calculateSingleAttribute(key);
 	}
 

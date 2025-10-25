@@ -172,8 +172,12 @@ export class ItemsManager {
 		}
 		//Create new size item
 		const item = await Item.create(grid, {parent: this.actor});
+		console.log(item);
 		this.actor.system.gridType = item._id;
-		await this.actor.update({system: this.actor.system});
+		await this.actor.update({
+			"system.gridType": item._id
+		});
+		console.log(this.actor);
 		Hooks.callAll("gridUpdated", this.actor);
 	}
 
@@ -196,6 +200,7 @@ export class ItemsManager {
 		//Create new size item
 		const item = await Item.create(size, {parent: this.actor});
 		this.actor.system.size = item._id;
+		console.log(foundry.utils.deepClone(this.actor.system));
 		await this.actor.update({system: this.actor.system});
 
 		//Apply grid
@@ -286,6 +291,7 @@ export class ItemsManager {
 	 * @param {Item} internal
 	 */
 	async applyInternal(internal) {
+		console.log(internal);
 		const item = await Item.create(internal, {parent: this.actor});
 		item.setFlag("fathomlessgears", "broken", false);
 		this.actor.system.internals.push(item._id);

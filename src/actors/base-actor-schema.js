@@ -53,7 +53,8 @@ export default class HLMActorModel extends foundry.abstract.TypeDataModel {
 									initial: 0
 								}),
 								additions: new fields.ArrayField(
-									newAttributeElement()
+									newAttributeElement(),
+									{initial: []}
 								)
 							}),
 							custom: new fields.NumberField({
@@ -80,10 +81,14 @@ export default class HLMActorModel extends foundry.abstract.TypeDataModel {
 									initial: 0
 								}),
 								additions: new fields.ArrayField(
-									newAttributeElement()
+									newAttributeElement(),
+									{initial: []}
 								)
 							}),
-							bonus: new fields.ArrayField(newAttributeElement()),
+							bonus: new fields.ArrayField(
+								newAttributeElement(),
+								{initial: []}
+							),
 							custom: new fields.NumberField({
 								...requiredInteger,
 								initial: 0
