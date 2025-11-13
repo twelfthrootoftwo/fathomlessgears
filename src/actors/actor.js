@@ -64,7 +64,9 @@ export class HLMActor extends Actor {
 		});
 
 		this.system.attributes.ballast = this.calculateBallast();
-		//this.applyConditions();
+		if (!this.isOwner) {
+			this.applyConditions();
+		}
 	}
 
 	/** @inheritdoc */
