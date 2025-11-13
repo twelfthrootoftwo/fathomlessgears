@@ -64,6 +64,8 @@ export class HLMActor extends Actor {
 		});
 
 		this.system.attributes.ballast = this.calculateBallast();
+
+		//Conditions are applied above in calculateBallast if isOwner is true
 		if (!this.isOwner) {
 			this.applyConditions();
 		}
