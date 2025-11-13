@@ -209,7 +209,6 @@ export class HLMActorSheet extends ActorSheet {
 		html.find(".hit-location-button").click(
 			this.locationHitMessage.bind(this)
 		);
-		html.find(".meltdown-button").click(this.rollMeltdown.bind(this));
 		html.find("#scan").click(this.toggleScan.bind(this));
 		html.find("#initialise-import").click(this.selectImport.bind(this));
 		html.find("#import-button").click(this.selectImport.bind(this));
@@ -221,6 +220,7 @@ export class HLMActorSheet extends ActorSheet {
 			html = this.actor.grid.activateListeners(html);
 		}
 		if (this.actor.type === ACTOR_TYPES.fisher) {
+			html.find(".meltdown-button").click(this.rollMeltdown.bind(this));
 			document
 				.getElementById("post-frame-ability")
 				.addEventListener("click", this.postFrameAbility.bind(this));
