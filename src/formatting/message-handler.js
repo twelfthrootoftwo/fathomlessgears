@@ -90,7 +90,10 @@ export class MessageHandler {
 		if (speaker) {
 			create.speaker = ChatMessage.getSpeaker({actor: speaker});
 		}
-
+		ChatMessage.applyRollMode(
+			create,
+			game.settings.get("core", "rollMode")
+		);
 		await ChatMessage.create(create);
 	}
 
@@ -256,7 +259,14 @@ export class MessageHandler {
 	async onTagReroll(ev) {
 		let rollSpecs = JSON.parse(ev.target.dataset.rollspecs);
 		let rollDisplay = await this.getTagRollDisplay(rollSpecs);
-		ChatMessage.create({content: rollDisplay});
+		const create = {
+			content: rollDisplay
+		};
+		ChatMessage.applyRollMode(
+			create,
+			game.settings.get("core", "rollMode")
+		);
+		ChatMessage.create(create);
 	}
 
 	checkNodeShouldBeFormatted(node) {
@@ -337,9 +347,14 @@ export class MessageHandler {
 					roll: roll
 				}
 			).then((html) => {
-				ChatMessage.create({
+				const create = {
 					content: html
-				});
+				};
+				ChatMessage.applyRollMode(
+					create,
+					game.settings.get("core", "rollMode")
+				);
+				ChatMessage.create(create);
 			});
 		});
 	}
