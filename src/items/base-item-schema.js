@@ -35,6 +35,10 @@ export class HLMTagModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const schema = {};
 		schema.source = getSourceSchema();
+		schema.string_id = new fields.StringField({
+			required: true,
+			initial: "-"
+		});
 		schema.value = new fields.NumberField({
 			required: true,
 			nullable: true
@@ -61,6 +65,10 @@ export class HLMConditionModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const schema = {};
 		schema.attributes = getAttributeSchema();
+		schema.string_id = new fields.StringField({
+			required: true,
+			initial: "-"
+		});
 		schema.value = new fields.NumberField({
 			required: true,
 			nullable: true
@@ -91,6 +99,10 @@ export class HLMInternalNPCModel extends foundry.abstract.TypeDataModel {
 		const schema = {};
 		schema.source = getSourceSchema();
 		schema.attributes = getAttributeSchema();
+		schema.string_id = new fields.StringField({
+			required: true,
+			initial: "-"
+		});
 		schema.action_text = new fields.StringField({
 			required: true,
 			blank: true
@@ -176,6 +188,10 @@ export class HLMFrameModel extends foundry.abstract.TypeDataModel {
 		const schema = {};
 		schema.source = getSourceSchema();
 		schema.attributes = getAttributeSchema();
+		schema.string_id = new fields.StringField({
+			required: true,
+			initial: "-"
+		});
 		schema.core_integrity = new fields.NumberField({
 			...requiredInteger,
 			initial: 0
@@ -208,6 +224,10 @@ export class HLMSizeModel extends foundry.abstract.TypeDataModel {
 		const schema = {};
 		schema.source = getSourceSchema();
 		schema.attributes = getAttributeSchema();
+		schema.string_id = new fields.StringField({
+			required: true,
+			initial: "-"
+		});
 		return schema;
 	}
 }
@@ -215,6 +235,10 @@ export class HLMSizeModel extends foundry.abstract.TypeDataModel {
 export class HLMGridModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const schema = {};
+		schema.string_id = new fields.StringField({
+			required: true,
+			initial: "-"
+		});
 		schema.hitLocationRoll = new fields.StringField({
 			required: true,
 			blank: true
@@ -263,6 +287,10 @@ export class HLMFishTemplateModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const schema = {};
 		schema.attributes = getAttributeSchema();
+		schema.string_id = new fields.StringField({
+			required: true,
+			initial: "-"
+		});
 		return schema;
 	}
 }
@@ -271,6 +299,10 @@ export class HLMHistoryModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const schema = {};
 		schema.attributes = getAttributeSchema();
+		schema.string_id = new fields.StringField({
+			required: true,
+			initial: "-"
+		});
 		schema.type = new fields.StringField({
 			required: true,
 			blank: true

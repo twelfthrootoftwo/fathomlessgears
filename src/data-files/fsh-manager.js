@@ -433,7 +433,12 @@ async function createItem(itemName, jsonData, itemType, sourceId, compendium) {
 	};
 	let item = null;
 	try {
-		const itemData = createHLMItemData(record, jsonData, sourceId);
+		const itemData = createHLMItemData(
+			itemName,
+			record,
+			jsonData,
+			sourceId
+		);
 		item = await compendium.createDocument(itemData);
 	} catch (error) {
 		console.log(error);
