@@ -285,7 +285,11 @@ export class HLMActor extends Actor {
 
 				this.updatingConditions = false;
 				for (let app of Object.values(this.apps)) {
-					app.render();
+					console.log(app);
+					if (app._state === 1 || app.state === 2) {
+						//rendering or rendered
+						app.render();
+					}
 				}
 				if (this.queueApply) {
 					this.queueApply = false;
