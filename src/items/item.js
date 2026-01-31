@@ -69,7 +69,13 @@ export class HLMItem extends Item {
 	 */
 	static migrateData(source) {
 		// source.system.string_id = "-";
-		if (source.system.string_id === "-") {
+		if (
+			this.system &&
+			(!this.system.string_id || this.system.string_id === "-")
+		) {
+			if (!source.system) {
+				source.system = {};
+			}
 			source.system.string_id = Utils.toLowerHyphen(source.name);
 		}
 
