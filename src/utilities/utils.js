@@ -279,6 +279,51 @@ export class Utils {
 	}
 
 	/**
+	 * Gets an item from a compendium by name
+	 * @param {str} compendiumName The compendium to search
+	 * @param {str} itemName The item to retrieve
+	 * @returns the HLMItem from the compendium (null if not found)
+	 */
+	static async findCompendiumItemFromId(compendiumName, itemId) {
+		const compendiumAddress = COMPENDIUMS[compendiumName];
+		if (!compendiumAddress) {
+			console.error(`Invalid compendium request: ${compendiumName}`);
+			return;
+		}
+		const collection = await game.packs.get(compendiumAddress);
+		if (!collection) {
+			ui.notifications.error(
+				`Could not find compendium ${compendiumName} (have you uploaded your .fsh?)`
+			);
+			return;
+		}
+		if (!collection.indexed) {
+			await collection.getIndex();
+		}
+		const record = collection.index.filter(
+			(p) => p.system.string_id == itemId
+		);
+		if (record.length < 1) {
+			let alternateCompendium = await game.packs.get(
+				COMPENDIUMS[`${compendiumName}_imported`]
+			);
+			if (alternateCompendium) {
+				return await this.findCompendiumItemFromId(
+					`${compendiumName}_imported`,
+					itemId
+				);
+			} else {
+				ui.notifications.warn(
+					`Could not identify item ${itemId} in collection ${compendiumName}`
+				);
+				return false;
+			}
+		}
+		const item = await collection.getDocument(record[0]._id);
+		return item;
+	}
+
+	/**
 	 * Test the expected fields exist on an object
 	 * @param {Object} data Object to test
 	 * @param {Array(str)} fields List of expected fields

@@ -64,6 +64,24 @@ class GridPoint {
  * @extends {Item}
  */
 export class HLMItem extends Item {
+	/**
+	 * @override
+	 */
+	static migrateData(source) {
+		// source.system.string_id = "-";
+		if (
+			this.system &&
+			(!this.system.string_id || this.system.string_id === "-")
+		) {
+			if (!source.system) {
+				source.system = {};
+			}
+			source.system.string_id = Utils.toLowerHyphen(source.name);
+		}
+
+		return super.migrateData(source);
+	}
+
 	async toggleBroken() {
 		if (!this.isInternal()) {
 			return null;
@@ -123,6 +141,7 @@ export class HLMItem extends Item {
 	}
 
 	postToChat(actor) {
+		console.log(this);
 		switch (this.type) {
 			case ITEM_TYPES.frame_pc:
 				this.postFrameMessage(actor);
@@ -293,20 +312,21 @@ export class HLMItem extends Item {
 
 /**
  * Construct item data for the various item types
+ * @param {String} itemName The original JSON key name
  * @param {Object} record The base item record (name, type)
  * @param {Object} data The JSON item data
  * @param {FileRecord} source The file source of this item
  */
-export function createHLMItemData(record, data, source) {
+export function createHLMItemData(itemName, record, data, source) {
 	const itemData = {
 		name: record.name,
 		type: record.type,
-		system: createHLMItemSystem(record.type, data, source)
+		system: createHLMItemSystem(itemName, record.type, data, source)
 	};
 	return itemData;
 }
 
-export function createHLMItemSystem(itemType, data, source) {
+export function createHLMItemSystem(itemName, itemType, data, source) {
 	let system = {};
 	switch (itemType) {
 		case ITEM_TYPES.size:
@@ -355,6 +375,7 @@ export function createHLMItemSystem(itemType, data, source) {
 			break;
 	}
 	system.source = source;
+	system.string_id = itemName;
 	return system;
 }
 
