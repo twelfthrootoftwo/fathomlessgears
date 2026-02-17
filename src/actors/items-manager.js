@@ -354,9 +354,18 @@ export class ItemsManager {
 				}
 			});
 		}
-
 		await this.actor.update({system: this.actor.system});
 		this.actor.breakInternalMessage(internal);
+
+		setTimeout(() => {
+			for (let app of Object.values(this.actor.apps)) {
+				if (!app.closing && (app._state === 1 || app._state === 2)) {
+					//rendering or rendered
+					app.render();
+					console.log("Re-render from items manager");
+				}
+			}
+		}, 10);
 
 		Hooks.callAll("internalBrokenToggled", internal, this.actor);
 	}
