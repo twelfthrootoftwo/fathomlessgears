@@ -75,7 +75,8 @@ export class HLMActorSheet extends ActorSheet {
 		context.rolled = {};
 		context.flat = {};
 		for (const [key, value] of Object.entries(
-			context.actor.attributesWithConditions
+			// context.actor.attributesWithConditions
+			context.actor.system.attributes
 		)) {
 			value.label = Utils.getLocalisedAttributeLabel(key);
 			if (key == "ballast") {

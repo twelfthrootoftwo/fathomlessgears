@@ -71,6 +71,7 @@ export class ItemsManager {
 	 * @param {Item} item The item to apply
 	 */
 	receiveDrop(item, context) {
+		console.log(item);
 		switch (item.type) {
 			case ITEM_TYPES.size:
 				this.applySize(item);
@@ -154,6 +155,7 @@ export class ItemsManager {
 	 * @param {Item} grid
 	 */
 	async applyGrid(grid) {
+		let actorDiff = {};
 		if (
 			this.actor.type == ACTOR_TYPES.fisher &&
 			grid.system.type != GRID_TYPE.fisher
@@ -173,7 +175,8 @@ export class ItemsManager {
 		//Create new size item
 		const item = await Item.create(grid, {parent: this.actor});
 		this.actor.system.gridType = item._id;
-		await this.actor.update({system: this.actor.system});
+		actorDiff["system.gridType"] = item._id;
+		await this.actor.update(actorDiff);
 		Hooks.callAll("gridUpdated", this.actor);
 	}
 
@@ -182,21 +185,25 @@ export class ItemsManager {
 	 * @param {Item} size
 	 */
 	async applySize(size) {
+		let actorDiff = {};
 		if (this.actor.type == ACTOR_TYPES.fisher) return false;
 		//Apply attribute changes
 		Object.keys(size.system.attributes).forEach((key) => {
 			this.actor.setBaseAttributeValue(key, size.system.attributes[key]);
+			actorDiff[`system.attributes.${key}`] =
+				this.actor.system.attributes[key];
 		});
 		//Remove existing size item
 		if (this.actor.system.size) {
 			const oldSize = this.actor.items.get(this.actor.system.size);
 			oldSize?.delete();
 		}
-		await this.actor.update({system: this.actor.system});
+		// await this.actor.update({system: this.actor.system});
 		//Create new size item
 		const item = await Item.create(size, {parent: this.actor});
 		this.actor.system.size = item._id;
-		await this.actor.update({system: this.actor.system});
+		actorDiff["system.size"] = item._id;
+		await this.actor.update(actorDiff);
 
 		//Apply grid
 		const newGrid = await Utils.getGridFromSize(size.name);
@@ -215,10 +222,13 @@ export class ItemsManager {
 	 * @param {Item} frame
 	 */
 	async applyFrame(frame) {
+		let actorDiff = {};
 		if (this.actor.type != ACTOR_TYPES.fisher) return false;
 		//Apply attribute changes
 		Object.keys(frame.system.attributes).forEach((key) => {
 			this.actor.setBaseAttributeValue(key, frame.system.attributes[key]);
+			actorDiff[`system.attributes.${key}`] =
+				this.actor.system.attributes[key];
 		});
 		//Remove existing size item
 		if (this.actor.system.frame) {
@@ -235,19 +245,25 @@ export class ItemsManager {
 		}
 		this.actor.modifyResourceValue("repair", frame.system.repair_kits);
 		this.actor.modifyResourceValue("core", frame.system.core_integrity);
-		await this.actor.update({system: this.actor.system});
+		actorDiff["system.resources.repair"] =
+			this.actor.system.resources.repair;
+		actorDiff["system.resources.core"] = this.actor.system.resources.core;
+		// await this.actor.update({system: this.actor.system});
 
 		//Create new size item
 		const item = await Item.create(frame, {parent: this.actor});
 		this.actor.system.frame = item._id;
+		actorDiff["system.frame"] = item._id;
 		await this.actor.calculateBallastAsync();
+		actorDiff[`system.attributes.ballast`] =
+			this.actor.system.attributes.ballast;
 
 		//Resize token if needed
 		if (item.name == "Jolly Roger") {
 			this.actor.updateDefaultTokenSize(2);
 		}
 
-		await this.actor.update({system: this.actor.system});
+		await this.actor.update(actorDiff);
 		Hooks.callAll("frameUpdated", this.actor);
 	}
 
@@ -288,7 +304,10 @@ export class ItemsManager {
 	async applyInternal(internal) {
 		const item = await Item.create(internal, {parent: this.actor});
 		item.setFlag("fathomlessgears", "broken", false);
+		let actorDiff = {};
 		this.actor.system.internals.push(item._id);
+		actorDiff["system.internals"] = this.actor.system.internals;
+
 		//Apply attributes
 		Object.keys(internal.system.attributes).forEach((key) => {
 			if (
@@ -302,6 +321,8 @@ export class ItemsManager {
 					internal.name
 				);
 				this.actor.addAttributeModifier(key, modifier);
+				actorDiff[`system.attributes.${key}`] =
+					this.actor.system.attributes[key];
 			}
 		});
 		//Modify resources
@@ -310,6 +331,8 @@ export class ItemsManager {
 				"repair",
 				internal.system.repair_kits
 			);
+			actorDiff["system.resources.repair"] =
+				this.actor.system.resources.repair;
 		}
 
 		//Special logic for Ascended Form
@@ -319,7 +342,7 @@ export class ItemsManager {
 
 		//await this.actor.calculateBallastAsync();
 
-		await this.actor.update({system: this.actor.system});
+		await this.actor.update(actorDiff);
 		Hooks.callAll("internalAdded", this.actor);
 		return item._id;
 	}
@@ -334,6 +357,7 @@ export class ItemsManager {
 
 		//Apply attribute changes
 		const isBroken = await internal.isBroken();
+		let actorDiff = {};
 		if (!internal.isSturdy()) {
 			Object.keys(internal.system.attributes).forEach((key) => {
 				if (
@@ -351,10 +375,13 @@ export class ItemsManager {
 						);
 						this.actor.addAttributeModifier(key, modifier);
 					}
+					actorDiff[`system.attributes.${key}`] =
+						this.actor.system.attributes[key];
 				}
 			});
 		}
-		await this.actor.update({system: this.actor.system});
+		// await this.actor.update({system: this.actor.system});
+		await this.actor.update(actorDiff);
 		this.actor.breakInternalMessage(internal);
 
 		setTimeout(() => {
@@ -384,34 +411,47 @@ export class ItemsManager {
 			item.type == ITEM_TYPES.internal_npc ||
 			item.type == ITEM_TYPES.internal_pc;
 		let attributeChanged = false;
+		let actorDiff = {};
 		if (item.system.attributes) {
 			Object.keys(item.system.attributes).forEach((key) => {
 				if (item.system.attributes[key] != 0) {
 					attributeChanged =
 						this.actor.removeAttributeModifier(key, uuid) ||
 						attributeChanged;
+					actorDiff[`system.attributes.${key}`] =
+						this.actor.system.attributes[key];
 				}
 			});
 		}
 
 		if (this.actor.system.resources) {
-			if (item.system.repair_kits)
+			if (item.system.repair_kits) {
 				attributeChanged =
 					this.actor.modifyResourceValue(
 						"repair",
 						-1 * item.system.repair_kits
 					) || attributeChanged;
-			if (item.system.marbles)
+				actorDiff[`system.resources.repair`] =
+					this.actor.system.resources.repair;
+			}
+			if (item.system.marbles) {
 				attributeChanged =
 					this.actor.modifyResourceValue(
 						"marbles",
 						-1 * item.system.marbles
 					) || attributeChanged;
+
+				actorDiff[`system.resources.marbles`] =
+					this.actor.system.resources.marbles;
+			}
 		}
 
 		if (attributeChanged) {
 			this.actor.calculateBallast();
-			await this.actor.update({system: this.actor.system});
+			actorDiff[`system.attributes.ballast`] =
+				this.actor.system.attributes.ballast;
+			await this.actor.update(actorDiff);
+			// await this.actor.update({system: this.actor.system});
 		}
 
 		//Re-retrieve item in case delete has been called twice as a race condition
@@ -449,6 +489,7 @@ export class ItemsManager {
 			item.setFlag("fathomlessgears", "activated", false);
 		}
 		//Apply attributes
+		let actorDiff = {};
 		Object.keys(item.system.attributes).forEach((key) => {
 			if (Utils.isAttribute(key) && item.system.attributes[key] != 0) {
 				const modifier = new AttributeElement(
@@ -458,15 +499,22 @@ export class ItemsManager {
 					item.name
 				);
 				this.actor.addAttributeModifier(key, modifier);
+				actorDiff[`system.attributes.${key}`] =
+					this.actor.system.attributes[key];
 			}
 		});
 		//Modify resources
 		if (item.system.repair_kits) {
 			this.actor.modifyResourceValue("repair", item.system.repair_kits);
+			actorDiff[`system.resources.repair`] =
+				this.actor.system.resources.repair;
 		}
 		await this.actor.calculateBallast(true);
+		actorDiff[`system.attributes.ballast`] =
+			this.actor.system.attributes.ballast;
 
-		await this.actor.update({system: this.actor.system});
+		// await this.actor.update({system: this.actor.system});
+		await this.actor.update(actorDiff);
 		return item._id;
 	}
 
@@ -475,7 +523,7 @@ export class ItemsManager {
 
 		item.setFlag("fathomlessgears", "activated", false);
 
-		await this.actor.update({system: this.actor.system});
+		// await this.actor.update({system: this.actor.system});
 		return item._id;
 	}
 
@@ -484,7 +532,7 @@ export class ItemsManager {
 
 		item.setFlag("fathomlessgears", "activated", false);
 
-		await this.actor.update({system: this.actor.system});
+		// await this.actor.update({system: this.actor.system});
 		return item._id;
 	}
 

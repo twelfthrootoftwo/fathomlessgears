@@ -99,13 +99,17 @@ async function buildFish(actor, data, importName) {
  * @param {HLMActor} actor The actor to populate
  */
 async function constructFisherData(importData, actor) {
-	const actorData = foundry.utils.deepClone(actor.system);
-	actorData.fisher_history.callsign = importData.callsign;
-	actorData.fisher_history.el = parseInt(importData.level);
-	actorData.fisher_history.background = Utils.capitaliseWords(
-		importData.background
-	);
-	await actor.update({system: actorData});
+	// const actorData = foundry.utils.deepClone(actor.system);
+	let historyDiff = {};
+	// actorData.fisher_history.callsign = importData.callsign;
+	// actorData.fisher_history.el = parseInt(importData.level);
+	// actorData.fisher_history.background = Utils.capitaliseWords(
+	// 	importData.background
+	// );
+	historyDiff.callsign = importData.callsign;
+	historyDiff.el = parseInt(importData.level);
+	historyDiff.background = Utils.capitaliseWords(importData.background);
+	await actor.update({"system.fisher_history": historyDiff});
 }
 
 /**

@@ -8,32 +8,34 @@ export default class HLMActorModel extends foundry.abstract.TypeDataModel {
 			nullable: false,
 			integer: true
 		};
-		const attributeElement = new fields.SchemaField({
-			value: new fields.NumberField({
-				...requiredInteger
-			}),
-			source: new fields.StringField({
-				required: true,
-				blank: false
-			}),
-			type: new fields.StringField({
-				required: true,
-				blank: false,
-				choices: [
-					"internal",
-					"development",
-					"template",
-					"condition",
-					"history"
-				]
-			}),
-			label: new fields.StringField({
-				required: true,
-				blank: false
-			})
-		});
+		// const attributeElement = new fields.AnyField();
+		// const attributeElement = new fields.SchemaField({
+		// 	value: new fields.NumberField({
+		// 		...requiredInteger
+		// 	}),
+		// 	source: new fields.StringField({
+		// 		required: true,
+		// 		blank: false
+		// 	}),
+		// 	type: new fields.StringField({
+		// 		required: true,
+		// 		blank: false,
+		// 		choices: [
+		// 			"internal",
+		// 			"development",
+		// 			"template",
+		// 			"condition",
+		// 			"history"
+		// 		]
+		// 	}),
+		// 	label: new fields.StringField({
+		// 		required: true,
+		// 		blank: false
+		// 	})
+		// });
 		const schema = {};
 
+		// schema.attributes = new fields.AnyField({});
 		schema.attributes = new fields.SchemaField(
 			Object.values(ATTRIBUTES).reduce((obj, attrName) => {
 				if (attrName == ATTRIBUTES.ballast) {
@@ -48,9 +50,10 @@ export default class HLMActorModel extends foundry.abstract.TypeDataModel {
 									...requiredInteger,
 									initial: 0
 								}),
-								additions: new fields.ArrayField(
-									attributeElement
-								)
+								// additions: new fields.ArrayField(
+								// 	new fields.ObjectField({})
+								// )
+								additions: new fields.ObjectField()
 							}),
 							custom: new fields.NumberField({
 								...requiredInteger,
@@ -75,11 +78,11 @@ export default class HLMActorModel extends foundry.abstract.TypeDataModel {
 									...requiredInteger,
 									initial: 0
 								}),
-								additions: new fields.ArrayField(
-									attributeElement
-								)
+								additions: new fields.ObjectField()
 							}),
-							bonus: new fields.ArrayField(attributeElement),
+							bonus: new fields.ArrayField(
+								new fields.ObjectField({})
+							),
 							custom: new fields.NumberField({
 								...requiredInteger,
 								initial: 0

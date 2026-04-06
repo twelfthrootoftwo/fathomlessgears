@@ -1,4 +1,4 @@
-import {ATTRIBUTES} from "../constants.js";
+// import {ATTRIBUTES} from "../constants.js";
 
 const fields = foundry.data.fields;
 const requiredInteger = {
@@ -20,15 +20,16 @@ function getSourceSchema() {
 }
 
 function getAttributeSchema() {
-	return new fields.SchemaField(
-		Object.values(ATTRIBUTES).reduce((obj, attrName) => {
-			obj[attrName] = new fields.NumberField({
-				...requiredInteger,
-				initial: 0
-			});
-			return obj;
-		}, {})
-	);
+	// return new fields.SchemaField(
+	// 	Object.values(ATTRIBUTES).reduce((obj, attrName) => {
+	// 		obj[attrName] = new fields.NumberField({
+	// 			...requiredInteger,
+	// 			initial: 0
+	// 		});
+	// 		return obj;
+	// 	}, {})
+	// );
+	return new fields.AnyField();
 }
 
 export class HLMTagModel extends foundry.abstract.TypeDataModel {
@@ -113,44 +114,46 @@ export class HLMInternalNPCModel extends foundry.abstract.TypeDataModel {
 			integer: true,
 			initial: 0
 		});
-		schema.attack = new fields.SchemaField(
-			{
-				type: new fields.StringField(),
-				attribute: new fields.StringField({
-					choices: Object.values(ATTRIBUTES)
-				}),
-				damage: new fields.NumberField({
-					...requiredInteger,
-					initial: 0
-				}),
-				marbles: new fields.NumberField({
-					...requiredInteger,
-					initial: 0
-				}),
-				range: new fields.NumberField({
-					...requiredInteger,
-					initial: 0
-				})
-			},
-			{nullable: true}
-		);
+		// schema.attack = new fields.SchemaField(
+		// 	{
+		// 		type: new fields.StringField(),
+		// 		attribute: new fields.StringField({
+		// 			choices: Object.values(ATTRIBUTES)
+		// 		}),
+		// 		damage: new fields.NumberField({
+		// 			...requiredInteger,
+		// 			initial: 0
+		// 		}),
+		// 		marbles: new fields.NumberField({
+		// 			...requiredInteger,
+		// 			initial: 0
+		// 		}),
+		// 		range: new fields.NumberField({
+		// 			...requiredInteger,
+		// 			initial: 0
+		// 		})
+		// 	},
+		// 	{nullable: true}
+		// );
+		schema.attack = new fields.AnyField({nullable: true});
 		schema.repair_kits = new fields.NumberField({
 			...requiredInteger,
 			initial: 0
 		});
 		schema.tags = new fields.ArrayField(
-			new fields.SchemaField({
-				name: new fields.StringField({
-					required: true,
-					blank: true
-				}),
-				value: new fields.NumberField({
-					required: true,
-					integer: true,
-					nullable: true,
-					initial: 0
-				})
-			})
+			// new fields.SchemaField({
+			// 	name: new fields.StringField({
+			// 		required: true,
+			// 		blank: true
+			// 	}),
+			// 	value: new fields.NumberField({
+			// 		required: true,
+			// 		integer: true,
+			// 		nullable: true,
+			// 		initial: 0
+			// 	})
+			// })
+			new fields.AnyField()
 		);
 		schema.type = new fields.StringField({
 			required: true,

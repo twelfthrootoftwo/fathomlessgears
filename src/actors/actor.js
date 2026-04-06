@@ -17,7 +17,7 @@ import {
 	//ATTRIBUTE_ONLY_CONDITIONS,
 	findConditionFromStatus,
 	findConditionEffect,
-	NUMBERED_CONDITIONS,
+	// NUMBERED_CONDITIONS,
 	quickCreateCounter,
 	CONDITIONS
 } from "../conditions/conditions.js";
@@ -111,13 +111,19 @@ export class HLMActor extends Actor {
 	async update(data, options) {
 		for (const [key, value] of Object.entries(data)) {
 			if (key == "system.attributes") {
+				console.log("Updating all attributes");
 				//All attributes
 				for (let [attrKey, attrData] of Object.entries(value)) {
 					let modifiers = attrData.values.standard.additions;
-					let filtered = modifiers.filter(
-						(mod) => mod.type != "condition"
+					attrData.values.standard.additions = Object.fromEntries(
+						Object.entries(modifiers).filter(
+							([_key, mod]) => mod.type != "condition"
+						)
 					);
-					attrData.values.standard.additions = filtered;
+					// let filtered = modifiers.filter(
+					// 	(mod) => mod.type != "condition"
+					// );
+					// attrData.values.standard.additions = filtered;
 					attrData = this.calculateAttributeData(attrData);
 					value[attrKey] = attrData;
 				}
@@ -125,21 +131,32 @@ export class HLMActor extends Actor {
 			} else if (key.indexOf("system.attributes") > -1 && value.values) {
 				//One attribute
 				let modifiers = value.values.standard.additions;
-				let filtered = modifiers.filter(
-					(mod) => mod.type != "condition"
+				// let filtered = modifiers.filter(
+				// 	(mod) => mod.type != "condition"
+				// );
+				// value.values.standard.additions = filtered;
+				value.values.standard.additions = Object.fromEntries(
+					Object.entries(modifiers).filter(
+						([_key, mod]) => mod.type != "condition"
+					)
 				);
-				value.values.standard.additions = filtered;
 				const attrData = this.calculateAttributeData(value);
 				data[key] = attrData;
 			} else if (key == "system") {
 				//Generic system object
+				console.log("Updating system object");
 				let attrObject = value.attributes;
 				for (let [attrKey, attrData] of Object.entries(attrObject)) {
 					let modifiers = attrData.values.standard.additions;
-					let filtered = modifiers.filter(
-						(mod) => mod.type != "condition"
+					// let filtered = modifiers.filter(
+					// 	(mod) => mod.type != "condition"
+					// );
+					// attrData.values.standard.additions = filtered;
+					attrData.values.standard.additions = Object.fromEntries(
+						Object.entries(modifiers).filter(
+							([_key, mod]) => mod.type != "condition"
+						)
 					);
-					attrData.values.standard.additions = filtered;
 					attrData = this.calculateAttributeData(attrData);
 					attrObject[attrKey] = attrData;
 				}
@@ -147,8 +164,25 @@ export class HLMActor extends Actor {
 				data[key] = value;
 			}
 		}
-		await super.update(data, options);
-		await this.applyConditions();
+		console.log("Update data:");
+		console.log(foundry.utils.deepClone(data));
+		await super.update(data, options).then(() => {
+			console.log("Post update");
+			console.log(foundry.utils.deepClone(this));
+		});
+		// setTimeout(() => {
+		// 	for (let app of Object.values(this.apps)) {
+		// 		if (!app.closing && (app._state === 1 || app._state === 2)) {
+		// 			//rendering or rendered
+		// 			console.log("Refresh sheet before apply conditions");
+		// 			console.log(foundry.utils.deepClone(this.system));
+		// 			app.render();
+		// 		}
+		// 	}
+		// }, 100);
+		// await this.applyConditions();
+		// console.log("Post apply conditions");
+		// console.log(foundry.utils.deepClone(this));
 	}
 
 	async transferEffects() {
@@ -235,78 +269,80 @@ export class HLMActor extends Actor {
 	}
 
 	async applyConditions() {
-		if (!game.availableConditionItems) {
-			console.log("Conditions not ready yet");
-			return;
-		}
-		if (!this.itemsManager) {
-			this.itemsManager = new ItemsManager(this);
-		}
-
-		if (!this.updatingConditions && game.availableConditionItems) {
-			this.updatingConditions = true;
-			this.attributesWithConditions = null;
-			if (foundry.utils.isNewerVersion(game.version, 12)) {
-				let attrs = this.toObject().system.attributes;
-				this.attributesWithConditions = attrs;
-			} else {
-				this.attributesWithConditions = foundry.utils.deepClone(
-					this.system.attributes
-				);
-			}
-
-			try {
-				const conditionNames = [];
-				let effectArray = this.effects.contents;
-				for (let activeEffect of effectArray) {
-					let conditionName = activeEffect.statuses
-						.values()
-						.next().value;
-					conditionNames.push(conditionName);
-
-					if (
-						NUMBERED_CONDITIONS.includes(conditionName) &&
-						!activeEffect.hasCounterFlag()
-					) {
-						//Wait for the value to be saved
-						await new Promise((resolve) =>
-							setTimeout(resolve, 500)
-						);
-						activeEffect = fromUuidSync(activeEffect.uuid);
-					}
-					if (
-						Array.from(
-							game.availableConditionItems?.keys()
-						).includes(conditionName)
-					) {
-						await this.applySingleActiveEffect(activeEffect);
-					}
-				}
-
-				this.updatingConditions = false;
-
-				setTimeout(() => {
-					for (let app of Object.values(this.apps)) {
-						if (
-							!app.closing &&
-							(app._state === 1 || app._state === 2)
-						) {
-							//rendering or rendered
-							app.render();
-						}
-					}
-				}, 100);
-				if (this.queueApply) {
-					this.queueApply = false;
-					await this.applyConditions();
-				}
-			} catch (error) {
-				console.error(error);
-				this.updatingConditions = false;
-			}
-		} else {
-			this.queueApply = true;
-		}
+		// if (!game.availableConditionItems) {
+		// 	console.log("Conditions not ready yet");
+		// 	return;
+		// }
+		// if (!this.itemsManager) {
+		// 	this.itemsManager = new ItemsManager(this);
+		// }
+		// if (!this.updatingConditions && game.availableConditionItems) {
+		// 	this.updatingConditions = true;
+		// 	this.attributesWithConditions = null;
+		// 	console.log("Before apply conditions:");
+		// 	console.log(foundry.utils.deepClone(this));
+		// 	if (
+		// 		foundry.utils.isNewerVersion(game.version, 12) &&
+		// 		!foundry.utils.isNewerVersion(game.version, 13)
+		// 	) {
+		// 		let attrs = this.toObject().system.attributes;
+		// 		this.attributesWithConditions = attrs;
+		// 	} else {
+		// this.attributesWithConditions = foundry.utils.deepClone(
+		// 	this.system.attributes
+		// );
+		// 	}
+		// 	console.log("Apply conditions prepped:");
+		// 	console.log(foundry.utils.deepClone(this));
+		// 	try {
+		// 		const conditionNames = [];
+		// 		let effectArray = this.effects.contents;
+		// 		for (let activeEffect of effectArray) {
+		// 			let conditionName = activeEffect.statuses
+		// 				.values()
+		// 				.next().value;
+		// 			conditionNames.push(conditionName);
+		// 			if (
+		// 				NUMBERED_CONDITIONS.includes(conditionName) &&
+		// 				!activeEffect.hasCounterFlag()
+		// 			) {
+		// 				//Wait for the value to be saved
+		// 				await new Promise((resolve) =>
+		// 					setTimeout(resolve, 500)
+		// 				);
+		// 				activeEffect = fromUuidSync(activeEffect.uuid);
+		// 			}
+		// 			if (
+		// 				Array.from(
+		// 					game.availableConditionItems?.keys()
+		// 				).includes(conditionName)
+		// 			) {
+		// 				await this.applySingleActiveEffect(activeEffect);
+		// 			}
+		// 		}
+		// 		this.updatingConditions = false;
+		// 		setTimeout(() => {
+		// 			for (let app of Object.values(this.apps)) {
+		// 				if (
+		// 					!app.closing &&
+		// 					(app._state === 1 || app._state === 2)
+		// 				) {
+		// 					//rendering or rendered
+		// 					app.render();
+		// 				}
+		// 			}
+		// 		}, 100);
+		// 		if (this.queueApply) {
+		// 			this.queueApply = false;
+		// 			await this.applyConditions();
+		// 		}
+		// 	} catch (error) {
+		// 		console.error(error);
+		// 		this.updatingConditions = false;
+		// 	}
+		// } else {
+		// 	this.queueApply = true;
+		// }
 	}
 
 	async applySingleActiveEffect(activeEffect) {
@@ -383,6 +419,9 @@ export class HLMActor extends Actor {
 	}
 
 	calculateAttributeData(attr) {
+		console.log("Calculating for:");
+		console.log(foundry.utils.deepClone(attr));
+
 		if (attr.key == "ballast") {
 			let result = this.calculateBallastData(attr);
 			return result;
@@ -390,7 +429,7 @@ export class HLMActor extends Actor {
 
 		let total = 0;
 		total = attr.values.standard.base;
-		attr.values.standard.additions.forEach((val) => {
+		Object.values(attr.values.standard.additions).forEach((val) => {
 			total += val.value;
 		});
 		if (total < ATTRIBUTE_MIN) total = ATTRIBUTE_MIN;
@@ -415,6 +454,8 @@ export class HLMActor extends Actor {
 
 		attr.total = total;
 		//this.applyConditions();
+		// console.log("Calculated attribute:");
+		// console.log(foundry.utils.deepClone(attr));
 		return attr;
 	}
 
@@ -438,8 +479,11 @@ export class HLMActor extends Actor {
 	 * @param {AttributeElement} modifier The modifier to add
 	 */
 	addAttributeModifier(key, modifier) {
+		console.log(`Modifying ${key}`);
+		console.log(modifier);
 		const targetAttribute = this.system.attributes[key];
-		targetAttribute.values.standard.additions.push(modifier);
+		// targetAttribute.values.standard.additions.push(modifier);
+		targetAttribute.values.standard.additions[modifier.source] = modifier;
 		this.calculateSingleAttribute(key);
 	}
 
@@ -493,13 +537,13 @@ export class HLMActor extends Actor {
 			this.system.attributes.ballast
 		);
 		this.system.attributes.ballast = ballast;
-		if (this.isOwner) {
-			this.update({
-				"system.attributes.ballast": this.system.attributes.ballast
-			}).then(() => {
-				this.applyConditions();
-			});
-		}
+		// if (this.isOwner) {
+		// 	this.update({
+		// 		"system.attributes.ballast": this.system.attributes.ballast
+		// 	}).then(() => {
+		// 		this.applyConditions();
+		// 	});
+		// }
 
 		return ballast;
 	}
@@ -509,9 +553,9 @@ export class HLMActor extends Actor {
 			this.system.attributes.ballast
 		);
 		this.system.attributes.ballast = ballast;
-		await this.update({
-			"system.attributes.ballast": this.system.attributes.ballast
-		});
+		// await this.update({
+		// 	"system.attributes.ballast": this.system.attributes.ballast
+		// });
 		await this.applyConditions();
 	}
 
@@ -521,14 +565,14 @@ export class HLMActor extends Actor {
 		//Calculate ballast weight from standard values only
 		//Homebrew ballast modifications can be done via the ballast custom mods
 		let weightTotal = weight.values.standard.base;
-		weight.values.standard.additions.forEach((element) => {
+		Object.values(weight.values.standard.additions).forEach((element) => {
 			weightTotal += element.value;
 		});
 		const weightBallast = Math.floor(weightTotal / 5);
 
 		ballast.values.standard.weight = weightBallast;
 		let ballastMods = 0;
-		ballast.values.standard.additions.forEach((element) => {
+		Object.values(ballast.values.standard.additions).forEach((element) => {
 			ballastMods += element.value;
 		});
 		ballast.total = ballast.values.standard.base + weightBallast;
