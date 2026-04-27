@@ -14,10 +14,10 @@ import {
 import {Grid} from "../grid/grid-base.js";
 import {ItemsManager} from "./items-manager.js";
 import {
-	//ATTRIBUTE_ONLY_CONDITIONS,
+	// ATTRIBUTE_ONLY_CONDITIONS,
 	findConditionFromStatus,
 	findConditionEffect,
-	// NUMBERED_CONDITIONS,
+	NUMBERED_CONDITIONS,
 	quickCreateCounter,
 	CONDITIONS
 } from "../conditions/conditions.js";
@@ -170,19 +170,17 @@ export class HLMActor extends Actor {
 			console.log("Post update");
 			console.log(foundry.utils.deepClone(this));
 		});
-		// setTimeout(() => {
-		// 	for (let app of Object.values(this.apps)) {
-		// 		if (!app.closing && (app._state === 1 || app._state === 2)) {
-		// 			//rendering or rendered
-		// 			console.log("Refresh sheet before apply conditions");
-		// 			console.log(foundry.utils.deepClone(this.system));
-		// 			app.render();
-		// 		}
-		// 	}
-		// }, 100);
-		// await this.applyConditions();
-		// console.log("Post apply conditions");
-		// console.log(foundry.utils.deepClone(this));
+		setTimeout(() => {
+			for (let app of Object.values(this.apps)) {
+				if (!app.closing && (app._state === 1 || app._state === 2)) {
+					//rendering or rendered
+					console.log("Refresh sheet before apply conditions");
+					console.log(foundry.utils.deepClone(this.system));
+					app.render();
+				}
+			}
+		}, 100);
+		await this.applyConditions();
 	}
 
 	async transferEffects() {
@@ -269,80 +267,83 @@ export class HLMActor extends Actor {
 	}
 
 	async applyConditions() {
-		// if (!game.availableConditionItems) {
-		// 	console.log("Conditions not ready yet");
-		// 	return;
-		// }
-		// if (!this.itemsManager) {
-		// 	this.itemsManager = new ItemsManager(this);
-		// }
-		// if (!this.updatingConditions && game.availableConditionItems) {
-		// 	this.updatingConditions = true;
-		// 	this.attributesWithConditions = null;
-		// 	console.log("Before apply conditions:");
-		// 	console.log(foundry.utils.deepClone(this));
-		// 	if (
-		// 		foundry.utils.isNewerVersion(game.version, 12) &&
-		// 		!foundry.utils.isNewerVersion(game.version, 13)
-		// 	) {
-		// 		let attrs = this.toObject().system.attributes;
-		// 		this.attributesWithConditions = attrs;
-		// 	} else {
-		// this.attributesWithConditions = foundry.utils.deepClone(
-		// 	this.system.attributes
-		// );
-		// 	}
-		// 	console.log("Apply conditions prepped:");
-		// 	console.log(foundry.utils.deepClone(this));
-		// 	try {
-		// 		const conditionNames = [];
-		// 		let effectArray = this.effects.contents;
-		// 		for (let activeEffect of effectArray) {
-		// 			let conditionName = activeEffect.statuses
-		// 				.values()
-		// 				.next().value;
-		// 			conditionNames.push(conditionName);
-		// 			if (
-		// 				NUMBERED_CONDITIONS.includes(conditionName) &&
-		// 				!activeEffect.hasCounterFlag()
-		// 			) {
-		// 				//Wait for the value to be saved
-		// 				await new Promise((resolve) =>
-		// 					setTimeout(resolve, 500)
-		// 				);
-		// 				activeEffect = fromUuidSync(activeEffect.uuid);
-		// 			}
-		// 			if (
-		// 				Array.from(
-		// 					game.availableConditionItems?.keys()
-		// 				).includes(conditionName)
-		// 			) {
-		// 				await this.applySingleActiveEffect(activeEffect);
-		// 			}
-		// 		}
-		// 		this.updatingConditions = false;
-		// 		setTimeout(() => {
-		// 			for (let app of Object.values(this.apps)) {
-		// 				if (
-		// 					!app.closing &&
-		// 					(app._state === 1 || app._state === 2)
-		// 				) {
-		// 					//rendering or rendered
-		// 					app.render();
-		// 				}
-		// 			}
-		// 		}, 100);
-		// 		if (this.queueApply) {
-		// 			this.queueApply = false;
-		// 			await this.applyConditions();
-		// 		}
-		// 	} catch (error) {
-		// 		console.error(error);
-		// 		this.updatingConditions = false;
-		// 	}
-		// } else {
-		// 	this.queueApply = true;
-		// }
+		if (!game.availableConditionItems) {
+			console.log("Conditions not ready yet");
+			return;
+		}
+		if (!this.itemsManager) {
+			this.itemsManager = new ItemsManager(this);
+		}
+		if (!this.updatingConditions && game.availableConditionItems) {
+			this.updatingConditions = true;
+			this.attributesWithConditions = null;
+			console.log("Before apply conditions:");
+			console.log(foundry.utils.deepClone(this));
+			if (
+				foundry.utils.isNewerVersion(game.version, 12) &&
+				!foundry.utils.isNewerVersion(game.version, 13)
+			) {
+				let attrs = this.toObject().system.attributes;
+				this.attributesWithConditions = attrs;
+			} else {
+				this.attributesWithConditions = foundry.utils.deepClone(
+					this.system.attributes
+				);
+			}
+			console.log("Apply conditions prepped:");
+			console.log(foundry.utils.deepClone(this));
+			try {
+				const conditionNames = [];
+				let effectArray = this.effects.contents;
+				for (let activeEffect of effectArray) {
+					let conditionName = activeEffect.statuses
+						.values()
+						.next().value;
+					conditionNames.push(conditionName);
+					if (
+						NUMBERED_CONDITIONS.includes(conditionName) &&
+						!activeEffect.hasCounterFlag()
+					) {
+						//Wait for the value to be saved
+						await new Promise((resolve) =>
+							setTimeout(resolve, 500)
+						);
+						activeEffect = fromUuidSync(activeEffect.uuid);
+					}
+					if (
+						Array.from(
+							game.availableConditionItems?.keys()
+						).includes(conditionName)
+					) {
+						console.log("Applying condition");
+						await this.applySingleActiveEffect(activeEffect);
+					}
+				}
+				this.updatingConditions = false;
+				setTimeout(() => {
+					for (let app of Object.values(this.apps)) {
+						if (
+							!app.closing &&
+							(app._state === 1 || app._state === 2)
+						) {
+							//rendering or rendered
+							app.render();
+						}
+					}
+				}, 100);
+				if (this.queueApply) {
+					this.queueApply = false;
+					await this.applyConditions();
+				}
+			} catch (error) {
+				console.error(error);
+				this.updatingConditions = false;
+			}
+		} else {
+			this.queueApply = true;
+		}
+		console.log("Post apply conditions");
+		console.log(foundry.utils.deepClone(this));
 	}
 
 	async applySingleActiveEffect(activeEffect) {
@@ -447,15 +448,13 @@ export class HLMActor extends Actor {
 		if (Utils.isDefenceAttribute(attr.key) && total > ATTRIBUTE_MAX_FLAT)
 			total = ATTRIBUTE_MAX_FLAT;
 		if (attr.values.bonus) {
-			attr.values.bonus.forEach((val) => {
+			Object.values(attr.values.bonus).forEach((val) => {
 				total += val.value;
 			});
 		}
 
 		attr.total = total;
-		//this.applyConditions();
-		// console.log("Calculated attribute:");
-		// console.log(foundry.utils.deepClone(attr));
+		// this.applyConditions();
 		return attr;
 	}
 
@@ -494,16 +493,8 @@ export class HLMActor extends Actor {
 	 */
 	removeAttributeModifier(key, source) {
 		const targetAttribute = this.system.attributes[key];
-		let delIndex = -1;
-		let index = 0;
-		targetAttribute.values.standard.additions.forEach((modifier) => {
-			if (modifier.source == source) {
-				delIndex = index;
-			}
-			index += 1;
-		});
-		if (delIndex >= 0) {
-			targetAttribute.values.standard.additions.splice(delIndex, 1);
+		if (targetAttribute.values.standard.additions[source]) {
+			delete targetAttribute.values.standard.additions[source];
 			this.calculateSingleAttribute(key);
 			return true;
 		} else {

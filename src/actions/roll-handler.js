@@ -32,7 +32,7 @@ export class RollHandler {
 				ROLL_MODIFIER_TYPE.modifier
 			)
 		);
-		attribute.values.standard.additions.forEach((term) => {
+		Object.values(attribute.values.standard.additions).forEach((term) => {
 			modifiers.push(
 				RollElement.attributeElementToRollElement(
 					term,
@@ -41,7 +41,7 @@ export class RollHandler {
 				)
 			);
 		});
-		attribute.values.bonus.forEach((term) => {
+		Object.values(attribute.values.bonus).forEach((term) => {
 			modifiers.push(
 				RollElement.attributeElementToRollElement(
 					term,

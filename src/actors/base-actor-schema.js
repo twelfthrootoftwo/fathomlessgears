@@ -80,9 +80,7 @@ export default class HLMActorModel extends foundry.abstract.TypeDataModel {
 								}),
 								additions: new fields.ObjectField()
 							}),
-							bonus: new fields.ArrayField(
-								new fields.ObjectField({})
-							),
+							bonus: new fields.ObjectField(),
 							custom: new fields.NumberField({
 								...requiredInteger,
 								initial: 0
