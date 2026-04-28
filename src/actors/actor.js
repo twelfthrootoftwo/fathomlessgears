@@ -120,21 +120,13 @@ export class HLMActor extends Actor {
 							([_key, mod]) => mod.type != "condition"
 						)
 					);
-					// let filtered = modifiers.filter(
-					// 	(mod) => mod.type != "condition"
-					// );
-					// attrData.values.standard.additions = filtered;
 					attrData = this.calculateAttributeData(attrData);
 					value[attrKey] = attrData;
 				}
 				data[key] = value;
-			} else if (key.indexOf("system.attributes") > -1 && value.values) {
+			} else if (key.indexOf("system.attributes") > -1 && value?.values) {
 				//One attribute
 				let modifiers = value.values.standard.additions;
-				// let filtered = modifiers.filter(
-				// 	(mod) => mod.type != "condition"
-				// );
-				// value.values.standard.additions = filtered;
 				value.values.standard.additions = Object.fromEntries(
 					Object.entries(modifiers).filter(
 						([_key, mod]) => mod.type != "condition"
@@ -148,10 +140,6 @@ export class HLMActor extends Actor {
 				let attrObject = value.attributes;
 				for (let [attrKey, attrData] of Object.entries(attrObject)) {
 					let modifiers = attrData.values.standard.additions;
-					// let filtered = modifiers.filter(
-					// 	(mod) => mod.type != "condition"
-					// );
-					// attrData.values.standard.additions = filtered;
 					attrData.values.standard.additions = Object.fromEntries(
 						Object.entries(modifiers).filter(
 							([_key, mod]) => mod.type != "condition"
@@ -164,18 +152,11 @@ export class HLMActor extends Actor {
 				data[key] = value;
 			}
 		}
-		console.log("Update data:");
-		console.log(foundry.utils.deepClone(data));
-		await super.update(data, options).then(() => {
-			console.log("Post update");
-			console.log(foundry.utils.deepClone(this));
-		});
+		await super.update(data, options);
 		setTimeout(() => {
 			for (let app of Object.values(this.apps)) {
 				if (!app.closing && (app._state === 1 || app._state === 2)) {
 					//rendering or rendered
-					console.log("Refresh sheet before apply conditions");
-					console.log(foundry.utils.deepClone(this.system));
 					app.render();
 				}
 			}
@@ -277,8 +258,6 @@ export class HLMActor extends Actor {
 		if (!this.updatingConditions && game.availableConditionItems) {
 			this.updatingConditions = true;
 			this.attributesWithConditions = null;
-			console.log("Before apply conditions:");
-			console.log(foundry.utils.deepClone(this));
 			if (
 				foundry.utils.isNewerVersion(game.version, 12) &&
 				!foundry.utils.isNewerVersion(game.version, 13)
@@ -290,8 +269,6 @@ export class HLMActor extends Actor {
 					this.system.attributes
 				);
 			}
-			console.log("Apply conditions prepped:");
-			console.log(foundry.utils.deepClone(this));
 			try {
 				const conditionNames = [];
 				let effectArray = this.effects.contents;
@@ -342,8 +319,6 @@ export class HLMActor extends Actor {
 		} else {
 			this.queueApply = true;
 		}
-		console.log("Post apply conditions");
-		console.log(foundry.utils.deepClone(this));
 	}
 
 	async applySingleActiveEffect(activeEffect) {
@@ -420,9 +395,6 @@ export class HLMActor extends Actor {
 	}
 
 	calculateAttributeData(attr) {
-		console.log("Calculating for:");
-		console.log(foundry.utils.deepClone(attr));
-
 		if (attr.key == "ballast") {
 			let result = this.calculateBallastData(attr);
 			return result;
@@ -478,10 +450,7 @@ export class HLMActor extends Actor {
 	 * @param {AttributeElement} modifier The modifier to add
 	 */
 	addAttributeModifier(key, modifier) {
-		console.log(`Modifying ${key}`);
-		console.log(modifier);
 		const targetAttribute = this.system.attributes[key];
-		// targetAttribute.values.standard.additions.push(modifier);
 		targetAttribute.values.standard.additions[modifier.source] = modifier;
 		this.calculateSingleAttribute(key);
 	}
@@ -491,11 +460,17 @@ export class HLMActor extends Actor {
 	 * @param {ATTRIBUTE} key The attribute to modify
 	 * @param {string} source The id of the modifier to remove (usually the id of the object that created it)
 	 */
-	removeAttributeModifier(key, source) {
+	async removeAttributeModifier(key, source) {
 		const targetAttribute = this.system.attributes[key];
 		if (targetAttribute.values.standard.additions[source]) {
-			delete targetAttribute.values.standard.additions[source];
-			this.calculateSingleAttribute(key);
+			if (foundry.utils.isNewerVersion(game.version, 14)) {
+				const modifierAddress = `system.attributes.${key}.values.standard.additions.${source}`;
+				await this.update({[modifierAddress]: -del});
+			} else {
+				const modifierAddress = `system.attributes.${key}.values.standard.additions.-=${source}`;
+				await this.update({[modifierAddress]: null});
+			}
+
 			return true;
 		} else {
 			console.log(`Could not find modifier ${source}`);

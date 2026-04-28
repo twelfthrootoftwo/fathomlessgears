@@ -150,6 +150,34 @@ export class ItemsManager {
 		return target;
 	}
 
+	async updateModifiedAttributes(item) {
+		const actorDiff = {};
+		Object.keys(item.system.attributes).forEach((key) => {
+			if (Utils.isAttribute(key) && item.system.attributes[key] != 0) {
+				actorDiff[`system.attributes.${key}`] =
+					this.actor.system.attributes[key];
+				if (key == ATTRIBUTES.weight) {
+					actorDiff[`system.attributes.ballast`] =
+						this.actor.system.attributes.ballast;
+				}
+			}
+		});
+		if (item.system.repair_kits) {
+			actorDiff[`system.resources.repair`] =
+				this.actor.system.resources.repair;
+		}
+		if (item.system.marbles) {
+			actorDiff[`system.resources.marbles`] =
+				this.actor.system.resources.marbles;
+		}
+		if (item.system.core_integrity) {
+			actorDiff["system.resources.core"] =
+				this.actor.system.resources.core;
+		}
+
+		await this.actor.update(actorDiff);
+	}
+
 	/**
 	 * Item drop processing for grid
 	 * @param {Item} grid
@@ -227,8 +255,6 @@ export class ItemsManager {
 		//Apply attribute changes
 		Object.keys(frame.system.attributes).forEach((key) => {
 			this.actor.setBaseAttributeValue(key, frame.system.attributes[key]);
-			actorDiff[`system.attributes.${key}`] =
-				this.actor.system.attributes[key];
 		});
 		//Remove existing size item
 		if (this.actor.system.frame) {
@@ -245,18 +271,12 @@ export class ItemsManager {
 		}
 		this.actor.modifyResourceValue("repair", frame.system.repair_kits);
 		this.actor.modifyResourceValue("core", frame.system.core_integrity);
-		actorDiff["system.resources.repair"] =
-			this.actor.system.resources.repair;
-		actorDiff["system.resources.core"] = this.actor.system.resources.core;
-		// await this.actor.update({system: this.actor.system});
+		await this.updateModifiedAttributes(frame);
 
 		//Create new size item
 		const item = await Item.create(frame, {parent: this.actor});
 		this.actor.system.frame = item._id;
 		actorDiff["system.frame"] = item._id;
-		await this.actor.calculateBallastAsync();
-		actorDiff[`system.attributes.ballast`] =
-			this.actor.system.attributes.ballast;
 
 		//Resize token if needed
 		if (item.name == "Jolly Roger") {
@@ -374,9 +394,9 @@ export class ItemsManager {
 							internal.name
 						);
 						this.actor.addAttributeModifier(key, modifier);
+						actorDiff[`system.attributes.${key}`] =
+							this.actor.system.attributes[key];
 					}
-					actorDiff[`system.attributes.${key}`] =
-						this.actor.system.attributes[key];
 				}
 			});
 		}
@@ -413,15 +433,11 @@ export class ItemsManager {
 		let attributeChanged = false;
 		let actorDiff = {};
 		if (item.system.attributes) {
-			Object.keys(item.system.attributes).forEach((key) => {
+			for (let key of Object.keys(item.system.attributes)) {
 				if (item.system.attributes[key] != 0) {
-					attributeChanged =
-						this.actor.removeAttributeModifier(key, uuid) ||
-						attributeChanged;
-					actorDiff[`system.attributes.${key}`] =
-						this.actor.system.attributes[key];
+					await this.actor.removeAttributeModifier(key, uuid);
 				}
-			});
+			}
 		}
 
 		if (this.actor.system.resources) {
@@ -446,12 +462,11 @@ export class ItemsManager {
 			}
 		}
 
-		if (attributeChanged) {
+		if (attributeChanged || item.system.attributes?.ballast > 0) {
 			this.actor.calculateBallast();
 			actorDiff[`system.attributes.ballast`] =
 				this.actor.system.attributes.ballast;
 			await this.actor.update(actorDiff);
-			// await this.actor.update({system: this.actor.system});
 		}
 
 		//Re-retrieve item in case delete has been called twice as a race condition
@@ -476,9 +491,9 @@ export class ItemsManager {
 			.concat(this.actor.itemTypes.development)
 			.concat(this.actor.itemTypes.deep_word)
 			.concat(this.actor.itemTypes.maneuver);
-		items.forEach((item) => {
-			this._removeItem(item._id);
-		});
+		for (let item of items) {
+			await this._removeItem(item._id);
+		}
 	}
 
 	async applyDevelopment(development) {
@@ -612,23 +627,13 @@ export class ItemsManager {
 			await this._removeItem(oldTemplate._id);
 
 			//Template weight is stored as a bonus
-			const targetAttribute = this.actor.system.attributes.weight;
-			let delIndex = -1;
-			let index = 0;
-			targetAttribute.values.bonus.forEach((modifier) => {
-				if (modifier.source == oldTemplate._id) {
-					delIndex = index;
-				}
-				index += 1;
-			});
-			if (delIndex >= 0) {
-				targetAttribute.values.bonus.splice(delIndex, 1);
+			if (foundry.utils.isNewerVersion(game.version, 14)) {
+				const modifierAddress = `system.attributes.weight.values.bonus.${oldTemplate._id}`;
+				await this.actor.update({[modifierAddress]: -del});
 			} else {
-				console.log(`Could not find template weight!`);
+				const modifierAddress = `system.attributes.weight.values.bonus.-=${oldTemplate._id}`;
+				await this.actor.update({[modifierAddress]: null});
 			}
-			await this.actor.update({
-				"system.attributes.weight": this.actor.system.attributes.weight
-			});
 		}
 	}
 
@@ -659,8 +664,13 @@ export class ItemsManager {
 			"template",
 			newTemplate.name
 		);
-		this.actor.system.attributes.weight.values.bonus.push(templateWeight);
-		this.actor.update({"system.attributes": this.actor.system.attributes});
+		this.actor.system.attributes.weight.values.bonus[newTemplate._id] =
+			templateWeight;
+
+		this.actor.update({
+			"system.attributes.weight": this.actor.system.attributes.weight
+		});
+		this.updateModifiedAttributes(newTemplate);
 
 		Hooks.callAll("templateUpdated", this.actor);
 	}
@@ -741,23 +751,24 @@ export class ItemsManager {
 			if (condition.system.attributes[key] != 0) {
 				let found = false;
 
-				//Look for an existing modifier to update
-				this.actor.attributesWithConditions[
-					key
-				].values.standard.additions.forEach((modifier) => {
-					if (modifier.source == condition._id) {
-						if (
-							modifier.value !=
+				if (
+					this.actor.attributesWithConditions[key].values.standard
+						.additions[condition._id] != null
+				) {
+					let modifier =
+						this.actor.attributesWithConditions[key].values.standard
+							.additions[condition._id];
+					if (
+						modifier.value !=
+						condition.system.attributes[key] *
+							condition.system.value
+					) {
+						modifier.value =
 							condition.system.attributes[key] *
-								condition.system.value
-						) {
-							modifier.value =
-								condition.system.attributes[key] *
-								condition.system.value;
-						}
-						found = true;
+							condition.system.value;
 					}
-				});
+					found = true;
+				}
 
 				//Create a new modifier if none exists
 				if (!found) {
@@ -770,7 +781,7 @@ export class ItemsManager {
 					);
 					this.actor.attributesWithConditions[
 						key
-					].values.standard.additions.push(modifier);
+					].values.standard.additions[condition._id] = modifier;
 				}
 
 				//Recalculate totals
@@ -869,9 +880,6 @@ export class ItemsManager {
 				) {
 					this.actor.removeAttributeModifier(key, id);
 				}
-			});
-			this.actor.update({
-				"system.attributes": this.actor.system.attributes
 			});
 		}
 		item.update({"system.healed": !item.system.healed});

@@ -1,4 +1,4 @@
-// import {ATTRIBUTES} from "../constants.js";
+import {ATTRIBUTES} from "../constants.js";
 
 const fields = foundry.data.fields;
 const requiredInteger = {
@@ -20,16 +20,16 @@ function getSourceSchema() {
 }
 
 function getAttributeSchema() {
-	// return new fields.SchemaField(
-	// 	Object.values(ATTRIBUTES).reduce((obj, attrName) => {
-	// 		obj[attrName] = new fields.NumberField({
-	// 			...requiredInteger,
-	// 			initial: 0
-	// 		});
-	// 		return obj;
-	// 	}, {})
-	// );
-	return new fields.AnyField();
+	return new fields.SchemaField(
+		Object.values(ATTRIBUTES).reduce((obj, attrName) => {
+			obj[attrName] = new fields.NumberField({
+				...requiredInteger,
+				initial: 0
+			});
+			return obj;
+		}, {})
+	);
+	// return new fields.AnyField();
 }
 
 export class HLMTagModel extends foundry.abstract.TypeDataModel {
