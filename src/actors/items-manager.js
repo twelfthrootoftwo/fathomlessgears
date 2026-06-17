@@ -400,7 +400,6 @@ export class ItemsManager {
 				}
 			});
 		}
-		// await this.actor.update({system: this.actor.system});
 		await this.actor.update(actorDiff);
 		this.actor.breakInternalMessage(internal);
 

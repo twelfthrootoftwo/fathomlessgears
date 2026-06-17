@@ -66,9 +66,9 @@ export class HLMActor extends Actor {
 		this.system.attributes.ballast = this.calculateBallast();
 
 		//Conditions are applied above in calculateBallast if isOwner is true
-		if (!this.isOwner) {
-			this.applyConditions();
-		}
+		// if (!this.isOwner) {
+		// 	this.applyConditions();
+		// }
 	}
 
 	/** @inheritdoc */
@@ -105,6 +105,12 @@ export class HLMActor extends Actor {
 				this.update({"prototypeToken.actorLink": true});
 			}
 		}
+	}
+
+	/** @inheritdoc */
+	applyActiveEffects() {
+		this.applyConditions();
+		super.applyActiveEffects();
 	}
 
 	/** @inheritdoc */
@@ -161,7 +167,7 @@ export class HLMActor extends Actor {
 				}
 			}
 		}, 100);
-		await this.applyConditions();
+		// await this.applyConditions();
 	}
 
 	async transferEffects() {
@@ -470,7 +476,11 @@ export class HLMActor extends Actor {
 				const modifierAddress = `system.attributes.${key}.values.standard.additions.-=${source}`;
 				await this.update({[modifierAddress]: null});
 			}
-
+			this.system.attributes[key] = this.calculateSingleAttribute(key);
+			await this.update({
+				[`system.attributes.${key}.total`]:
+					this.system.attributes[key].total
+			});
 			return true;
 		} else {
 			console.log(`Could not find modifier ${source}`);
