@@ -61,6 +61,7 @@ export class GridHoverHUD extends HLMApplication {
 	 * check requirements then show grid
 	 */
 	checkShowGridRequirements(actor) {
+		if (!actor) return;
 		setTimeout(function () {
 			if (
 				actor.getFlag("fathomlessgears", "interactiveGrid") &&
