@@ -160,16 +160,17 @@ export class HLMInternalNPCModel extends foundry.abstract.TypeDataModel {
 			blank: true
 		});
 		schema.grid_coords = new fields.ArrayField(
-			new fields.SchemaField({
-				x: new fields.NumberField({
-					...requiredInteger,
-					initial: 0
-				}),
-				y: new fields.NumberField({
-					...requiredInteger,
-					initial: 0
-				})
-			})
+			// new fields.SchemaField({
+			// 	x: new fields.NumberField({
+			// 		...requiredInteger,
+			// 		initial: 0
+			// 	}),
+			// 	y: new fields.NumberField({
+			// 		...requiredInteger,
+			// 		initial: 0
+			// 	})
+			// })
+			new fields.AnyField()
 		);
 		return schema;
 	}
