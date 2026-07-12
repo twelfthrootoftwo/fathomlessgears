@@ -435,7 +435,11 @@ async function createItem(itemName, jsonData, itemType, sourceId, compendium) {
 			jsonData,
 			sourceId
 		);
+		console.log("Item data:");
+		console.log(itemData);
 		item = await compendium.createDocument(itemData);
+		console.log("Resulting item:");
+		console.log(item);
 	} catch (error) {
 		console.log(error);
 		const message =

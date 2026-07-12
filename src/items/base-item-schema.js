@@ -141,36 +141,35 @@ export class HLMInternalNPCModel extends foundry.abstract.TypeDataModel {
 			initial: 0
 		});
 		schema.tags = new fields.ArrayField(
-			// new fields.SchemaField({
-			// 	name: new fields.StringField({
-			// 		required: true,
-			// 		blank: true
-			// 	}),
-			// 	value: new fields.NumberField({
-			// 		required: true,
-			// 		integer: true,
-			// 		nullable: true,
-			// 		initial: 0
-			// 	})
-			// })
-			new fields.AnyField()
+			new fields.SchemaField({
+				name: new fields.StringField({
+					required: true,
+					blank: true
+				}),
+				value: new fields.NumberField({
+					required: true,
+					integer: true,
+					nullable: true,
+					initial: 0
+				})
+			})
+			// new fields.AnyField()
 		);
 		schema.type = new fields.StringField({
 			required: true,
 			blank: true
 		});
 		schema.grid_coords = new fields.ArrayField(
-			// new fields.SchemaField({
-			// 	x: new fields.NumberField({
-			// 		...requiredInteger,
-			// 		initial: 0
-			// 	}),
-			// 	y: new fields.NumberField({
-			// 		...requiredInteger,
-			// 		initial: 0
-			// 	})
-			// })
-			new fields.AnyField()
+			new fields.SchemaField({
+				x: new fields.NumberField({
+					...requiredInteger,
+					initial: 0
+				}),
+				y: new fields.NumberField({
+					...requiredInteger,
+					initial: 0
+				})
+			})
 		);
 		return schema;
 	}

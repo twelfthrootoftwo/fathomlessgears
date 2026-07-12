@@ -5,58 +5,54 @@ import {testFieldsExist} from "./import-validator.js";
 /**
  * Records data for a tag on a specific internal (including value if it has one)
  */
-class InternalTag {
-	name;
-	value;
+// class InternalTag {
+// 	name;
+// 	value;
 
-	constructor(name, value) {
-		this.name = name;
-		this.value = value;
-	}
-}
+// 	constructor(name, value) {
+// 		this.name = name;
+// 		this.value = value;
+// 	}
+// }
 
 /**
  * Records data for an attack (type, damage, range)
  */
-class Attack {
-	type;
-	attribute;
-	damage;
-	marbles;
-	range;
+// class Attack {
+// 	type;
+// 	attribute;
+// 	damage;
+// 	marbles;
+// 	range;
 
-	constructor(type, attribute, damage, marbles, range) {
-		this.type = Utils.capitaliseFirstLetter(type);
-		this.attribute = attribute;
-		this.damage = damage;
-		this.marbles = marbles;
-		this.range = range;
-	}
+// 	constructor(type, attribute, damage, marbles, range) {
+// 		this.type = Utils.capitaliseFirstLetter(type);
+// 		this.attribute = attribute;
+// 		this.damage = damage;
+// 		this.marbles = marbles;
+// 		this.range = range;
+// 	}
 
-	convertAttributeToDescriptor(type) {
-		switch (type) {
-			case "close":
-				return "Melee";
-			case "far":
-				return "Ranged";
-			default:
-				return Utils.capitaliseFirstLetter(type);
-		}
-	}
-}
+// 	convertAttributeToDescriptor(type) {
+// 		switch (type) {
+// 			case "close":
+// 				return "Melee";
+// 			case "far":
+// 				return "Ranged";
+// 			default:
+// 				return Utils.capitaliseFirstLetter(type);
+// 		}
+// 	}
+// }
 
-class GridPoint {
-	x;
-	y;
-
-	constructor(coordString) {
-		coordString = coordString.replace("[", "");
-		coordString = coordString.replace("]", "");
-		coordString = coordString.replace(" ", "");
-		const coordArray = coordString.split(",");
-		this.x = parseInt(coordArray[0]);
-		this.y = parseInt(coordArray[1]);
-	}
+function createAttackObject(type, attribute, damage, marbles, range) {
+	let attack = {};
+	attack.type = Utils.capitaliseFirstLetter(type);
+	attack.attribute = attribute;
+	attack.damage = damage;
+	attack.marbles = marbles;
+	attack.range = range;
+	return attack;
 }
 
 /**
@@ -505,7 +501,8 @@ function constructManeuverData(data) {
 		ap_cost: data.ap_cost
 	};
 	if (data.range) {
-		system.attack = new Attack(
+		// system.attack = new Attack(
+		system.attack = createAttackObject(
 			"mental",
 			ATTRIBUTES.mental,
 			0,
@@ -523,7 +520,9 @@ function constructDeepWordData(data) {
 		action_text: data.action_text || data.extra_rules
 	};
 	if (data.range) {
-		system.attack = new Attack(
+		// system.attack = new Attack(
+
+		system.attack = createAttackObject(
 			"mental",
 			ATTRIBUTES.mental,
 			0,
@@ -536,7 +535,7 @@ function constructDeepWordData(data) {
 			system.attack.damage = "Your current backlash (_BACKLASH_VALUE_)";
 		}
 	}
-	system.tags = [new InternalTag("fathomless", data.fathomless)];
+	system.tags = [{name: "fathomless", value: data.fathomless}];
 
 	return system;
 }
@@ -577,8 +576,8 @@ function getAPCost(data) {
 function constructAttack(data) {
 	const attackTypes = ["close", "far", "mental"];
 	if (!attackTypes.includes(data.type)) return null;
-
-	return new Attack(
+	return createAttackObject(
+		// return new Attack(
 		data.type,
 		data.action_data.attribute,
 		data.action_data.damage,
@@ -607,15 +606,26 @@ function separateTags(tagList) {
 		} else {
 			name = Utils.capitaliseWords(tagText);
 		}
-		tags.push(new InternalTag(name, value));
+		tags.push({name: name, value: value});
 	});
 	return tags;
+}
+
+function gridStringToCoord(coordString) {
+	let coord = {};
+	coordString = coordString.replace("[", "");
+	coordString = coordString.replace("]", "");
+	coordString = coordString.replace(" ", "");
+	const coordArray = coordString.split(",");
+	coord.x = parseInt(coordArray[0]);
+	coord.y = parseInt(coordArray[1]);
+	return coord;
 }
 
 function unpackGridCoords(gridList) {
 	const coords = [];
 	gridList.forEach((gridString) => {
-		const coord = new GridPoint(gridString);
+		const coord = gridStringToCoord(gridString);
 		coords.push(coord);
 	});
 	return coords;
