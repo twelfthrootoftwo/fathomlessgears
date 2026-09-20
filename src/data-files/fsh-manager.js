@@ -1,7 +1,7 @@
 import {identifyDataTypes} from "./file-utils.js";
 import {FileUploader} from "./uploader.js";
 import {
-	FileRecord,
+	createFileRecord,
 	getExtension,
 	getTargetCompendiumForImport,
 	isItemFromFileSource
@@ -266,7 +266,7 @@ export class FshManager extends HLMApplication {
 	 */
 	async removeCallback(ev) {
 		this.startLoading(game.i18n.localize("MANAGER.init"));
-		const targetRecord = new FileRecord(
+		const targetRecord = createFileRecord(
 			ev.target.attributes.filename.value,
 			ev.target.attributes.version.value
 		);
@@ -281,7 +281,7 @@ export class FshManager extends HLMApplication {
 	 * @param {Event} ev The callback event
 	 */
 	updateCallback(ev) {
-		const targetRecord = new FileRecord(
+		const targetRecord = createFileRecord(
 			ev.target.attributes.filename.value,
 			ev.target.attributes.version.value
 		);
@@ -506,7 +506,7 @@ export async function constructFileRecord(file, fileName) {
 			break;
 		}
 	}
-	return new FileRecord(fileName, versionNumber);
+	return createFileRecord(fileName, versionNumber);
 }
 
 //TODO: Extract version numbers when available

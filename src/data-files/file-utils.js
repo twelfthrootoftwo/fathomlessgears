@@ -1,14 +1,24 @@
 import {ITEM_TYPES} from "../constants.js";
 import {Utils} from "../utilities/utils.js";
 
-export class FileRecord {
-	filename;
-	version;
+/**
+ * A record identifying which uploaded data file an item or setting entry came from.
+ * Plain object rather than a class instance: Foundry's SchemaField only preserves
+ * values whose constructor is the built-in Object (see foundry.utils.getType) - a
+ * class instance gets silently reset to {} during document data cleaning.
+ * @typedef {Object} FileRecord
+ * @property {string} filename
+ * @property {string} version
+ */
 
-	constructor(filename, version) {
-		this.filename = filename;
-		this.version = version;
-	}
+/**
+ * Construct a FileRecord
+ * @param {string} filename
+ * @param {string} version
+ * @returns {FileRecord}
+ */
+export function createFileRecord(filename, version) {
+	return {filename, version};
 }
 
 /**
