@@ -253,6 +253,14 @@ export class HLMActor extends Actor {
 		return matchingEffect.getCounterValue();
 	}
 
+	/**
+	 * Recompute attributesWithConditions from the current base attributes and active effects.
+	 * Callers should await this (directly or via calculateAttributeTotals) whenever they need
+	 * a guarantee that the displayed totals reflect the latest modifiers, since a bare fire-and-forget
+	 * call may be coalesced with an already-running pass (see the queueApply handling below).
+	 * @returns {Promise<void>} Resolves once attributesWithConditions reflects the state of
+	 * system.attributes at the time this was called (or later).
+	 */
 	async applyConditions() {
 		if (!game.availableConditionItems) {
 			console.log("Conditions not ready yet");
@@ -261,69 +269,73 @@ export class HLMActor extends Actor {
 		if (!this.itemsManager) {
 			this.itemsManager = new ItemsManager(this);
 		}
-		if (!this.updatingConditions && game.availableConditionItems) {
-			this.updatingConditions = true;
-			this.attributesWithConditions = null;
-			if (
-				foundry.utils.isNewerVersion(game.version, 12) &&
-				!foundry.utils.isNewerVersion(game.version, 13)
-			) {
-				let attrs = this.toObject().system.attributes;
-				this.attributesWithConditions = attrs;
-			} else {
-				this.attributesWithConditions = foundry.utils.deepClone(
-					this.system.attributes
-				);
-			}
-			try {
-				const conditionNames = [];
-				let effectArray = this.effects.contents;
-				for (let activeEffect of effectArray) {
-					let conditionName = activeEffect.statuses
-						.values()
-						.next().value;
-					conditionNames.push(conditionName);
-					if (
-						NUMBERED_CONDITIONS.includes(conditionName) &&
-						!activeEffect.hasCounterFlag()
-					) {
-						//Wait for the value to be saved
-						await new Promise((resolve) =>
-							setTimeout(resolve, 500)
-						);
-						activeEffect = fromUuidSync(activeEffect.uuid);
-					}
-					if (
-						Array.from(
-							game.availableConditionItems?.keys()
-						).includes(conditionName)
-					) {
-						console.log("Applying condition");
-						await this.applySingleActiveEffect(activeEffect);
-					}
-				}
-				this.updatingConditions = false;
-				setTimeout(() => {
-					for (let app of Object.values(this.apps)) {
-						if (
-							!app.closing &&
-							(app._state === 1 || app._state === 2)
-						) {
-							//rendering or rendered
-							app.render();
-						}
-					}
-				}, 100);
-				if (this.queueApply) {
-					this.queueApply = false;
-					await this.applyConditions();
-				}
-			} catch (error) {
-				console.error(error);
-				this.updatingConditions = false;
-			}
-		} else {
+		if (this.updatingConditionsPromise) {
+			//A pass is already running. It may have started before whatever change
+			//prompted this call, so queue another pass and wait for that one instead
+			//of resolving early with data that could still be stale.
 			this.queueApply = true;
+			return this.updatingConditionsPromise;
+		}
+		this.updatingConditionsPromise = this._recalculateConditions().finally(
+			() => {
+				this.updatingConditionsPromise = null;
+			}
+		);
+		return this.updatingConditionsPromise;
+	}
+
+	async _recalculateConditions() {
+		if (
+			foundry.utils.isNewerVersion(game.version, 12) &&
+			!foundry.utils.isNewerVersion(game.version, 13)
+		) {
+			let attrs = this.toObject().system.attributes;
+			this.attributesWithConditions = attrs;
+		} else {
+			this.attributesWithConditions = foundry.utils.deepClone(
+				this.system.attributes
+			);
+		}
+		try {
+			const conditionNames = [];
+			let effectArray = this.effects.contents;
+			for (let activeEffect of effectArray) {
+				let conditionName = activeEffect.statuses.values().next().value;
+				conditionNames.push(conditionName);
+				if (
+					NUMBERED_CONDITIONS.includes(conditionName) &&
+					!activeEffect.hasCounterFlag()
+				) {
+					//Wait for the value to be saved
+					await new Promise((resolve) => setTimeout(resolve, 500));
+					activeEffect = fromUuidSync(activeEffect.uuid);
+				}
+				if (
+					Array.from(game.availableConditionItems?.keys()).includes(
+						conditionName
+					)
+				) {
+					console.log("Applying condition");
+					await this.applySingleActiveEffect(activeEffect);
+				}
+			}
+			setTimeout(() => {
+				for (let app of Object.values(this.apps)) {
+					if (
+						!app.closing &&
+						(app._state === 1 || app._state === 2)
+					) {
+						//rendering or rendered
+						app.render();
+					}
+				}
+			}, 100);
+			if (this.queueApply) {
+				this.queueApply = false;
+				await this._recalculateConditions();
+			}
+		} catch (error) {
+			console.error(error);
 		}
 	}
 
@@ -462,7 +474,28 @@ export class HLMActor extends Actor {
 	}
 
 	/**
-	 * Removes an attribute modifier, if it exists
+	 * Removes an attribute modifier from memory only, without persisting the change.
+	 * Use this when removing several modifiers as part of one logical operation (e.g.
+	 * breaking an internal that affects multiple attributes) so the caller can persist
+	 * everything with a single trailing update (e.g. calculateAttributeTotals) instead
+	 * of one round trip per modifier.
+	 * @param {ATTRIBUTE} key The attribute to modify
+	 * @param {string} source The id of the modifier to remove (usually the id of the object that created it)
+	 * @returns true if a modifier was found and removed, false otherwise
+	 */
+	removeAttributeModifierLocal(key, source) {
+		const targetAttribute = this.system.attributes[key];
+		if (!targetAttribute.values.standard.additions[source]) {
+			console.log(`Could not find modifier ${source}`);
+			return false;
+		}
+		delete targetAttribute.values.standard.additions[source];
+		this.system.attributes[key] = this.calculateSingleAttribute(key);
+		return true;
+	}
+
+	/**
+	 * Removes an attribute modifier, if it exists, and immediately persists the change.
 	 * @param {ATTRIBUTE} key The attribute to modify
 	 * @param {string} source The id of the modifier to remove (usually the id of the object that created it)
 	 */

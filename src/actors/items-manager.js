@@ -377,41 +377,31 @@ export class ItemsManager {
 
 		//Apply attribute changes
 		const isBroken = await internal.isBroken();
-		let actorDiff = {};
 		if (!internal.isSturdy()) {
-			Object.keys(internal.system.attributes).forEach((key) => {
+			for (const key of Object.keys(internal.system.attributes)) {
 				if (
-					key != ATTRIBUTES.weight &&
-					internal.system.attributes[key] != 0
+					key == ATTRIBUTES.weight ||
+					internal.system.attributes[key] == 0
 				) {
-					if (isBroken) {
-						this.actor.removeAttributeModifier(key, uuid);
-					} else {
-						const modifier = new AttributeElement(
-							internal.system.attributes[key],
-							internal._id,
-							"internal",
-							internal.name
-						);
-						this.actor.addAttributeModifier(key, modifier);
-						actorDiff[`system.attributes.${key}`] =
-							this.actor.system.attributes[key];
-					}
+					continue;
 				}
-			});
-		}
-		await this.actor.update(actorDiff);
-		this.actor.breakInternalMessage(internal);
-
-		setTimeout(() => {
-			for (let app of Object.values(this.actor.apps)) {
-				if (!app.closing && (app._state === 1 || app._state === 2)) {
-					//rendering or rendered
-					app.render();
-					console.log("Re-render from items manager");
+				if (isBroken) {
+					this.actor.removeAttributeModifierLocal(key, uuid);
+				} else {
+					const modifier = new AttributeElement(
+						internal.system.attributes[key],
+						internal._id,
+						"internal",
+						internal.name
+					);
+					this.actor.addAttributeModifier(key, modifier);
 				}
 			}
-		}, 10);
+		}
+		//Recalculates totals (including condition modifiers) and persists the
+		//result, which triggers a re-render of any open sheet with fresh data.
+		await this.actor.calculateAttributeTotals();
+		this.actor.breakInternalMessage(internal);
 
 		Hooks.callAll("internalBrokenToggled", internal, this.actor);
 	}
@@ -846,15 +836,15 @@ export class ItemsManager {
 				this.actor.addAttributeModifier(key, modifier);
 			}
 		});
-		await this.actor.update({
-			"system.attributes": this.actor.system.attributes
-		});
+		//Recalculates totals (including condition modifiers) and persists the
+		//result, which triggers a re-render of any open sheet with fresh data.
+		await this.actor.calculateAttributeTotals();
 	}
 
 	async toggleInjuryHealed(id) {
 		let item = this.actor.items.get(id);
 		if (item.system.healed) {
-			Object.keys(item.system.attributes).forEach((key) => {
+			for (const key of Object.keys(item.system.attributes)) {
 				if (
 					Utils.isAttribute(key) &&
 					item.system.attributes[key] != 0
@@ -867,21 +857,21 @@ export class ItemsManager {
 					);
 					this.actor.addAttributeModifier(key, modifier);
 				}
-			});
-			this.actor.update({
-				"system.attributes": this.actor.system.attributes
-			});
+			}
 		} else {
-			Object.keys(item.system.attributes).forEach((key) => {
+			for (const key of Object.keys(item.system.attributes)) {
 				if (
 					Utils.isAttribute(key) &&
 					item.system.attributes[key] != 0
 				) {
-					this.actor.removeAttributeModifier(key, id);
+					this.actor.removeAttributeModifierLocal(key, id);
 				}
-			});
+			}
 		}
-		item.update({"system.healed": !item.system.healed});
+		//Recalculates totals (including condition modifiers) and persists the
+		//result, which triggers a re-render of any open sheet with fresh data.
+		await this.actor.calculateAttributeTotals();
+		await item.update({"system.healed": !item.system.healed});
 	}
 
 	async clearConditions() {
