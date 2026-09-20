@@ -2,17 +2,17 @@ import {NUMBERED_CONDITIONS} from "./conditions.js";
 
 export class HLMActiveEffect extends ActiveEffect {
 	_onCreate(...args) {
-		this.parent.transferEffects();
+		this.parent.transferEffects(args[2]);
 		super._onCreate(...args);
 	}
 
 	_onDelete(...args) {
-		this.parent.transferEffects();
+		this.parent.transferEffects(args[2]);
 		super._onDelete(...args);
 	}
 
 	_onUpdate(...args) {
-		this.parent.transferEffects();
+		this.parent.transferEffects(args[2]);
 		super._onUpdate(...args);
 	}
 

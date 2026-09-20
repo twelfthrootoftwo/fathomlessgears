@@ -170,69 +170,109 @@ export class HLMActor extends Actor {
 		// await this.applyConditions();
 	}
 
-	async transferEffects() {
-		if (
-			this.firstOwner() &&
-			game.user.id == this.firstOwner().id &&
-			!this.isTransferring
-		) {
-			let thisIsBallast = Boolean(
-				this.getFlag("fathomlessgears", "originalActorReference")
-			);
-			let pairedActorId = thisIsBallast
-				? this.getFlag("fathomlessgears", "originalActorReference")
-				: this.getFlag("fathomlessgears", "ballastActorReference");
-			let pairedActor = fromUuidSync(pairedActorId);
-			if (!pairedActor) return;
+	/**
+	 * Mirror this actor's conditions onto its paired ballast/original actor, and vice versa.
+	 * Guarded so that only the client of the user whose action actually triggered the change
+	 * performs the mirroring - "first owner" used to be used for this, but it names a fixed
+	 * user unrelated to who is acting, which blocked other players from reliably applying
+	 * conditions to either token in the pair. Whoever can't write to the paired actor simply
+	 * has the mirrored update rejected by ownership checks, same as any other edit.
+	 * @param {string} [userId] The id of the user whose action triggered this call, from the
+	 * ActiveEffect's _onCreate/_onUpdate/_onDelete. Omit only for a manually-triggered call.
+	 */
+	async transferEffects(userId) {
+		if (userId && userId !== game.user.id) return;
+		if (this.transferringPromise) {
+			//A pass is already running and may have started before whatever change
+			//prompted this call (e.g. rapid repeated clicks on a status icon under a
+			//slow connection) - queue another pass and wait for that one instead of
+			//returning early with an update that could still be dropped.
+			this.queueTransfer = true;
+			return this.transferringPromise;
+		}
+		this.transferringPromise = this._transferEffects().finally(() => {
+			this.transferringPromise = null;
+		});
+		return this.transferringPromise;
+	}
+
+	async _transferEffects() {
+		let thisIsBallast = Boolean(
+			this.getFlag("fathomlessgears", "originalActorReference")
+		);
+		let pairedActorId = thisIsBallast
+			? this.getFlag("fathomlessgears", "originalActorReference")
+			: this.getFlag("fathomlessgears", "ballastActorReference");
+		let pairedActor = pairedActorId ? fromUuidSync(pairedActorId) : null;
+		if (pairedActor) {
 			let thisEffects = this.appliedEffects;
 			let pairedEffects = pairedActor.appliedEffects;
 			let pairedTokens = thisIsBallast
-				? pairedActor?.getNonBallastTokens()
-				: pairedActor?.getBallastTokens();
-			if (!pairedTokens || pairedTokens.length == 0) return;
-
-			this.isTransferring = true;
-			for (let effect of thisEffects) {
-				if (effect.statuses.has("ballast")) continue;
-				let matchingEffect = pairedEffects.find(
-					(pairedEffect) => pairedEffect.name == effect.name
-				);
-				if (!matchingEffect) {
-					const statusKey = effect.statuses.values().next().value;
-					await pairedTokens[0].actor.toggleStatusEffect(statusKey);
-					const createdEffect =
-						pairedTokens[0].actor.appliedEffects.filter(
-							(appliedEffect) =>
-								appliedEffect.statuses.has(statusKey)
-						)[0];
-					setTimeout(async () => {
+				? pairedActor.getNonBallastTokens()
+				: pairedActor.getBallastTokens();
+			if (pairedTokens && pairedTokens.length > 0) {
+				for (let effect of thisEffects) {
+					if (effect.statuses.has("ballast")) continue;
+					let matchingEffect = pairedEffects.find(
+						(pairedEffect) => pairedEffect.name == effect.name
+					);
+					if (!matchingEffect) {
+						const statusKey = effect.statuses.values().next().value;
+						await pairedTokens[0].actor.toggleStatusEffect(
+							statusKey
+						);
+						const createdEffect =
+							pairedTokens[0].actor.appliedEffects.find(
+								(appliedEffect) =>
+									appliedEffect.statuses.has(statusKey)
+							);
+						if (createdEffect) {
+							await quickCreateCounter(
+								createdEffect,
+								effect.getCounterValue()
+							);
+						}
+					} else if (
+						effect.getCounterValue() &&
+						effect.getCounterValue() !=
+							matchingEffect.getCounterValue()
+					) {
 						await quickCreateCounter(
-							createdEffect,
+							matchingEffect,
 							effect.getCounterValue()
 						);
-					}, 200);
-				} else if (
-					effect.getCounterValue() &&
-					effect.getCounterValue() != matchingEffect.getCounterValue()
-				) {
-					await quickCreateCounter(
-						matchingEffect,
-						effect.getCounterValue()
-					);
+					}
 				}
-			}
 
-			for (let effect of pairedEffects) {
-				if (effect.statuses.has("ballast")) continue;
-				let matchingEffect = thisEffects.find(
-					(thisEffect) => thisEffect.name == effect.name
-				);
-				if (!matchingEffect) {
-					const statusKey = effect.statuses.values().next().value;
-					await pairedTokens[0].actor.toggleStatusEffect(statusKey);
+				for (let effect of pairedEffects) {
+					if (effect.statuses.has("ballast")) continue;
+					let matchingEffect = thisEffects.find(
+						(thisEffect) => thisEffect.name == effect.name
+					);
+					if (!matchingEffect) {
+						//This actor (not the paired one) is missing the effect - apply
+						//it here. Toggling on the paired side here was the bug: the
+						//paired actor already has this effect, so toggling it there
+						//would just delete the very effect we're trying to match.
+						const statusKey = effect.statuses.values().next().value;
+						await this.toggleStatusEffect(statusKey);
+						const createdEffect = this.appliedEffects.find(
+							(appliedEffect) =>
+								appliedEffect.statuses.has(statusKey)
+						);
+						if (createdEffect) {
+							await quickCreateCounter(
+								createdEffect,
+								effect.getCounterValue()
+							);
+						}
+					}
 				}
 			}
-			this.isTransferring = false;
+		}
+		if (this.queueTransfer) {
+			this.queueTransfer = false;
+			await this._transferEffects();
 		}
 	}
 
@@ -806,24 +846,6 @@ export class HLMActor extends Actor {
 			"prototypeToken.height": size,
 			"prototypeToken.width": size
 		});
-	}
-
-	firstOwner() {
-		const playerOwners = Object.entries(this.ownership)
-			.filter(
-				([id, level]) =>
-					!game.users.get(id)?.isGM &&
-					game.users.get(id)?.active &&
-					level === 3
-			)
-			.map(([id, _level]) => id);
-
-		if (playerOwners.length > 0) {
-			return game.users.get(playerOwners[0]);
-		}
-
-		/* if no online player owns this actor, fall back to first GM */
-		return game.users.activeGM;
 	}
 
 	getBallastTokens() {
