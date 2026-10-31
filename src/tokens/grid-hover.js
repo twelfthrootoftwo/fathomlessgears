@@ -20,6 +20,24 @@ export class GridHoverHUD extends HLMApplication {
 		});
 	}
 
+	/**
+	 * A render which is still in flight when clear() (or a newer render) runs is
+	 * stale by the time it finishes - its own DOM insertion still happens (that
+	 * part of the core render pipeline isn't cancellable mid-flight), but nothing
+	 * would otherwise remove it afterwards, since the close() that ran earlier has
+	 * already resolved and clear()'s original caller is long done. Track a
+	 * generation counter so a render can tell, after the fact, whether it's still
+	 * the current one; if not, it cleans up after itself immediately.
+	 */
+	async _render(force, options) {
+		const myGeneration = (this.renderGeneration =
+			(this.renderGeneration ?? 0) + 1);
+		await super._render(force, options);
+		if (this.renderGeneration !== myGeneration) {
+			this.clear();
+		}
+	}
+
 	getData() {
 		const data = super.getData();
 		const actor = this.object;
@@ -84,6 +102,12 @@ export class GridHoverHUD extends HLMApplication {
 	 * @param {HTML} html The HTML document
 	 */
 	activateListeners(html) {
+		//this.object can go null mid-render if clear() runs while a render triggered
+		//by assignActor/refresh is still in flight (e.g. an actor update refreshing
+		//the HUD at the same moment the user unlocks it) - without this guard that
+		//crashes the render, which leaves the stale HUD stuck on screen since the
+		//close() call below runs before the crash and no-ops (see its own comment).
+		if (!this.object) return;
 		this.object.grid.activateListeners(html);
 	}
 
@@ -105,7 +129,21 @@ export class GridHoverHUD extends HLMApplication {
 	 */
 	clear() {
 		this.object = null;
-		this.close().then(() => {
+		//Invalidate any render currently in flight - see the comment on _render above.
+		this.renderGeneration = (this.renderGeneration ?? 0) + 1;
+		//Guard against reentrancy: close() fires the generic "closeApplication" hook
+		//(see initialiseHooks below), which calls clearGrid() -> clear() again while
+		//this very call is still inside close(). Without this check that's unbounded
+		//synchronous recursion once close() actually runs instead of no-opping (see
+		//the force:true comment below) - it was latent but harmless before, since the
+		//un-forced close() always returned before ever reaching the hook.
+		if (this._state === Application.RENDER_STATES.CLOSING) return;
+		//force: true, since close() otherwise silently no-ops unless the app is
+		//currently in the RENDERED state - if a render triggered by assignActor/
+		//refresh (e.g. an actor update) is still in flight when clear() runs, the
+		//app is in the RENDERING state and a non-forced close does nothing, leaving
+		//the stale HUD stuck on screen.
+		this.close({force: true}).then(() => {
 			if (this.awaitingRefresh && this.object) {
 				this.render(true);
 			}
