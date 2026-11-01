@@ -109,6 +109,74 @@ export class GridHoverHUD extends HLMApplication {
 		//close() call below runs before the crash and no-ops (see its own comment).
 		if (!this.object) return;
 		this.object.grid.activateListeners(html);
+		GridHoverHUD.updateSidebarOffset();
+		GridHoverHUD.updateLeftOffset();
+	}
+
+	/**
+	 * Keeps the HUD's right-aligned positions flush against the sidebar tabs
+	 * column (the always-visible row of menu buttons), rather than the fixed
+	 * --sidebar-width (300px), which only matches the full expanded sidebar
+	 * panel's width. #sidebar-content collapses off-screen by default in v13,
+	 * leaving only the ~48px #sidebar-tabs column visible - a HUD positioned at
+	 * a fixed 300px then floats in empty space well short of that column, and
+	 * conversely sits partly behind the tabs column once the sidebar expands
+	 * (which adds its own width on top of the 300px).
+	 *
+	 * Deliberately computed from #sidebar-tabs' and #sidebar-content's own
+	 * *widths*, not from a measured position like getBoundingClientRect().left -
+	 * #sidebar-content's expand/collapse is driven by an animated margin (see
+	 * styles/canvas.css' transition on .grid-hover-hud), so #sidebar-tabs'
+	 * position is mid-flight for the 250ms after toggling and a position
+	 * measurement taken then reflects the *previous* state, not the one being
+	 * animated to (visibly one click behind, flipping to the wrong spot on each
+	 * toggle). Width, unlike position, isn't part of that animation and is
+	 * correct immediately, which also means this can update the instant the
+	 * sidebar starts transitioning instead of waiting for it to finish - letting
+	 * the HUD's own `right` transition (see the CSS) run in sync with it rather
+	 * than jumping only after the sidebar has already finished moving.
+	 */
+	static updateSidebarOffset() {
+		const tabs = document.getElementById("sidebar-tabs");
+		if (!tabs) return;
+		const content = document.getElementById("sidebar-content");
+		const expanded = content?.classList.contains("expanded");
+		let offset = tabs.getBoundingClientRect().width;
+		if (expanded) {
+			offset += content.getBoundingClientRect().width;
+		} else {
+			offset += parseFloat(window.getComputedStyle(tabs).paddingRight);
+		}
+		document.documentElement.style.setProperty(
+			"--grid-hud-sidebar-offset",
+			`${offset}px`
+		);
+	}
+
+	/**
+	 * Same idea as updateSidebarOffset, but for the left-aligned positions:
+	 * keeps the HUD clear of the scene controls toolbar, which sits flush at the
+	 * actual top-left corner - a HUD positioned at a hardcoded `left: 0` sits
+	 * directly on top of it. Its width isn't fixed the way the old
+	 * --sidebar-width assumption was for the sidebar: it depends on how many
+	 * columns of tool icons the currently active control set needs
+	 * (--control-columns) and the page's UI scale setting, so it's measured
+	 * directly off the DOM rather than assumed, the same way as the sidebar.
+	 *
+	 * Measures #ui-left-column-1 (the toolbar itself), not its parent #ui-left -
+	 * #ui-left is a much wider (width: 50% of the screen) invisible positioning
+	 * container for left-side UI in general, not the visible boundary of the
+	 * toolbar, so measuring it put the HUD roughly at screen-center instead of
+	 * just past the toolbar.
+	 */
+	static updateLeftOffset() {
+		const column = document.getElementById("ui-left-column-1");
+		if (!column) return;
+		const offset = column.getBoundingClientRect().right;
+		document.documentElement.style.setProperty(
+			"--grid-hud-left-offset",
+			`${offset}px`
+		);
 	}
 
 	/**
@@ -235,6 +303,17 @@ export class GridHoverHUD extends HLMApplication {
 		Hooks.on("createActiveEffect", (condition) =>
 			refreshGrid(condition.parent)
 		);
+
+		//Keep the HUD flush against the sidebar tabs column and the scene controls
+		//toolbar even if the sidebar is expanded/collapsed, the active tool changes
+		//the controls layout, or the window is resized while the HUD is already
+		//open (locked) and nothing else happens to trigger a fresh render meanwhile.
+		Hooks.on("collapseSidebar", () => GridHoverHUD.updateSidebarOffset());
+		Hooks.on("renderSceneControls", () => GridHoverHUD.updateLeftOffset());
+		window.addEventListener("resize", () => {
+			GridHoverHUD.updateSidebarOffset();
+			GridHoverHUD.updateLeftOffset();
+		});
 	}
 
 	getLockPrompt() {

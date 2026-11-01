@@ -5,6 +5,14 @@
 	width: 480px;
 	height: 400px;
 	background-color: #ffffff90;
+	/* right: matches the sidebar's own expand/collapse duration (250ms, see
+	   #sidebar-content in Foundry core) so the HUD slides in sync with it instead
+	   of snapping once GridHoverHUD.updateSidebarOffset updates
+	   --grid-hud-sidebar-offset. left: smooths the equivalent left-side shift from
+	   GridHoverHUD.updateLeftOffset when the scene controls toolbar changes width. */
+	transition:
+		right 250ms ease,
+		left 250ms ease;
 
 	&.dark {
 		--color-border-dark-primary: #fff;
@@ -22,7 +30,10 @@
 
 	&.bottom-left {
 		bottom: 100px;
-		left: 0;
+		/* Flush against the scene controls toolbar (see GridHoverHUD.updateLeftOffset),
+		   which runs the full height of the screen, not just the top - falls back to 0
+		   if that hasn't been measured yet */
+		left: var(--grid-hud-left-offset, 0px);
 
 		& .lock-prompt-text {
 			text-align: right;
@@ -30,7 +41,9 @@
 	}
 	&.bottom-right {
 		bottom: 100px;
-		right: var(--sidebar-width);
+		/* Flush against the sidebar tabs column (see GridHoverHUD.updateSidebarOffset),
+		   falling back to the static sidebar width if that hasn't been measured yet */
+		right: var(--grid-hud-sidebar-offset, var(--sidebar-width));
 
 		& .lock-prompt-text {
 			text-align: left;
@@ -38,7 +51,7 @@
 	}
 	&.top-left {
 		top: 0;
-		left: 0;
+		left: var(--grid-hud-left-offset, 0px);
 
 		& .lock-prompt-text {
 			text-align: right;
@@ -46,7 +59,7 @@
 	}
 	&.top-right {
 		top: 0;
-		right: var(--sidebar-width);
+		right: var(--grid-hud-sidebar-offset, var(--sidebar-width));
 
 		& .lock-prompt-text {
 			text-align: left;

@@ -162,4 +162,8 @@
 	font-size: var(--font-size-12);
 	font-style: italic;
 	color: var(--color-text-dark-2);
+	& p {
+		margin-top: 4px;
+		margin-bottom: 4px;
+	}
 }
