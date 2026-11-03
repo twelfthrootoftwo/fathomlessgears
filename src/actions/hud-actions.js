@@ -95,17 +95,33 @@ export class HUDActionCollection {
 					await effect.setCounterVisibility();
 
 					if (!originalToken.isLinked) {
-						setTimeout(() => {
-							createdToken.actor.setFlag(
-								"fathomlessgears",
-								"originalActorReference",
-								originalToken.actor.uuid
-							);
-							originalToken.actor.setFlag(
-								"fathomlessgears",
-								"ballastActorReference",
-								createdToken.actor.uuid
-							);
+						setTimeout(async () => {
+							//Both flags must actually be saved before transferEffects
+							//reads them to find the paired actor - setFlag()'s update
+							//doesn't apply locally until the server round trip
+							//completes, so firing the transfer loop right after an
+							//un-awaited setFlag() races it and silently finds no
+							//paired actor every time.
+							await Promise.all([
+								createdToken.actor.setFlag(
+									"fathomlessgears",
+									"originalActorReference",
+									originalToken.actor.uuid
+								),
+								originalToken.actor.setFlag(
+									"fathomlessgears",
+									"ballastActorReference",
+									createdToken.actor.uuid
+								)
+							]);
+							for (const effect of originalToken.actor
+								.appliedEffects) {
+								await originalToken.actor.transferEffects(
+									game.user.id,
+									"create",
+									effect
+								);
+							}
 						}, 50);
 					}
 					let createdTokenDrawn = canvas.tokens.placeables.filter(

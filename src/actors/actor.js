@@ -55,8 +55,6 @@ export class HLMActor extends Actor {
 
 		this.itemsManager = new ItemsManager(this);
 
-		this.queuedEffects = [];
-
 		Hooks.on("conditionListReady", () => {
 			setTimeout(() => {
 				this.applyConditions();
@@ -171,108 +169,121 @@ export class HLMActor extends Actor {
 	}
 
 	/**
-	 * Mirror this actor's conditions onto its paired ballast/original actor, and vice versa.
-	 * Guarded so that only the client of the user whose action actually triggered the change
-	 * performs the mirroring - "first owner" used to be used for this, but it names a fixed
-	 * user unrelated to who is acting, which blocked other players from reliably applying
-	 * conditions to either token in the pair. Whoever can't write to the paired actor simply
-	 * has the mirrored update rejected by ownership checks, same as any other edit.
+	 * Mirror a single effect change (create/update/delete) from this actor onto
+	 * its paired ballast/original actor, and vice versa. Guarded so that only the
+	 * client of the user whose action actually triggered the change performs the
+	 * mirroring - "first owner" used to be used for this, but it names a fixed
+	 * user unrelated to who is acting, which blocked other players from reliably
+	 * applying conditions to either token in the pair. Whoever can't write to the
+	 * paired actor simply has the mirrored update rejected by ownership checks,
+	 * same as any other edit.
+	 *
+	 * Deliberately mirrors the *specific* change that was just made, rather than
+	 * diffing this actor's and the paired actor's full effect lists and
+	 * reconciling - that older design couldn't tell "the paired actor has this
+	 * and I never did" (needs adding here) apart from "the paired actor still has
+	 * this because I only just deleted my own copy" (needs deleting there too,
+	 * not re-adding here). Both look identical as a plain diff, which made it
+	 * impossible to ever delete a condition on an actor with a ballast pairing -
+	 * the other side's still-present copy would always get re-added right back.
 	 * @param {string} [userId] The id of the user whose action triggered this call, from the
 	 * ActiveEffect's _onCreate/_onUpdate/_onDelete. Omit only for a manually-triggered call.
+	 * @param {"create"|"update"|"delete"} [changeType] What just happened to `effect` on this actor.
+	 * @param {ActiveEffect} [effect] The effect that was created/updated/deleted.
 	 */
-	async transferEffects(userId) {
+	async transferEffects(userId, changeType, effect) {
 		if (userId && userId !== game.user.id) return;
+		if (!changeType || !effect) return;
 		if (this.transferringPromise) {
 			//A pass is already running and may have started before whatever change
 			//prompted this call (e.g. rapid repeated clicks on a status icon under a
-			//slow connection) - queue another pass and wait for that one instead of
-			//returning early with an update that could still be dropped.
-			this.queueTransfer = true;
+			//slow connection, or several conditions being transferred at once when a
+			//ballast token is created) - queue this one and wait for the in-flight
+			//pass instead of returning early with an update that could still be
+			//dropped. Queued changes are drained in FIFO order (see the `shift()`
+			//below) so they're applied in the same order they actually happened.
+			if (!this.queuedTransfers) this.queuedTransfers = [];
+			this.queuedTransfers.push({changeType, effect});
 			return this.transferringPromise;
 		}
-		this.transferringPromise = this._transferEffects().finally(() => {
+		this.transferringPromise = this._transferEffects(
+			changeType,
+			effect
+		).finally(() => {
 			this.transferringPromise = null;
 		});
 		return this.transferringPromise;
 	}
 
-	async _transferEffects() {
-		let thisIsBallast = Boolean(
-			this.getFlag("fathomlessgears", "originalActorReference")
-		);
-		let pairedActorId = thisIsBallast
-			? this.getFlag("fathomlessgears", "originalActorReference")
-			: this.getFlag("fathomlessgears", "ballastActorReference");
-		let pairedActor = pairedActorId ? fromUuidSync(pairedActorId) : null;
-		if (pairedActor) {
-			let thisEffects = this.appliedEffects;
-			let pairedEffects = pairedActor.appliedEffects;
+	async _transferEffects(changeType, effect) {
+		if (!effect.statuses.has("ballast")) {
+			let thisIsBallast = Boolean(
+				this.getFlag("fathomlessgears", "originalActorReference")
+			);
+			let pairedActorId = thisIsBallast
+				? this.getFlag("fathomlessgears", "originalActorReference")
+				: this.getFlag("fathomlessgears", "ballastActorReference");
+			let pairedActor = pairedActorId
+				? fromUuidSync(pairedActorId)
+				: null;
 			let pairedTokens = thisIsBallast
-				? pairedActor.getNonBallastTokens()
-				: pairedActor.getBallastTokens();
+				? pairedActor?.getNonBallastTokens()
+				: pairedActor?.getBallastTokens();
 			if (pairedTokens && pairedTokens.length > 0) {
-				for (let effect of thisEffects) {
-					if (effect.statuses.has("ballast")) continue;
-					let matchingEffect = pairedEffects.find(
-						(pairedEffect) => pairedEffect.name == effect.name
-					);
-					if (!matchingEffect) {
-						const statusKey = effect.statuses.values().next().value;
-						await pairedTokens[0].actor.toggleStatusEffect(
-							statusKey
-						);
-						const createdEffect =
-							pairedTokens[0].actor.appliedEffects.find(
-								(appliedEffect) =>
-									appliedEffect.statuses.has(statusKey)
+				const pairedActorInstance = pairedTokens[0].actor;
+				const matchingEffect = pairedActorInstance.appliedEffects.find(
+					(pairedEffect) => pairedEffect.name == effect.name
+				);
+				switch (changeType) {
+					case "create":
+						if (!matchingEffect) {
+							const statusKey = effect.statuses
+								.values()
+								.next().value;
+							await pairedActorInstance.toggleStatusEffect(
+								statusKey
 							);
-						if (createdEffect) {
-							await quickCreateCounter(
-								createdEffect,
-								effect.getCounterValue()
+							const createdEffect =
+								pairedActorInstance.appliedEffects.find(
+									(appliedEffect) =>
+										appliedEffect.statuses.has(statusKey)
+								);
+							if (createdEffect) {
+								await quickCreateCounter(
+									createdEffect,
+									effect.getCounterValue()
+								);
+							}
+						}
+						break;
+					case "delete":
+						if (matchingEffect) {
+							const statusKey = matchingEffect.statuses
+								.values()
+								.next().value;
+							await pairedActorInstance.toggleStatusEffect(
+								statusKey,
+								{active: false}
 							);
 						}
-					} else if (
-						effect.getCounterValue() &&
-						effect.getCounterValue() !=
+						break;
+					case "update":
+						if (
+							effect.getCounterValue() !==
 							matchingEffect.getCounterValue()
-					) {
-						await quickCreateCounter(
-							matchingEffect,
-							effect.getCounterValue()
-						);
-					}
-				}
-
-				for (let effect of pairedEffects) {
-					if (effect.statuses.has("ballast")) continue;
-					let matchingEffect = thisEffects.find(
-						(thisEffect) => thisEffect.name == effect.name
-					);
-					if (!matchingEffect) {
-						//This actor (not the paired one) is missing the effect - apply
-						//it here. Toggling on the paired side here was the bug: the
-						//paired actor already has this effect, so toggling it there
-						//would just delete the very effect we're trying to match.
-						const statusKey = effect.statuses.values().next().value;
-						await this.toggleStatusEffect(statusKey);
-						const createdEffect = this.appliedEffects.find(
-							(appliedEffect) =>
-								appliedEffect.statuses.has(statusKey)
-						);
-						if (createdEffect) {
+						) {
 							await quickCreateCounter(
-								createdEffect,
+								matchingEffect,
 								effect.getCounterValue()
 							);
 						}
-					}
+						break;
 				}
 			}
 		}
-		if (this.queueTransfer) {
-			this.queueTransfer = false;
-			await this._transferEffects();
+		if (this.queuedTransfers?.length > 0) {
+			const next = this.queuedTransfers.shift();
+			await this._transferEffects(next.changeType, next.effect);
 		}
 	}
 
@@ -380,7 +391,6 @@ export class HLMActor extends Actor {
 	}
 
 	async applySingleActiveEffect(activeEffect) {
-		if (this.queuedEffects.includes(activeEffect.name)) return;
 		const counterValue = activeEffect.getCounterValue()
 			? activeEffect.getCounterValue()
 			: await this.getPairedTokenValue(activeEffect);

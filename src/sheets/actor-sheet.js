@@ -46,13 +46,14 @@ export class HLMActorSheet extends ActorSheet {
 			"fathomlessgears",
 			"initialised"
 		);
-		context.biographyHTML = await TextEditor.enrichHTML(
-			context.actor.system.biography,
-			{
-				secrets: this.document.isOwner,
-				async: true
-			}
-		);
+		context.biographyHTML =
+			await foundry.applications.ux.TextEditor.implementation.enrichHTML(
+				context.actor.system.biography,
+				{
+					secrets: this.document.isOwner,
+					async: true
+				}
+			);
 		this.getResourceLabels(context.actor);
 		context.scan_text = await context.actor.getScanText();
 		context.template =
